@@ -1,0 +1,10 @@
+*				  text=auto
+
+*.cpp			  text
+*.h				  text
+*.inl			  text
+*.md			  text
+*.props			  text eol=crlf
+*.sln			  text eol=crlf
+*.vcxproj		  text eol=crlf
+*.vcxproj.filters text eol=crlf
