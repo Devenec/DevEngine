@@ -1,6 +1,7 @@
 # directories
 
 **/obj/
+build/Win32/
 
 
 # file extensions
