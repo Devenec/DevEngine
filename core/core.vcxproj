@@ -10,6 +10,18 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\core\Macros.h" />
+    <ClInclude Include="include\core\MacrosInternals.h" />
+    <ClInclude Include="include\core\Numeric.h" />
+    <ClInclude Include="include\core\Types.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Types.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\core\Numeric.inl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{40DDAD30-3FEF-4AA9-B29B-0BE6E8B9A18B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
