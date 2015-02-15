@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{40DDAD30-3FEF-4AA9-B29B-0BE6E8B9A18B}</ProjectGuid>
+    <ProjectGuid>{E71F9CEB-502A-4575-8E99-DC4D7DB6895D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Core</RootNamespace>
+    <RootNamespace>Platform</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -54,20 +54,6 @@
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="include\core\ConfigMacros.h" />
-    <ClInclude Include="include\core\Macros.h" />
-    <ClInclude Include="include\core\MacrosInternal.h" />
-    <ClInclude Include="include\core\Numeric.h" />
-    <ClInclude Include="include\core\Types.h" />
-    <ClInclude Include="include\core\Variadic.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="include\core\Numeric.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="source\Types.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

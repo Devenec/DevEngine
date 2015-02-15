@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <core/Macros.h>
 #include <core/Types.h>
 
 namespace Core
@@ -16,11 +17,11 @@ namespace Core
 	{
 	public:
 
-		inline static T epsilon(); // TODO: make constexpr
+		static DE_CONSTEXPR T epsilon();
 
-		inline static T max(); // TODO: make constexpr
+		static DE_CONSTEXPR T max();
 
-		inline static T min(); // TODO: make constexpr
+		static DE_CONSTEXPR T min();
 
 	private:
 
