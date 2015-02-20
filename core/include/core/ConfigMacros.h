@@ -14,4 +14,4 @@
  * type, and DE_TEXT() converts literals to Char16 literals. Otherwise Char8
  * character type is used.
  */
-#define DE_CONFIG_CHAR16
+//#define DE_CONFIG_CHAR16

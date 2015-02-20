@@ -12,15 +12,30 @@
 
 namespace Core
 {
+	/**
+	 * Provides numeric constants for numeric types.
+	 */
 	template<typename T>
 	class Numeric
 	{
 	public:
 
+		/**
+		 * Gets the epsilon of a floating point type.
+		 *
+		 * Epsilon is the difference between 1.0 and the next value
+		 * representable by the floating point type T.
+		 */
 		static DE_CONSTEXPR T epsilon();
 
+		/**
+		 * Gets the maximum value representable by the numeric type T.
+		 */
 		static DE_CONSTEXPR T max();
 
+		/**
+		 * Gets the minimum value representable by the numeric type T.
+		 */
 		static DE_CONSTEXPR T min();
 
 	private:

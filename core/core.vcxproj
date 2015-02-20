@@ -55,12 +55,18 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\Array.h" />
     <ClInclude Include="include\core\ConfigMacros.h" />
+    <ClInclude Include="include\core\List.h" />
     <ClInclude Include="include\core\Macros.h" />
     <ClInclude Include="include\core\MacrosInternal.h" />
+    <ClInclude Include="include\core\Map.h" />
     <ClInclude Include="include\core\Numeric.h" />
+    <ClInclude Include="include\core\String.h" />
+    <ClInclude Include="include\core\StringStream.h" />
     <ClInclude Include="include\core\Types.h" />
     <ClInclude Include="include\core\Variadic.h" />
+    <ClInclude Include="include\core\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\core\Numeric.inl" />
