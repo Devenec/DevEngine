@@ -24,16 +24,13 @@
     <ClInclude Include="include\core\List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Macros.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\core\MacrosInternal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\Numeric.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\Platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\String.h">
@@ -43,6 +40,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\UtilityMacros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\UtilityMacrosInternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\Variadic.h">

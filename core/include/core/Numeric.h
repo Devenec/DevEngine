@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <core/Macros.h>
 #include <core/Types.h>
+#include <core/UtilityMacros.h>
 
 namespace Core
 {

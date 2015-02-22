@@ -1,5 +1,5 @@
 /**
- * @file core/Macros.h
+ * @file core/UtilityMacros.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -8,9 +8,12 @@
 #pragma once
 
 #include <core/ConfigMacros.h>
-#include <core/MacrosInternal.h>
+#include <core/UtilityMacrosInternal.h>
 
 // Functions
+
+#define DE_WARNING(message) \
+	_DE_WARNING(message)
 
 /**
  * Stringifies a value.
@@ -34,7 +37,7 @@
  */
 #if defined(DE_CONFIG_CHAR16)
 	#define DE_TEXT(literal) \
-		_DE_TO_CHAR16(literal)
+		_DE_CHAR16(literal)
 #else
 	#define DE_TEXT(literal) \
 		literal
@@ -46,8 +49,9 @@
 /**
  * Constant expression
  *
- * Expands to constexpr specifier with compilers that support it. Otherwise
- * expands to inline const specifier. Intended for use with functions.
+ * Expands to "constexpr" specifier with compilers that support it. Otherwise
+ * expands to "inline const" specifier. Intended for use with functions, since
+ * not all supported compilers support constant expression functions yet.
  */
 #define DE_CONSTEXPR _DE_CONSTEXPR
 
@@ -55,15 +59,15 @@
  * Filename
  *
  * Expands to a string literal that indicates the name of the file in which
- * DE_FILE appears. The literal is processed with DE_TEXT().
+ * the macro appears. The literal is processed with DE_TEXT().
  */
 #define DE_FILE DE_TEXT(__FILE__)
 
 /**
  * Function name
  *
- * Expands to a string literal that indicates the name and signature of the
- * function in which DE_FUNCTION appears. The literal is processed with
+ * Expands to a string literal that indicates the name and signature of
+ * the function in which the macro appears. The literal is processed with
  * DE_TEXT().
  */
 #define DE_FUNCTION DE_TEXT(_DE_FUNCTION)
@@ -71,7 +75,7 @@
 /**
  * Line number
  *
- * Expands to the number of the line in which DE_LINE appears.
+ * Expands to the number of the line in which the macro appears.
  */
 #define DE_LINE __LINE__
 
