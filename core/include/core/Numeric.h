@@ -16,7 +16,7 @@ namespace Core
 	 * Provides numeric constants for numeric types.
 	 */
 	template<typename T>
-	class Numeric
+	class Numeric final
 	{
 	public:
 

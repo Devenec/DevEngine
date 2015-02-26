@@ -12,8 +12,16 @@
 
 // Functions
 
-#define DE_WARNING(message) \
-	_DE_WARNING(message)
+/**
+ * Converts a literal to Char16 literal.
+ *
+ * Prefixes the literal with "L".
+ *
+ * @param literal
+ *   A character or string literal
+ */
+#define DE_CHAR16(literal) \
+	_DE_CHAR16(literal)
 
 /**
  * Stringifies a value.
@@ -42,6 +50,15 @@
 	#define DE_TEXT(literal) \
 		literal
 #endif
+
+/**
+ * Issues a compiler warning.
+ *
+ * @param message
+ *   A warning message
+ */
+#define DE_WARNING(message) \
+	_DE_WARNING(message)
 
 
 // Keywords and variables

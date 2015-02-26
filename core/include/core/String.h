@@ -14,6 +14,12 @@
 namespace Core
 {
 	/**
+	 * Character array template 
+	 */
+	template<typename T>
+	using StringTemplate = std::basic_string<T>;
+
+	/**
 	 * Character array for Char8 type.
 	 */
 	using String8 = std::basic_string<Char8>;
