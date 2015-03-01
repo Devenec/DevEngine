@@ -13,7 +13,7 @@
 // Functions
 
 /**
- * Converts a literal to Char16 literal.
+ * Converts a character or string literal to Char16 literal.
  *
  * Prefixes the literal with "L".
  *

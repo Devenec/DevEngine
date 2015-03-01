@@ -20,25 +20,25 @@ namespace Core
 	using StringTemplate = std::basic_string<T>;
 
 	/**
-	 * Character array for Char8 type.
+	 * Character array for Char8 type
 	 */
-	using String8 = std::basic_string<Char8>;
+	using String8 = StringTemplate<Char8>;
 	
 	/**
-	 * Character array for Char16 type.
+	 * Character array for Char16 type
 	 */
-	using String16 = std::basic_string<Char16>;
+	using String16 = StringTemplate<Char16>;
 
 	/**
-	 * Common character array.
+	 * Common character array
 	 *
 	 * If DE_CONFIG_CHAR16 is defined, the underlying type is Char16. Otherwise
 	 * the type is Char8.
 	 */
 	using String =
 #if defined(DE_CONFIG_CHAR16)
-	String16;
+		StringTemplate<Char16>;
 #else
-	String8;
+		StringTemplate<Char8>;
 #endif
 }

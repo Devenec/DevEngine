@@ -24,6 +24,9 @@
     <ClInclude Include="include\core\List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,23 +57,20 @@
     <ClInclude Include="include\core\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\core\Numeric.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="include\core\Log.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="include\core\Numeric.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Types.cpp">
+    <ClCompile Include="source\Log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Log.cpp">
+    <ClCompile Include="source\Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

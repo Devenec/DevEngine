@@ -12,7 +12,7 @@
 namespace Core
 {
 	/**
-	 * Dynamic-size array.
+	 * Dynamic-size array
 	 */
 	template<typename T>
 	using Vector = std::vector<T>;

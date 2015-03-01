@@ -12,7 +12,7 @@
 namespace Core
 {
 	/**
-	 * Doubly-linked list.
+	 * Doubly-linked list
 	 */
 	template<typename T>
 	using List = std::list<T>;

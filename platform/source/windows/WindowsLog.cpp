@@ -16,16 +16,18 @@ using namespace Core;
 
 // External
 
-static const Array<const Char8*, 3u> LOG_LEVEL_NAMES_8 =
+static const Array<const Char8*, 4u> LEVEL_IDENTIFIERS_8 =
 {
 	"DEBUG  ",
+	"INFO   ",
 	"WARNING",
 	"ERROR  "
 };
 
-static const Array<const Char16*, 3u> LOG_LEVEL_NAMES_16 =
+static const Array<const Char16*, 4u> LEVEL_IDENTIFIERS_16 =
 {
 	L"DEBUG  ",
+	L"INFO   ",
 	L"WARNING",
 	L"ERROR  "
 };
@@ -34,15 +36,15 @@ static const Array<const Char16*, 3u> LOG_LEVEL_NAMES_16 =
 // Private
 
 template<>
-void Log::writeToConsole<Char8>(const LogLevel& level, const StringTemplate<Char8>& message)
+void Log::writeToConsole(const LogLevel& level, const StringTemplate<Char8>& message)
 {
-	const Char8* logLevelName = LOG_LEVEL_NAMES_8[static_cast<Int32>(level)];
+	const Char8* logLevelName = LEVEL_IDENTIFIERS_8[static_cast<Int32>(level)];
 	printf(_DE_LOG_MESSAGE_FORMAT, logLevelName, message.c_str());
 }
 
 template<>
 void Log::writeToConsole<Char16>(const LogLevel& level, const StringTemplate<Char16>& message)
 {
-	const Char16* logLevelName = LOG_LEVEL_NAMES_16[static_cast<Int32>(level)];
+	const Char16* logLevelName = LEVEL_IDENTIFIERS_16[static_cast<Int32>(level)];
 	wprintf(DE_CHAR16(_DE_LOG_MESSAGE_FORMAT), logLevelName, message.c_str());
 }

@@ -12,7 +12,7 @@
 namespace Core
 {
 	/**
-	 * Unordered map for storing key-value pairs with unique keys.
+	 * Unordered map for storing key-value pairs with unique keys
 	 */
 	template<typename Key, typename T>
 	using Map = std::unordered_map<Key, T>;

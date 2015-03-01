@@ -8,6 +8,7 @@
 #pragma once
 
 #include <core/String.h>
+#include <core/StringStream.h>
 #include <core/Types.h>
 
 namespace Core
@@ -15,6 +16,7 @@ namespace Core
 	enum class LogLevel
 	{
 		Debug,
+		Info,
 		Warning,
 		Error
 	};
@@ -23,24 +25,32 @@ namespace Core
 	{
 	public:
 
+		typedef void (*Flush)(Log& log);
+
 		Log();
 
 		~Log();
 
-		LogLevel filterLevel() const;
+		inline LogLevel filterLevel() const;
 
-		void setfilterLevel(const LogLevel& value);
+		inline void setfilterLevel(const LogLevel& value);
 
-		void write(const LogLevel& level, const Char8* message);
+		void write(const LogLevel& level, const String& message);
 
-		void write(const LogLevel& level, const Char16* message);
+		inline Log& operator <<(const LogLevel& value);
+
+		inline Log& operator <<(const Flush& flush);
 
 		template<typename T>
-		void write(const LogLevel& level, const StringTemplate<T>& message);
+		Log& operator <<(const T& value);
+
+		static inline void flush(Log& log);
 
 	private:
 
+		StringStreamTemplate<Char> _stream;
 		LogLevel _filterLevel;
+		LogLevel _streamLevel;
 
 		Log(const Log& log) = delete;
 		Log(Log&& log) = delete;

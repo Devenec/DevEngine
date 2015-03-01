@@ -13,7 +13,7 @@
 namespace Core
 {
 	/**
-	 * Fixed-size array.
+	 * Fixed-size array
 	 */
 	template<typename T, Uint32 Size>
 	using Array = std::array<T, Size>;

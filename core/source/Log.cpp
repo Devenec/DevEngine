@@ -12,26 +12,13 @@ using namespace Core;
 // Public
 
 Log::Log()
-	: _filterLevel(LogLevel::Debug) { }
+	: _filterLevel(LogLevel::Debug),
+	  _streamLevel(LogLevel::Debug) { }
 
 Log::~Log() { }
 
-LogLevel Log::filterLevel() const
+void Log::write(const LogLevel& level, const String& message)
 {
-	return _filterLevel;
-}
-
-void Log::setfilterLevel(const LogLevel& value)
-{
-	_filterLevel = value;
-}
-
-void Log::write(const LogLevel& level, const Char8* message)
-{
-	write<Char8>(level, message);
-}
-
-void Log::write(const LogLevel& level, const Char16* message)
-{
-	write<Char16>(level, message);
+	if(level >= _filterLevel)
+		writeToConsole(level, message);
 }
