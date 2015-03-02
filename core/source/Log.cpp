@@ -11,14 +11,16 @@ using namespace Core;
 
 // Public
 
-Log::Log()
-	: _filterLevel(LogLevel::Debug),
-	  _streamLevel(LogLevel::Debug) { }
-
-Log::~Log() { }
-
 void Log::write(const LogLevel& level, const String& message)
 {
 	if(level >= _filterLevel)
 		writeToConsole(level, message);
 }
+
+// Private
+
+Log::Log()
+	: _filterLevel(LogLevel::Debug),
+	  _streamLevel(LogLevel::Debug) { }
+
+Log::~Log() { }

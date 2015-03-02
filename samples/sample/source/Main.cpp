@@ -7,24 +7,17 @@
 
 #include <core/ConfigMacros.h>
 #include <core/Log.h>
+#include <core/LogManager.h>
 #include <core/String.h>
-
-//
-#if defined(DE_CONFIG_CHAR16)
-#include <fcntl.h>
-#include <io.h>
-#endif
-//
 
 using namespace Core;
 
 int main()
 {
-	Log log;
+	LogManager logManager;
+	Log& log = logManager.log();
 
 #if defined(DE_CONFIG_CHAR16)
-	_setmode(_fileno(stdout), _O_U16TEXT);
-
 	String16 message(L"Hello wörld!");
 	log.write(LogLevel::Debug, L"Hello wörld!");
 	log.write(LogLevel::Debug, message);

@@ -27,10 +27,6 @@ namespace Core
 
 		typedef void (*Flush)(Log& log);
 
-		Log();
-
-		~Log();
-
 		inline LogLevel filterLevel() const;
 
 		inline void setfilterLevel(const LogLevel& value);
@@ -48,12 +44,16 @@ namespace Core
 
 	private:
 
+		friend class LogManager;
+
 		StringStreamTemplate<Char> _stream;
 		LogLevel _filterLevel;
 		LogLevel _streamLevel;
 
+		Log();
 		Log(const Log& log) = delete;
 		Log(Log&& log) = delete;
+		~Log();
 
 		template<typename T>
 		void writeToConsole(const LogLevel& level, const StringTemplate<T>& message);

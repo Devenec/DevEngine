@@ -26,5 +26,8 @@
     <ClCompile Include="source\windows\WindowsLog.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
+    <ClCompile Include="source\windows\WindowsLogManager.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

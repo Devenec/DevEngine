@@ -61,9 +61,11 @@
     <ClInclude Include="include\core\ConfigMacros.h" />
     <ClInclude Include="include\core\List.h" />
     <ClInclude Include="include\core\Log.h" />
+    <ClInclude Include="include\core\LogManager.h" />
     <ClInclude Include="include\core\Map.h" />
     <ClInclude Include="include\core\Numeric.h" />
     <ClInclude Include="include\core\Platform.h" />
+    <ClInclude Include="include\core\Singleton.h" />
     <ClInclude Include="include\core\String.h" />
     <ClInclude Include="include\core\StringStream.h" />
     <ClInclude Include="include\core\Types.h" />
@@ -75,9 +77,11 @@
   <ItemGroup>
     <None Include="include\core\Log.inl" />
     <None Include="include\core\Numeric.inl" />
+    <None Include="include\core\Singleton.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Log.cpp" />
+    <ClCompile Include="source\LogManager.cpp" />
     <ClCompile Include="source\Types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
