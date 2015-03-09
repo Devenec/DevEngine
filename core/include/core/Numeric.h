@@ -31,12 +31,12 @@ namespace Core
 		/**
 		 * Gets the maximum value representable by the numeric type T.
 		 */
-		static DE_CONSTEXPR T max();
+		static DE_CONSTEXPR T maximum();
 
 		/**
 		 * Gets the minimum value representable by the numeric type T.
 		 */
-		static DE_CONSTEXPR T min();
+		static DE_CONSTEXPR T minimum();
 
 	private:
 

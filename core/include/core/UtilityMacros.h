@@ -18,10 +18,16 @@
  * Prefixes the literal with "L".
  *
  * @param literal
- *   A character or string literal
+ *   A character or string literal, or a macro that expands to a literal
  */
 #define DE_CHAR16(literal) \
 	_DE_CHAR16(literal)
+
+/**
+ * Breaks the debugger as if a breakpoint had been hit.
+ */
+#define DE_DEBUG_BREAK() \
+	_DE_DEBUG_BREAK()
 
 /**
  * Stringifies a value.
@@ -29,7 +35,7 @@
  * Converts "value" to a string literal by surrounding it with quotation marks.
  *
  * @param value
- *   An identifier or a macro argument
+ *   An identifier or a macro
  */
 #define DE_STRING(value) \
 	_DE_STRING(value)
@@ -41,7 +47,7 @@
  * by prefixing it with "L". Otherwise "literal" is not changed.
  *
  * @param literal
- *   A character or string literal
+ *   A character or string literal, or a macro that expands to a literal
  */
 #if defined(DE_CONFIG_CHAR16)
 	#define DE_TEXT(literal) \

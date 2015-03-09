@@ -12,7 +12,7 @@
 
 namespace Core
 {
-	class LogManager : public Singleton<LogManager>
+	class LogManager final : public Singleton<LogManager>
 	{
 	public:
 

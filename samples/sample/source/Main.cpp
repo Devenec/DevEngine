@@ -9,6 +9,9 @@
 #include <core/Log.h>
 #include <core/LogManager.h>
 #include <core/String.h>
+#include <core/UtilityMacros.h>
+#include <core/debug/Assert.h>
+#include <core/debug/StackTrace.h>
 
 using namespace Core;
 
@@ -36,6 +39,26 @@ int main()
 	log.setfilterLevel(LogLevel::Error);
 	log.write(LogLevel::Info, "This should not be logged");
 #endif
+
+	Debug::StackTrace stackTrace(10u);
+	Debug::StackEntries stackEntries = stackTrace.generate();
+	log.setfilterLevel(LogLevel::Debug);
+	log << LogLevel::Debug << DE_TEXT("Stack trace:\n");
+
+	for(Uint32 i = 0u, size = stackEntries.size(); i < size; i++)
+	{
+		if(i != 0u)
+			log << DE_TEXT('\n');
+
+		log << DE_TEXT('\t') << i << DE_TEXT(": ") << stackEntries[i].functionName << DE_TEXT(" (0x") << std::hex <<
+			stackEntries[i].address << std::dec << DE_TEXT(") @ ") << stackEntries[i].filepath <<
+			DE_TEXT(" on line ") << stackEntries[i].fileLine;
+	}
+
+	log << Log::flush;
+	
+	DE_ASSERT(true);
+	//DE_ASSERT(false);
 
 	return 0;
 }

@@ -1,5 +1,5 @@
 /**
- * @file platform/windows/LogManager.cpp
+ * @file platform/windows/WindowsLogManager.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa

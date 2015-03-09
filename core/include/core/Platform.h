@@ -33,22 +33,22 @@
  * Defines the following macros:
  *
  * DE_ARCHITECTURE
- *   Specifies the target processor architecture. Its value is one of the
+ *   Specifies the target processor architecture. The value is one of the
  *   DE_ARCHITECTURE_* values defined above.
  *
  * DE_COMPILER
- *   Specifies the compiler. Its value is one of the DE_COMPILER_* values
+ *   Specifies the compiler. The value is one of the DE_COMPILER_* values
  *   defined above.
  *
  * DE_COMPILER_VERSION
  *   Specifies the version of the compiler.
  *
  * DE_CONFIG
- *   Specifies the build configuration. Its value is one of the DE_CONFIG_*
+ *   Specifies the build configuration. The value is one of the DE_CONFIG_*
  *   values defined above.
  *
  * DE_PLATFORM
- *   Specifies the target platform. Its value is one of the DE_PLATFORM_*
+ *   Specifies the target platform. The value is one of the DE_PLATFORM_*
  *   values defined above.
  */
 #include <platform/PlatformInternal.h>

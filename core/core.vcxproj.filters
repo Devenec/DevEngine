@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\debug">
+      <UniqueIdentifier>{7957408a-4a5d-4984-a952-d8c818fe69bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\debug">
+      <UniqueIdentifier>{0fd53b2c-3230-417e-9aaf-b65aa60dfc90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\core\Array.h">
@@ -63,6 +69,12 @@
     <ClInclude Include="include\core\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\debug\Assert.h">
+      <Filter>Header Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\debug\StackTrace.h">
+      <Filter>Header Files\debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\core\Log.inl">
@@ -84,6 +96,9 @@
     </ClCompile>
     <ClCompile Include="source\Types.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\debug\Assert.cpp">
+      <Filter>Source Files\debug</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

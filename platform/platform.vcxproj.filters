@@ -16,17 +16,29 @@
     <Filter Include="Source Files\windows">
       <UniqueIdentifier>{3b414000-a269-4c3b-b8b7-7192d2ea7f45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\windows">
+      <UniqueIdentifier>{e4967b5d-4f79-4fd9-b8f5-a04b0f4e2b79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\platform\PlatformInternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\windows\Windows.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\windows\Windows.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
     <ClCompile Include="source\windows\WindowsLog.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
     <ClCompile Include="source\windows\WindowsLogManager.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\windows\WindowsStackTrace.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
   </ItemGroup>

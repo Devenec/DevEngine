@@ -62,6 +62,9 @@
 // Platform specific internal keywords and variables
 
 #if DE_COMPILER == DE_COMPILER_MSVC
+	#define _DE_DEBUG_BREAK() \
+		__asm int 3
+
 	#define _DE_CONSTEXPR	 inline const
 	#define _DE_FUNCTION	 __FUNCSIG__
 	#define _DE_NO_OPERATION __noop

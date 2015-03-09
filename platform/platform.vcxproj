@@ -58,10 +58,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\platform\PlatformInternal.h" />
+    <ClInclude Include="include\platform\windows\Windows.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\windows\Windows.cpp" />
     <ClCompile Include="source\windows\WindowsLog.cpp" />
     <ClCompile Include="source\windows\WindowsLogManager.cpp" />
+    <ClCompile Include="source\windows\WindowsStackTrace.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
