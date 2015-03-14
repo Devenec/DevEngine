@@ -5,13 +5,9 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
-#include <core/ConfigMacros.h>
 #include <core/LogManager.h>
-
-#if defined(DE_CONFIG_CHAR16)
-	#include <fcntl.h>
-	#include <io.h>
-#endif
+#include <core/Types.h>
+#include <platform/windows/Windows.h>
 
 using namespace Core;
 
@@ -19,7 +15,6 @@ using namespace Core;
 
 void LogManager::initialise()
 {
-#if defined(DE_CONFIG_CHAR16)
-	_setmode(_fileno(stdout), _O_U16TEXT);
-#endif
+	const Int32 result = SetConsoleOutputCP(CP_UTF8);
+	DE_ASSERT_WINDOWS(result != 0);
 }

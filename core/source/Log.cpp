@@ -11,10 +11,19 @@ using namespace Core;
 
 // Public
 
-void Log::write(const LogLevel& level, const String& message)
+void Log::write(const LogLevel& level, const String8& message)
 {
 	if(level >= _filterLevel)
 		writeToConsole(level, message);
+}
+
+// Operators
+
+template<>
+Log& Log::operator <<(const String16& value)
+{
+	_stream << toString8(value);
+	return *this;
 }
 
 // Private

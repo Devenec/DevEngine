@@ -35,7 +35,7 @@ T* Singleton<T>::_instance = nullptr;
 template<typename T>
 Singleton<T>::Singleton()
 {
-	// TODO: check whether an instance already exists
+	DE_ASSERT(_instance == nullptr);
 	_instance = static_cast<T*>(this);
 }
 

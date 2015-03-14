@@ -31,14 +31,16 @@ namespace Core
 
 		inline void setfilterLevel(const LogLevel& value);
 
-		void write(const LogLevel& level, const String& message);
+		void write(const LogLevel& level, const String8& message);
 
-		inline Log& operator <<(const LogLevel& value);
+		inline Log& operator <<(const LogLevel& logLevel);
 
 		inline Log& operator <<(const Flush& flush);
 
+		inline Log& operator <<(const Char16* characters);
+
 		template<typename T>
-		Log& operator <<(const T& value);
+		inline Log& operator <<(const T& value);
 
 		static inline void flush(Log& log);
 
@@ -46,7 +48,7 @@ namespace Core
 
 		friend class LogManager;
 
-		StringStreamTemplate<Char> _stream;
+		StringStream8 _stream;
 		LogLevel _filterLevel;
 		LogLevel _streamLevel;
 
@@ -55,8 +57,7 @@ namespace Core
 		Log(Log&& log) = delete;
 		~Log();
 
-		template<typename T>
-		void writeToConsole(const LogLevel& level, const StringTemplate<T>& message);
+		void writeToConsole(const LogLevel& level, const String8& message);
 
 		Log& operator =(const Log& log) = delete;
 	};

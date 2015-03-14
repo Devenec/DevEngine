@@ -47,28 +47,31 @@
 
 // Internal functions
 
-#define __DE_STRING(value) \
-	_DE_STRING(value)
+#define __DE_STRING8(value) \
+	_DE_STRING8(value)
 
 
 // Platform specific internal functions
 
 #if DE_COMPILER == DE_COMPILER_MSVC
-	#define _DE_WARNING(msg) \
-		__pragma(message(__FILE__ "(" __DE_STRING(__LINE__) ") : warning: \"" msg "\""))
+	#define _DE_CHAR16(value) \
+		L ## value
+
+	#define _DE_COMPILER_WARN(msg) \
+		__pragma(message(__FILE__ "(" __DE_STRING8(__LINE__) ") : warning: \"" msg "\""))
+
+	#define _DE_DEBUGGER_BREAK() \
+		__asm int 3
 #endif
 
 
 // Platform specific internal keywords and variables
 
 #if DE_COMPILER == DE_COMPILER_MSVC
-	#define _DE_DEBUG_BREAK() \
-		__asm int 3
-
 	#define _DE_CONSTEXPR	 inline const
 	#define _DE_FUNCTION	 __FUNCSIG__
 	#define _DE_NO_OPERATION __noop
 #endif
 
 
-#undef __DE_STRING
+#undef __DE_STRING8

@@ -20,5 +20,5 @@
 
 namespace Platform
 {
-	void failWindowsAssertion(const Char* file, const Char* function, const Uint32 line);
+	void failWindowsAssertion(const Char8* file, const Char8* function, const Uint32 line);
 }

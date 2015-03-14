@@ -9,10 +9,7 @@
 
 // Internal functions
 
-#define _DE_CHAR16(literal) \
-	L ## literal
-
-#define _DE_STRING(value) \
+#define _DE_STRING8(value) \
 	#value
 
 

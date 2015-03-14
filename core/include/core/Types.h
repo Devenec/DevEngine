@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <core/ConfigMacros.h>
-
 /**
  * Boolean
  *
@@ -72,26 +70,11 @@ using Float32 = float;
 using Float64 = double;
 
 /**
- * 8-bit character
- *
- * The encoding is platform-dependent.
+ * 8-bit unicode character (UTF-8)
  */
 using Char8 = char;
 
 /**
- * 16-bit unicode character
+ * 16-bit unicode character (UTF-16)
  */
 using Char16 = wchar_t;
-
-/**
- * Common character
- *
- * If DE_CONFIG_CHAR16 is defined, the type is Char16. Otherwise the type is
- * Char8.
- */
-using Char =
-#if defined(DE_CONFIG_CHAR16)
-	Char16;
-#else
-	Char8;
-#endif

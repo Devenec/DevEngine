@@ -8,7 +8,6 @@
 #pragma once
 
 #include <string>
-#include <core/ConfigMacros.h>
 #include <core/Types.h>
 
 namespace Core
@@ -20,25 +19,32 @@ namespace Core
 	using StringTemplate = std::basic_string<T>;
 
 	/**
-	 * Character array for Char8 type
+	 * Character array for the Char8 type
 	 */
 	using String8 = StringTemplate<Char8>;
 	
 	/**
-	 * Character array for Char16 type
+	 * Character array for the Char16 type
 	 */
 	using String16 = StringTemplate<Char16>;
 
 	/**
-	 * Common character array
+	 * Converts a String16 string to a String8 string.
 	 *
-	 * If DE_CONFIG_CHAR16 is defined, the underlying type is Char16. Otherwise
-	 * the type is Char8.
+	 * @param string
+	 *   The string to convert
+	 * @return
+	 *   The converted string
 	 */
-	using String =
-#if defined(DE_CONFIG_CHAR16)
-		StringTemplate<Char16>;
-#else
-		StringTemplate<Char8>;
-#endif
+	String8 toString8(const String16& string);
+
+	/**
+	 * Converts a String8 string to a String16 string.
+	 *
+	 * @param string
+	 *   The string to convert
+	 * @return
+	 *   The converted string
+	 */
+	String16 toString16(const String8& string);
 }

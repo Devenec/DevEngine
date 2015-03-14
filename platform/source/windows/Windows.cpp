@@ -14,15 +14,14 @@ using namespace Core;
 
 // Platform
 
-void Platform::failWindowsAssertion(const Char* file, const Char* function, const Uint32 line)
+void Platform::failWindowsAssertion(const Char8* file, const Char8* function, const Uint32 line)
 {
 	if(LogManager::hasInstance())
 	{
-		LogManager::instance().log() << LogLevel::Error << DE_TEXT("Windows assertion failed @ ") << file <<
-			DE_TEXT(" in function ") << function << DE_TEXT(" on line ") << line << DE_TEXT(", error code ") <<
-			GetLastError() << Log::flush;
+		LogManager::instance().log() << LogLevel::Error << "Windows assertion failed @ " << file << " in function " <<
+			function << " on line " << line << ", error code " << GetLastError() << Log::flush;
 	}
 
-	DE_DEBUG_BREAK();
+	DE_DEBUGGER_BREAK();
 	std::abort();
 }

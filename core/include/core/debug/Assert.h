@@ -11,14 +11,13 @@
 #include <core/Types.h>
 
 /**
- * Calls Debug::failAssertion() if an expression evaluates to false.
+ * Calls Debug::failAssertion() if "expression" evaluates to false.
  *
  * @param expression
  *   A boolean expression to evaluate
  */
 #define DE_ASSERT(expression) \
-	(expression) ? DE_NO_OPERATION : Debug::failAssertion(DE_TEXT(DE_STRING(expression)), DE_FILE, DE_FUNCTION, \
-		DE_LINE)
+	(expression) ? DE_NO_OPERATION : Debug::failAssertion(DE_STRING8(expression), DE_FILE, DE_FUNCTION, DE_LINE)
 
 namespace Debug
 {
@@ -36,5 +35,5 @@ namespace Debug
 	 * @param line
 	 *   The line number on which the assertion failed
 	 */
-	void failAssertion(const Char* expression, const Char* file, const Char* function, const Uint32 line);
+	void failAssertion(const Char8* expression, const Char8* file, const Char8* function, const Uint32 line);
 }

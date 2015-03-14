@@ -14,15 +14,14 @@ using namespace Core;
 
 // Debug
 
-void Debug::failAssertion(const Char* expression, const Char* file, const Char* function, const Uint32 line)
+void Debug::failAssertion(const Char8* expression, const Char8* file, const Char8* function, const Uint32 line)
 {
 	if(LogManager::hasInstance())
 	{
-		LogManager::instance().log() << LogLevel::Error << DE_TEXT("Assertion failed @ ") << file <<
-			DE_TEXT(" in function ") << function << DE_TEXT(" on line ") << line << DE_TEXT(": ") << expression <<
-			Log::flush;
+		LogManager::instance().log() << LogLevel::Error << "Assertion failed @ " << file << " in function " <<
+			function << " on line " << line << ": " << expression << Log::flush;
 	}
 
-	DE_DEBUG_BREAK();
+	DE_DEBUGGER_BREAK();
 	std::abort();
 }

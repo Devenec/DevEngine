@@ -30,7 +30,7 @@
 
 
 /**
- * Defines the following macros:
+ * The following macros are defined in the interal header file:
  *
  * DE_ARCHITECTURE
  *   Specifies the target processor architecture. The value is one of the

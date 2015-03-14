@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <core/debug/Assert.h>
+
 namespace Core
 {
 	template<typename T>

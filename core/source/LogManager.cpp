@@ -16,7 +16,4 @@ LogManager::LogManager()
 	initialise();
 }
 
-LogManager::~LogManager()
-{
-	// TODO: deinitialise???
-}
+LogManager::~LogManager() { }

@@ -63,9 +63,6 @@
     <ClInclude Include="include\core\UtilityMacrosInternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Variadic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\core\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -92,6 +89,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\LogManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Types.cpp">

@@ -71,7 +71,6 @@
     <ClInclude Include="include\core\Types.h" />
     <ClInclude Include="include\core\UtilityMacros.h" />
     <ClInclude Include="include\core\UtilityMacrosInternal.h" />
-    <ClInclude Include="include\core\Variadic.h" />
     <ClInclude Include="include\core\Vector.h" />
     <ClInclude Include="include\core\debug\Assert.h" />
     <ClInclude Include="include\core\debug\StackTrace.h" />
@@ -84,6 +83,7 @@
   <ItemGroup>
     <ClCompile Include="source\Log.cpp" />
     <ClCompile Include="source\LogManager.cpp" />
+    <ClCompile Include="source\String.cpp" />
     <ClCompile Include="source\Types.cpp" />
     <ClCompile Include="source\debug\Assert.cpp" />
   </ItemGroup>

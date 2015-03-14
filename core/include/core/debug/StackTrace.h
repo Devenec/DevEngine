@@ -15,8 +15,8 @@ namespace Debug
 {
 	struct StackEntry final
 	{
-		Core::String filepath;
-		Core::String functionName;
+		Core::String8 filepath;
+		Core::String8 functionName;
 		Uint64 address;
 		Uint32 fileLine;
 	};
@@ -35,10 +35,9 @@ namespace Debug
 
 	private:
 
-		template<typename T>
 		class Impl;
 
-		Impl<Char>* _impl;
+		Impl* _impl;
 
 		StackTrace(const StackTrace& stackTrace) = delete;
 		StackTrace(StackTrace&& stackTrace) = delete;
