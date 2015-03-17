@@ -21,6 +21,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\Array.h">
       <Filter>Header Files</Filter>
     </ClInclude>

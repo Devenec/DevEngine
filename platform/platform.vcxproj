@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\windows\Windows.cpp" />
+    <ClCompile Include="source\windows\WindowsApplication.cpp" />
     <ClCompile Include="source\windows\WindowsLog.cpp" />
     <ClCompile Include="source\windows\WindowsLogManager.cpp" />
     <ClCompile Include="source\windows\WindowsStackTrace.cpp" />

@@ -32,6 +32,9 @@
     <ClCompile Include="source\windows\Windows.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
+    <ClCompile Include="source\windows\WindowsApplication.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
     <ClCompile Include="source\windows\WindowsLog.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>

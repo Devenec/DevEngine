@@ -57,6 +57,7 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\Application.h" />
     <ClInclude Include="include\core\Array.h" />
     <ClInclude Include="include\core\ConfigMacros.h" />
     <ClInclude Include="include\core\List.h" />
