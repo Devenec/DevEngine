@@ -6,6 +6,7 @@
  */
 
 #include <core/Array.h>
+#include <core/Memory.h>
 #include <core/Numeric.h>
 #include <core/UtilityMacros.h>
 #include <core/debug/StackTrace.h>
@@ -124,7 +125,7 @@ private:
 // Public
 
 StackTrace::StackTrace(const Uint32 maxEntryCount)
-	: _impl(new Impl(maxEntryCount)) { }
+	: _impl(DE_ALLOC Impl(maxEntryCount)) { }
 
 StackTrace::~StackTrace()
 {

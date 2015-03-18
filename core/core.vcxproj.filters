@@ -75,6 +75,12 @@
     <ClInclude Include="include\core\debug\StackTrace.h">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\debug\AllocationTrace.h">
+      <Filter>Header Files\debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\core\Log.inl">
@@ -101,6 +107,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\debug\Assert.cpp">
+      <Filter>Source Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\debug\AllocationTrace.cpp">
       <Filter>Source Files\debug</Filter>
     </ClCompile>
   </ItemGroup>
