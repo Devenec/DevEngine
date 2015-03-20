@@ -7,9 +7,10 @@
 
 #include <cstdlib>
 #include <core/Memory.h>
-#include <core/debug/AllocationTrace.h>
 #include <core/debug/Assert.h>
+#include <core/debug/AllocationTrace.h>
 
+using namespace Core;
 using namespace Debug;
 
 void* operator new(Uint32 size)
@@ -20,27 +21,30 @@ void* operator new(Uint32 size)
 	return pointer;
 }
 
-void* operator new[](Uint32 size)
-{
-	return ::operator new(size);
-}
-
 void* operator new(Uint32 size, const Char8* file, const Char8* function, const Uint32 line)
 {
 	void* pointer = ::operator new(size);
 
-	if(AllocationTrace::hasInstance()) // TODO: what if there is no instance?
+	if(AllocationTrace::hasInstance())
 		AllocationTrace::instance().addAllocation(pointer, file, function, line);
 
 	return pointer;
 }
 
+void* operator new[](Uint32 size)
+{
+	return ::operator new(size);
+}
+
+void* operator new[](Uint32 size, const Char8* file, const Char8* function, const Uint32 line)
+{
+	return ::operator new(size, file, function, line);
+}
+
 void operator delete(void* pointer)
 {
-#if DE_BUILD_CONFIG != DE_BUILD_CONFIG_PRODUCTION
-	if(pointer != nullptr && AllocationTrace::hasInstance()) // TODO: what if there is no instance?
+	if(AllocationTrace::hasInstance())
 		AllocationTrace::instance().removeAllocation(pointer);
-#endif
 
 	std::free(pointer);
 }

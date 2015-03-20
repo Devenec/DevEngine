@@ -10,7 +10,7 @@
 // Static
 
 template<typename T>
-bool Singleton<T>::hasInstance()
+Bool Singleton<T>::hasInstance()
 {
 	return _instance != nullptr;
 }

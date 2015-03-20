@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <core/Platform.h>
 #include <core/UtilityMacros.h>
 #include <core/Types.h>
 
@@ -16,8 +17,13 @@
  * @param expression
  *   A boolean expression to evaluate
  */
-#define DE_ASSERT(expression) \
-	(expression) ? DE_NO_OPERATION : Debug::failAssertion(DE_STRING8(expression), DE_FILE, DE_FUNCTION, DE_LINE)
+#if DE_BUILD_CONFIG == DE_BUILD_CONFIG_PRODUCTION
+	#define DE_ASSERT(expression) \
+		DE_NO_OPERATION
+#else
+	#define DE_ASSERT(expression) \
+		(expression) ? DE_NO_OPERATION : Debug::failAssertion(DE_STRING8(expression), DE_FILE, DE_FUNCTION, DE_LINE)
+#endif
 
 namespace Debug
 {

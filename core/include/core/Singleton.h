@@ -8,6 +8,7 @@
 #pragma once
 
 #include <core/debug/Assert.h>
+#include <core/Types.h>
 
 namespace Core
 {
@@ -16,7 +17,7 @@ namespace Core
 	{
 	public:
 
-		static inline bool hasInstance();
+		static inline Bool hasInstance();
 
 		static inline T& instance();
 

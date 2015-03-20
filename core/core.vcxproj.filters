@@ -42,6 +42,9 @@
     <ClInclude Include="include\core\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\Numeric.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,16 +72,13 @@
     <ClInclude Include="include\core\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\debug\AllocationTrace.h">
+      <Filter>Header Files\debug</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\debug\Assert.h">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
     <ClInclude Include="include\core\debug\StackTrace.h">
-      <Filter>Header Files\debug</Filter>
-    </ClInclude>
-    <ClInclude Include="include\core\Memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\core\debug\AllocationTrace.h">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
   </ItemGroup>
@@ -100,19 +100,19 @@
     <ClCompile Include="source\LogManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\Memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\debug\Assert.cpp">
+    <ClCompile Include="source\debug\AllocationTrace.cpp">
       <Filter>Source Files\debug</Filter>
     </ClCompile>
-    <ClCompile Include="source\Memory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\debug\AllocationTrace.cpp">
+    <ClCompile Include="source\debug\Assert.cpp">
       <Filter>Source Files\debug</Filter>
     </ClCompile>
   </ItemGroup>
