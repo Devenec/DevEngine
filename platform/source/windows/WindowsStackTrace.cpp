@@ -125,7 +125,7 @@ private:
 // Public
 
 StackTrace::StackTrace(const Uint32 maxEntryCount)
-	: _impl(DE_ALLOC Impl(maxEntryCount)) { }
+	: _impl(DE_NEW Impl(maxEntryCount)) { }
 
 StackTrace::~StackTrace()
 {

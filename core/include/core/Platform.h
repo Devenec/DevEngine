@@ -11,18 +11,23 @@
 
 #define DE_ARCHITECTURE_X86 1
 
+
 // Supported compilers
 
 #define DE_COMPILER_MSVC 1
 
+
 // Minimum supported compiler versions
 
-#define DE_MIN_COMPILER_VERSION_MSVC 1800
+#define DE_COMPILER_VERSION_MIN_MSVC 1800
+
 
 // Supported build configurations
 
-#define DE_CONFIG_DEBUG	  1
-#define DE_CONFIG_RELEASE 2
+#define DE_BUILD_CONFIG_DEBUG	   1
+#define DE_BUILD_CONFIG_RELEASE	   2
+#define DE_BUILD_CONFIG_PRODUCTION 3
+
 
 // Supported platforms
 
@@ -43,9 +48,9 @@
  * DE_COMPILER_VERSION
  *   Specifies the version of the compiler.
  *
- * DE_CONFIG
- *   Specifies the build configuration. The value is one of the DE_CONFIG_*
- *   values defined above.
+ * DE_BUILD_CONFIG
+ *   Specifies the build configuration. The value is one of the
+ *   DE_BUILD_CONFIG_* values defined above.
  *
  * DE_PLATFORM
  *   Specifies the target platform. The value is one of the DE_PLATFORM_*

@@ -7,11 +7,18 @@
 
 #pragma once
 
+#include <core/Platform.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
 
-#define DE_ALLOC new (DE_FILE, DE_FUNCTION, DE_LINE)
+#if DE_BUILD_CONFIG == DE_BUILD_CONFIG_PRODUCTION
+	#define DE_NEW new
+#else
+	#define DE_NEW new (DE_FILE, DE_FUNCTION, DE_LINE)
+#endif
 
-#define DE_DEALLOC delete
+#define DE_DELETE delete
 
 void* operator new(Uint32 size, const Char8* file, const Char8* function, const Uint32 line);
+
+void* operator new[](Uint32 size, const Char8* file, const Char8* function, const Uint32 line);
