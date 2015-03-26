@@ -10,8 +10,11 @@
 #include <core/LogManager.h>
 #include <core/String.h>
 #include <core/UtilityMacros.h>
+#include <graphics/Window.h>
+#include <graphics/WindowManager.h>
 
 using namespace Core;
+using namespace Graphics;
 
 void devEngineMain(const StartupParameters& startupParameters)
 {
@@ -30,4 +33,12 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	log.setfilterLevel(LogLevel::Warning);
 	log.write(LogLevel::Info, "This should not be logged");
+	log.setfilterLevel(LogLevel::Debug);
+
+	WindowManager windowManager;
+	Window* window = windowManager.createWindow();
+	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
+	window->show();
+
+	while(window->processMessages()) { }
 }
