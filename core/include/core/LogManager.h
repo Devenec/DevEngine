@@ -16,9 +16,9 @@ namespace Core
 	{
 	public:
 
-		LogManager();
+		inline LogManager();
 
-		~LogManager();
+		~LogManager() = default;
 
 		inline Log& log();
 
@@ -29,13 +29,11 @@ namespace Core
 		LogManager(const LogManager& logManager) = delete;
 		LogManager(LogManager&& logManager) = delete;
 
-		void initialise();
+		void initialise() const;
 
 		LogManager& operator =(const LogManager& logManager) = delete;
+		LogManager& operator =(LogManager&& logManager) = delete;
 	};
 
-	Log& LogManager::log()
-	{
-		return _log;
-	}
+#include "inline/LogManager.inl"
 }

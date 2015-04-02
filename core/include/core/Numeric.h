@@ -46,7 +46,8 @@ namespace Core
 		~Numeric() = delete;
 
 		Numeric& operator =(const Numeric& numeric) = delete;
+		Numeric& operator =(Numeric&& numeric) = delete;
 	};
 
-#include "Numeric.inl"
+#include "inline/Numeric.inl"
 }

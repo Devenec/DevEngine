@@ -1,5 +1,5 @@
 /**
- * @file core/Singleton.inl
+ * @file core/inline/Singleton.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa

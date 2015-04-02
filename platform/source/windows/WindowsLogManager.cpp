@@ -13,7 +13,7 @@ using namespace Core;
 
 // Private
 
-void LogManager::initialise()
+void LogManager::initialise() const
 {
 	const Int32 result = SetConsoleOutputCP(CP_UTF8);
 	DE_ASSERT_WINDOWS(result != 0);

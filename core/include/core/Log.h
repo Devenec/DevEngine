@@ -31,7 +31,7 @@ namespace Core
 
 		inline void setfilterLevel(const LogLevel& value);
 
-		void write(const LogLevel& level, const String8& message);
+		void write(const LogLevel& level, const String8& message) const;
 
 		inline Log& operator <<(const LogLevel& logLevel);
 
@@ -52,15 +52,16 @@ namespace Core
 		LogLevel _filterLevel;
 		LogLevel _streamLevel;
 
-		Log();
+		inline Log();
 		Log(const Log& log) = delete;
 		Log(Log&& log) = delete;
-		~Log();
+		~Log() = default;
 
-		void writeToConsole(const LogLevel& level, const String8& message);
+		void writeToConsole(const LogLevel& level, const String8& message) const;
 
 		Log& operator =(const Log& log) = delete;
+		Log& operator =(Log&& log) = delete;
 	};
 
-#include "Log.inl"
+#include "inline/Log.inl"
 }

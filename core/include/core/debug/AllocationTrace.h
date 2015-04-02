@@ -14,7 +14,7 @@
 
 namespace Debug
 {
-	struct Allocation
+	struct Allocation final
 	{
 		Core::String8 file;
 		Core::String8 function;
@@ -34,7 +34,7 @@ namespace Debug
 		
 		AllocationTrace();
 
-		~AllocationTrace();
+		~AllocationTrace() = default;
 
 		void addAllocation(void* pointer, const Core::String8& file, const Core::String8& function, const Uint32 line);
 
@@ -55,5 +55,6 @@ namespace Debug
 		void checkForMemoryLeaks() const;
 
 		AllocationTrace& operator =(const AllocationTrace& allocationTrace) = delete;
+		AllocationTrace& operator =(AllocationTrace&& allocationTrace) = delete;
 	};
 }

@@ -27,9 +27,9 @@ namespace Core
 
 		static T* _instance;
 
-		Singleton();
+		inline Singleton();
 
-		~Singleton();
+		inline ~Singleton();
 
 	private:
 
@@ -37,7 +37,8 @@ namespace Core
 		Singleton(Singleton&& singleton) = delete;
 
 		Singleton& operator =(const Singleton& singleton) = delete;
+		Singleton& operator =(Singleton&& singleton) = delete;
 	};
 
-#include "Singleton.inl"
+#include "inline/Singleton.inl"
 }

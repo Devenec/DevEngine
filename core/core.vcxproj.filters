@@ -19,6 +19,9 @@
     <Filter Include="Source Files\debug">
       <UniqueIdentifier>{0fd53b2c-3230-417e-9aaf-b65aa60dfc90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\inline">
+      <UniqueIdentifier>{5939b29e-d67b-4e2e-9efe-24b7a0083470}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\core\Application.h">
@@ -83,21 +86,21 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\core\Log.inl">
-      <Filter>Header Files</Filter>
+    <None Include="include\core\inline\Log.inl">
+      <Filter>Header Files\inline</Filter>
     </None>
-    <None Include="include\core\Numeric.inl">
-      <Filter>Header Files</Filter>
+    <None Include="include\core\inline\LogManager.inl">
+      <Filter>Header Files\inline</Filter>
     </None>
-    <None Include="include\core\Singleton.inl">
-      <Filter>Header Files</Filter>
+    <None Include="include\core\inline\Numeric.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
+    <None Include="include\core\inline\Singleton.inl">
+      <Filter>Header Files\inline</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\LogManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Memory.cpp">

@@ -18,8 +18,6 @@ using namespace Debug;
 AllocationTrace::AllocationTrace()
 	: _isInitialised(false) { }
 
-AllocationTrace::~AllocationTrace() { }
-
 void AllocationTrace::addAllocation(void* pointer, const String8& file, const String8& function, const Uint32 line)
 {
 	if(_isInitialised)

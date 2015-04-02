@@ -43,5 +43,6 @@ namespace Debug
 		StackTrace(StackTrace&& stackTrace) = delete;
 
 		StackTrace& operator =(const StackTrace& stackTrace) = delete;
+		StackTrace& operator =(StackTrace&& stackTrace) = delete;
 	};
 }

@@ -1,5 +1,5 @@
 /**
- * @file core/Log.inl
+ * @file core/inline/Log.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -51,3 +51,9 @@ void Log::flush(Log& log)
 	log.write(log._streamLevel, log._stream.str());
 	log._stream.str(String8());
 }
+
+// Private
+
+Log::Log()
+	: _filterLevel(LogLevel::Debug),
+	  _streamLevel(LogLevel::Debug) { }

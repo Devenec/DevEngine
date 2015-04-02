@@ -1,5 +1,5 @@
 /**
- * @file core/Numeric.inl
+ * @file core/inline/Numeric.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa

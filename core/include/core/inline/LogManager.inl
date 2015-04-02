@@ -1,13 +1,9 @@
 /**
- * @file core/LogManager.cpp
+ * @file core/inline/LogManager.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
-
-#include <core/LogManager.h>
-
-using namespace Core;
 
 // Public
 
@@ -16,4 +12,7 @@ LogManager::LogManager()
 	initialise();
 }
 
-LogManager::~LogManager() { }
+Log& LogManager::log()
+{
+	return _log;
+}

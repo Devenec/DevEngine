@@ -11,7 +11,7 @@ using namespace Core;
 
 // Public
 
-void Log::write(const LogLevel& level, const String8& message)
+void Log::write(const LogLevel& level, const String8& message) const
 {
 	if(level >= _filterLevel)
 		writeToConsole(level, message);
@@ -25,11 +25,3 @@ Log& Log::operator <<(const String16& value)
 	_stream << toString8(value);
 	return *this;
 }
-
-// Private
-
-Log::Log()
-	: _filterLevel(LogLevel::Debug),
-	  _streamLevel(LogLevel::Debug) { }
-
-Log::~Log() { }

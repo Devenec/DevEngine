@@ -11,7 +11,7 @@
 #include <core/UtilityMacros.h>
 #include <core/debug/StackTrace.h>
 #include <platform/windows/Windows.h>
-#include <DbgHelp.h> // Needs to be included after Windows.h (platform/windows/Windows.h>
+#include <DbgHelp.h> // Needs to be included after Windows.h (platform/windows/Windows.h)
 
 using namespace Core;
 using namespace Debug;
@@ -42,7 +42,7 @@ public:
 		symbolInfo->SizeOfStruct = sizeof(SymbolInfo);
 	}
 
-	~Impl() { }
+	~Impl() = default;
 
 	StackEntries generate()
 	{
@@ -119,6 +119,7 @@ private:
 	}
 
 	Impl& operator =(const Impl& impl) = delete;
+	Impl& operator =(Impl&& impl) = delete;
 };
 
 
