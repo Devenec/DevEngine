@@ -14,7 +14,7 @@ namespace Graphics
 {
 	using WindowHandle = void*;
 
-	class Window
+	class Window final
 	{
 	public:
 
@@ -40,5 +40,6 @@ namespace Graphics
 		~Window();
 
 		Window& operator =(const Window& window) = delete;
+		Window& operator =(Window&& window) = delete;
 	};
 }

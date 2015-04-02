@@ -48,7 +48,7 @@
     </ClCompile>
     <Link />
     <Link>
-      <AdditionalDependencies>DbgHelp.lib;core.lib;platform.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DbgHelp.lib;core.lib;graphics.lib;platform.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -59,7 +59,7 @@
     </ClCompile>
     <Link />
     <Link>
-      <AdditionalDependencies>DbgHelp.lib;core.lib;platform.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DbgHelp.lib;core.lib;graphics.lib;platform.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

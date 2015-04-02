@@ -57,11 +57,17 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\graphics\DisplayMode.h" />
+    <ClInclude Include="include\graphics\GraphicsAdapter.h" />
     <ClInclude Include="include\graphics\Window.h" />
     <ClInclude Include="include\graphics\WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\Temp.cpp" />
+    <None Include="include\graphics\inline\DisplayMode.inl" />
+    <None Include="include\graphics\inline\GraphicsAdapter.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\DisplayMode.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

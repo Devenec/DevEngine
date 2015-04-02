@@ -63,6 +63,7 @@ private:
 	Impl(Impl&& impl) = delete;
 
 	Impl& operator =(const Impl& impl) = delete;
+	Impl& operator =(Impl&& impl) = delete;
 };
 
 

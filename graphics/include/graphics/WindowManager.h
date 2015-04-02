@@ -9,11 +9,12 @@
 
 #include <core/Singleton.h>
 #include <core/Types.h>
+#include <core/Vector.h>
 #include <graphics/Window.h>
 
 namespace Graphics
 {
-	class WindowManager : public Core::Singleton<WindowManager>
+	class WindowManager final : public Core::Singleton<WindowManager>
 	{
 	public:
 
@@ -36,5 +37,6 @@ namespace Graphics
 		void destroyWindow();
 
 		WindowManager& operator =(const WindowManager& windowManager) = delete;
+		WindowManager& operator =(WindowManager&& windowManager) = delete;
 	};
 }
