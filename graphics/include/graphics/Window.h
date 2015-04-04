@@ -12,7 +12,7 @@
 
 namespace Graphics
 {
-	using WindowHandle = void*;
+	using WindowHandle = Void*;
 
 	class Window final
 	{

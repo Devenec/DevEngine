@@ -17,7 +17,27 @@
 using namespace Core;
 using namespace Graphics;
 
+static void testLog(const StartupParameters& startupParameters);
+static void testWindow();
+
 void devEngineMain(const StartupParameters& startupParameters)
+{
+	testLog(startupParameters);
+	testWindow();
+}
+
+static void testWindow()
+{
+	GraphicsAdapterManager graphicsAdapterManager;
+	WindowManager windowManager;
+	Window* window = windowManager.createWindow();
+	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
+	window->show();
+
+	while(window->processMessages()) { }
+}
+
+static void testLog(const StartupParameters& startupParameters)
 {
 	Log& log = LogManager::instance().log();
 	log.write(LogLevel::Debug, "Startup parameters:");
@@ -35,12 +55,4 @@ void devEngineMain(const StartupParameters& startupParameters)
 	log.setfilterLevel(LogLevel::Warning);
 	log.write(LogLevel::Info, "This should not be logged");
 	log.setfilterLevel(LogLevel::Debug);
-
-	GraphicsAdapterManager graphicsAdapterManager;
-	WindowManager windowManager;
-	Window* window = windowManager.createWindow();
-	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
-	window->show();
-
-	while(window->processMessages()) { }
 }

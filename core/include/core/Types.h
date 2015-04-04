@@ -78,3 +78,10 @@ using Char8 = char;
  * 16-bit unicode character (UTF-16)
  */
 using Char16 = wchar_t;
+
+/**
+ * Void
+ *
+ * Used with void pointers.
+ */
+using Void = void;

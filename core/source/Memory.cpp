@@ -13,17 +13,17 @@
 using namespace Core;
 using namespace Debug;
 
-void* operator new(Uint32 size)
+Void* operator new(Uint32 size)
 {
-	void* pointer = std::malloc(size);
+	Void* pointer = std::malloc(size);
 	DE_ASSERT(pointer != nullptr);
 
 	return pointer;
 }
 
-void* operator new(Uint32 size, const Char8* file, const Char8* function, const Uint32 line)
+Void* operator new(Uint32 size, const Char8* file, const Char8* function, const Uint32 line)
 {
-	void* pointer = ::operator new(size);
+	Void* pointer = ::operator new(size);
 
 	if(AllocationTrace::hasInstance())
 		AllocationTrace::instance().addAllocation(pointer, file, function, line);
@@ -31,17 +31,17 @@ void* operator new(Uint32 size, const Char8* file, const Char8* function, const 
 	return pointer;
 }
 
-void* operator new[](Uint32 size)
+Void* operator new[](Uint32 size)
 {
 	return ::operator new(size);
 }
 
-void* operator new[](Uint32 size, const Char8* file, const Char8* function, const Uint32 line)
+Void* operator new[](Uint32 size, const Char8* file, const Char8* function, const Uint32 line)
 {
 	return ::operator new(size, file, function, line);
 }
 
-void operator delete(void* pointer)
+void operator delete(Void* pointer)
 {
 	if(AllocationTrace::hasInstance())
 		AllocationTrace::instance().removeAllocation(pointer);
@@ -49,7 +49,7 @@ void operator delete(void* pointer)
 	std::free(pointer);
 }
 
-void operator delete[](void* pointer)
+void operator delete[](Void* pointer)
 {
 	::operator delete(pointer);
 }

@@ -66,7 +66,7 @@ private:
 
 	Array<Byte, sizeof(SymbolInfo) + (MAX_FUNCTION_NAME_LENGTH - 1u) * sizeof(Char16)> symbolInfoData;
 	SourceInfo sourceInfo;
-	Vector<void*> symbolAddresses;
+	Vector<Void*> symbolAddresses;
 	HANDLE processHandle;
 	SymbolInfo* symbolInfo;
 	Uint32 maxEntryCount;

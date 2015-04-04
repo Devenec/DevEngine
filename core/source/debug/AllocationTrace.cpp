@@ -18,7 +18,7 @@ using namespace Debug;
 AllocationTrace::AllocationTrace()
 	: _isInitialised(false) { }
 
-void AllocationTrace::addAllocation(void* pointer, const String8& file, const String8& function, const Uint32 line)
+void AllocationTrace::addAllocation(Void* pointer, const String8& file, const String8& function, const Uint32 line)
 {
 	if(_isInitialised)
 	{
@@ -40,7 +40,7 @@ void AllocationTrace::initialise()
 	_isInitialised = true;
 }
 
-void AllocationTrace::removeAllocation(void* pointer)
+void AllocationTrace::removeAllocation(Void* pointer)
 {
 	if(_isInitialised)
 	{

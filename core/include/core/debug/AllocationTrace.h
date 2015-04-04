@@ -26,7 +26,7 @@ namespace Debug
 			  line(line) { }
 	};
 
-	using Allocations = Core::Map<void*, Allocation>;
+	using Allocations = Core::Map<Void*, Allocation>;
 	
 	class AllocationTrace final : public Core::Singleton<AllocationTrace>
 	{
@@ -36,13 +36,13 @@ namespace Debug
 
 		~AllocationTrace() = default;
 
-		void addAllocation(void* pointer, const Core::String8& file, const Core::String8& function, const Uint32 line);
+		void addAllocation(Void* pointer, const Core::String8& file, const Core::String8& function, const Uint32 line);
 
 		void deinitialise();
 
 		void initialise();
 
-		void removeAllocation(void* pointer);
+		void removeAllocation(Void* pointer);
 
 	private:
 

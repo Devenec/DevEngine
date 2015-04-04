@@ -19,6 +19,6 @@
 
 #define DE_DELETE delete
 
-void* operator new(Uint32 size, const Char8* file, const Char8* function, const Uint32 line);
+Void* operator new(Uint32 size, const Char8* file, const Char8* function, const Uint32 line);
 
-void* operator new[](Uint32 size, const Char8* file, const Char8* function, const Uint32 line);
+Void* operator new[](Uint32 size, const Char8* file, const Char8* function, const Uint32 line);
