@@ -5,19 +5,18 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
-#include <algorithm>
 #include <core/Memory.h>
-#include <core/String.h>
+#include <core/Types.h>
 #include <core/UtilityMacros.h>
 #include <core/debug/Assert.h>
-#include <graphics/GraphicsAdapter.h>
+#include <graphics/DisplayMode.h>
+#include <graphics/GraphicsAdapterManager.h>
 #include <graphics/WindowManager.h>
 
 #define OEMRESOURCE
 #include <platform/windows/Windows.h>
 #undef OEMRESOURCE
 
-using namespace Core;
 using namespace Graphics;
 
 // External
@@ -36,73 +35,6 @@ class WindowManager::Impl
 public:
 
 	Impl()
-	{
-		initialiseGraphicsAdapters();
-		registerWindowClass();
-	}
-
-	~Impl()
-	{
-		unregisterWindowClass();
-		deinitialiseGraphicsAdapters();
-	}
-
-	HWND createWindow() const
-	{
-		const RECT windowRectangle = createWindowRectangle();
-		
-		HWND windowHandle = CreateWindowExW(0u, WINDOW_CLASS_NAME, WINDOW_DEFAULT_TITLE, WINDOW_STYLE,
-			windowRectangle.left, windowRectangle.top, windowRectangle.right, windowRectangle.bottom, nullptr, nullptr,
-			GetModuleHandleW(nullptr), nullptr);
-
-		DE_ASSERT(windowHandle != nullptr);
-		return windowHandle;
-	}
-
-	void destroyWindow(HWND windowHandle) const
-	{
-		const Int32 result = DestroyWindow(windowHandle);
-		DE_ASSERT(result != 0);
-	}
-
-private:
-
-	using GraphicsAdapters = Core::Vector<GraphicsAdapter*>;
-
-	GraphicsAdapters _graphicsAdapters;
-
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
-
-	void initialiseGraphicsAdapters()
-	{
-		Int32 result = 1;
-		DISPLAY_DEVICEW graphicsAdapterInfo;
-		graphicsAdapterInfo.cb = sizeof(graphicsAdapterInfo);
-
-		for(Uint32 i = 0u; result != 0; ++i)
-		{
-			result = EnumDisplayDevicesW(nullptr, i, &graphicsAdapterInfo, 0u);
-
-			if(result != 0 && (graphicsAdapterInfo.StateFlags & DISPLAY_DEVICE_ACTIVE) != 0u)
-			{
-				Uint32 currentDisplayModeIndex;
-
-				const DisplayModes displayModes = getGraphicsAdapterDisplayModes(graphicsAdapterInfo.DeviceName,
-					currentDisplayModeIndex);
-
-				GraphicsAdapter* graphicsAdapter = DE_NEW GraphicsAdapter(toString8(graphicsAdapterInfo.DeviceName),
-					displayModes, currentDisplayModeIndex);
-
-				if((graphicsAdapterInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) != 0u)
-					_graphicsAdapters.insert(_graphicsAdapters.begin(), graphicsAdapter);
-				else
-					_graphicsAdapters.push_back(graphicsAdapter);
-			}
-		}
-	}
-
-	void registerWindowClass() const
 	{
 		HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
 		DE_ASSERT(cursorHandle != nullptr);
@@ -125,21 +57,41 @@ private:
 		DE_ASSERT(result != 0u);
 	}
 
-	void unregisterWindowClass() const
+	~Impl()
 	{
 		const Int32 result = UnregisterClassW(WINDOW_CLASS_NAME, GetModuleHandleW(nullptr));
 		DE_ASSERT(result != 0);
 	}
 
-	void deinitialiseGraphicsAdapters() const
+	HWND createWindow() const
 	{
-		for(GraphicsAdapters::const_iterator i = _graphicsAdapters.begin(), end = _graphicsAdapters.end(); i != end; ++i)
-			delete *i;
+		const RECT windowRectangle = createWindowRectangle();
+		
+		HWND windowHandle = CreateWindowExW(0u, WINDOW_CLASS_NAME, WINDOW_DEFAULT_TITLE, WINDOW_STYLE,
+			windowRectangle.left, windowRectangle.top, windowRectangle.right, windowRectangle.bottom, nullptr, nullptr,
+			GetModuleHandleW(nullptr), nullptr);
+
+		DE_ASSERT(windowHandle != nullptr);
+		return windowHandle;
 	}
+
+	void destroyWindow(HWND windowHandle) const
+	{
+		const Int32 result = DestroyWindow(windowHandle);
+		DE_ASSERT(result != 0);
+	}
+
+private:
+
+	Impl(const Impl& impl) = delete;
+	Impl(Impl&& impl) = delete;
 
 	RECT createWindowRectangle() const
 	{
-		const DisplayMode& currentDisplayMode = _graphicsAdapters[0]->currentDisplayMode();
+		DE_ASSERT(GraphicsAdapterManager::hasInstance());
+		const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
+		const DisplayMode& currentDisplayMode = graphicsAdapterManager.graphicsAdapters()[0]->currentDisplayMode();
+
 		RECT windowRectangle;
 		windowRectangle.left = currentDisplayMode.width() / 2 - WINDOW_DEFAULT_WIDTH / 2;
 		windowRectangle.top = currentDisplayMode.height() / 2 - WINDOW_DEFAULT_HEIGHT / 2;
@@ -150,52 +102,6 @@ private:
 		DE_ASSERT(result != 0);
 
 		return windowRectangle;
-	}
-
-	DisplayModes getGraphicsAdapterDisplayModes(const Char16* adapterName, Uint32& currentModeIndex) const
-	{
-		DisplayMode displayMode(1u, 0u, 0u, 0u);
-		DEVMODEW displayModeInfo;
-		displayModeInfo.dmDriverExtra = 0u;
-		displayModeInfo.dmSize = sizeof(displayModeInfo);
-		DisplayModes displayModes;
-
-		for(Uint32 i = 0; displayMode.width() != 0; ++i)
-		{
-			displayMode = getGraphicsAdapterDisplayMode(adapterName, i, displayModeInfo);
-
-			if(displayMode.width() != 0u &&
-				std::find(displayModes.begin(), displayModes.end(), displayMode) == displayModes.end())
-			{
-					displayModes.push_back(displayMode);
-			}
-		}
-
-		displayModes.shrink_to_fit();
-		std::sort(displayModes.begin(), displayModes.end());
-		displayMode = getGraphicsAdapterDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, displayModeInfo);
-		DE_ASSERT(displayMode.width() != 0u);
-		DisplayModes::const_iterator position = std::find(displayModes.begin(), displayModes.end(), displayMode);
-		DE_ASSERT(position != displayModes.end());
-		currentModeIndex = position - displayModes.begin();
-
-		return displayModes;
-	}
-
-	DisplayMode getGraphicsAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo)
-		const
-	{
-		const Int32 result = EnumDisplaySettingsW(adapterName, modeIndex, &modeInfo);
-
-		if(result == 0)
-		{
-			return DisplayMode();
-		}
-		else
-		{
-			return DisplayMode(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight, modeInfo.dmBitsPerPel,
-				modeInfo.dmDisplayFrequency);
-		}
 	}
 
 	Impl& operator =(const Impl& impl) = delete;

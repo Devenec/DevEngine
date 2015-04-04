@@ -130,7 +130,7 @@ StackTrace::StackTrace(const Uint32 maxEntryCount)
 
 StackTrace::~StackTrace()
 {
-	delete _impl;
+	DE_DELETE _impl;
 }
 
 StackEntries StackTrace::generate() const

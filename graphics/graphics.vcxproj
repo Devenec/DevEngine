@@ -59,12 +59,12 @@
   <ItemGroup>
     <ClInclude Include="include\graphics\DisplayMode.h" />
     <ClInclude Include="include\graphics\GraphicsAdapter.h" />
+    <ClInclude Include="include\graphics\GraphicsAdapterManager.h" />
     <ClInclude Include="include\graphics\Window.h" />
     <ClInclude Include="include\graphics\WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\graphics\inline\DisplayMode.inl" />
-    <None Include="include\graphics\inline\GraphicsAdapter.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\DisplayMode.cpp" />

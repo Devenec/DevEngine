@@ -21,7 +21,7 @@ public:
 	Impl(HWND handle)
 		: _handle(handle) { }
 
-	~Impl() { }
+	~Impl() = default;
 
 	HWND handle() const
 	{

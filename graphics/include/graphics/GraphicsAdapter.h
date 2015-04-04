@@ -20,31 +20,28 @@ namespace Graphics
 	{
 	public:
 
-		~GraphicsAdapter() = default;
+		const DisplayMode& currentDisplayMode() const;
 
-		inline const DisplayMode& currentDisplayMode() const;
+		void setDisplayMode(const DisplayMode& mode);
 
-		inline const Core::String8& name() const;
-
-		inline const DisplayModes& supportedDisplayModes() const;
+		const DisplayModes& supportedDisplayModes() const;
 
 	private:
 
-		friend class WindowManager;
+		friend class GraphicsAdapterManager;
 
-		Core::String8 _name;
-		DisplayModes _supportedDisplayModes;
-		Uint32 _currentDisplayModeIndex;
+		class Impl;
+		
+		Impl* _impl;
 
-		inline GraphicsAdapter(const Core::String8& name, const DisplayModes& supportedDisplayModes,
+		GraphicsAdapter(const Core::String8& name, const DisplayModes& supportedDisplayModes,
 			const Uint32 currentDisplayModeIndex);
 
 		GraphicsAdapter(const GraphicsAdapter& graphicsAdapter) = delete;
 		GraphicsAdapter(GraphicsAdapter&& graphicsAdapter) = delete;
+		~GraphicsAdapter();
 
 		GraphicsAdapter& operator =(const GraphicsAdapter& graphicsAdapter) = delete;
 		GraphicsAdapter& operator =(GraphicsAdapter&& graphicsAdapter) = delete;
 	};
-
-#include "inline/GraphicsAdapter.inl"
 }

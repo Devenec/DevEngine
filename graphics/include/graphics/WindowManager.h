@@ -8,8 +8,6 @@
 #pragma once
 
 #include <core/Singleton.h>
-#include <core/Types.h>
-#include <core/Vector.h>
 #include <graphics/Window.h>
 
 namespace Graphics

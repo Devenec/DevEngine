@@ -10,6 +10,7 @@
 #include <core/LogManager.h>
 #include <core/String.h>
 #include <core/UtilityMacros.h>
+#include <graphics/GraphicsAdapterManager.h>
 #include <graphics/Window.h>
 #include <graphics/WindowManager.h>
 
@@ -35,6 +36,7 @@ void devEngineMain(const StartupParameters& startupParameters)
 	log.write(LogLevel::Info, "This should not be logged");
 	log.setfilterLevel(LogLevel::Debug);
 
+	GraphicsAdapterManager graphicsAdapterManager;
 	WindowManager windowManager;
 	Window* window = windowManager.createWindow();
 	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");

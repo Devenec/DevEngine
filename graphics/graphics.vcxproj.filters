@@ -30,12 +30,12 @@
     <ClInclude Include="include\graphics\WindowManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\GraphicsAdapterManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\graphics\inline\DisplayMode.inl">
-      <Filter>Header Files\inline</Filter>
-    </None>
-    <None Include="include\graphics\inline\GraphicsAdapter.inl">
       <Filter>Header Files\inline</Filter>
     </None>
   </ItemGroup>

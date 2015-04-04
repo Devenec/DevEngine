@@ -50,5 +50,11 @@
     <ClCompile Include="source\windows\WindowsWindowManager.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
+    <ClCompile Include="source\windows\WindowsGraphicsAdapter.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\windows\WindowsGraphicsAdapterManager.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
