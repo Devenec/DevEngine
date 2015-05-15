@@ -89,7 +89,7 @@ const DisplayMode& GraphicsAdapter::currentDisplayMode() const
 	return _impl->currentDisplayMode();
 }
 
-void GraphicsAdapter::setDisplayMode(const DisplayMode& mode)
+void GraphicsAdapter::setDisplayMode(const DisplayMode& mode) const
 {
 	_impl->setDisplayMode(mode);
 }

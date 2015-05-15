@@ -66,9 +66,11 @@ public:
 	HWND createWindow() const
 	{
 		const RECT windowRectangle = createWindowRectangle();
+		const Int32 windowWidth = windowRectangle.right - windowRectangle.left;
+		const Int32 windowHeight = windowRectangle.bottom - windowRectangle.top;
 		
 		HWND windowHandle = CreateWindowExW(0u, WINDOW_CLASS_NAME, WINDOW_DEFAULT_TITLE, WINDOW_STYLE,
-			windowRectangle.left, windowRectangle.top, windowRectangle.right, windowRectangle.bottom, nullptr, nullptr,
+			windowRectangle.left, windowRectangle.top, windowWidth, windowHeight, nullptr, nullptr,
 			GetModuleHandleW(nullptr), nullptr);
 
 		DE_ASSERT(windowHandle != nullptr);
@@ -92,16 +94,16 @@ private:
 		const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
 		const DisplayMode& currentDisplayMode = graphicsAdapterManager.graphicsAdapters()[0]->currentDisplayMode();
 
-		RECT windowRectangle;
-		windowRectangle.left = currentDisplayMode.width() / 2 - WINDOW_DEFAULT_WIDTH / 2;
-		windowRectangle.top = currentDisplayMode.height() / 2 - WINDOW_DEFAULT_HEIGHT / 2;
-		windowRectangle.right = WINDOW_DEFAULT_WIDTH;
-		windowRectangle.bottom = WINDOW_DEFAULT_HEIGHT;
+		RECT rectangle;
+		rectangle.left = currentDisplayMode.width() / 2 - WINDOW_DEFAULT_WIDTH / 2;
+		rectangle.top = currentDisplayMode.height() / 2 - WINDOW_DEFAULT_HEIGHT / 2;
+		rectangle.right = rectangle.left + WINDOW_DEFAULT_WIDTH;
+		rectangle.bottom = rectangle.top + WINDOW_DEFAULT_HEIGHT;
 
-		const Int32 result = AdjustWindowRectEx(&windowRectangle, WINDOW_STYLE, 0, 0u);
+		const Int32 result = AdjustWindowRectEx(&rectangle, WINDOW_STYLE, 0, 0u);
 		DE_ASSERT(result != 0);
 
-		return windowRectangle;
+		return rectangle;
 	}
 
 	Impl& operator =(const Impl& impl) = delete;

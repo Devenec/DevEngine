@@ -22,7 +22,7 @@ namespace Graphics
 
 		const DisplayMode& currentDisplayMode() const;
 
-		void setDisplayMode(const DisplayMode& mode);
+		void setDisplayMode(const DisplayMode& mode) const;
 
 		const DisplayModes& supportedDisplayModes() const;
 

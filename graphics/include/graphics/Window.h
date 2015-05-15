@@ -22,7 +22,9 @@ namespace Graphics
 
 		Bool processMessages() const;
 
-		void setTitle(const Core::String8& title) const;
+		void setFullscreen(const Bool value) const;
+
+		void setTitle(const Core::String8& value) const;
 
 		void show() const;
 

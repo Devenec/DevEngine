@@ -34,17 +34,21 @@ static void testWindow()
 	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	window->show();
 
+	//window->setFullscreen(true);
+	//window->setFullscreen(false);
+
 	while(window->processMessages()) { }
 }
 
 static void testLog(const StartupParameters& startupParameters)
 {
 	Log& log = LogManager::instance().log();
-	log.write(LogLevel::Debug, "Startup parameters:");
+	log.write(LogLevel::Debug, "-- Startup parameters --");
 
 	for(StartupParameters::const_iterator i = startupParameters.begin(), end = startupParameters.end(); i != end; ++i)
 		log.write(LogLevel::Debug, *i);
 
+	log.write(LogLevel::Debug, "-- End of startup parameters --");
 	log.write(LogLevel::Debug, "Hello w\xC3\xB6rld!");
 	const String8 message("Hello w\xC3\xB6rld!");
 	log.write(LogLevel::Debug, message);

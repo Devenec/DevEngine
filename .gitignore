@@ -7,6 +7,14 @@ build/Win32/
 # file extensions
 
 *.suo
+*.user
 
 
 # files
+
+
+
+
+# exceptions
+
+!samples/sample/*.user

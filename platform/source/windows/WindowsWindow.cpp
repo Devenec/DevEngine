@@ -19,7 +19,13 @@ class Window::Impl
 public:
 
 	Impl(HWND handle)
-		: _handle(handle) { }
+		: _handle(handle),
+		  _width(0u),
+		  _height(0u),
+		  _isFullscreen(false)
+	{
+		getSize(_width, _height);
+	}
 
 	~Impl() = default;
 
@@ -43,10 +49,39 @@ public:
 		return true;
 	}
 
-	void setTitle(const String8& title) const
+	// TODO: clean
+	void setFullscreen(const Bool value)
 	{
-		const String16 title16 = toString16(title);
-		const Int32 result = SetWindowTextW(_handle, title16.c_str());
+		if(value != _isFullscreen)
+		{
+			HMONITOR monitorHandle = MonitorFromWindow(_handle, MONITOR_DEFAULTTONEAREST);
+			MONITORINFO monitorInfo;
+			monitorInfo.cbSize = sizeof(monitorInfo);
+			const Int32 result = GetMonitorInfoW(monitorHandle, &monitorInfo);
+			DE_ASSERT(result != 0);
+			setFullscreenStyle(value);
+
+			if(value)
+			{
+				const Int32 windowWidth = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
+				const Int32 windowHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+				setRectangle(monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top, windowWidth, windowHeight);
+			}
+			else
+			{
+				const Int32 windowX = (monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left) / 2 - _width / 2;
+				const Int32 windowY = (monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top) / 2 - _height / 2;
+				setRectangle(windowX, windowY, _width, _height);
+			}
+
+			_isFullscreen = value;
+		}
+	}
+
+	void setTitle(const String8& value) const
+	{
+		const String16 title = toString16(value);
+		const Int32 result = SetWindowTextW(_handle, title.c_str());
 		DE_ASSERT(result != 0);
 	}
 
@@ -58,9 +93,43 @@ public:
 private:
 
 	HWND _handle;
+	Uint32 _width;
+	Uint32 _height;
+	Bool _isFullscreen;
 
 	Impl(const Impl& impl) = delete;
 	Impl(Impl&& impl) = delete;
+
+	void getSize(Uint32& width, Uint32& height)
+	{
+		RECT rectangle;
+		const Int32 result = GetWindowRect(_handle, &rectangle);
+		DE_ASSERT(result != 0u);
+		width = rectangle.right - rectangle.left;
+		height = rectangle.bottom - rectangle.top;
+	}
+
+	void setFullscreenStyle(const Bool isFullscreen)
+	{
+		const Int32 style = GetWindowLongPtrW(_handle, GWL_STYLE);
+		Int32 newStyle = style;
+
+		if(isFullscreen)
+			newStyle &= ~WS_CAPTION;
+		else
+			newStyle |= WS_CAPTION;
+
+		const Int32 result = SetWindowLongPtrW(_handle, GWL_STYLE, newStyle);
+		DE_ASSERT(result == style);
+	}
+
+	void setRectangle(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height)
+	{
+		const Int32 result = SetWindowPos(_handle, HWND_TOP, x, y, width, height,
+			SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
+
+		DE_ASSERT(result != 0);
+	}
 
 	Impl& operator =(const Impl& impl) = delete;
 	Impl& operator =(Impl&& impl) = delete;
@@ -79,14 +148,19 @@ Bool Window::processMessages() const
 	return _impl->processMessages();
 }
 
-void Window::setTitle(const String8& title) const
+void Window::setTitle(const String8& value) const
 {
-	_impl->setTitle(title);
+	_impl->setTitle(value);
 }
 
 void Window::show() const
 {
 	_impl->show();
+}
+
+void Window::setFullscreen(const Bool value) const
+{
+	_impl->setFullscreen(value);
 }
 
 // Private
