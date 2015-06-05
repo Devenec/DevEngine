@@ -8,16 +8,16 @@
 // Public
 
 DisplayMode::DisplayMode()
-	: _width(0u),
+	: _colourDepth(0u),
+	  _frequency(0u),
 	  _height(0u),
-	  _colourDepth(0u),
-	  _frequency(0u) { }
+	  _width(0u) { }
 
 DisplayMode::DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 frequency)
-	: _width(width),
+	: _colourDepth(colourDepth),
+	  _frequency(frequency),
 	  _height(height),
-	  _colourDepth(colourDepth),
-	  _frequency(frequency) { }
+	  _width(width) { }
 
 Uint32 DisplayMode::colourDepth() const
 {
@@ -37,4 +37,12 @@ Uint32 DisplayMode::height() const
 Uint32 DisplayMode::width() const
 {
 	return _width;
+}
+
+// Operators
+
+Bool DisplayMode::operator ==(const DisplayMode& displayMode) const
+{
+	return _width == displayMode._width && _height == displayMode._height &&
+		_colourDepth == displayMode._colourDepth && _frequency == displayMode._frequency;
 }

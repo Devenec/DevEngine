@@ -6,9 +6,10 @@
  */
 
 #include <cstdlib>
+#include <core/Error.h>
+#include <core/Log.h>
 #include <core/Memory.h>
-#include <core/debug/Assert.h>
-#include <core/debug/AllocationTrace.h>
+#include <core/debug/AllocationTracker.h>
 
 using namespace Core;
 using namespace Debug;
@@ -16,35 +17,46 @@ using namespace Debug;
 Void* operator new(Uint32 size)
 {
 	Void* pointer = std::malloc(size);
-	DE_ASSERT(pointer != nullptr);
+
+	if(pointer == nullptr)
+	{
+		defaultLog << LogLevel::Error << "[Core::new] Failed to allocate memory." << Log::Flush();
+		DE_ERROR(0); // TODO: set errorCode
+	}
 
 	return pointer;
 }
 
-Void* operator new(Uint32 size, const Char8* file, const Char8* function, const Uint32 line)
-{
-	Void* pointer = ::operator new(size);
+#if DE_BUILD_CONFIG != DE_BUILD_CONFIG_PRODUCTION
+	Void* operator new(Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
+	{
+		Void* pointer = ::operator new(size);
 
-	if(AllocationTrace::hasInstance())
-		AllocationTrace::instance().addAllocation(pointer, file, function, line);
+		if(AllocationTracker::hasInstance())
+			AllocationTracker::instance().registerAllocation(pointer, file, line, function);
 
-	return pointer;
-}
+		return pointer;
+	}
+#endif
 
 Void* operator new[](Uint32 size)
 {
 	return ::operator new(size);
 }
 
-Void* operator new[](Uint32 size, const Char8* file, const Char8* function, const Uint32 line)
-{
-	return ::operator new(size, file, function, line);
-}
+#if DE_BUILD_CONFIG != DE_BUILD_CONFIG_PRODUCTION
+	Void* operator new[](Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
+	{
+		return ::operator new(size, file, line, function);
+	}
+#endif
 
 void operator delete(Void* pointer)
 {
-	if(AllocationTrace::hasInstance())
-		AllocationTrace::instance().removeAllocation(pointer);
+#if DE_BUILD_CONFIG != DE_BUILD_CONFIG_PRODUCTION
+	if(AllocationTracker::hasInstance())
+		AllocationTracker::instance().deregisterAllocation(pointer);
+#endif
 
 	std::free(pointer);
 }

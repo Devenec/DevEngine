@@ -25,3 +25,7 @@ Log& Log::operator <<(const String16& value)
 	_stream << toString8(value);
 	return *this;
 }
+
+// Private
+
+// Log::writeToConsole() is defined in platform/*/*Log.cpp

@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <core/Log.h>
 #include <core/Singleton.h>
 
 namespace Core
@@ -16,24 +15,18 @@ namespace Core
 	{
 	public:
 
-		inline LogManager();
-
-		~LogManager() = default;
-
-		inline Log& log();
-
-	private:
-
-		Log _log;
+		LogManager();
 
 		LogManager(const LogManager& logManager) = delete;
 		LogManager(LogManager&& logManager) = delete;
 
-		void initialise() const;
+		~LogManager();
+
+		void deinitialise();
+
+		void initialise();
 
 		LogManager& operator =(const LogManager& logManager) = delete;
 		LogManager& operator =(LogManager&& logManager) = delete;
 	};
-
-#include "inline/LogManager.inl"
 }

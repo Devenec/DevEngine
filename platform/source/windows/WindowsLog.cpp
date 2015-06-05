@@ -14,7 +14,7 @@ using namespace Core;
 
 // External
 
-static const Array<const Char8*, 4u> LOG_LEVEL_IDENTIFIERS =
+static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
 {
 	"DEBUG  ",
 	"INFO   ",
@@ -27,6 +27,6 @@ static const Array<const Char8*, 4u> LOG_LEVEL_IDENTIFIERS =
 
 void Log::writeToConsole(const LogLevel& level, const String8& message) const
 {
-	const Char8* logLevelName = LOG_LEVEL_IDENTIFIERS[static_cast<Int32>(level)];
-	std::wprintf(DE_CHAR16("%S | %S\n"), logLevelName, message.c_str());
+	const Char8* levelName = LOG_LEVEL_NAMES[static_cast<Int32>(level)];
+	std::wprintf(DE_CHAR16("%S | %S\n"), levelName, message.c_str());
 }

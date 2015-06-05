@@ -4,6 +4,8 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
+#include <core/Error.h>
+#include <core/Log.h>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
 #include <graphics/Window.h>
@@ -11,6 +13,11 @@
 
 using namespace Core;
 using namespace Graphics;
+
+// External
+
+static const Char8* WINDOW_CONTEXT = "[Platform::WindowsWindow]";
+
 
 // Implementation
 
@@ -20,12 +27,15 @@ public:
 
 	Impl(HWND handle)
 		: _handle(handle),
-		  _width(0u),
 		  _height(0u),
+		  _width(0u),
 		  _isFullscreen(false)
 	{
 		getSize(_width, _height);
 	}
+
+	Impl(const Impl& impl) = delete;
+	Impl(Impl&& impl) = delete;
 
 	~Impl() = default;
 
@@ -38,7 +48,7 @@ public:
 	{
 		MSG message;
 
-		while(PeekMessageW(&message, nullptr, 0u, 0u, PM_REMOVE) != 0)
+		while(PeekMessageW(&message, nullptr, 0u, 0u, PM_REMOVE) != FALSE)
 		{
 			if(message.message == WM_QUIT)
 				return false;
@@ -58,7 +68,15 @@ public:
 			MONITORINFO monitorInfo;
 			monitorInfo.cbSize = sizeof(monitorInfo);
 			const Int32 result = GetMonitorInfoW(monitorHandle, &monitorInfo);
-			DE_ASSERT(result != 0);
+
+			if(result == 0)
+			{
+				defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to get the info of the window's monitor." <<
+					Log::Flush();
+
+				DE_ERROR(0); // TODO: set errorCode
+			}
+
 			setFullscreenStyle(value);
 
 			if(value)
@@ -82,7 +100,14 @@ public:
 	{
 		const String16 title = toString16(value);
 		const Int32 result = SetWindowTextW(_handle, title.c_str());
-		DE_ASSERT(result != 0);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to set the title of the window." <<
+				Log::Flush();
+
+			DE_ERROR(0); // TODO: set errorCode
+		}
 	}
 
 	void show() const
@@ -90,21 +115,29 @@ public:
 		ShowWindow(_handle, SW_SHOWNORMAL);
 	}
 
+	Impl& operator =(const Impl& impl) = delete;
+	Impl& operator =(Impl&& impl) = delete;
+
 private:
 
 	HWND _handle;
-	Uint32 _width;
 	Uint32 _height;
+	Uint32 _width;
 	Bool _isFullscreen;
-
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
 
 	void getSize(Uint32& width, Uint32& height)
 	{
 		RECT rectangle;
 		const Int32 result = GetWindowRect(_handle, &rectangle);
-		DE_ASSERT(result != 0u);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to get the rectangle of the window." <<
+				Log::Flush();
+
+			DE_ERROR(0); // TODO: set errorCode
+		}
+
 		width = rectangle.right - rectangle.left;
 		height = rectangle.bottom - rectangle.top;
 	}
@@ -120,7 +153,14 @@ private:
 			newStyle |= WS_CAPTION;
 
 		const Int32 result = SetWindowLongPtrW(_handle, GWL_STYLE, newStyle);
-		DE_ASSERT(result == style);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to set the style of the window." <<
+				Log::Flush();
+
+			DE_ERROR(0); // TODO: set errorCode
+		}
 	}
 
 	void setRectangle(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height)
@@ -128,11 +168,14 @@ private:
 		const Int32 result = SetWindowPos(_handle, HWND_TOP, x, y, width, height,
 			SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
 
-		DE_ASSERT(result != 0);
-	}
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to set the rectangle of the window." <<
+				Log::Flush();
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+			DE_ERROR(0); // TODO: set errorCode
+		}
+	}
 };
 
 
@@ -148,6 +191,11 @@ Bool Window::processMessages() const
 	return _impl->processMessages();
 }
 
+void Window::setFullscreen(const Bool value) const
+{
+	_impl->setFullscreen(value);
+}
+
 void Window::setTitle(const String8& value) const
 {
 	_impl->setTitle(value);
@@ -156,11 +204,6 @@ void Window::setTitle(const String8& value) const
 void Window::show() const
 {
 	_impl->show();
-}
-
-void Window::setFullscreen(const Bool value) const
-{
-	_impl->setFullscreen(value);
 }
 
 // Private

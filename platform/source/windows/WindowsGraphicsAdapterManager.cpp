@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <core/Memory.h>
 #include <core/String.h>
+#include <core/Types.h>
 #include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
 #include <graphics/GraphicsAdapterManager.h>
@@ -32,26 +33,29 @@ public:
 			areAdaptersAvailable = initialiseAdapter(i, adapterInfo);
 	}
 
+	Impl(const Impl& impl) = delete;
+	Impl(Impl&& impl) = delete;
+
 	~Impl()
 	{
-		for(GraphicsAdapters::const_iterator i = _graphicsAdapters.begin(), end = _graphicsAdapters.end(); i != end;
+		for(GraphicsAdapterList::const_iterator i = _graphicsAdapters.begin(), end = _graphicsAdapters.end(); i != end;
 			++i)
 		{
 			DE_DELETE *i;
 		}
 	}
 
-	const GraphicsAdapters& graphicsAdapters() const
+	const GraphicsAdapterList& graphicsAdapters() const
 	{
 		return _graphicsAdapters;
 	}
 
+	Impl& operator =(const Impl& impl) = delete;
+	Impl& operator =(Impl&& impl) = delete;
+
 private:
 
-	GraphicsAdapters _graphicsAdapters;
-
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	GraphicsAdapterList _graphicsAdapters;
 
 	Bool initialiseAdapter(const Uint32 adapterIndex, DISPLAY_DEVICEW& adapterInfo)
 	{
@@ -59,7 +63,7 @@ private:
 
 		if(result != 0 && (adapterInfo.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) != 0u)
 		{
-			DisplayModes displayModes;
+			DisplayModeList displayModes;
 			const Uint32 currentDisplayModeIndex = getAdapterDisplayModes(adapterInfo.DeviceName, displayModes);
 
 			GraphicsAdapter* graphicsAdapter = DE_NEW GraphicsAdapter(toString8(adapterInfo.DeviceName), displayModes,
@@ -74,14 +78,14 @@ private:
 		return result != 0;
 	}
 
-	Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModes& modes) const
+	Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes) const
 	{
 		DisplayMode displayMode(1u, 0u, 0u, 0u);
 		DEVMODEW displayModeInfo;
 		displayModeInfo.dmDriverExtra = 0u;
 		displayModeInfo.dmSize = sizeof(displayModeInfo);
 
-		for(Uint32 i = 0u; displayMode.width() != 0; ++i)
+		for(Uint32 i = 0u; displayMode.width() != 0u; ++i)
 		{
 			displayMode = getAdapterDisplayMode(adapterName, i, displayModeInfo);
 
@@ -110,32 +114,34 @@ private:
 		}
 	}
 
-	Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo, const DisplayModes& modes)
-		const
+	Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
+		const DisplayModeList& modes) const
 	{
 		const DisplayMode displayMode = getAdapterDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);
-		DisplayModes::const_iterator iterator = std::find(modes.begin(), modes.end(), displayMode);
-		DE_ASSERT(iterator != modes.end());
+		DisplayModeList::const_iterator iterator = std::find(modes.begin(), modes.end(), displayMode);
 
 		return iterator - modes.begin();
 	}
-
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
 };
 
 
 // Public
 
 GraphicsAdapterManager::GraphicsAdapterManager()
-	: _impl(DE_NEW Impl()) { }
+	: _impl(nullptr) { }
 
-GraphicsAdapterManager::~GraphicsAdapterManager()
+void GraphicsAdapterManager::deinitialise()
 {
 	DE_DELETE _impl;
 }
 
-const GraphicsAdapters& GraphicsAdapterManager::graphicsAdapters() const
+const GraphicsAdapterList& GraphicsAdapterManager::graphicsAdapters() const
 {
+	DE_ASSERT(_impl != nullptr);
 	return _impl->graphicsAdapters();
+}
+
+void GraphicsAdapterManager::initialise()
+{
+	_impl = DE_NEW Impl();
 }

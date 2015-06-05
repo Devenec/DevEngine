@@ -33,6 +33,9 @@
     <ClInclude Include="include\core\ConfigMacros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -75,7 +78,7 @@
     <ClInclude Include="include\core\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\debug\AllocationTrace.h">
+    <ClInclude Include="include\core\debug\AllocationTracker.h">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
     <ClInclude Include="include\core\debug\Assert.h">
@@ -89,9 +92,6 @@
     <None Include="include\core\inline\Log.inl">
       <Filter>Header Files\inline</Filter>
     </None>
-    <None Include="include\core\inline\LogManager.inl">
-      <Filter>Header Files\inline</Filter>
-    </None>
     <None Include="include\core\inline\Numeric.inl">
       <Filter>Header Files\inline</Filter>
     </None>
@@ -100,7 +100,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\LogManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Memory.cpp">
@@ -112,7 +118,7 @@
     <ClCompile Include="source\Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\debug\AllocationTrace.cpp">
+    <ClCompile Include="source\debug\AllocationTracker.cpp">
       <Filter>Source Files\debug</Filter>
     </ClCompile>
     <ClCompile Include="source\debug\Assert.cpp">

@@ -21,7 +21,7 @@ namespace Debug
 		Uint32 fileLine;
 	};
 
-	using StackEntries = Core::Vector<StackEntry>;
+	using StackEntryList = Core::Vector<StackEntry>;
 
 	class StackTrace final
 	{
@@ -29,20 +29,20 @@ namespace Debug
 
 		StackTrace(const Uint32 maxEntryCount);
 
+		StackTrace(const StackTrace& stackTrace) = delete;
+		StackTrace(StackTrace&& stackTrace) = delete;
+
 		~StackTrace();
 
-		StackEntries generate() const;
+		StackEntryList generate() const;
+
+		StackTrace& operator =(const StackTrace& stackTrace) = delete;
+		StackTrace& operator =(StackTrace&& stackTrace) = delete;
 
 	private:
 
 		class Impl;
 
 		Impl* _impl;
-
-		StackTrace(const StackTrace& stackTrace) = delete;
-		StackTrace(StackTrace&& stackTrace) = delete;
-
-		StackTrace& operator =(const StackTrace& stackTrace) = delete;
-		StackTrace& operator =(StackTrace&& stackTrace) = delete;
 	};
 }

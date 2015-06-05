@@ -18,9 +18,19 @@ namespace Graphics
 
 		WindowManager();
 
-		~WindowManager();
+		WindowManager(const WindowManager& windowManager) = delete;
+		WindowManager(WindowManager&& windowManager) = delete;
+
+		~WindowManager() = default;
 
 		Window* createWindow();
+
+		void deinitialise();
+
+		void initialise();
+
+		WindowManager& operator =(const WindowManager& windowManager) = delete;
+		WindowManager& operator =(WindowManager&& windowManager) = delete;
 
 	private:
 
@@ -29,12 +39,6 @@ namespace Graphics
 		Impl* _impl;
 		Window* _window;
 
-		WindowManager(const WindowManager& windowManager) = delete;
-		WindowManager(WindowManager&& windowManager) = delete;
-
 		void destroyWindow();
-
-		WindowManager& operator =(const WindowManager& windowManager) = delete;
-		WindowManager& operator =(WindowManager&& windowManager) = delete;
 	};
 }

@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <core/debug/Assert.h>
 #include <core/Types.h>
+#include <core/debug/Assert.h>
 
 namespace Core
 {
@@ -16,6 +16,12 @@ namespace Core
 	class Singleton
 	{
 	public:
+
+		Singleton(const Singleton& singleton) = delete;
+		Singleton(Singleton&& singleton) = delete;
+
+		Singleton& operator =(const Singleton& singleton) = delete;
+		Singleton& operator =(Singleton&& singleton) = delete;
 
 		static inline Bool hasInstance();
 
@@ -30,14 +36,6 @@ namespace Core
 		inline Singleton();
 
 		inline ~Singleton();
-
-	private:
-
-		Singleton(const Singleton& singleton) = delete;
-		Singleton(Singleton&& singleton) = delete;
-
-		Singleton& operator =(const Singleton& singleton) = delete;
-		Singleton& operator =(Singleton&& singleton) = delete;
 	};
 
 #include "inline/Singleton.inl"

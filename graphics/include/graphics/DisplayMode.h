@@ -37,16 +37,16 @@ namespace Graphics
 
 		DisplayMode& operator =(DisplayMode&& displayMode) = default;
 
-		Bool operator ==(const DisplayMode& displayMode) const;
+		inline Bool operator ==(const DisplayMode& displayMode) const;
 
 		Bool operator <(const DisplayMode& displayMode) const;
 
 	private:
 
-		Uint32 _width;
-		Uint32 _height;
 		Uint32 _colourDepth;
 		Uint32 _frequency;
+		Uint32 _height;
+		Uint32 _width;
 	};
 
 #include "inline/DisplayMode.inl"

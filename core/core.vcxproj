@@ -60,6 +60,7 @@
     <ClInclude Include="include\core\Application.h" />
     <ClInclude Include="include\core\Array.h" />
     <ClInclude Include="include\core\ConfigMacros.h" />
+    <ClInclude Include="include\core\Error.h" />
     <ClInclude Include="include\core\List.h" />
     <ClInclude Include="include\core\Log.h" />
     <ClInclude Include="include\core\LogManager.h" />
@@ -74,22 +75,23 @@
     <ClInclude Include="include\core\UtilityMacros.h" />
     <ClInclude Include="include\core\UtilityMacrosInternal.h" />
     <ClInclude Include="include\core\Vector.h" />
-    <ClInclude Include="include\core\debug\AllocationTrace.h" />
+    <ClInclude Include="include\core\debug\AllocationTracker.h" />
     <ClInclude Include="include\core\debug\Assert.h" />
     <ClInclude Include="include\core\debug\StackTrace.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\core\inline\Log.inl" />
-    <None Include="include\core\inline\LogManager.inl" />
     <None Include="include\core\inline\Numeric.inl" />
     <None Include="include\core\inline\Singleton.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Error.cpp" />
     <ClCompile Include="source\Log.cpp" />
+    <ClCompile Include="source\LogManager.cpp" />
     <ClCompile Include="source\Memory.cpp" />
     <ClCompile Include="source\String.cpp" />
     <ClCompile Include="source\Types.cpp" />
-    <ClCompile Include="source\debug\AllocationTrace.cpp" />
+    <ClCompile Include="source\debug\AllocationTracker.cpp" />
     <ClCompile Include="source\debug\Assert.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

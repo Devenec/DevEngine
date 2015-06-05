@@ -7,20 +7,25 @@
 
 #include <cstdlib>
 #include <core/Log.h>
-#include <core/LogManager.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
 
 // Platform
 
-void Platform::failWindowsAssertion(const Char8* file, const Char8* function, const Uint32 line)
+void Platform::failWindowsAssertion(const Char8* file, const Uint32 line, const Char8* function)
 {
-	if(LogManager::hasInstance())
-	{
-		LogManager::instance().log() << LogLevel::Error << "Windows assertion failed @ " << file << " in function " <<
-			function << " on line " << line << ", error code " << GetLastError() << Log::flush;
-	}
+	defaultLog << LogLevel::Error << "Windows assertion failed with error code " << GetLastError() << ", at " <<
+		file << " on line " << line << " in function " << function << '.' << Log::Flush();
+
+	DE_DEBUGGER_BREAK();
+	std::abort();
+}
+
+void Platform::invokeWindowsError(const Uint32 errorCode)
+{
+	defaultLog << LogLevel::Error << "Windows error occurred with code " << errorCode << '-' << GetLastError() <<
+		'.' << Log::Flush();
 
 	DE_DEBUGGER_BREAK();
 	std::abort();

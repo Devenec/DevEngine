@@ -19,21 +19,25 @@ void Log::setfilterLevel(const LogLevel& value)
 
 // Operators
 
-Log& Log::operator <<(const LogLevel& logLevel)
+Log& Log::operator <<(const Char16* characters)
 {
-	_streamLevel = logLevel;
+	_stream << toString8(characters);
 	return *this;
 }
 
 Log& Log::operator <<(const Flush& flush)
 {
-	flush(*this);
+	static_cast<Void>(flush);
+	write(_streamLevel, _stream.str());
+	_stream.str(String8());
+	_streamLevel = LogLevel::Debug;
+
 	return *this;
 }
 
-Log& Log::operator <<(const Char16* characters)
+Log& Log::operator <<(const LogLevel& logLevel)
 {
-	_stream << toString8(characters);
+	_streamLevel = logLevel;
 	return *this;
 }
 
@@ -42,14 +46,6 @@ Log& Log::operator <<(const T& value)
 {
 	_stream << value;
 	return *this;
-}
-
-// Static
-
-void Log::flush(Log& log)
-{
-	log.write(log._streamLevel, log._stream.str());
-	log._stream.str(String8());
 }
 
 // Private

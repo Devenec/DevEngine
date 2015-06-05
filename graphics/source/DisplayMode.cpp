@@ -13,12 +13,6 @@ using namespace Graphics;
 
 // Operators
 
-Bool DisplayMode::operator ==(const DisplayMode& displayMode) const
-{
-	return _width == displayMode._width && _height == displayMode._height &&
-		_colourDepth == displayMode._colourDepth && _frequency == displayMode._frequency;
-}
-
 Bool DisplayMode::operator <(const DisplayMode& displayMode) const
 {
 	if(_width != displayMode._width)

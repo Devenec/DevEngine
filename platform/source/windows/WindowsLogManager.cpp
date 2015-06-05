@@ -11,10 +11,13 @@
 
 using namespace Core;
 
-// Private
+// Public
 
-void LogManager::initialise() const
+void LogManager::deinitialise() { }
+
+void LogManager::initialise()
 {
+	// TODO: disable console in production build?
 	const Int32 result = SetConsoleOutputCP(CP_UTF8);
 	DE_ASSERT_WINDOWS(result != 0);
 }

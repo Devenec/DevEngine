@@ -5,6 +5,8 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
+#include <core/Error.h>
+#include <core/Log.h>
 #include <core/Memory.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
@@ -17,6 +19,7 @@
 #include <platform/windows/Windows.h>
 #undef OEMRESOURCE
 
+using namespace Core;
 using namespace Graphics;
 
 // External
@@ -27,6 +30,8 @@ static const Uint32 WINDOW_DEFAULT_WIDTH  = 800u;
 static const Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
 static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
+static const Char8* WINDOW_MANAGER_CONTEXT = "[Platform::WindowsWindowManager]";
+
 
 // Implementation
 
@@ -36,15 +41,12 @@ public:
 
 	Impl()
 	{
-		HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
-		DE_ASSERT(cursorHandle != nullptr);
-
 		WNDCLASSEXW windowClass;
 		windowClass.cbClsExtra = 0;
 		windowClass.cbSize = sizeof(windowClass);
 		windowClass.cbWndExtra = 0;
 		windowClass.hbrBackground = nullptr;
-		windowClass.hCursor = static_cast<HCURSOR>(cursorHandle);
+		windowClass.hCursor = loadCursor();
 		windowClass.hIcon = nullptr; // TODO: set icon
 		windowClass.hIconSm = nullptr; // TODO: set icon
 		windowClass.hInstance = GetModuleHandleW(nullptr);
@@ -53,14 +55,23 @@ public:
 		windowClass.lpszMenuName = nullptr;
 		windowClass.style = CS_OWNDC;
 
-		const Uint32 result = RegisterClassExW(&windowClass);
-		DE_ASSERT(result != 0u);
+		registerWindowClass(windowClass);
 	}
+
+	Impl(const Impl& impl) = delete;
+	Impl(Impl&& impl) = delete;
 
 	~Impl()
 	{
 		const Int32 result = UnregisterClassW(WINDOW_CLASS_NAME, GetModuleHandleW(nullptr));
-		DE_ASSERT(result != 0);
+		
+		if(result == 0u)
+		{
+			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to deregister the window class." <<
+				Log::Flush();
+
+			DE_ERROR(0); // TODO: set errorCode
+		}
 	}
 
 	HWND createWindow() const
@@ -73,20 +84,53 @@ public:
 			windowRectangle.left, windowRectangle.top, windowWidth, windowHeight, nullptr, nullptr,
 			GetModuleHandleW(nullptr), nullptr);
 
-		DE_ASSERT(windowHandle != nullptr);
+		if(windowHandle == nullptr)
+		{
+			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to create a window." << Log::Flush();
+			DE_ERROR(0); // TODO: set errorCode
+		}
+
 		return windowHandle;
 	}
 
 	void destroyWindow(HWND windowHandle) const
 	{
 		const Int32 result = DestroyWindow(windowHandle);
-		DE_ASSERT(result != 0);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to destroy a window." << Log::Flush();
+			DE_ERROR(0); // TODO: set errorCode
+		}
 	}
+
+	Impl& operator =(const Impl& impl) = delete;
+	Impl& operator =(Impl&& impl) = delete;
 
 private:
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	HCURSOR loadCursor() const
+	{
+		HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
+
+		if(cursorHandle == nullptr)
+			return nullptr;
+		else
+			return static_cast<HCURSOR>(cursorHandle);
+	}
+
+	void registerWindowClass(const WNDCLASSEX& windowClassInfo)
+	{
+		const Uint32 result = RegisterClassExW(&windowClassInfo);
+
+		if(result == 0u)
+		{
+			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to register the window class." <<
+				Log::Flush();
+
+			DE_ERROR(0); // TODO: set errorCode
+		}
+	}
 
 	RECT createWindowRectangle() const
 	{
@@ -101,13 +145,17 @@ private:
 		rectangle.bottom = rectangle.top + WINDOW_DEFAULT_HEIGHT;
 
 		const Int32 result = AdjustWindowRectEx(&rectangle, WINDOW_STYLE, 0, 0u);
-		DE_ASSERT(result != 0);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to create a rectangle for a window." <<
+				Log::Flush();
+
+			DE_ERROR(0); // TODO: set errorCode
+		}
 
 		return rectangle;
 	}
-
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
 
 	static LRESULT CALLBACK processMessage(HWND windowHandle, Uint32 message, WPARAM wParam, LPARAM lParam)
 	{
@@ -129,16 +177,8 @@ private:
 // Public
 
 WindowManager::WindowManager()
-	: _impl(DE_NEW Impl()),
+	: _impl(nullptr),
 	  _window(nullptr) { }
-
-WindowManager::~WindowManager()
-{
-	if(_window != nullptr)
-		destroyWindow();
-	
-	DE_DELETE _impl;
-}
 
 Window* WindowManager::createWindow()
 {
@@ -149,6 +189,19 @@ Window* WindowManager::createWindow()
 	}
 
 	return _window;
+}
+
+void WindowManager::deinitialise()
+{
+	if(_window != nullptr)
+		destroyWindow();
+	
+	DE_DELETE _impl;
+}
+
+void WindowManager::initialise()
+{
+	_impl = DE_NEW Impl();
 }
 
 // Private

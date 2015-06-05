@@ -7,20 +7,16 @@
 
 #include <cstdlib>
 #include <core/Log.h>
-#include <core/LogManager.h>
 #include <core/debug/Assert.h>
 
 using namespace Core;
 
 // Debug
 
-void Debug::failAssertion(const Char8* expression, const Char8* file, const Char8* function, const Uint32 line)
+void Debug::failAssertion(const Char8* expression, const Char8* file, const Uint32 line, const Char8* function)
 {
-	if(LogManager::hasInstance()) // TODO: what if there is no instance?
-	{
-		LogManager::instance().log() << LogLevel::Error << "Assertion failed @ " << file << " in function " <<
-			function << " on line " << line << ": " << expression << Log::flush;
-	}
+	defaultLog << LogLevel::Error << "Assertion failed with expression '" << expression << "', at " << file <<
+		" on line " << line << " in function " << function << '.' << Log::Flush();
 
 	DE_DEBUGGER_BREAK();
 	std::abort();

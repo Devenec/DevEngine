@@ -25,7 +25,12 @@ namespace Core
 	{
 	public:
 
-		typedef void (*Flush)(Log& log);
+		struct Flush { };
+
+		Log(const Log& log) = delete;
+		Log(Log&& log) = delete;
+
+		~Log() = default;
 
 		inline LogLevel filterLevel() const;
 
@@ -33,16 +38,17 @@ namespace Core
 
 		void write(const LogLevel& level, const String8& message) const;
 
-		inline Log& operator <<(const LogLevel& logLevel);
-
-		inline Log& operator <<(const Flush& flush);
+		Log& operator =(const Log& log) = delete;
+		Log& operator =(Log&& log) = delete;
 
 		inline Log& operator <<(const Char16* characters);
 
+		inline Log& operator <<(const Flush& flush);
+
+		inline Log& operator <<(const LogLevel& logLevel);
+
 		template<typename T>
 		inline Log& operator <<(const T& value);
-
-		static inline void flush(Log& log);
 
 	private:
 
@@ -53,15 +59,11 @@ namespace Core
 		LogLevel _streamLevel;
 
 		inline Log();
-		Log(const Log& log) = delete;
-		Log(Log&& log) = delete;
-		~Log() = default;
 
 		void writeToConsole(const LogLevel& level, const String8& message) const;
-
-		Log& operator =(const Log& log) = delete;
-		Log& operator =(Log&& log) = delete;
 	};
 
 #include "inline/Log.inl"
+
+	extern Log& defaultLog;
 }

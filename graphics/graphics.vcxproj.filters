@@ -24,13 +24,13 @@
     <ClInclude Include="include\graphics\GraphicsAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\GraphicsAdapterManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\WindowManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\graphics\GraphicsAdapterManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

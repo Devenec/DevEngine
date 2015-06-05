@@ -18,6 +18,9 @@ namespace Graphics
 	{
 	public:
 
+		Window(const Window& window) = delete;
+		Window(Window&& window) = delete;
+
 		WindowHandle handle() const;
 
 		Bool processMessages() const;
@@ -28,6 +31,9 @@ namespace Graphics
 
 		void show() const;
 
+		Window& operator =(const Window& window) = delete;
+		Window& operator =(Window&& window) = delete;
+
 	private:
 
 		friend class WindowManager;
@@ -37,11 +43,6 @@ namespace Graphics
 		Impl* _impl;
 
 		Window(WindowHandle handle);
-		Window(const Window& window) = delete;
-		Window(Window&& window) = delete;
 		~Window();
-
-		Window& operator =(const Window& window) = delete;
-		Window& operator =(Window&& window) = delete;
 	};
 }

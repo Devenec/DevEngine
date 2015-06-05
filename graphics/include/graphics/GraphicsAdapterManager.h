@@ -13,7 +13,7 @@
 
 namespace Graphics
 {
-	using GraphicsAdapters = Core::Vector<GraphicsAdapter*>;
+	using GraphicsAdapterList = Core::Vector<GraphicsAdapter*>;
 
 	class GraphicsAdapterManager final : public Core::Singleton<GraphicsAdapterManager>
 	{
@@ -21,20 +21,24 @@ namespace Graphics
 
 		GraphicsAdapterManager();
 
-		~GraphicsAdapterManager();
+		GraphicsAdapterManager(const GraphicsAdapterManager& graphicsAdapterManager) = delete;
+		GraphicsAdapterManager(GraphicsAdapterManager&& graphicsAdapterManager) = delete;
 
-		const GraphicsAdapters& graphicsAdapters() const;
+		~GraphicsAdapterManager() = default;
+
+		void deinitialise();
+
+		const GraphicsAdapterList& graphicsAdapters() const;
+
+		void initialise();
+
+		GraphicsAdapterManager& operator =(const GraphicsAdapterManager& graphicsAdapterManager) = delete;
+		GraphicsAdapterManager& operator =(GraphicsAdapterManager&& graphicsAdapterManager) = delete;
 
 	private:
 
 		class Impl;
 
 		Impl* _impl;
-
-		GraphicsAdapterManager(const GraphicsAdapterManager& graphicsAdapterManager) = delete;
-		GraphicsAdapterManager(GraphicsAdapterManager&& graphicsAdapterManager) = delete;
-
-		GraphicsAdapterManager& operator =(const GraphicsAdapterManager& graphicsAdapterManager) = delete;
-		GraphicsAdapterManager& operator =(GraphicsAdapterManager&& graphicsAdapterManager) = delete;
 	};
 }

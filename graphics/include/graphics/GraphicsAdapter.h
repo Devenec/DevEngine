@@ -14,17 +14,23 @@
 
 namespace Graphics
 {
-	using DisplayModes = Core::Vector<DisplayMode>;
+	using DisplayModeList = Core::Vector<DisplayMode>;
 
 	class GraphicsAdapter final
 	{
 	public:
 
+		GraphicsAdapter(const GraphicsAdapter& graphicsAdapter) = delete;
+		GraphicsAdapter(GraphicsAdapter&& graphicsAdapter) = delete;
+
 		const DisplayMode& currentDisplayMode() const;
 
 		void setDisplayMode(const DisplayMode& mode) const;
 
-		const DisplayModes& supportedDisplayModes() const;
+		const DisplayModeList& supportedDisplayModes() const;
+
+		GraphicsAdapter& operator =(const GraphicsAdapter& graphicsAdapter) = delete;
+		GraphicsAdapter& operator =(GraphicsAdapter&& graphicsAdapter) = delete;
 
 	private:
 
@@ -34,14 +40,9 @@ namespace Graphics
 		
 		Impl* _impl;
 
-		GraphicsAdapter(const Core::String8& name, const DisplayModes& supportedDisplayModes,
+		GraphicsAdapter(const Core::String8& name, const DisplayModeList& supportedDisplayModes,
 			const Uint32 currentDisplayModeIndex);
 
-		GraphicsAdapter(const GraphicsAdapter& graphicsAdapter) = delete;
-		GraphicsAdapter(GraphicsAdapter&& graphicsAdapter) = delete;
 		~GraphicsAdapter();
-
-		GraphicsAdapter& operator =(const GraphicsAdapter& graphicsAdapter) = delete;
-		GraphicsAdapter& operator =(GraphicsAdapter&& graphicsAdapter) = delete;
 	};
 }

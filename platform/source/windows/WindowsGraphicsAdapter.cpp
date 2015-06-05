@@ -20,11 +20,14 @@ class GraphicsAdapter::Impl
 {
 public:
 
-	Impl(const String8& name, const DisplayModes& supportedDisplayModes, const Uint32 currentDisplayModeIndex)
+	Impl(const String8& name, const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex)
 		: _name(toString16(name)),
 		  _supportedDisplayModes(supportedDisplayModes),
-		  _initialDisplayModeIndex(currentDisplayModeIndex),
-		  _currentDisplayModeIndex(currentDisplayModeIndex) { }
+		  _currentDisplayModeIndex(currentDisplayModeIndex),
+		  _initialDisplayModeIndex(currentDisplayModeIndex) { }
+
+	Impl(const Impl& impl) = delete;
+	Impl(Impl&& impl) = delete;
 
 	~Impl()
 	{
@@ -39,8 +42,8 @@ public:
 
 	void setDisplayMode(const DisplayMode& mode)
 	{
-		DisplayModes::const_iterator iterator = std::find(_supportedDisplayModes.begin(), _supportedDisplayModes.end(),
-			mode);
+		DisplayModeList::const_iterator iterator = std::find(_supportedDisplayModes.begin(),
+			_supportedDisplayModes.end(), mode);
 
 		DE_ASSERT(iterator != _supportedDisplayModes.end());
 		DEVMODEW displayModeInfo;
@@ -56,29 +59,26 @@ public:
 		_currentDisplayModeIndex = iterator - _supportedDisplayModes.begin();
 	}
 
-	const DisplayModes& supportedDisplayModes() const
+	const DisplayModeList& supportedDisplayModes() const
 	{
 		return _supportedDisplayModes;
 	}
 
+	Impl& operator =(const Impl& impl) = delete;
+	Impl& operator =(Impl&& impl) = delete;
+
 private:
 
 	String16 _name;
-	DisplayModes _supportedDisplayModes;
-	Uint32 _initialDisplayModeIndex;
+	DisplayModeList _supportedDisplayModes;
 	Uint32 _currentDisplayModeIndex;
-
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Uint32 _initialDisplayModeIndex;
 
 	void changeDisplaySettings(DEVMODEW* displayModeInfo, const Uint32 flags) const
 	{
 		const Int32 result = ChangeDisplaySettingsExW(_name.c_str(), displayModeInfo, nullptr, flags, nullptr);
 		DE_ASSERT(result == DISP_CHANGE_SUCCESSFUL);
 	}
-	
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
 };
 
 
@@ -94,14 +94,14 @@ void GraphicsAdapter::setDisplayMode(const DisplayMode& mode) const
 	_impl->setDisplayMode(mode);
 }
 
-const DisplayModes& GraphicsAdapter::supportedDisplayModes() const
+const DisplayModeList& GraphicsAdapter::supportedDisplayModes() const
 {
 	return _impl->supportedDisplayModes();
 }
 
 // Private
 
-GraphicsAdapter::GraphicsAdapter(const String8& name, const DisplayModes& supportedDisplayModes,
+GraphicsAdapter::GraphicsAdapter(const String8& name, const DisplayModeList& supportedDisplayModes,
 	const Uint32 currentDisplayModeIndex)
 	: _impl(DE_NEW Impl(name, supportedDisplayModes, currentDisplayModeIndex)) { }
 
