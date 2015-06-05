@@ -68,6 +68,7 @@
     <ClInclude Include="include\core\Memory.h" />
     <ClInclude Include="include\core\Numeric.h" />
     <ClInclude Include="include\core\Platform.h" />
+    <ClInclude Include="include\core\Rectangle.h" />
     <ClInclude Include="include\core\Singleton.h" />
     <ClInclude Include="include\core\String.h" />
     <ClInclude Include="include\core\StringStream.h" />
@@ -82,6 +83,7 @@
   <ItemGroup>
     <None Include="include\core\inline\Log.inl" />
     <None Include="include\core\inline\Numeric.inl" />
+    <None Include="include\core\inline\Rectangle.inl" />
     <None Include="include\core\inline\Singleton.inl" />
   </ItemGroup>
   <ItemGroup>

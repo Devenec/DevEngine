@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <core/Rectangle.h>
 #include <core/String.h>
 #include <core/Types.h>
 
@@ -25,7 +26,11 @@ namespace Graphics
 
 		Bool processMessages() const;
 
+		Core::Rectangle rectangle() const;
+
 		void setFullscreen(const Bool value) const;
+
+		void setRectangle(const Core::Rectangle& value) const;
 
 		void setTitle(const Core::String8& value) const;
 

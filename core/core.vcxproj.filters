@@ -87,6 +87,9 @@
     <ClInclude Include="include\core\debug\StackTrace.h">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Rectangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\core\inline\Log.inl">
@@ -96,6 +99,9 @@
       <Filter>Header Files\inline</Filter>
     </None>
     <None Include="include\core\inline\Singleton.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
+    <None Include="include\core\inline\Rectangle.inl">
       <Filter>Header Files\inline</Filter>
     </None>
   </ItemGroup>

@@ -27,11 +27,9 @@ public:
 
 	Impl(HWND handle)
 		: _handle(handle),
-		  _height(0u),
-		  _width(0u),
 		  _isFullscreen(false)
 	{
-		getSize(_width, _height);
+		_rectangle = getRectangle();
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -42,6 +40,11 @@ public:
 	HWND handle() const
 	{
 		return _handle;
+	}
+
+	Bool isFullscreen() const
+	{
+		return _isFullscreen;
 	}
 
 	Bool processMessages() const
@@ -59,41 +62,44 @@ public:
 		return true;
 	}
 
-	// TODO: clean
+	Core::Rectangle rectangle() const
+	{
+		if(_isFullscreen)
+			return getRectangle();
+		else
+			return _rectangle;
+	}
+
 	void setFullscreen(const Bool value)
 	{
 		if(value != _isFullscreen)
 		{
-			HMONITOR monitorHandle = MonitorFromWindow(_handle, MONITOR_DEFAULTTONEAREST);
-			MONITORINFO monitorInfo;
-			monitorInfo.cbSize = sizeof(monitorInfo);
-			const Int32 result = GetMonitorInfoW(monitorHandle, &monitorInfo);
-
-			if(result == 0)
-			{
-				defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to get the info of the window's monitor." <<
-					Log::Flush();
-
-				DE_ERROR(0); // TODO: set errorCode
-			}
-
 			setFullscreenStyle(value);
 
 			if(value)
-			{
-				const Int32 windowWidth = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
-				const Int32 windowHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
-				setRectangle(monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top, windowWidth, windowHeight);
-			}
+				setRectangle(getFullscreenRectangle(), value);
 			else
-			{
-				const Int32 windowX = (monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left) / 2 - _width / 2;
-				const Int32 windowY = (monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top) / 2 - _height / 2;
-				setRectangle(windowX, windowY, _width, _height);
-			}
+				setRectangle(_rectangle);
 
 			_isFullscreen = value;
 		}
+	}
+	
+	void setRectangle(const Core::Rectangle& value, const Bool isFullscreenRectangle = false)
+	{
+		const Int32 result = SetWindowPos(_handle, HWND_TOP, value.x, value.y, value.width, value.height,
+			SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to set the rectangle of the window." <<
+				Log::Flush();
+
+			DE_ERROR(0); // TODO: set errorCode
+		}
+			
+		if(!isFullscreenRectangle)
+			_rectangle = value;
 	}
 
 	void setTitle(const String8& value) const
@@ -119,13 +125,12 @@ public:
 	Impl& operator =(Impl&& impl) = delete;
 
 private:
-
+	
+	Core::Rectangle _rectangle;
 	HWND _handle;
-	Uint32 _height;
-	Uint32 _width;
 	Bool _isFullscreen;
 
-	void getSize(Uint32& width, Uint32& height)
+	Core::Rectangle getRectangle() const
 	{
 		RECT rectangle;
 		const Int32 result = GetWindowRect(_handle, &rectangle);
@@ -138,11 +143,11 @@ private:
 			DE_ERROR(0); // TODO: set errorCode
 		}
 
-		width = rectangle.right - rectangle.left;
-		height = rectangle.bottom - rectangle.top;
+		return Core::Rectangle(rectangle.left, rectangle.top, rectangle.right - rectangle.left,
+			rectangle.bottom - rectangle.top);
 	}
 
-	void setFullscreenStyle(const Bool isFullscreen)
+	void setFullscreenStyle(const Bool isFullscreen) const
 	{
 		const Int32 style = GetWindowLongPtrW(_handle, GWL_STYLE);
 		Int32 newStyle = style;
@@ -163,18 +168,24 @@ private:
 		}
 	}
 
-	void setRectangle(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height)
+	Core::Rectangle getFullscreenRectangle() const
 	{
-		const Int32 result = SetWindowPos(_handle, HWND_TOP, x, y, width, height,
-			SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
+		HMONITOR monitorHandle = MonitorFromWindow(_handle, MONITOR_DEFAULTTONEAREST);
+		MONITORINFO monitorInfo;
+		monitorInfo.cbSize = sizeof(monitorInfo);
+		const Int32 result = GetMonitorInfoW(monitorHandle, &monitorInfo);
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to set the rectangle of the window." <<
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to get the info of the window's monitor." <<
 				Log::Flush();
 
 			DE_ERROR(0); // TODO: set errorCode
 		}
+		
+		return Core::Rectangle(monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top,
+			monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
+			monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top);
 	}
 };
 
@@ -191,9 +202,20 @@ Bool Window::processMessages() const
 	return _impl->processMessages();
 }
 
+Core::Rectangle Window::rectangle() const
+{
+	return _impl->rectangle();
+}
+
 void Window::setFullscreen(const Bool value) const
 {
 	_impl->setFullscreen(value);
+}
+
+void Window::setRectangle(const Core::Rectangle& value) const
+{
+	if(!_impl->isFullscreen())
+		_impl->setRectangle(value);
 }
 
 void Window::setTitle(const String8& value) const
