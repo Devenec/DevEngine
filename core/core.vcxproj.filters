@@ -16,11 +16,11 @@
     <Filter Include="Header Files\debug">
       <UniqueIdentifier>{7957408a-4a5d-4984-a952-d8c818fe69bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\debug">
-      <UniqueIdentifier>{0fd53b2c-3230-417e-9aaf-b65aa60dfc90}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\inline">
       <UniqueIdentifier>{5939b29e-d67b-4e2e-9efe-24b7a0083470}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\debug">
+      <UniqueIdentifier>{0fd53b2c-3230-417e-9aaf-b65aa60dfc90}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +34,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\FileStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\FileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\List.h">
@@ -55,6 +61,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\Platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\Rectangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\Singleton.h">
@@ -87,30 +96,21 @@
     <ClInclude Include="include\core\debug\StackTrace.h">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\Rectangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\core\FileStream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\core\FileSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\core\inline\FileStream.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
     <None Include="include\core\inline\Log.inl">
       <Filter>Header Files\inline</Filter>
     </None>
     <None Include="include\core\inline\Numeric.inl">
       <Filter>Header Files\inline</Filter>
     </None>
-    <None Include="include\core\inline\Singleton.inl">
-      <Filter>Header Files\inline</Filter>
-    </None>
     <None Include="include\core\inline\Rectangle.inl">
       <Filter>Header Files\inline</Filter>
     </None>
-    <None Include="include\core\inline\FileStream.inl">
+    <None Include="include\core\inline\Singleton.inl">
       <Filter>Header Files\inline</Filter>
     </None>
   </ItemGroup>

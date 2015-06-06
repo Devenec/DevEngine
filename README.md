@@ -1,6 +1,6 @@
 ## DevEngine
 
-A 3D game development framework and game engine  
+A 3D game development framework  
 Version 0.0.1
 
 
