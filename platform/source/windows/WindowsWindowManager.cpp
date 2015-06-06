@@ -40,6 +40,7 @@ class WindowManager::Impl
 public:
 
 	Impl()
+		: _isCursorVisible(true)
 	{
 		WNDCLASSEXW windowClass;
 		windowClass.cbClsExtra = 0;
@@ -56,6 +57,8 @@ public:
 		windowClass.style = CS_OWNDC;
 
 		registerWindowClass(windowClass);
+
+		//SetCursor(nullptr);
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -90,6 +93,7 @@ public:
 			DE_ERROR(0); // TODO: set errorCode
 		}
 
+		setUserDataPointer(windowHandle);
 		return windowHandle;
 	}
 
@@ -104,10 +108,17 @@ public:
 		}
 	}
 
+	void setCursorVisibility(const Bool value)
+	{
+		_isCursorVisible = value;
+	}
+
 	Impl& operator =(const Impl& impl) = delete;
 	Impl& operator =(Impl&& impl) = delete;
 
 private:
+
+	Bool _isCursorVisible;
 
 	HCURSOR loadCursor() const
 	{
@@ -119,7 +130,7 @@ private:
 			return static_cast<HCURSOR>(cursorHandle);
 	}
 
-	void registerWindowClass(const WNDCLASSEX& windowClassInfo)
+	void registerWindowClass(const WNDCLASSEX& windowClassInfo) const
 	{
 		const Uint32 result = RegisterClassExW(&windowClassInfo);
 
@@ -157,13 +168,44 @@ private:
 		return rectangle;
 	}
 
+	void setUserDataPointer(HWND windowHandle) const
+	{
+		SetLastError(0u);
+		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(this));
+
+		if(result == 0 && GetLastError() != 0u)
+		{
+			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT <<
+				"Failed to set the user data pointer of a window." << Log::Flush();
+
+			DE_ERROR(0); // TODO: set errorCode
+		}
+	}
+
+	Bool hideCursor(const Bool isCursorInClientArea) const
+	{
+		if(!_isCursorVisible && isCursorInClientArea)
+		{
+			SetCursor(nullptr);
+			return true;
+		}
+
+		return false;
+	}
+
 	static LRESULT CALLBACK processMessage(HWND windowHandle, Uint32 message, WPARAM wParam, LPARAM lParam)
 	{
+		Impl* impl = reinterpret_cast<Impl*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
+
 		switch(message)
 		{
 			case WM_CLOSE:
 				PostQuitMessage(0);
 				break;
+
+			case WM_SETCURSOR:
+				if(impl->hideCursor(LOWORD(lParam) == HTCLIENT))
+					return 1;
 
 			default:
 				return DefWindowProcW(windowHandle, message, wParam, lParam);
@@ -202,6 +244,11 @@ void WindowManager::deinitialise()
 void WindowManager::initialise()
 {
 	_impl = DE_NEW Impl();
+}
+
+void WindowManager::setCursorVisibility(const Bool value)
+{
+	_impl->setCursorVisibility(value);
 }
 
 // Private
