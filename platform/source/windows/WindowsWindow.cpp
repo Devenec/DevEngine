@@ -4,10 +4,8 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
-#include <core/Error.h>
 #include <core/Log.h>
 #include <core/Memory.h>
-#include <core/debug/Assert.h>
 #include <graphics/Window.h>
 #include <platform/windows/Windows.h>
 
@@ -92,10 +90,10 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to set the rectangle of the window." <<
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to set the rectangle of the window." <<
 				Log::Flush();
 
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 			
 		if(!isFullscreenRectangle)
@@ -109,10 +107,10 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to set the title of the window." <<
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to set the title of the window." <<
 				Log::Flush();
 
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 	}
 
@@ -137,10 +135,10 @@ private:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to get the rectangle of the window." <<
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to get the rectangle of the window." <<
 				Log::Flush();
 
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 
 		return Core::Rectangle(rectangle.left, rectangle.top, rectangle.right - rectangle.left,
@@ -161,10 +159,10 @@ private:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to set the style of the window." <<
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to set the style of the window." <<
 				Log::Flush();
 
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 	}
 
@@ -177,10 +175,10 @@ private:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << WINDOW_CONTEXT << "Failed to get the info of the window's monitor." <<
+			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to get the info of the window's monitor." <<
 				Log::Flush();
 
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 		
 		return Core::Rectangle(monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top,

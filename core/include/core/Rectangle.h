@@ -1,6 +1,7 @@
 /**
  * @file core/Rectangle.h
  *
+ * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 

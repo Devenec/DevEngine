@@ -1,6 +1,7 @@
 /**
  * @file core/inline/Rectangle.inl
  *
+ * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 

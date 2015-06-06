@@ -61,6 +61,7 @@
     <ClInclude Include="include\core\Array.h" />
     <ClInclude Include="include\core\ConfigMacros.h" />
     <ClInclude Include="include\core\Error.h" />
+    <ClInclude Include="include\core\FileStream.h" />
     <ClInclude Include="include\core\List.h" />
     <ClInclude Include="include\core\Log.h" />
     <ClInclude Include="include\core\LogManager.h" />
@@ -81,6 +82,7 @@
     <ClInclude Include="include\core\debug\StackTrace.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\core\inline\FileStream.inl" />
     <None Include="include\core\inline\Log.inl" />
     <None Include="include\core\inline\Numeric.inl" />
     <None Include="include\core\inline\Rectangle.inl" />

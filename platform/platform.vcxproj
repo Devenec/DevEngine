@@ -63,6 +63,7 @@
   <ItemGroup>
     <ClCompile Include="source\windows\Windows.cpp" />
     <ClCompile Include="source\windows\WindowsApplication.cpp" />
+    <ClCompile Include="source\windows\WindowsFileStream.cpp" />
     <ClCompile Include="source\windows\WindowsGraphicsAdapter.cpp" />
     <ClCompile Include="source\windows\WindowsGraphicsAdapterManager.cpp" />
     <ClCompile Include="source\windows\WindowsLog.cpp" />

@@ -5,10 +5,8 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
-#include <core/Error.h>
 #include <core/Log.h>
 #include <core/Memory.h>
-#include <core/Types.h>
 #include <core/UtilityMacros.h>
 #include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
@@ -30,7 +28,7 @@ static const Uint32 WINDOW_DEFAULT_WIDTH  = 800u;
 static const Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
 static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
-static const Char8* WINDOW_MANAGER_CONTEXT = "[Platform::WindowsWindowManager]";
+static const Char8* WINDOWMANAGER_CONTEXT = "[Platform::WindowsWindowManager]";
 
 
 // Implementation
@@ -57,8 +55,6 @@ public:
 		windowClass.style = CS_OWNDC;
 
 		registerWindowClass(windowClass);
-
-		//SetCursor(nullptr);
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -70,10 +66,10 @@ public:
 		
 		if(result == 0u)
 		{
-			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to deregister the window class." <<
+			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to deregister the window class." <<
 				Log::Flush();
 
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 	}
 
@@ -89,8 +85,8 @@ public:
 
 		if(windowHandle == nullptr)
 		{
-			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to create a window." << Log::Flush();
-			DE_ERROR(0); // TODO: set errorCode
+			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to create a window." << Log::Flush();
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 
 		setUserDataPointer(windowHandle);
@@ -103,8 +99,8 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to destroy a window." << Log::Flush();
-			DE_ERROR(0); // TODO: set errorCode
+			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to destroy a window." << Log::Flush();
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 	}
 
@@ -136,10 +132,10 @@ private:
 
 		if(result == 0u)
 		{
-			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to register the window class." <<
+			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to register the window class." <<
 				Log::Flush();
 
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 	}
 
@@ -159,10 +155,10 @@ private:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT << "Failed to create a rectangle for a window." <<
+			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to create a rectangle for a window." <<
 				Log::Flush();
 
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 
 		return rectangle;
@@ -175,10 +171,10 @@ private:
 
 		if(result == 0 && GetLastError() != 0u)
 		{
-			defaultLog << LogLevel::Error << WINDOW_MANAGER_CONTEXT <<
-				"Failed to set the user data pointer of a window." << Log::Flush();
+			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT <<
+				" Failed to set the user data pointer of a window." << Log::Flush();
 
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0); // TODO: set errorCode
 		}
 	}
 
