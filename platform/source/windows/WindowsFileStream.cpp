@@ -21,7 +21,7 @@ static const Char8* FILESTREAM_CONTEXT = "[Platform::WindowsFileStream]";
 // Implementation
 
 // TODO: support very long filepaths?
-class FileStream::Impl
+class FileStream::Impl final
 {
 public:
 

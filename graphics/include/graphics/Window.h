@@ -7,9 +7,13 @@
 
 #pragma once
 
-#include <core/Rectangle.h>
 #include <core/String.h>
 #include <core/Types.h>
+
+namespace Core
+{
+	class Rectangle;
+}
 
 namespace Graphics
 {

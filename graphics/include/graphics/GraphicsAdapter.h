@@ -10,10 +10,11 @@
 #include <core/String.h>
 #include <core/Types.h>
 #include <core/Vector.h>
-#include <graphics/DisplayMode.h>
 
 namespace Graphics
 {
+	class DisplayMode;
+
 	using DisplayModeList = Core::Vector<DisplayMode>;
 
 	class GraphicsAdapter final

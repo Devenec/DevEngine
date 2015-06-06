@@ -61,6 +61,7 @@
     <ClInclude Include="include\platform\windows\Windows.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\windows\WindowsFileSystem.cpp" />
     <ClCompile Include="source\windows\Windows.cpp" />
     <ClCompile Include="source\windows\WindowsApplication.cpp" />
     <ClCompile Include="source\windows\WindowsFileStream.cpp" />

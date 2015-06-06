@@ -11,6 +11,7 @@
 #include <core/Types.h>
 #include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
+#include <graphics/GraphicsAdapter.h>
 #include <graphics/GraphicsAdapterManager.h>
 #include <platform/windows/Windows.h>
 
@@ -19,7 +20,7 @@ using namespace Graphics;
 
 // Implementation
 
-class GraphicsAdapterManager::Impl
+class GraphicsAdapterManager::Impl final
 {
 public:
 

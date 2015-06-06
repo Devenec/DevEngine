@@ -10,7 +10,9 @@
 #include <core/UtilityMacros.h>
 #include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
+#include <graphics/GraphicsAdapter.h>
 #include <graphics/GraphicsAdapterManager.h>
+#include <graphics/Window.h>
 #include <graphics/WindowManager.h>
 
 #define OEMRESOURCE
@@ -33,7 +35,7 @@ static const Char8* WINDOWMANAGER_CONTEXT = "[Platform::WindowsWindowManager]";
 
 // Implementation
 
-class WindowManager::Impl
+class WindowManager::Impl final
 {
 public:
 

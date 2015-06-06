@@ -9,10 +9,11 @@
 
 #include <core/Singleton.h>
 #include <core/Types.h>
-#include <graphics/Window.h>
 
 namespace Graphics
 {
+	class Window;
+
 	class WindowManager final : public Core::Singleton<WindowManager>
 	{
 	public:

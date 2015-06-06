@@ -7,6 +7,7 @@
 
 #include <core/Application.h>
 #include <core/ConfigMacros.h>
+#include <core/FileSystem.h>
 #include <core/LogManager.h>
 #include <core/Platform.h>
 #include <core/Types.h>
@@ -28,6 +29,7 @@ using namespace Debug;
 
 		LogManager logManager;
 		logManager.initialise();
+		FileSystem fileSystem;
 		StartupParameters startupParameters(argumentCount);
 
 		for(Int32 i = 0; i < argumentCount; ++i)

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
+#include <graphics/DisplayMode.h>
 #include <graphics/GraphicsAdapter.h>
 #include <platform/windows/Windows.h>
 
@@ -16,7 +17,7 @@ using namespace Graphics;
 
 // Implementation
 
-class GraphicsAdapter::Impl
+class GraphicsAdapter::Impl final
 {
 public:
 

@@ -25,7 +25,7 @@ namespace Core
 		End
 	};
 
-	class FileStream
+	class FileStream final
 	{
 	public:
 

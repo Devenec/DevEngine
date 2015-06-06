@@ -6,6 +6,7 @@
 
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/Rectangle.h>
 #include <graphics/Window.h>
 #include <platform/windows/Windows.h>
 
@@ -19,7 +20,7 @@ static const Char8* WINDOW_CONTEXT = "[Platform::WindowsWindow]";
 
 // Implementation
 
-class Window::Impl
+class Window::Impl final
 {
 public:
 

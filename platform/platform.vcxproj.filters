@@ -59,5 +59,8 @@
     <ClCompile Include="source\windows\WindowsFileStream.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
+    <ClCompile Include="source\windows\WindowsFileSystem.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

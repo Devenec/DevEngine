@@ -9,10 +9,11 @@
 
 #include <core/Singleton.h>
 #include <core/Vector.h>
-#include <graphics/GraphicsAdapter.h>
 
 namespace Graphics
 {
+	class GraphicsAdapter;
+
 	using GraphicsAdapterList = Core::Vector<GraphicsAdapter*>;
 
 	class GraphicsAdapterManager final : public Core::Singleton<GraphicsAdapterManager>

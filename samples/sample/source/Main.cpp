@@ -7,6 +7,7 @@
 
 #include <core/Application.h>
 #include <core/FileStream.h>
+#include <core/FileSystem.h>
 #include <core/Log.h>
 #include <core/String.h>
 #include <core/Types.h>
@@ -53,6 +54,13 @@ static void testLog(const StartupParameters& startupParameters)
 
 static void testFileStream()
 {
+	FileSystem& fileSystem = FileSystem::instance();
+
+	defaultLog << LogLevel::Debug << "File exists: 'assets/test.txt' - " << fileSystem.fileExists("assets/test.txt") <<
+		", 'assets/testi.txt' - " << fileSystem.fileExists("assets/testi.txt") << Log::Flush();
+
+	//
+
 	FileStream fileStream;
 	fileStream.open("assets/\xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0.txt", OpenMode::Read);
 	const Uint64 fileStreamSize = fileStream.size();

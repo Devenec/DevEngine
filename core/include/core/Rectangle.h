@@ -11,7 +11,7 @@
 
 namespace Core
 {
-	class Rectangle
+	class Rectangle final
 	{
 	public:
 
