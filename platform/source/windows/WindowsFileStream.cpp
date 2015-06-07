@@ -31,6 +31,7 @@ public:
 
 	Impl(const Impl& impl) = delete;
 	Impl(Impl&& impl) = delete;
+
 	~Impl() = default;
 
 	void close()
@@ -213,6 +214,12 @@ private:
 
 FileStream::FileStream()
 	: _impl(DE_NEW Impl()) { }
+
+FileStream::FileStream(const String8& filepath, const OpenMode& openMode)
+	: _impl(DE_NEW Impl())
+{
+	_impl->open(filepath, openMode);
+}
 
 FileStream::~FileStream()
 {

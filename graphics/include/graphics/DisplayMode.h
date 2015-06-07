@@ -39,6 +39,8 @@ namespace Graphics
 
 		inline Bool operator ==(const DisplayMode& displayMode) const;
 
+		inline Bool operator !=(const DisplayMode& displayMode) const;
+
 		Bool operator <(const DisplayMode& displayMode) const;
 
 	private:

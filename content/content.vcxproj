@@ -57,7 +57,12 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\content\ContentBase.h" />
+    <ClInclude Include="include\content\ContentLoader.h" />
     <ClInclude Include="include\content\ContentManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\content\inline\ContentManager.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\ContentManager.cpp" />

@@ -7,20 +7,47 @@
 
 #pragma once
 
+#include <core/String.h>
+#include <core/Map.h>
+
+#include <content/ContentLoader.h>
+#include <core/FileStream.h>
+
 namespace Content
 {
-	class ContentManager
+	class ContentBase;
+
+	class ContentManager final
 	{
 	public:
 
-		ContentManager();
+		inline ContentManager(const Core::String8& contentRootDirectory = "");
 
 		ContentManager(const ContentManager& contentManager) = delete;
 		ContentManager(ContentManager&& contentManager) = delete;
 
 		~ContentManager();
 
+		inline const Core::String8& contentRootDirectory() const;
+
+		inline void setContentRootDirectory(const Core::String8& value);
+
+		template<typename T>
+		inline T* load(const Core::String8& filepath);
+
 		ContentManager& operator =(const ContentManager& contentManager) = delete;
 		ContentManager& operator =(ContentManager&& contentManager) = delete;
+
+	private:
+
+		using ContentMap = Core::Map<Core::String8, ContentBase*>;
+
+		Core::String8 _contentRootDirectory;
+		ContentMap _loadedContent;
+
+		template<typename T>
+		inline T* loadContent(const Core::String8& filepath);
 	};
+
+#include "inline/ContentManager.inl"
 }

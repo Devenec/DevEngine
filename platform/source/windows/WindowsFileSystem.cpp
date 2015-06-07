@@ -24,8 +24,10 @@ class FileSystem::Impl final
 public:
 
 	Impl() = default;
+
 	Impl(const Impl& impl) = delete;
 	Impl(Impl&& impl) = delete;
+
 	~Impl() = default;
 
 	Bool fileExists(const String8& filepath)
