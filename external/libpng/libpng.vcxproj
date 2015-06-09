@@ -11,21 +11,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{96E13A64-E77E-49F5-8C81-86B8EDA6900A}</ProjectGuid>
+    <ProjectGuid>{B210B7E1-5F0A-45DA-A045-477388628403}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Graphics</RootNamespace>
+    <RootNamespace>libpng</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -33,10 +33,10 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="..\properties\win32-debug.props" />
+    <Import Project="..\..\properties\win32-debug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="..\properties\win32-release.props" />
+    <Import Project="..\..\properties\win32-release.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -44,36 +44,50 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\external\libpng\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\external\zlib\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
-    <Link />
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\external\libpng\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsC</CompileAs>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\external\zlib\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\graphics\DisplayMode.h" />
-    <ClInclude Include="include\graphics\GraphicsAdapter.h" />
-    <ClInclude Include="include\graphics\GraphicsAdapterManager.h" />
-    <ClInclude Include="include\graphics\Image.h" />
-    <ClInclude Include="include\graphics\ImageLoader.h" />
-    <ClInclude Include="include\graphics\Window.h" />
-    <ClInclude Include="include\graphics\WindowManager.h" />
+    <ClInclude Include="include\png.h" />
+    <ClInclude Include="include\pngconf.h" />
+    <ClInclude Include="include\pngdebug.h" />
+    <ClInclude Include="include\pnginfo.h" />
+    <ClInclude Include="include\pnglibconf.h" />
+    <ClInclude Include="include\pngpriv.h" />
+    <ClInclude Include="include\pngstruct.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\graphics\inline\DisplayMode.inl" />
-    <None Include="include\graphics\inline\Image.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="source\DisplayMode.cpp" />
-    <ClCompile Include="source\ImageLoader.cpp" />
+    <ClCompile Include="source\png.c" />
+    <ClCompile Include="source\pngerror.c" />
+    <ClCompile Include="source\pngget.c" />
+    <ClCompile Include="source\pngmem.c" />
+    <ClCompile Include="source\pngpread.c" />
+    <ClCompile Include="source\pngread.c" />
+    <ClCompile Include="source\pngrio.c" />
+    <ClCompile Include="source\pngrtran.c" />
+    <ClCompile Include="source\pngrutil.c" />
+    <ClCompile Include="source\pngset.c" />
+    <ClCompile Include="source\pngtrans.c" />
+    <ClCompile Include="source\pngwio.c" />
+    <ClCompile Include="source\pngwrite.c" />
+    <ClCompile Include="source\pngwtran.c" />
+    <ClCompile Include="source\pngwutil.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -30,12 +30,14 @@ using namespace Debug;
 		LogManager logManager;
 		logManager.initialise();
 		FileSystem fileSystem;
+		fileSystem.initialise();
 		StartupParameters startupParameters(argumentCount);
 
 		for(Int32 i = 0; i < argumentCount; ++i)
 			startupParameters[i] = toString8(arguments[i]);
 
 		devEngineMain(startupParameters);
+		fileSystem.deinitialise();
 		logManager.deinitialise();
 
 	#if DE_BUILD_CONFIG != DE_BUILD_CONFIG_PRODUCTION

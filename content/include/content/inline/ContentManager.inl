@@ -24,12 +24,12 @@ template<typename T>
 T* ContentManager::load(const Core::String8& filepath)
 {
 	Core::String8 contentFilepath = _contentRootDirectory + filepath;
-	ContentMap::const_iterator iterator = _loadedContent.find(contentFilepath);
+	ContentMap::iterator iterator = _loadedContent.find(contentFilepath);
 
 	if(iterator == _loadedContent.end())
-		return loadContent(contentFilepath);
+		return loadContent<T>(contentFilepath);
 	else
-		return iterator->second;
+		return static_cast<T*>(iterator->second);
 }
 
 // Private
@@ -37,10 +37,12 @@ T* ContentManager::load(const Core::String8& filepath)
 template<typename T>
 T* ContentManager::loadContent(const Core::String8& filepath)
 {
-	ContentLoader contentLoader = ContentLoader<T>::loader();
+	ContentLoader<T>* contentLoader = ContentLoader<T>::loader();
 	Core::FileStream fileStream(filepath);
-	T* content = contentLoader.load(fileStream);
+	T* content = contentLoader->load(fileStream);
 	_loadedContent[filepath] = content;
+	fileStream.close();
+	DE_DELETE contentLoader; // TODO: remove when a better solution is found
 
 	return content;
 }

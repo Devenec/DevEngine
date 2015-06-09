@@ -5,6 +5,7 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
+#include <content/ContentManager.h>
 #include <core/Application.h>
 #include <core/FileStream.h>
 #include <core/FileSystem.h>
@@ -14,9 +15,11 @@
 #include <core/UtilityMacros.h>
 #include <core/Vector.h>
 #include <graphics/GraphicsAdapterManager.h>
+#include <graphics/Image.h>
 #include <graphics/Window.h>
 #include <graphics/WindowManager.h>
 
+using namespace Content;
 using namespace Core;
 using namespace Graphics;
 
@@ -108,6 +111,9 @@ static void testFileStream()
 
 static void testWindow()
 {
+	ContentManager contentManager;
+	Image* image = contentManager.load<Image>("assets/icon.png");
+
 	GraphicsAdapterManager graphicsAdapterManager;
 	graphicsAdapterManager.initialise();
 	WindowManager windowManager;

@@ -8,6 +8,7 @@
 #include <core/FileSystem.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/debug/Assert.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
@@ -63,14 +64,20 @@ private:
 // Public
 
 FileSystem::FileSystem()
-	: _impl(DE_NEW Impl()) { }
+	: _impl(nullptr) { }
 
-FileSystem::~FileSystem()
+void FileSystem::deinitialise()
 {
 	DE_DELETE _impl;
 }
 
 Bool FileSystem::fileExists(const String8& filepath)
 {
+	DE_ASSERT(_impl != nullptr);
 	return _impl->fileExists(filepath);
+}
+
+void FileSystem::initialise()
+{
+	_impl = DE_NEW Impl();
 }

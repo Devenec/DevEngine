@@ -22,9 +22,13 @@ namespace Core
 		FileSystem(const FileSystem& fileSystem) = delete;
 		FileSystem(FileSystem&& fileSystem) = delete;
 
-		~FileSystem();
+		~FileSystem() = default;
+
+		void deinitialise();
 
 		Bool fileExists(const String8& filepath);
+
+		void initialise();
 
 		FileSystem& operator =(const FileSystem& fileSystem) = delete;
 		FileSystem& operator =(FileSystem&& fileSystem) = delete;

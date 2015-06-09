@@ -11,21 +11,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{96E13A64-E77E-49F5-8C81-86B8EDA6900A}</ProjectGuid>
+    <ProjectGuid>{58FC06C0-73AE-4091-9AAC-E94ED3A27649}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Graphics</RootNamespace>
+    <RootNamespace>zlib</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -33,10 +33,10 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="..\properties\win32-debug.props" />
+    <Import Project="..\..\properties\win32-debug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="..\properties\win32-release.props" />
+    <Import Project="..\..\properties\win32-release.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -44,36 +44,52 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\external\libpng\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4127;4131;4244;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
-    <Link />
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\external\libpng\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4127;4131;4244;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\graphics\DisplayMode.h" />
-    <ClInclude Include="include\graphics\GraphicsAdapter.h" />
-    <ClInclude Include="include\graphics\GraphicsAdapterManager.h" />
-    <ClInclude Include="include\graphics\Image.h" />
-    <ClInclude Include="include\graphics\ImageLoader.h" />
-    <ClInclude Include="include\graphics\Window.h" />
-    <ClInclude Include="include\graphics\WindowManager.h" />
+    <ClInclude Include="include\crc32.h" />
+    <ClInclude Include="include\deflate.h" />
+    <ClInclude Include="include\gzguts.h" />
+    <ClInclude Include="include\inffast.h" />
+    <ClInclude Include="include\inffixed.h" />
+    <ClInclude Include="include\inflate.h" />
+    <ClInclude Include="include\inftrees.h" />
+    <ClInclude Include="include\trees.h" />
+    <ClInclude Include="include\zconf.h" />
+    <ClInclude Include="include\zlib.h" />
+    <ClInclude Include="include\zutil.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\graphics\inline\DisplayMode.inl" />
-    <None Include="include\graphics\inline\Image.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="source\DisplayMode.cpp" />
-    <ClCompile Include="source\ImageLoader.cpp" />
+    <ClCompile Include="source\adler32.c" />
+    <ClCompile Include="source\compress.c" />
+    <ClCompile Include="source\crc32.c" />
+    <ClCompile Include="source\deflate.c" />
+    <ClCompile Include="source\gzclose.c" />
+    <ClCompile Include="source\gzlib.c" />
+    <ClCompile Include="source\gzread.c" />
+    <ClCompile Include="source\gzwrite.c" />
+    <ClCompile Include="source\infback.c" />
+    <ClCompile Include="source\inffast.c" />
+    <ClCompile Include="source\inflate.c" />
+    <ClCompile Include="source\inftrees.c" />
+    <ClCompile Include="source\trees.c" />
+    <ClCompile Include="source\uncompr.c" />
+    <ClCompile Include="source\zutil.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

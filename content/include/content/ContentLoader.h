@@ -18,21 +18,24 @@ namespace Content
 	public:
 
 		ContentLoader(const ContentLoader& contentLoader) = delete;
-
-		ContentLoader(ContentLoader&& contentLoader) = default;
+		ContentLoader(ContentLoader&& contentLoader) = delete;
 		
-		virtual ~ContentLoader() = default;
 
-		virtual T* load(const Core::FileStream& fileStream) = 0;
+		virtual T* load(Core::FileStream& fileStream) = 0;
 
 		ContentLoader& operator =(const ContentLoader& contentLoader) = delete;
+		ContentLoader& operator =(ContentLoader&& contentLoader) = delete;
 
-		ContentLoader& operator =(ContentLoader&& contentLoader) = default;
-
-		static inline ContentLoader loader(); // TODO: use ContentLoader<T>?
+		static ContentLoader<T>* loader();
 
 	protected:
 
 		ContentLoader() = default;
+
+		virtual ~ContentLoader() = default;
+
+	private:
+
+		friend class ContentManager;
 	};
 }
