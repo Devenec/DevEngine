@@ -1,5 +1,5 @@
 /**
- * @file graphics/Image.inl
+ * @file graphics/inline/Image.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa

@@ -83,8 +83,10 @@
     <ClInclude Include="include\core\debug\StackTrace.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\core\inline\AllocationTracker.inl" />
     <None Include="include\core\inline\FileStream.inl" />
     <None Include="include\core\inline\Log.inl" />
+    <None Include="include\core\inline\Memory.inl" />
     <None Include="include\core\inline\Numeric.inl" />
     <None Include="include\core\inline\Rectangle.inl" />
     <None Include="include\core\inline\Singleton.inl" />

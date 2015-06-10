@@ -18,20 +18,21 @@ namespace Debug
 	{
 	public:
 		
-		AllocationTracker();
+		inline AllocationTracker();
 
 		AllocationTracker(const AllocationTracker& allocationTracker) = delete;
 		AllocationTracker(AllocationTracker&& allocationTracker) = delete;
 
 		~AllocationTracker() = default;
 
-		void deinitialise();
+		inline void deinitialise();
 
-		void deregisterAllocation(Void* pointer);
+		void deregisterAllocation(Void* pointer, const Uint32 byteCount);
 
-		void initialise();
+		inline void initialise();
 
-		void registerAllocation(Void* pointer, const Char8* file, const Uint32 line, const Char8* function);
+		void registerAllocation(Void* pointer, const Uint32 byteCount, const Char8* file, const Uint32 line,
+			const Char8* function);
 
 		AllocationTracker& operator =(const AllocationTracker& allocationTracker) = delete;
 		AllocationTracker& operator =(AllocationTracker&& allocationTracker) = delete;
@@ -43,11 +44,13 @@ namespace Debug
 			const Char8* file;
 			const Char8* function;
 
+			Uint32 byteCount;
 			Uint32 line;
 
-			AllocationRecord(const Char8* file, const Uint32 line, const Char8* function)
+			AllocationRecord(const Uint32 byteCount, const Char8* file, const Uint32 line, const Char8* function)
 				: file(file),
 				  function(function),
+				  byteCount(byteCount),
 				  line(line) { }
 		};
 
@@ -58,4 +61,6 @@ namespace Debug
 
 		void checkForMemoryLeaks() const;
 	};
+
+#include "../inline/AllocationTracker.inl"
 }

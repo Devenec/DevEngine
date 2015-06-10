@@ -13,10 +13,7 @@
 using namespace Core;
 using namespace Graphics;
 
-// External
-
 static const Char8* WINDOW_CONTEXT = "[Platform::WindowsWindow]";
-
 
 // Implementation
 

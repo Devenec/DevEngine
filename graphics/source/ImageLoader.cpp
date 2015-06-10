@@ -16,10 +16,7 @@
 using namespace Core;
 using namespace Graphics;
 
-// External
-
 static const Char8* IMAGELOADER_CONTEXT = "[Graphics::ImageLoader]";
-
 
 // Public
 

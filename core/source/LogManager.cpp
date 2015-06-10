@@ -12,10 +12,7 @@
 
 using namespace Core;
 
-// External
-
 static Array<Byte, sizeof(Log)> defaultLogMemory;
-
 
 // Core
 

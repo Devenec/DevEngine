@@ -9,6 +9,8 @@
 #include <core/Error.h>
 #include <core/Log.h>
 
+// Core
+
 void Core::invokeError(const Uint32 errorCode)
 {
 	defaultLog << LogLevel::Error << "Error occurred with code " << errorCode << '.' << Log::Flush();

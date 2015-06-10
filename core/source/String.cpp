@@ -11,6 +11,8 @@
 
 using namespace Core;
 
+// Core
+
 String8 Core::toString8(const String16& string)
 {
 	std::wstring_convert<std::codecvt_utf8_utf16<Char16>> converter;

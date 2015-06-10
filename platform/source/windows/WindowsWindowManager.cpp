@@ -22,8 +22,6 @@
 using namespace Core;
 using namespace Graphics;
 
-// External
-
 static const Char16* WINDOW_CLASS_NAME	  = DE_CHAR16("devengine");
 static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine");
 static const Uint32 WINDOW_DEFAULT_WIDTH  = 800u;
@@ -31,7 +29,6 @@ static const Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
 static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
 static const Char8* WINDOWMANAGER_CONTEXT = "[Platform::WindowsWindowManager]";
-
 
 // Implementation
 

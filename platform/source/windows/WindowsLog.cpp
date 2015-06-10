@@ -12,8 +12,6 @@
 
 using namespace Core;
 
-// External
-
 static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
 {
 	"DEBUG  ",
@@ -21,7 +19,6 @@ static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
 	"WARNING",
 	"ERROR  "
 };
-
 
 // Private
 
