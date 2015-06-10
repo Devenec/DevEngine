@@ -7,10 +7,7 @@
 
 #pragma once
 
-#include <png.h>
 #include <content/ContentLoader.h>
-#include <core/Types.h>
-#include <core/Vector.h>
 
 namespace Core
 {
@@ -25,7 +22,7 @@ namespace Graphics
 	{
 	public:
 
-		ImageLoader(); // TODO: make inline
+		ImageLoader() = default;
 
 		ImageLoader(const ImageLoader& imageLoader) = delete;
 		ImageLoader(ImageLoader&& imageLoader) = delete;
@@ -36,26 +33,5 @@ namespace Graphics
 
 		ImageLoader& operator =(const ImageLoader& imageLoader) = delete;
 		ImageLoader& operator =(ImageLoader&& imageLoader) = delete;
-
-	private:
-
-		using PNGReader = png_struct;
-		using PNGInfo = png_info;
-
-		PNGInfo* _pngInfo;
-		PNGReader* _pngReader;
-
-		void initialisePngReader(Core::FileStream& fileStream);
-		void initialisePngInfo();
-		Core::Vector<Byte> readImage() const;
-		ImageFormat getImageFormat() const;
-		void deinitialisePngReader();
-
-		static void validatePngSignature(Core::FileStream& fileStream);
-		static void handlePngReaderError(PNGReader* pngReader, const Char8* message);
-		static void handlePngReaderWarning(PNGReader* pngReader, const Char8* message);
-		static Void* allocatePngReaderMemory(PNGReader* pngReader, Uint32 byteCount);
-		static void deallocatePngReaderMemory(PNGReader* pngReader, Void* pointer);
-		static void readPngReader(PNGReader* pngReader, Byte* buffer, Uint32 byteCount);
 	};
 }

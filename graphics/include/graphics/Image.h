@@ -10,17 +10,10 @@
 #include <content/ContentBase.h>
 #include <core/Types.h>
 #include <core/Vector.h>
+#include <graphics/ImageFormat.h>
 
 namespace Graphics
 {
-	enum class ImageFormat
-	{
-		R8,
-		RA8,
-		RGB8,
-		RGBA8
-	};
-
 	class Image final : public Content::ContentBase
 	{
 	public:
