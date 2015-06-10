@@ -225,7 +225,7 @@ Window* WindowManager::createWindow()
 	if(_window == nullptr)
 	{
 		HWND windowHandle = _impl->createWindow();
-		_window = DE_NEW Window(windowHandle);
+		_window = DE_NEW(Window)(windowHandle);
 	}
 
 	return _window;
@@ -236,12 +236,12 @@ void WindowManager::deinitialise()
 	if(_window != nullptr)
 		destroyWindow();
 	
-	DE_DELETE _impl;
+	DE_DELETE(_impl, Impl);
 }
 
 void WindowManager::initialise()
 {
-	_impl = DE_NEW Impl();
+	_impl = DE_NEW(Impl)();
 }
 
 void WindowManager::setCursorVisibility(const Bool value)
@@ -254,6 +254,6 @@ void WindowManager::setCursorVisibility(const Bool value)
 void WindowManager::destroyWindow()
 {
 	_impl->destroyWindow(static_cast<HWND>(_window->handle()));
-	DE_DELETE _window;
+	DE_DELETE(_window, Window);
 	_window = nullptr;
 }

@@ -104,9 +104,9 @@ const DisplayModeList& GraphicsAdapter::supportedDisplayModes() const
 
 GraphicsAdapter::GraphicsAdapter(const String8& name, const DisplayModeList& supportedDisplayModes,
 	const Uint32 currentDisplayModeIndex)
-	: _impl(DE_NEW Impl(name, supportedDisplayModes, currentDisplayModeIndex)) { }
+	: _impl(DE_NEW(Impl)(name, supportedDisplayModes, currentDisplayModeIndex)) { }
 
 GraphicsAdapter::~GraphicsAdapter()
 {
-	DE_DELETE _impl;
+	DE_DELETE(_impl, Impl);
 }

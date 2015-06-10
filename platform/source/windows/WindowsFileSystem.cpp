@@ -68,7 +68,7 @@ FileSystem::FileSystem()
 
 void FileSystem::deinitialise()
 {
-	DE_DELETE _impl;
+	DE_DELETE(_impl, Impl);
 }
 
 Bool FileSystem::fileExists(const String8& filepath)
@@ -79,5 +79,5 @@ Bool FileSystem::fileExists(const String8& filepath)
 
 void FileSystem::initialise()
 {
-	_impl = DE_NEW Impl();
+	_impl = DE_NEW(Impl)();
 }

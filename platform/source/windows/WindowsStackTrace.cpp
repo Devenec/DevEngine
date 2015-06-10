@@ -125,11 +125,11 @@ private:
 // Public
 
 StackTrace::StackTrace(const Uint32 maxEntryCount)
-	: _impl(DE_NEW Impl(maxEntryCount)) { }
+	: _impl(DE_NEW(Impl)(maxEntryCount)) { }
 
 StackTrace::~StackTrace()
 {
-	DE_DELETE _impl;
+	DE_DELETE(_impl, Impl);
 }
 
 StackEntryList StackTrace::generate() const

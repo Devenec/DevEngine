@@ -230,9 +230,9 @@ void Window::show() const
 // Private
 
 Window::Window(WindowHandle windowHandle)
-	: _impl(DE_NEW Impl(static_cast<HWND>(windowHandle))) { }
+	: _impl(DE_NEW(Impl)(static_cast<HWND>(windowHandle))) { }
 
 Window::~Window()
 {
-	DE_DELETE _impl;
+	DE_DELETE(_impl, Impl);
 }

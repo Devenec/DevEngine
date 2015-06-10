@@ -16,5 +16,5 @@ using namespace Content;
 ContentManager::~ContentManager()
 {
 	for(ContentMap::const_iterator i = _loadedContent.begin(), end = _loadedContent.end(); i != end; ++i)
-		DE_DELETE i->second;
+		DE_DELETE(i->second, ContentBase);
 }

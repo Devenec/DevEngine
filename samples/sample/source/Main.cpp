@@ -66,12 +66,12 @@ static void testFileStream()
 
 	FileStream fileStream;
 	fileStream.open("assets/\xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0.txt", OpenMode::Read);
-	const Uint64 fileStreamSize = fileStream.size();
-	Vector<Char8> buffer(static_cast<Uint32>(fileStreamSize));
+	const Uint64 fileStreamSize = fileStream.size() - 2u;
+	Vector<Char8> buffer(static_cast<Uint32>(fileStreamSize + 1u));
 	buffer[static_cast<Uint32>(fileStreamSize) - 1u] = '\0';
 	
 	const Uint32 bytesRead = fileStream.read(reinterpret_cast<Byte*>(buffer.data()),
-		static_cast<Uint32>(fileStreamSize) - 1u);
+		static_cast<Uint32>(fileStreamSize));
 
 	fileStream.close();
 
@@ -89,7 +89,7 @@ static void testFileStream()
 	defaultLog << LogLevel::Debug << "Read: " << array << ", current position: " << fileStream.position() << '.' <<
 		Log::Flush();
 
-	fileStream.seek(SeekPosition::End, -17);
+	fileStream.seek(SeekPosition::End, -18);
 	fileStream.seek(SeekPosition::Current, 7);
 	array[8] = '\0';
 	fileStream.read(reinterpret_cast<Byte*>(array), 8u);
@@ -98,7 +98,7 @@ static void testFileStream()
 		Log::Flush();
 
 	defaultLog << LogLevel::Debug << "Is at end of file: " << fileStream.isAtEndOfFile() << '.' << Log::Flush();
-	fileStream.seek(SeekPosition::Begin, 42);
+	fileStream.seek(SeekPosition::Begin, 43);
 
 	defaultLog << LogLevel::Debug << "Is at end of file (after seek): " << fileStream.isAtEndOfFile() << '.' <<
 		Log::Flush();

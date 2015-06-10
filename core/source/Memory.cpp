@@ -11,16 +11,15 @@
 #include <core/Memory.h>
 #include <core/debug/AllocationTracker.h>
 
-using namespace Core;
 using namespace Debug;
 
-Void* operator new(Uint32 size)
+Void* Core::allocate(const Uint32 byteCount)
 {
-	Void* pointer = std::malloc(size);
+	Void* pointer = std::malloc(byteCount);
 
 	if(pointer == nullptr)
 	{
-		defaultLog << LogLevel::Error << "[Core::new] Failed to allocate memory." << Log::Flush();
+		defaultLog << LogLevel::Error << "[Core::allocate] Failed to allocate memory." << Log::Flush();
 		DE_ERROR(0); // TODO: set errorCode
 	}
 
@@ -28,30 +27,18 @@ Void* operator new(Uint32 size)
 }
 
 #if DE_BUILD_CONFIG != DE_BUILD_CONFIG_PRODUCTION
-	Void* operator new(Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
-	{
-		Void* pointer = ::operator new(size);
-
-		if(AllocationTracker::hasInstance())
-			AllocationTracker::instance().registerAllocation(pointer, file, line, function);
-
-		return pointer;
-	}
-#endif
-
-Void* operator new[](Uint32 size)
+Void* Core::allocate(const Uint32 byteCount, const Char8* file, const Uint32 line, const Char8* function)
 {
-	return ::operator new(size);
-}
+	Void* pointer = allocate(byteCount);
 
-#if DE_BUILD_CONFIG != DE_BUILD_CONFIG_PRODUCTION
-	Void* operator new[](Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
-	{
-		return ::operator new(size, file, line, function);
-	}
+	if(AllocationTracker::hasInstance())
+		AllocationTracker::instance().registerAllocation(pointer, file, line, function);
+
+	return pointer;
+}
 #endif
 
-void operator delete(Void* pointer)
+void Core::deallocate(Void* pointer)
 {
 #if DE_BUILD_CONFIG != DE_BUILD_CONFIG_PRODUCTION
 	if(AllocationTracker::hasInstance())
@@ -59,9 +46,4 @@ void operator delete(Void* pointer)
 #endif
 
 	std::free(pointer);
-}
-
-void operator delete[](Void* pointer)
-{
-	::operator delete(pointer);
 }

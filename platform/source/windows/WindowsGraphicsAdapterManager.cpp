@@ -42,7 +42,7 @@ public:
 		for(GraphicsAdapterList::const_iterator i = _graphicsAdapters.begin(), end = _graphicsAdapters.end(); i != end;
 			++i)
 		{
-			DE_DELETE *i;
+			DE_DELETE(*i, GraphicsAdapter);
 		}
 	}
 
@@ -67,7 +67,7 @@ private:
 			DisplayModeList displayModes;
 			const Uint32 currentDisplayModeIndex = getAdapterDisplayModes(adapterInfo.DeviceName, displayModes);
 
-			GraphicsAdapter* graphicsAdapter = DE_NEW GraphicsAdapter(toString8(adapterInfo.DeviceName), displayModes,
+			GraphicsAdapter* graphicsAdapter = DE_NEW(GraphicsAdapter)(toString8(adapterInfo.DeviceName), displayModes,
 				currentDisplayModeIndex);
 
 			if((adapterInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) != 0u)
@@ -133,7 +133,7 @@ GraphicsAdapterManager::GraphicsAdapterManager()
 
 void GraphicsAdapterManager::deinitialise()
 {
-	DE_DELETE _impl;
+	DE_DELETE(_impl, Impl);
 }
 
 const GraphicsAdapterList& GraphicsAdapterManager::graphicsAdapters() const
@@ -144,5 +144,5 @@ const GraphicsAdapterList& GraphicsAdapterManager::graphicsAdapters() const
 
 void GraphicsAdapterManager::initialise()
 {
-	_impl = DE_NEW Impl();
+	_impl = DE_NEW(Impl)();
 }

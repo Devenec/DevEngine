@@ -42,7 +42,7 @@ T* ContentManager::loadContent(const Core::String8& filepath)
 	T* content = contentLoader->load(fileStream);
 	_loadedContent[filepath] = content;
 	fileStream.close();
-	DE_DELETE contentLoader; // TODO: remove when a better solution is found
+	DE_DELETE(contentLoader, ContentLoader<T>); // TODO: remove when a better solution is found
 
 	return content;
 }

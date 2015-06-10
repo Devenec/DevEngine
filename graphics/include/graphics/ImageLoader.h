@@ -54,7 +54,7 @@ namespace Graphics
 		static void validatePngSignature(Core::FileStream& fileStream);
 		static void handlePngReaderError(PNGReader* pngReader, const Char8* message);
 		static void handlePngReaderWarning(PNGReader* pngReader, const Char8* message);
-		static Void* allocatePngReaderMemory(PNGReader* pngReader, Uint32 size);
+		static Void* allocatePngReaderMemory(PNGReader* pngReader, Uint32 byteCount);
 		static void deallocatePngReaderMemory(PNGReader* pngReader, Void* pointer);
 		static void readPngReader(PNGReader* pngReader, Byte* buffer, Uint32 byteCount);
 	};

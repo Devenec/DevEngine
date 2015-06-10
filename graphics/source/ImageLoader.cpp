@@ -38,7 +38,7 @@ Image* ImageLoader::load(FileStream& fileStream)
 	const ImageFormat imageFormat = getImageFormat();
 	deinitialisePngReader();
 
-	return DE_NEW Image(imageWidth, imageHeight, imageFormat, imageData);
+	return DE_NEW(Image)(imageWidth, imageHeight, imageFormat, imageData);
 }
 
 // Private
@@ -147,16 +147,16 @@ void ImageLoader::handlePngReaderWarning(png_struct* pngReader, const Char8* mes
 	defaultLog << LogLevel::Warning << IMAGELOADER_CONTEXT << " PNG warning: " << message << '.' << Log::Flush();
 }
 
-Void* ImageLoader::allocatePngReaderMemory(png_struct* pngReader, Uint32 size)
+Void* ImageLoader::allocatePngReaderMemory(png_struct* pngReader, Uint32 byteCount)
 {
 	static_cast<Void>(pngReader);
-	return DE_NEW Byte[size];
+	return DE_MALLOC(byteCount);
 }
 
 void ImageLoader::deallocatePngReaderMemory(png_struct* pngReader, Void* pointer)
 {
 	static_cast<Void>(pngReader);
-	DE_DELETE[] pointer;
+	DE_FREE(pointer);
 }
 
 void ImageLoader::readPngReader(png_struct* pngReader, Byte* buffer, Uint32 byteCount)
@@ -177,6 +177,6 @@ namespace Content
 	template<>
 	ContentLoader<Image>* ContentLoader<Image>::loader()
 	{
-		return DE_NEW ImageLoader();
+		return DE_NEW(ImageLoader)();
 	}
 }

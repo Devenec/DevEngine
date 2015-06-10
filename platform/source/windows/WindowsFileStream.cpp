@@ -214,17 +214,17 @@ private:
 // Public
 
 FileStream::FileStream()
-	: _impl(DE_NEW Impl()) { }
+	: _impl(DE_NEW(Impl)()) { }
 
 FileStream::FileStream(const String8& filepath, const OpenMode& openMode)
-	: _impl(DE_NEW Impl())
+	: _impl(DE_NEW(Impl)())
 {
 	_impl->open(filepath, openMode);
 }
 
 FileStream::~FileStream()
 {
-	DE_DELETE _impl;
+	DE_DELETE(_impl, Impl);
 }
 
 void FileStream::close() const
