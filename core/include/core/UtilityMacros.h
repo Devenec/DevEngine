@@ -67,8 +67,8 @@
 /**
  * Function name
  *
- * Expands to a string literal that indicates the name and signature of the
- * function in which the macro appears.
+ * Expands to a string literal that indicates the name of the function in which
+ * the macro appears.
  */
 #define DE_FUNCTION _DE_FUNCTION
 

@@ -13,7 +13,9 @@
 
 void Core::invokeError(const Uint32 errorCode)
 {
-	defaultLog << LogLevel::Error << "Error occurred with code " << errorCode << '.' << Log::Flush();
+	defaultLog << LogLevel::Error << "Error occurred with code 0x" << std::hex << std::uppercase << errorCode <<
+		std::nouppercase << std::dec << '.' << Log::Flush();
+
 	DE_DEBUGGER_BREAK();
 	std::abort();
 }

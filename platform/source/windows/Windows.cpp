@@ -24,8 +24,8 @@ void Platform::failWindowsAssertion(const Char8* file, const Uint32 line, const 
 
 void Platform::invokeWindowsError(const Uint32 errorCode)
 {
-	defaultLog << LogLevel::Error << "Windows error occurred with code " << errorCode << '-' << GetLastError() <<
-		'.' << Log::Flush();
+	defaultLog << LogLevel::Error << "Windows error occurred with code 0x" << std::hex << std::uppercase <<
+		errorCode << std::nouppercase << std::dec << '-' << GetLastError() << '.' << Log::Flush();
 
 	DE_DEBUGGER_BREAK();
 	std::abort();

@@ -105,7 +105,7 @@ public:
 			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to set the rectangle of the window." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000300);
 		}
 			
 		if(!isFullscreenRectangle)
@@ -122,7 +122,7 @@ public:
 			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to set the title of the window." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000301);
 		}
 	}
 
@@ -151,7 +151,7 @@ private:
 			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to get the rectangle of the window." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000302);
 		}
 
 		return Core::Rectangle(rectangle.left, rectangle.top, rectangle.right - rectangle.left,
@@ -175,7 +175,7 @@ private:
 			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to set the style of the window." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000303);
 		}
 	}
 
@@ -191,7 +191,7 @@ private:
 			defaultLog << LogLevel::Error << WINDOW_CONTEXT << " Failed to get the info of the window's monitor." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000304);
 		}
 		
 		return Core::Rectangle(monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.top,

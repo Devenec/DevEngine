@@ -26,7 +26,7 @@ Void* Core::allocateMemory(const Uint32 byteCount)
 	if(pointer == nullptr)
 	{
 		defaultLog << LogLevel::Error << "[Core::allocateMemory] Failed to allocate memory." << Log::Flush();
-		DE_ERROR(0); // TODO: set errorCode
+		DE_ERROR(0x010000);
 	}
 
 	return pointer;

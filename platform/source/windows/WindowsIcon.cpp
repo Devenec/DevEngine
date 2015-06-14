@@ -47,7 +47,7 @@ void Icon::create(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 	if(_iconHandle == nullptr)
 	{
 		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to create the icon." << Log::Flush();
-		DE_ERROR_WINDOWS(0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x000200);
 	}
 }
 
@@ -58,7 +58,7 @@ void Icon::destroy() const
 	if(result == 0)
 	{
 		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to destroy the icon." << Log::Flush();
-		DE_ERROR_WINDOWS(0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x000201);
 	}
 }
 
@@ -96,7 +96,7 @@ HBITMAP Icon::createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& data
 	if(bitmapHandle == nullptr)
 	{
 		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to create the colour bitmap." << Log::Flush();
-		DE_ERROR_WINDOWS(0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x000202);
 	}
 
 	releaseDeviceContext(deviceContextHandle);
@@ -132,7 +132,7 @@ HBITMAP Icon::createMaskBitmap(const Image* image)
 	if(bitmapHandle == nullptr)
 	{
 		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to create the mask bitmap." << Log::Flush();
-		DE_ERROR_WINDOWS(0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x000203);
 	}
 
 	return bitmapHandle;
@@ -145,7 +145,7 @@ void Icon::destroyBitmap(HBITMAP bitmapHandle)
 	if(result == 0)
 	{
 		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to destroy a bitmap." << Log::Flush();
-		DE_ERROR_WINDOWS(0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x000204);
 	}
 
 }
@@ -175,7 +175,7 @@ HDC Icon::getDeviceContext()
 	if(deviceContextHandle == nullptr)
 	{
 		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to get a device context." << Log::Flush();
-		DE_ERROR_WINDOWS(0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x000205);
 	}
 
 	return deviceContextHandle;
@@ -188,7 +188,7 @@ void Icon::releaseDeviceContext(HDC deviceContextHandle)
 	if(result == 0)
 	{
 		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to release the device context." << Log::Flush();
-		DE_ERROR_WINDOWS(0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x000206);
 	}
 }
 

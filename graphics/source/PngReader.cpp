@@ -72,7 +72,7 @@ void PNGReader::initialiseStructure()
 		defaultLog << LogLevel::Error << PNGREADER_CONTEXT << " Failed to initialise the PNG structure." <<
 			Log::Flush();
 
-		DE_ERROR(0); // TODO: set errorCode
+		DE_ERROR(0x000000);
 	}
 }
 
@@ -83,7 +83,7 @@ void PNGReader::initialiseInfo()
 	if(_pngInfo == nullptr)
 	{
 		defaultLog << LogLevel::Error << PNGREADER_CONTEXT << " Failed to initialise the PNG info." << Log::Flush();
-		DE_ERROR(0); // TODO: set errorCode
+		DE_ERROR(0x000001);
 	}
 }
 
@@ -96,7 +96,7 @@ void PNGReader::validateSignature(FileStream& fileStream)
 	if(result != 0)
 	{
 		defaultLog << LogLevel::Error << PNGREADER_CONTEXT << " The PNG signature is invalid." << Log::Flush();
-		DE_ERROR(0); // TODO: set errorCode
+		DE_ERROR(0x000002);
 	}
 
 	png_set_sig_bytes(_pngStructure, 8);
@@ -108,7 +108,7 @@ void PNGReader::handleError(PNGStructure* pngStructure, const Char8* message)
 {
 	static_cast<Void>(pngStructure);
 	defaultLog << LogLevel::Error << PNGREADER_CONTEXT << " PNG error: " << message << '.' << Log::Flush();
-	DE_ERROR(0); // TODO: set errorCode
+	DE_ERROR(0x000003);
 }
 
 void PNGReader::handleWarning(PNGStructure* pngStructure, const Char8* message)

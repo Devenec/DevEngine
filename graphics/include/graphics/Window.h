@@ -36,7 +36,6 @@ namespace Graphics
 
 		void setFullscreen(const Bool value) const;
 
-		// TODO: support multiple (different size) icons?
 		void setIcon(const Image* value) const;
 
 		void setRectangle(const Core::Rectangle& value) const;

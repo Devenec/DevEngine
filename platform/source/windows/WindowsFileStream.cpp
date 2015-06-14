@@ -17,7 +17,6 @@ static const Char8* FILESTREAM_CONTEXT = "[Platform::WindowsFileStream]";
 
 // Implementation
 
-// TODO: support very long filepaths?
 class FileStream::Impl final
 {
 public:
@@ -43,7 +42,7 @@ public:
 			if(result == 0)
 			{
 				defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to close a file." << Log::Flush();
-				DE_ERROR_WINDOWS(0); // TODO: set errorCode
+				DE_ERROR_WINDOWS(0x000000);
 			}
 
 			_openMode = static_cast<OpenMode>(0);
@@ -63,7 +62,6 @@ public:
 		const Uint32 accessMode = getAccessMode(openMode);
 		const Uint32 creationMode = getCreationMode(openMode);
 
-		// TODO: support FILE_FLAG_RANDOM_ACCESS/FILE_FLAG_SEQUENTIAL_ACCESS?
 		_handle = CreateFileW(filepath16.c_str(), accessMode, FILE_SHARE_READ, nullptr, creationMode,
 			FILE_ATTRIBUTE_NORMAL, nullptr);
 
@@ -72,7 +70,7 @@ public:
 			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000001);
 		}
 
 		_openMode = openMode;
@@ -90,7 +88,7 @@ public:
 			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to get the position of a file pointer." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000002);
 		}
 
 		return position.QuadPart;
@@ -105,7 +103,7 @@ public:
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to read a file." << Log::Flush();
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000003);
 		}
 
 		return byteCountRead;
@@ -125,7 +123,7 @@ public:
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to seek a file." << Log::Flush();
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000004);
 		}
 	}
 
@@ -139,7 +137,7 @@ public:
 			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to get the size of a file." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000005);
 		}
 
 		return size.QuadPart;
@@ -154,7 +152,7 @@ public:
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to write to a file." << Log::Flush();
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000006);
 		}
 
 		return byteCountWritten;
@@ -175,7 +173,7 @@ private:
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to flush the file buffer." << Log::Flush();
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000007);
 		}
 	}
 

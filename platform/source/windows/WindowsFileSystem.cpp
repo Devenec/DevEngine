@@ -44,7 +44,7 @@ public:
 			defaultLog << LogLevel::Error << FILESYSTEM_CONTEXT << " Failed to get the attributes of file '" <<
 				filepath << "'." << Log::Flush();
 
-			DE_ERROR_WINDOWS(0); // TODO: set errorCode
+			DE_ERROR_WINDOWS(0x000100);
 		}
 
 		return (fileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0u;

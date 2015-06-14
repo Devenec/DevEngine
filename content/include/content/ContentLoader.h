@@ -11,7 +11,6 @@
 
 namespace Content
 {
-	// TODO: figure out how to create each ContentLoader<T> once, reuse them and destroy them when no longer needed
 	template<typename T>
 	class ContentLoader
 	{
@@ -19,7 +18,6 @@ namespace Content
 
 		ContentLoader(const ContentLoader& contentLoader) = delete;
 		ContentLoader(ContentLoader&& contentLoader) = delete;
-		
 
 		virtual T* load(Core::FileStream& fileStream) = 0;
 

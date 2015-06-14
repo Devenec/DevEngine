@@ -79,7 +79,7 @@ private:
 	void initialiseSymbolHandler()
 	{
 		SymSetOptions(SYMOPT_DEFERRED_LOADS | SYMOPT_FAIL_CRITICAL_ERRORS | SYMOPT_LOAD_LINES | SYMOPT_UNDNAME);
-		const Int32 result = SymInitialize(_processHandle, nullptr, TRUE); // TODO: support UserSearchPath?
+		const Int32 result = SymInitialize(_processHandle, nullptr, TRUE);
 		DE_ASSERT_WINDOWS(result != 0);
 	}
 
