@@ -7,11 +7,14 @@
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <core/Rectangle.h>
+#include <graphics/Image.h>
 #include <graphics/Window.h>
 #include <platform/windows/Windows.h>
+#include <platform/windows/WindowsIcon.h>
 
 using namespace Core;
 using namespace Graphics;
+using namespace Platform;
 
 static const Char8* WINDOW_CONTEXT = "[Platform::WindowsWindow]";
 
@@ -31,7 +34,7 @@ public:
 	Impl(const Impl& impl) = delete;
 	Impl(Impl&& impl) = delete;
 
-	~Impl() = default;
+	~Impl() { }
 
 	HWND handle() const
 	{
@@ -80,6 +83,17 @@ public:
 			_isFullscreen = value;
 		}
 	}
+
+	void setIcon(const Image* value)
+	{
+		_icon.deinitialise();
+		
+		if(value != nullptr)
+		{
+			_icon.initialise(value);
+			SendMessageW(_handle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));
+		}
+	}
 	
 	void setRectangle(const Core::Rectangle& value, const Bool isFullscreenRectangle = false)
 	{
@@ -124,6 +138,7 @@ private:
 	
 	Core::Rectangle _rectangle;
 	HWND _handle;
+	Icon _icon;
 	Bool _isFullscreen;
 
 	Core::Rectangle getRectangle() const
@@ -206,6 +221,11 @@ Core::Rectangle Window::rectangle() const
 void Window::setFullscreen(const Bool value) const
 {
 	_impl->setFullscreen(value);
+}
+
+void Window::setIcon(const Image* value) const
+{
+	_impl->setIcon(value);
 }
 
 void Window::setRectangle(const Core::Rectangle& value) const

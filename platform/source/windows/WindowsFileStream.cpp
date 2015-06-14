@@ -63,10 +63,9 @@ public:
 		const Uint32 accessMode = getAccessMode(openMode);
 		const Uint32 creationMode = getCreationMode(openMode);
 
-		// TODO: open so that other programs can open the file simultaneously
 		// TODO: support FILE_FLAG_RANDOM_ACCESS/FILE_FLAG_SEQUENTIAL_ACCESS?
-		_handle = CreateFileW(filepath16.c_str(), accessMode, 0u, nullptr, creationMode, FILE_ATTRIBUTE_NORMAL,
-			nullptr);
+		_handle = CreateFileW(filepath16.c_str(), accessMode, FILE_SHARE_READ, nullptr, creationMode,
+			FILE_ATTRIBUTE_NORMAL, nullptr);
 
 		if(_handle == INVALID_HANDLE_VALUE)
 		{

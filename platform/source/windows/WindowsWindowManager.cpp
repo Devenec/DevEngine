@@ -45,8 +45,8 @@ public:
 		windowClass.cbWndExtra = 0;
 		windowClass.hbrBackground = nullptr;
 		windowClass.hCursor = loadCursor();
-		windowClass.hIcon = nullptr; // TODO: set icon
-		windowClass.hIconSm = nullptr; // TODO: set icon
+		windowClass.hIcon = nullptr;
+		windowClass.hIconSm = nullptr;
 		windowClass.hInstance = GetModuleHandleW(nullptr);
 		windowClass.lpfnWndProc = processMessage;
 		windowClass.lpszClassName = WINDOW_CLASS_NAME;
@@ -241,7 +241,7 @@ void WindowManager::initialise()
 	_impl = DE_NEW(Impl)();
 }
 
-void WindowManager::setCursorVisibility(const Bool value)
+void WindowManager::setCursorVisibility(const Bool value) const
 {
 	_impl->setCursorVisibility(value);
 }

@@ -15,6 +15,9 @@
     <Filter Include="Source Files\windows">
       <UniqueIdentifier>{3b414000-a269-4c3b-b8b7-7192d2ea7f45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\windows\inline">
+      <UniqueIdentifier>{5420f3dc-593a-4800-b8f5-193136ae7c5c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -27,6 +30,14 @@
     <ClInclude Include="include\platform\windows\Windows.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\windows\WindowsIcon.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\platform\windows\inline\WindowsIcon.inl">
+      <Filter>Header Files\windows\inline</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\windows\Windows.cpp">
@@ -45,6 +56,9 @@
       <Filter>Source Files\windows</Filter>
     </ClCompile>
     <ClCompile Include="source\windows\WindowsGraphicsAdapterManager.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\windows\WindowsIcon.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
     <ClCompile Include="source\windows\WindowsLog.cpp">

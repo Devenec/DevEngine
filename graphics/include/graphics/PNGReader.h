@@ -19,7 +19,7 @@ namespace Core
 
 namespace Graphics
 {
-	class PNGReader
+	class PNGReader final
 	{
 	public:
 

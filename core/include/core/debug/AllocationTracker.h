@@ -62,5 +62,5 @@ namespace Debug
 		void checkForMemoryLeaks() const;
 	};
 
-#include "../inline/AllocationTracker.inl"
+#include "inline/AllocationTracker.inl"
 }

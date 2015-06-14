@@ -31,7 +31,7 @@ namespace Graphics
 
 		void initialise();
 
-		void setCursorVisibility(const Bool value);
+		void setCursorVisibility(const Bool value) const;
 
 		WindowManager& operator =(const WindowManager& windowManager) = delete;
 		WindowManager& operator =(WindowManager&& windowManager) = delete;

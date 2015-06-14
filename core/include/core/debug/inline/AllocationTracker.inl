@@ -1,5 +1,5 @@
 /**
- * @file core/inline/AllocationTracker.inl
+ * @file core/debug/inline/AllocationTracker.inl
  *
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */

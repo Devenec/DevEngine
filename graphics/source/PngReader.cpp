@@ -10,6 +10,7 @@
 #include <core/FileStream.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/debug/Assert.h>
 #include <graphics/PNGReader.h>
 
 static const Char8* PNGREADER_CONTEXT = "[Graphics::PNGReader]";
@@ -29,7 +30,6 @@ ImageFormat PNGReader::imageFormat() const
 		case PNG_COLOR_TYPE_GRAY_ALPHA:
 			return ImageFormat::RA8;
 
-		case PNG_COLOR_TYPE_PALETTE:
 		case PNG_COLOR_TYPE_RGB:
 			return ImageFormat::RGB8;
 
@@ -37,10 +37,7 @@ ImageFormat PNGReader::imageFormat() const
 			return ImageFormat::RGBA8;
 
 		default:
-			defaultLog << LogLevel::Error << PNGREADER_CONTEXT << " The image format is not supported."
-				<< Log::Flush();
-
-			DE_ERROR(0); // TODO: set errorCode
+			DE_ASSERT(false);
 			return ImageFormat();
 	}
 }
@@ -49,7 +46,8 @@ Vector<Byte> PNGReader::readImage(FileStream& fileStream)
 {
 	validateSignature(fileStream);
 	png_set_read_fn(_pngStructure, &fileStream, readData);
-	png_read_png(_pngStructure, _pngInfo, PNG_TRANSFORM_PACKING | PNG_TRANSFORM_SCALE_16, nullptr);
+	const Int32 transforms = PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_SCALE_16;
+	png_read_png(_pngStructure, _pngInfo, transforms, nullptr);
 	const Uint32 height = png_get_image_height(_pngStructure, _pngInfo);
 	const Uint32 rowByteCount = png_get_rowbytes(_pngStructure, _pngInfo);
 	Vector<Byte> data(height * rowByteCount);

@@ -113,13 +113,14 @@ static void testWindow()
 {
 	ContentManager contentManager;
 	Image* image = contentManager.load<Image>("assets/icon.png");
-
 	GraphicsAdapterManager graphicsAdapterManager;
 	graphicsAdapterManager.initialise();
 	WindowManager windowManager;
 	windowManager.initialise();
+
 	Window* window = windowManager.createWindow();
 	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
+	window->setIcon(image);
 	window->show();
 
 	//window->setFullscreen(true);
