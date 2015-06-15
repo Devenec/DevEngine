@@ -26,6 +26,7 @@ using namespace Graphics;
 static void testLog(const StartupParameters& startupParameters);
 static void testFileStream();
 static void testWindow();
+static void testGraphics(Window* window);
 
 void devEngineMain(const StartupParameters& startupParameters)
 {
@@ -126,7 +127,20 @@ static void testWindow()
 	//window->setFullscreen(true);
 	//window->setFullscreen(false);
 
+	testGraphics(window);
+
 	while(window->processMessages()) { }
 	windowManager.deinitialise();
 	graphicsAdapterManager.deinitialise();
+}
+
+#include <platform/wgl/WGLTemporaryGraphicsContext.h>
+#include <gl/GL.h>
+
+static void testGraphics(Window* window)
+{
+	Platform::TemporaryGraphicsContext graphicsContext(static_cast<HWND>(window->handle()));
+	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	graphicsContext.swapBuffers();
 }

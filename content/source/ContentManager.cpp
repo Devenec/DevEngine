@@ -7,7 +7,6 @@
 
 #include <content/ContentBase.h>
 #include <content/ContentManager.h>
-#include <core/Memory.h>
 
 using namespace Content;
 

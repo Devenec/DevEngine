@@ -13,7 +13,7 @@
 
 using namespace Core;
 
-static const Char8* FILESTREAM_CONTEXT = "[Platform::WindowsFileStream]";
+static const Char8* FILESTREAM_CONTEXT = "[Platform::FileStream - Windows]";
 
 // Implementation
 

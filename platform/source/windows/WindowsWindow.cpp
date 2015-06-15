@@ -16,7 +16,7 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
-static const Char8* WINDOW_CONTEXT = "[Platform::WindowsWindow]";
+static const Char8* WINDOW_CONTEXT = "[Platform::Window - Windows]";
 
 // Implementation
 
@@ -25,7 +25,7 @@ class Window::Impl final
 public:
 
 	Impl(HWND handle)
-		: _handle(handle),
+		: _windowHandle(handle),
 		  _isFullscreen(false)
 	{
 		_rectangle = getRectangle();
@@ -38,7 +38,7 @@ public:
 
 	HWND handle() const
 	{
-		return _handle;
+		return _windowHandle;
 	}
 
 	Bool isFullscreen() const
@@ -91,13 +91,13 @@ public:
 		if(value != nullptr)
 		{
 			_icon.initialise(value);
-			SendMessageW(_handle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));
+			SendMessageW(_windowHandle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));
 		}
 	}
 	
 	void setRectangle(const Core::Rectangle& value, const Bool isFullscreenRectangle = false)
 	{
-		const Int32 result = SetWindowPos(_handle, HWND_TOP, value.x, value.y, value.width, value.height,
+		const Int32 result = SetWindowPos(_windowHandle, HWND_TOP, value.x, value.y, value.width, value.height,
 			SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
 
 		if(result == 0)
@@ -115,7 +115,7 @@ public:
 	void setTitle(const String8& value) const
 	{
 		const String16 title = toString16(value);
-		const Int32 result = SetWindowTextW(_handle, title.c_str());
+		const Int32 result = SetWindowTextW(_windowHandle, title.c_str());
 
 		if(result == 0)
 		{
@@ -128,7 +128,7 @@ public:
 
 	void show() const
 	{
-		ShowWindow(_handle, SW_SHOWNORMAL);
+		ShowWindow(_windowHandle, SW_SHOWNORMAL);
 	}
 
 	Impl& operator =(const Impl& impl) = delete;
@@ -137,14 +137,14 @@ public:
 private:
 	
 	Core::Rectangle _rectangle;
-	HWND _handle;
+	HWND _windowHandle;
 	Icon _icon;
 	Bool _isFullscreen;
 
 	Core::Rectangle getRectangle() const
 	{
 		RECT rectangle;
-		const Int32 result = GetWindowRect(_handle, &rectangle);
+		const Int32 result = GetWindowRect(_windowHandle, &rectangle);
 
 		if(result == 0)
 		{
@@ -160,7 +160,7 @@ private:
 
 	void setFullscreenStyle(const Bool isFullscreen) const
 	{
-		const Int32 style = GetWindowLongPtrW(_handle, GWL_STYLE);
+		const Int32 style = GetWindowLongPtrW(_windowHandle, GWL_STYLE);
 		Int32 newStyle = style;
 
 		if(isFullscreen)
@@ -168,7 +168,7 @@ private:
 		else
 			newStyle |= WS_CAPTION;
 
-		const Int32 result = SetWindowLongPtrW(_handle, GWL_STYLE, newStyle);
+		const Int32 result = SetWindowLongPtrW(_windowHandle, GWL_STYLE, newStyle);
 
 		if(result == 0)
 		{
@@ -181,7 +181,7 @@ private:
 
 	Core::Rectangle getFullscreenRectangle() const
 	{
-		HMONITOR monitorHandle = MonitorFromWindow(_handle, MONITOR_DEFAULTTONEAREST);
+		HMONITOR monitorHandle = MonitorFromWindow(_windowHandle, MONITOR_DEFAULTTONEAREST);
 		MONITORINFO monitorInfo;
 		monitorInfo.cbSize = sizeof(monitorInfo);
 		const Int32 result = GetMonitorInfoW(monitorHandle, &monitorInfo);

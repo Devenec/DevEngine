@@ -28,7 +28,7 @@ static const Uint32 WINDOW_DEFAULT_WIDTH  = 800u;
 static const Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
 static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
-static const Char8* WINDOWMANAGER_CONTEXT = "[Platform::WindowsWindowManager]";
+static const Char8* WINDOWMANAGER_CONTEXT = "[Platform::WindowManager - Windows]";
 
 // Implementation
 
@@ -234,6 +234,7 @@ void WindowManager::deinitialise()
 		destroyWindow();
 	
 	DE_DELETE(_impl, Impl);
+	_impl = nullptr;
 }
 
 void WindowManager::initialise()

@@ -31,7 +31,7 @@ public:
 	{
 		if(maxEntryCount > Numeric<Uint16>::maximum())
 		{
-			defaultLog << LogLevel::Warning << "[Platform::WindowsStackTrace] maxEntryCount is too large and is"
+			defaultLog << LogLevel::Warning << "[Platform::StackTrace - Windows] maxEntryCount is too large and is"
 				" clamped to Numeric<Uint16>::maximum()." << Log::Flush();
 
 			this->_maxEntryCount = Numeric<Uint16>::maximum();

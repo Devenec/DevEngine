@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <new>
 #include <core/ConfigMacros.h>
 #include <core/Platform.h>
 #include <core/Types.h>

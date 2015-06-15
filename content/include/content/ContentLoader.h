@@ -7,7 +7,10 @@
 
 #pragma once
 
-#include <core/FileStream.h>
+namespace Core
+{
+	class FileStream;
+}
 
 namespace Content
 {
@@ -24,7 +27,7 @@ namespace Content
 		ContentLoader& operator =(const ContentLoader& contentLoader) = delete;
 		ContentLoader& operator =(ContentLoader&& contentLoader) = delete;
 
-		static ContentLoader<T>* loader();
+		static ContentLoader<T>* createLoader();
 
 	protected:
 

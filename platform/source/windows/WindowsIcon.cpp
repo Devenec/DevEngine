@@ -5,7 +5,6 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
-#include <core/Error.h>
 #include <core/Log.h>
 #include <core/Types.h>
 #include <core/Vector.h>
@@ -17,7 +16,7 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
-static const Char8* ICON_CONTEXT = "[Platform::WindowsIcon]";
+static const Char8* ICON_CONTEXT = "[Platform::Icon - Windows]";
 
 // Public
 

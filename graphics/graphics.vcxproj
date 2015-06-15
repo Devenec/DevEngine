@@ -62,6 +62,7 @@
     <ClInclude Include="include\graphics\DisplayMode.h" />
     <ClInclude Include="include\graphics\GraphicsAdapter.h" />
     <ClInclude Include="include\graphics\GraphicsAdapterManager.h" />
+    <ClInclude Include="include\graphics\GraphicsContext.h" />
     <ClInclude Include="include\graphics\Image.h" />
     <ClInclude Include="include\graphics\ImageFormat.h" />
     <ClInclude Include="include\graphics\ImageLoader.h" />

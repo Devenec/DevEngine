@@ -58,10 +58,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\platform\PlatformInternal.h" />
+    <ClInclude Include="include\platform\wgl\WGLGraphicsContextBase.h" />
+    <ClInclude Include="include\platform\wgl\WGLTemporaryGraphicsContext.h" />
     <ClInclude Include="include\platform\windows\Windows.h" />
     <ClInclude Include="include\platform\windows\WindowsIcon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\wgl\WGLGraphicsContext.cpp" />
+    <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp" />
+    <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp" />
     <ClCompile Include="source\windows\WindowsFileSystem.cpp" />
     <ClCompile Include="source\windows\Windows.cpp" />
     <ClCompile Include="source\windows\WindowsApplication.cpp" />
@@ -76,6 +81,7 @@
     <ClCompile Include="source\windows\WindowsWindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl" />
     <None Include="include\platform\windows\inline\WindowsIcon.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

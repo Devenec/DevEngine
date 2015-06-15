@@ -13,7 +13,7 @@
 
 using namespace Core;
 
-static const Char8* FILESYSTEM_CONTEXT = "[Platform::WindowsFileSystem]";
+static const Char8* FILESYSTEM_CONTEXT = "[Platform::FileSystem - Windows]";
 
 // Implementation
 

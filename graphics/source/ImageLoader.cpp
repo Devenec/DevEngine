@@ -35,7 +35,7 @@ Image* ImageLoader::load(FileStream& fileStream)
 namespace Content
 {
 	template<>
-	ContentLoader<Image>* ContentLoader<Image>::loader()
+	ContentLoader<Image>* ContentLoader<Image>::createLoader()
 	{
 		return DE_NEW(ImageLoader)();
 	}
