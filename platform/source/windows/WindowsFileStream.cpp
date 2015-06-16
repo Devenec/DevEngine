@@ -23,12 +23,15 @@ public:
 
 	Impl()
 		: _handle(nullptr),
-		  _openMode(static_cast<OpenMode>(0)) { }
+		  _openMode(OpenMode()) { }
 
 	Impl(const Impl& impl) = delete;
 	Impl(Impl&& impl) = delete;
 
-	~Impl() = default;
+	~Impl()
+	{
+		close();
+	}
 
 	void close()
 	{
@@ -41,11 +44,11 @@ public:
 
 			if(result == 0)
 			{
-				defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to close a file." << Log::Flush();
+				defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to close the file." << Log::Flush();
 				DE_ERROR_WINDOWS(0x000000);
 			}
 
-			_openMode = static_cast<OpenMode>(0);
+			_openMode = OpenMode();
 			_handle = nullptr;
 		}
 	}
@@ -85,8 +88,8 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to get the position of a file pointer." <<
-				Log::Flush();
+			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT <<
+				" Failed to get the position of the file pointer." << Log::Flush();
 
 			DE_ERROR_WINDOWS(0x000002);
 		}
@@ -102,7 +105,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to read a file." << Log::Flush();
+			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to read the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000003);
 		}
 
@@ -122,7 +125,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to seek a file." << Log::Flush();
+			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to seek the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000004);
 		}
 	}
@@ -134,7 +137,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to get the size of a file." <<
+			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to get the size of the file." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x000005);
@@ -151,7 +154,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to write to a file." << Log::Flush();
+			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to write to the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000006);
 		}
 
@@ -177,7 +180,7 @@ private:
 		}
 	}
 
-	Uint32 getAccessMode(const OpenMode& openMode) const
+	static Uint32 getAccessMode(const OpenMode& openMode)
 	{
 		Uint32 mode = 0u;
 
@@ -190,7 +193,7 @@ private:
 		return mode;
 	}
 
-	Uint32 getCreationMode(const OpenMode& openMode) const
+	static Uint32 getCreationMode(const OpenMode& openMode)
 	{
 		Uint32 mode = 0u;
 
@@ -211,7 +214,7 @@ FileStream::FileStream()
 	: _impl(DE_NEW(Impl)()) { }
 
 FileStream::FileStream(const String8& filepath, const OpenMode& openMode)
-	: _impl(DE_NEW(Impl)())
+	: FileStream()
 {
 	_impl->open(filepath, openMode);
 }

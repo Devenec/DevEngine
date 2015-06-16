@@ -30,7 +30,7 @@ namespace Platform
 		HDC _deviceContextHandle;
 		HGLRC _graphicsContextHandle;
 
-		inline GraphicsContextBase(HWND windowHandle);
+		inline explicit GraphicsContextBase(HWND windowHandle);
 
 		inline ~GraphicsContextBase();
 

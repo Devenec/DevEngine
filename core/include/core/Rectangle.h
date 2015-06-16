@@ -15,13 +15,13 @@ namespace Core
 	{
 	public:
 
-		Int32 x;
-
-		Int32 y;
+		Uint32 height;
 
 		Uint32 width;
 
-		Uint32 height;
+		Int32 x;
+
+		Int32 y;
 
 		Rectangle() = default;
 

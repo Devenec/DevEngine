@@ -16,7 +16,7 @@ namespace Core
 }
 
 /**
- * A custom application entry point.
+ * Custom application entry point
  *
  * @params startupParameters
  *   Command line parameters

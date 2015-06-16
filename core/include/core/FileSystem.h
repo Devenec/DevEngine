@@ -7,36 +7,25 @@
 
 #pragma once
 
-#include <core/Singleton.h>
 #include <core/String.h>
 #include <core/Types.h>
 
 namespace Core
 {
-	class FileSystem final : public Singleton<FileSystem>
+	class FileSystem final
 	{
 	public:
 
-		FileSystem();
+		FileSystem() = delete;
 
 		FileSystem(const FileSystem& fileSystem) = delete;
 		FileSystem(FileSystem&& fileSystem) = delete;
 
-		~FileSystem() = default;
+		~FileSystem() = delete;
 
-		void deinitialise();
-
-		Bool fileExists(const String8& filepath);
-
-		void initialise();
+		static Bool fileExists(const String8& filepath);
 
 		FileSystem& operator =(const FileSystem& fileSystem) = delete;
 		FileSystem& operator =(FileSystem&& fileSystem) = delete;
-
-	private:
-
-		class Impl;
-
-		Impl* _impl;
 	};
 }

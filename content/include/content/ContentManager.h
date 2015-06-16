@@ -32,6 +32,7 @@ namespace Content
 
 		inline void setContentRootDirectory(const Core::String8& value);
 
+		// TODO: support absolute filepaths
 		template<typename T>
 		inline T* load(const Core::String8& filepath);
 

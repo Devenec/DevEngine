@@ -8,9 +8,6 @@
     <Filter Include="Header Files\debug">
       <UniqueIdentifier>{7957408a-4a5d-4984-a952-d8c818fe69bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\debug\inline">
-      <UniqueIdentifier>{2ac8a9a3-d010-4916-b7e0-be366019a22d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\inline">
       <UniqueIdentifier>{5939b29e-d67b-4e2e-9efe-24b7a0083470}</UniqueIdentifier>
     </Filter>
@@ -24,6 +21,9 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\debug\inline">
+      <UniqueIdentifier>{1ff55375-094b-4a42-b0b8-4f471f23d538}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -128,9 +128,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\LogManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Memory.cpp">

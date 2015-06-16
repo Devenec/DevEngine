@@ -58,10 +58,9 @@ static void testLog(const StartupParameters& startupParameters)
 
 static void testFileStream()
 {
-	FileSystem& fileSystem = FileSystem::instance();
-
-	defaultLog << LogLevel::Debug << "File exists: 'assets/test.txt' - " << fileSystem.fileExists("assets/test.txt") <<
-		", 'assets/testi.txt' - " << fileSystem.fileExists("assets/testi.txt") << Log::Flush();
+	defaultLog << LogLevel::Debug << "File exists: 'assets/test.txt' - " <<
+		FileSystem::fileExists("assets/test.txt") << ", 'assets/testi.txt' - " <<
+		FileSystem::fileExists("assets/testi.txt") << Log::Flush();
 
 	//
 
@@ -128,10 +127,7 @@ static void testWindow()
 	//window->setFullscreen(false);
 
 	testGraphics(window);
-
 	while(window->processMessages()) { }
-	windowManager.deinitialise();
-	graphicsAdapterManager.deinitialise();
 }
 
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>

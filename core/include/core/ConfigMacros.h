@@ -16,7 +16,7 @@
 #define DE_CONFIG_DEVENGINE_MAIN
 
 /**
- * If defined, Debug::AllocationTracker (in core) is used to track memory leaks
- * in debug and release builds.
+ * If defined, Debug::AllocationTracker (see core/debug/AllocationTracker.h) is
+ * used to track memory leaks in debug and release builds.
  */
 #define DE_CONFIG_TRACK_ALLOCATIONS

@@ -92,7 +92,15 @@ public:
 		return windowHandle;
 	}
 
-	void destroyWindow(HWND windowHandle) const
+	void setCursorVisibility(const Bool value)
+	{
+		_isCursorVisible = value;
+	}
+
+	Impl& operator =(const Impl& impl) = delete;
+	Impl& operator =(Impl&& impl) = delete;
+
+	static void destroyWindow(HWND windowHandle)
 	{
 		const Int32 result = DestroyWindow(windowHandle);
 
@@ -102,14 +110,6 @@ public:
 			DE_ERROR_WINDOWS(0x000402);
 		}
 	}
-
-	void setCursorVisibility(const Bool value)
-	{
-		_isCursorVisible = value;
-	}
-
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
 
 private:
 
@@ -123,19 +123,6 @@ private:
 			return nullptr;
 		else
 			return static_cast<HCURSOR>(cursorHandle);
-	}
-
-	void registerWindowClass(const WNDCLASSEX& windowClassInfo) const
-	{
-		const Uint32 result = RegisterClassExW(&windowClassInfo);
-
-		if(result == 0u)
-		{
-			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to register the window class." <<
-				Log::Flush();
-
-			DE_ERROR_WINDOWS(0x000403);
-		}
 	}
 
 	RECT createWindowRectangle() const
@@ -188,6 +175,19 @@ private:
 		return false;
 	}
 
+	static void registerWindowClass(const WNDCLASSEX& windowClassInfo)
+	{
+		const Uint32 result = RegisterClassExW(&windowClassInfo);
+
+		if(result == 0u)
+		{
+			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to register the window class." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x000403);
+		}
+	}
+
 	static LRESULT CALLBACK processMessage(HWND windowHandle, Uint32 message, WPARAM wParam, LPARAM lParam)
 	{
 		Impl* impl = reinterpret_cast<Impl*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
@@ -217,6 +217,14 @@ WindowManager::WindowManager()
 	: _impl(nullptr),
 	  _window(nullptr) { }
 
+WindowManager::~WindowManager()
+{
+	if(_window != nullptr)
+		destroyWindow();
+	
+	DE_DELETE(_impl, Impl);
+}
+
 Window* WindowManager::createWindow()
 {
 	if(_window == nullptr)
@@ -226,15 +234,6 @@ Window* WindowManager::createWindow()
 	}
 
 	return _window;
-}
-
-void WindowManager::deinitialise()
-{
-	if(_window != nullptr)
-		destroyWindow();
-	
-	DE_DELETE(_impl, Impl);
-	_impl = nullptr;
 }
 
 void WindowManager::initialise()
@@ -251,7 +250,6 @@ void WindowManager::setCursorVisibility(const Bool value) const
 
 void WindowManager::destroyWindow()
 {
-	_impl->destroyWindow(static_cast<HWND>(_window->handle()));
+	Impl::destroyWindow(static_cast<HWND>(_window->handle()));
 	DE_DELETE(_window, Window);
-	_window = nullptr;
 }

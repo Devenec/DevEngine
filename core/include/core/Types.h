@@ -82,6 +82,6 @@ using Char16 = wchar_t;
 /**
  * Void
  *
- * Used with void pointers.
+ * Used mainly with void pointers.
  */
 using Void = void;

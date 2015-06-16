@@ -1,13 +1,17 @@
 DevEngine - TODO
 ----------------
 
+- Design how Core::Log works with different builds, e.g. filtering levels and the default stream level
+
 - Design how content loaders (inherited from Content::ContentLoader) should work. Currently, an instance is created each
 	time a single asset needs to be loaded, and destroyed after the loading is done. This lowers memory consumption, but
 	should the loaders be cached?
 
-- Should very long filepaths be supported (Core::FileStream)?
+- Create console dynamically?
 
-- Should console be supported in production build?
+- Disable console (SetConsoleOutputCP and usage) in production build
+
+- Should very long filepaths be supported (Core::FileStream)?
 
 - Should small icons (16 x 16) be supported with windows? The internal downscaling of large icons seems to produce
 	no-so-good quality.
@@ -15,3 +19,5 @@ DevEngine - TODO
 - Should FILE_FLAG_RANDOM_ACCESS and FILE_FLAG_SEQUENTIAL_ACCESS -modes be supported (Core::FileStream)?
 
 - Should UserSearchPath be supported with SymInitialize (Debug::StackTrace)?
+
+- Make non-copyable components movable?

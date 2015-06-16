@@ -11,7 +11,7 @@
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
 
-#if DE_BUILD_CONFIG == DE_BUILD_CONFIG_PRODUCTION
+#if DE_BUILD == DE_BUILD_PRODUCTION
 	#define DE_ASSERT(expression) \
 		DE_NO_OPERATION
 #else

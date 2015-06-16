@@ -25,9 +25,7 @@ namespace Graphics
 		GraphicsAdapterManager(const GraphicsAdapterManager& graphicsAdapterManager) = delete;
 		GraphicsAdapterManager(GraphicsAdapterManager&& graphicsAdapterManager) = delete;
 
-		~GraphicsAdapterManager() = default;
-
-		void deinitialise();
+		~GraphicsAdapterManager();
 
 		const GraphicsAdapterList& graphicsAdapters() const;
 

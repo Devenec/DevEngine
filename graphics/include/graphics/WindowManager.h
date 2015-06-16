@@ -23,11 +23,9 @@ namespace Graphics
 		WindowManager(const WindowManager& windowManager) = delete;
 		WindowManager(WindowManager&& windowManager) = delete;
 
-		~WindowManager() = default;
+		~WindowManager();
 
 		Window* createWindow();
-
-		void deinitialise();
 
 		void initialise();
 

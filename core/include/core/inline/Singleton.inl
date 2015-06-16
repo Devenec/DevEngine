@@ -18,6 +18,7 @@ Bool Singleton<T>::hasInstance()
 template<typename T>
 T& Singleton<T>::instance()
 {
+	DE_ASSERT(_instance != nullptr);
 	return *_instance;
 }
 

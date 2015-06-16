@@ -79,7 +79,7 @@ private:
 		return result != 0;
 	}
 
-	Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes) const
+	static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes)
 	{
 		DisplayMode displayMode(1u, 0u, 0u, 0u);
 		DEVMODEW displayModeInfo;
@@ -100,7 +100,7 @@ private:
 		return getCurrentAdapterDisplayModeIndex(adapterName, displayModeInfo, modes);
 	}
 
-	DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo) const
+	static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo)
 	{
 		const Int32 result = EnumDisplaySettingsW(adapterName, modeIndex, &modeInfo);
 
@@ -115,8 +115,8 @@ private:
 		}
 	}
 
-	Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
-		const DisplayModeList& modes) const
+	static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
+		const DisplayModeList& modes)
 	{
 		const DisplayMode displayMode = getAdapterDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);
 		DisplayModeList::const_iterator iterator = std::find(modes.begin(), modes.end(), displayMode);
@@ -131,7 +131,7 @@ private:
 GraphicsAdapterManager::GraphicsAdapterManager()
 	: _impl(nullptr) { }
 
-void GraphicsAdapterManager::deinitialise()
+GraphicsAdapterManager::~GraphicsAdapterManager()
 {
 	DE_DELETE(_impl, Impl);
 }

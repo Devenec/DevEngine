@@ -7,11 +7,12 @@
 
 #pragma once
 
-#include <graphics/ImageFormat.h>
+#include <utility>
 #include <platform/windows/Windows.h>
 
 namespace Graphics
 {
+	enum class ImageFormat;
 	class Image;
 }
 
@@ -23,26 +24,25 @@ namespace Platform
 
 		inline Icon();
 
+		explicit Icon(const Graphics::Image* image);
+
 		Icon(const Icon& icon) = delete;
-		Icon(Icon&& icon) = delete;
 
-		inline ~Icon();
+		inline Icon(Icon&& icon);
 
-		inline void deinitialise();
-
-		void initialise(const Graphics::Image* image);
+		~Icon();
 
 		inline const HICON handle() const;
 
 		Icon& operator =(const Icon& icon) = delete;
-		Icon& operator =(Icon&& icon) = delete;
+
+		inline Icon& operator =(Icon&& icon);
 
 	private:
 
 		HICON _iconHandle;
 
 		void create(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
-		void destroy() const;
 
 		static BITMAPV5HEADER createBitmapHeader(const Graphics::Image* image);
 		static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer);

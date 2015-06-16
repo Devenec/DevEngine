@@ -27,14 +27,14 @@ namespace Debug
 	{
 	public:
 
-		StackTrace(const Uint32 maxEntryCount);
+		explicit StackTrace(const Uint32 maxEntryCount);
 
 		StackTrace(const StackTrace& stackTrace) = delete;
 		StackTrace(StackTrace&& stackTrace) = delete;
 
 		~StackTrace();
 
-		StackEntryList generate() const;
+		StackEntryList generate(const Uint32 frameOffset = 0u) const;
 
 		StackTrace& operator =(const StackTrace& stackTrace) = delete;
 		StackTrace& operator =(StackTrace&& stackTrace) = delete;

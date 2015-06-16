@@ -26,7 +26,7 @@
 		#error The compiler version is unsupported. The minimum supported version is DE_COMPILER_VERSION_MIN_MSVC.
 	#endif
 #else
-	#error "The compiler is unsupported."
+	#error The compiler is unsupported.
 #endif
 
 
@@ -37,7 +37,7 @@
 		L ## value
 
 	#define _DE_COMPILER_WARN(msg) \
-		__pragma(message(__FILE__ "(" __DE_STRING8(__LINE__) ") : warning: \"" msg "\""))
+		__pragma(message(__FILE__ "(" __DE_STRING8(__LINE__) ") : warning: " msg))
 
 	#define _DE_DEBUGGER_BREAK() \
 		__asm int 3
@@ -64,17 +64,15 @@
 
 // Build configuration detection
 
-#if defined(_DE_BUILD_CONFIG_DEBUG)
-	#define DE_BUILD_CONFIG DE_BUILD_CONFIG_DEBUG
-#elif defined(_DE_BUILD_CONFIG_RELEASE)
-	#define DE_BUILD_CONFIG DE_BUILD_CONFIG_RELEASE
-#elif defined(_DE_BUILD_CONFIG_PRODUCTION)
-	#define DE_BUILD_CONFIG DE_BUILD_CONFIG_PRODUCTION
+#if defined(_DE_BUILD_DEBUG)
+	#define DE_BUILD DE_BUILD_DEBUG
+#elif defined(_DE_BUILD_RELEASE)
+	#define DE_BUILD DE_BUILD_RELEASE
+#elif defined(_DE_BUILD_PRODUCTION)
+	#define DE_BUILD DE_BUILD_PRODUCTION
 #else
-	#define DE_BUILD_CONFIG DE_BUILD_CONFIG_DEBUG
-
-	_DE_COMPILER_WARN("Could not detect the build configuration correctly."
-		" DE_BUILD_CONFIG is set to DE_BUILD_CONFIG_DEBUG.");
+	#define DE_BUILD DE_BUILD_DEBUG
+	_DE_COMPILER_WARN("Could not detect the build configuration correctly. DE_BUILD is set to DE_BUILD_DEBUG.");
 #endif
 
 

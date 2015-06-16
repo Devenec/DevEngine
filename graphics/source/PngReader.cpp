@@ -11,6 +11,7 @@
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
+#include <graphics/ImageFormat.h>
 #include <graphics/PNGReader.h>
 
 static const Char8* PNGREADER_CONTEXT = "[Graphics::PNGReader]";
@@ -120,13 +121,13 @@ void PNGReader::handleWarning(PNGStructure* pngStructure, const Char8* message)
 Void* PNGReader::allocateMemory(PNGStructure* pngStructure, Uint32 byteCount)
 {
 	static_cast<Void>(pngStructure);
-	return DE_MALLOC(byteCount);
+	return DE_ALLOCATE(byteCount);
 }
 
 void PNGReader::deallocateMemory(PNGStructure* pngStructure, Void* pointer)
 {
 	static_cast<Void>(pngStructure);
-	DE_FREE(pointer);
+	DE_DEALLOCATE(pointer);
 }
 
 void PNGReader::readData(PNGStructure* pngStructure, Byte* buffer, Uint32 byteCount)

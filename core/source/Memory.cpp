@@ -10,11 +10,9 @@
 #include <core/Log.h>
 #include <core/Memory.h>
 
-#if DE_BUILD_CONFIG != DE_BUILD_CONFIG_PRODUCTION && defined(DE_CONFIG_TRACK_ALLOCATIONS)
+#if DE_BUILD != DE_BUILD_PRODUCTION && defined(DE_CONFIG_TRACK_ALLOCATIONS)
 	#define _DE_TRACK_ALLOCATIONS
 	#include <core/debug/AllocationTracker.h>
-	
-	using namespace Debug;
 #endif
 
 // Core
@@ -36,7 +34,7 @@ Void* Core::allocateMemory(const Uint32 byteCount)
 Void* Core::allocateMemory(const Uint32 byteCount, const Char8* file, const Uint32 line, const Char8* function)
 {
 	Void* pointer = allocateMemory(byteCount);
-	AllocationTracker::instance().registerAllocation(pointer, byteCount, file, line, function);
+	Debug::AllocationTracker::instance().registerAllocation(pointer, byteCount, file, line, function);
 
 	return pointer;
 }
@@ -45,7 +43,7 @@ Void* Core::allocateMemory(const Uint32 byteCount, const Char8* file, const Uint
 void Core::deallocateMemory(Void* pointer, const Uint32 byteCount)
 {
 #if defined(_DE_TRACK_ALLOCATIONS)
-	AllocationTracker::instance().deregisterAllocation(pointer, byteCount);
+	Debug::AllocationTracker::instance().deregisterAllocation(pointer, byteCount);
 #endif
 
 	std::free(pointer);

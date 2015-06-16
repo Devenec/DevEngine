@@ -31,7 +31,7 @@ namespace Core
 
 		FileStream();
 
-		FileStream(const String8& filepath, const OpenMode& openMode = OpenMode::Read);
+		explicit FileStream(const String8& filepath, const OpenMode& openMode = OpenMode::Read);
 
 		FileStream(const FileStream& fileStream) = delete;
 		FileStream(FileStream&& fileStream) = delete;

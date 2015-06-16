@@ -24,9 +24,9 @@
 
 // Supported build configurations
 
-#define DE_BUILD_CONFIG_DEBUG	   1
-#define DE_BUILD_CONFIG_RELEASE	   2
-#define DE_BUILD_CONFIG_PRODUCTION 3
+#define DE_BUILD_DEBUG		1
+#define DE_BUILD_RELEASE	2
+#define DE_BUILD_PRODUCTION 3
 
 
 // Supported platforms
@@ -48,9 +48,9 @@
  * DE_COMPILER_VERSION
  *   Specifies the version of the compiler.
  *
- * DE_BUILD_CONFIG
- *   Specifies the build configuration. The value is one of the
- *   DE_BUILD_CONFIG_* values defined above.
+ * DE_BUILD
+ *   Specifies the build configuration. The value is one of the DE_BUILD_*
+ *   values defined above.
  *
  * DE_PLATFORM
  *   Specifies the target platform. The value is one of the DE_PLATFORM_*

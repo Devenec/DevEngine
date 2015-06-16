@@ -1,6 +1,7 @@
 /**
  * @file platform/windows/WindowsWindow.cpp
  *
+ * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
@@ -24,7 +25,7 @@ class Window::Impl final
 {
 public:
 
-	Impl(HWND handle)
+	explicit Impl(HWND handle)
 		: _windowHandle(handle),
 		  _isFullscreen(false)
 	{
@@ -44,21 +45,6 @@ public:
 	Bool isFullscreen() const
 	{
 		return _isFullscreen;
-	}
-
-	Bool processMessages() const
-	{
-		MSG message;
-
-		while(PeekMessageW(&message, nullptr, 0u, 0u, PM_REMOVE) != FALSE)
-		{
-			if(message.message == WM_QUIT)
-				return false;
-
-			DispatchMessageW(&message);
-		}
-
-		return true;
 	}
 
 	Core::Rectangle rectangle() const
@@ -86,13 +72,12 @@ public:
 
 	void setIcon(const Image* value)
 	{
-		_icon.deinitialise();
-		
-		if(value != nullptr)
-		{
-			_icon.initialise(value);
-			SendMessageW(_windowHandle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));
-		}
+		if(value == nullptr)
+			_icon = Icon();
+		else
+			_icon = Icon(value);
+
+		SendMessageW(_windowHandle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));
 	}
 	
 	void setRectangle(const Core::Rectangle& value, const Bool isFullscreenRectangle = false)
@@ -133,6 +118,21 @@ public:
 
 	Impl& operator =(const Impl& impl) = delete;
 	Impl& operator =(Impl&& impl) = delete;
+
+	static Bool processMessages()
+	{
+		MSG message;
+
+		while(PeekMessageW(&message, nullptr, 0u, 0u, PM_REMOVE) != FALSE)
+		{
+			if(message.message == WM_QUIT)
+				return false;
+
+			DispatchMessageW(&message);
+		}
+
+		return true;
+	}
 
 private:
 	
@@ -210,7 +210,7 @@ WindowHandle Window::handle() const
 
 Bool Window::processMessages() const
 {
-	return _impl->processMessages();
+	return Impl::processMessages();
 }
 
 Core::Rectangle Window::rectangle() const

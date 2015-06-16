@@ -27,7 +27,7 @@
     <ClInclude Include="include\graphics\GraphicsAdapterManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-	<ClInclude Include="include\graphics\GraphicsContext.h">
+    <ClInclude Include="include\graphics\GraphicsContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\Image.h">
@@ -67,7 +67,7 @@
     <ClCompile Include="source\ImageLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\PngReader.cpp">
+    <ClCompile Include="source\PNGReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

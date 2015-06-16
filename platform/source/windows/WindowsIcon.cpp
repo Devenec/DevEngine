@@ -10,6 +10,7 @@
 #include <core/Vector.h>
 #include <core/debug/Assert.h>
 #include <graphics/Image.h>
+#include <graphics/ImageFormat.h>
 #include <platform/windows/WindowsIcon.h>
 
 using namespace Core;
@@ -20,7 +21,8 @@ static const Char8* ICON_CONTEXT = "[Platform::Icon - Windows]";
 
 // Public
 
-void Icon::initialise(const Image* image)
+Icon::Icon(const Image* image)
+	: Icon()
 {
 	BITMAPV5HEADER bitmapHeader = createBitmapHeader(image);
 	Byte* bitmapDataBuffer;
@@ -30,6 +32,20 @@ void Icon::initialise(const Image* image)
 	create(colourBitmapHandle, maskBitmapHandle);
 	destroyBitmap(maskBitmapHandle);
 	destroyBitmap(colourBitmapHandle);
+}
+
+Icon::~Icon()
+{
+	if(_iconHandle != nullptr)
+	{
+		const Int32 result = DestroyIcon(_iconHandle);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to destroy the icon." << Log::Flush();
+			DE_ERROR_WINDOWS(0x000201);
+		}
+	}
 }
 
 // Private
@@ -47,17 +63,6 @@ void Icon::create(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 	{
 		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to create the icon." << Log::Flush();
 		DE_ERROR_WINDOWS(0x000200);
-	}
-}
-
-void Icon::destroy() const
-{
-	const Int32 result = DestroyIcon(_iconHandle);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to destroy the icon." << Log::Flush();
-		DE_ERROR_WINDOWS(0x000201);
 	}
 }
 

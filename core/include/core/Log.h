@@ -60,7 +60,7 @@ namespace Core
 
 		inline Log();
 
-		void writeToConsole(const LogLevel& level, const String8& message) const;
+		static void writeToConsole(const LogLevel& level, const String8& message);
 	};
 
 #include "inline/Log.inl"

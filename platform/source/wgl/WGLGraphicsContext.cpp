@@ -7,6 +7,7 @@
 
 #include <core/Memory.h>
 #include <graphics/GraphicsContext.h>
+#include <graphics/Window.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/windows/Windows.h>
 
@@ -19,7 +20,7 @@ class GraphicsContext::Impl final : public GraphicsContextBase
 {
 public:
 
-	Impl(HWND windowHandle)
+	explicit Impl(HWND windowHandle)
 		: Base(windowHandle) { }
 
 	Impl(const Impl& impl) = delete;
@@ -41,10 +42,9 @@ private:
 GraphicsContext::GraphicsContext()
 	: _impl(nullptr) { }
 
-void GraphicsContext::deinitialise()
+GraphicsContext::~GraphicsContext()
 {
 	DE_DELETE(_impl, Impl);
-	_impl = nullptr;
 }
 
 void GraphicsContext::initialise(Window* window)

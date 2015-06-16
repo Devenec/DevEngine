@@ -8,10 +8,10 @@
 // Public
 
 Rectangle::Rectangle(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height)
-	: x(x),
-	  y(y),
+	: height(height),
 	  width(width),
-	  height(height) { }
+	  x(x),
+	  y(y) { }
 
 Int32 Rectangle::bottom() const
 {

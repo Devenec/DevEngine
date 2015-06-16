@@ -21,7 +21,7 @@
 	_DE_CHAR16(value)
 
 /**
- * Issues a compiler warning.
+ * Invokes a compiler warning.
  *
  * @param message
  *   A warning message
@@ -36,7 +36,8 @@
 	_DE_DEBUGGER_BREAK()
 
 /**
- * Converts "value" to a Char8 string literal by surrounding it with quotation marks.
+ * Converts "value" to a Char8 string literal by surrounding it with quotation
+ * marks.
  *
  * @param value
  *   An identifier

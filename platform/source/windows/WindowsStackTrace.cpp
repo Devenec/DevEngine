@@ -17,13 +17,15 @@
 using namespace Core;
 using namespace Debug;
 
+static const Char8* STACKTRACE_CONTEXT = "[Platform::StackTrace - Windows]";
+
 // Implementation
 
 class StackTrace::Impl final
 {
 public:
 
-	Impl(const Uint32 maxEntryCount)
+	explicit Impl(const Uint32 maxEntryCount)
 		: _symbolAddresses(maxEntryCount),
 		  _processHandle(GetCurrentProcess()),
 		  _symbolInfo(reinterpret_cast<SYMBOL_INFOW*>(_symbolInfoMemory.data())),
@@ -31,10 +33,10 @@ public:
 	{
 		if(maxEntryCount > Numeric<Uint16>::maximum())
 		{
-			defaultLog << LogLevel::Warning << "[Platform::StackTrace - Windows] maxEntryCount is too large and is"
-				" clamped to Numeric<Uint16>::maximum()." << Log::Flush();
+			defaultLog << LogLevel::Warning << STACKTRACE_CONTEXT <<
+				" maxEntryCount is too large and is clamped to Numeric<Uint16>::maximum()." << Log::Flush();
 
-			this->_maxEntryCount = Numeric<Uint16>::maximum();
+			_maxEntryCount = Numeric<Uint16>::maximum();
 		}
 
 		_sourceInfo.SizeOfStruct = sizeof(IMAGEHLP_LINEW64);
@@ -47,9 +49,11 @@ public:
 
 	~Impl() = default;
 
-	StackEntryList generate()
+	StackEntryList generate(const Uint32 frameOffset)
 	{
-		const Uint32 entryCount = RtlCaptureStackBackTrace(0u, _maxEntryCount, _symbolAddresses.data(), nullptr);
+		const Uint32 entryCount = RtlCaptureStackBackTrace(frameOffset, _maxEntryCount, _symbolAddresses.data(),
+			nullptr);
+
 		StackEntryList entries;
 
 		if(entryCount > 0u)
@@ -76,7 +80,7 @@ private:
 	SYMBOL_INFOW* _symbolInfo;
 	Uint32 _maxEntryCount;
 
-	void initialiseSymbolHandler()
+	void initialiseSymbolHandler() const
 	{
 		SymSetOptions(SYMOPT_DEFERRED_LOADS | SYMOPT_FAIL_CRITICAL_ERRORS | SYMOPT_LOAD_LINES | SYMOPT_UNDNAME);
 		const Int32 result = SymInitialize(_processHandle, nullptr, TRUE);
@@ -100,7 +104,7 @@ private:
 		return entries;
 	}
 
-	void deinitialiseSymbolHandler()
+	void deinitialiseSymbolHandler() const
 	{
 		const Int32 result = SymCleanup(_processHandle);
 		DE_ASSERT_WINDOWS(result != 0);
@@ -132,7 +136,7 @@ StackTrace::~StackTrace()
 	DE_DELETE(_impl, Impl);
 }
 
-StackEntryList StackTrace::generate() const
+StackEntryList StackTrace::generate(const Uint32 frameOffset) const
 {
-	return _impl->generate();
+	return _impl->generate(frameOffset);
 }

@@ -30,6 +30,7 @@ namespace Graphics
 
 		WindowHandle handle() const;
 
+		// TODO: decouple from specific window when multiple windows are supported?
 		Bool processMessages() const;
 
 		Core::Rectangle rectangle() const;
@@ -55,7 +56,7 @@ namespace Graphics
 
 		Impl* _impl;
 
-		Window(WindowHandle handle);
+		explicit Window(WindowHandle handle);
 		~Window();
 	};
 }

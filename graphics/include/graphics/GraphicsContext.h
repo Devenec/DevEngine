@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include <graphics/Window.h>
-
 namespace Graphics
 {
+	class Window;
+
 	class GraphicsContext final
 	{
 	public:
@@ -20,9 +20,7 @@ namespace Graphics
 		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
 		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
 
-		~GraphicsContext() = default;
-
-		void deinitialise();
+		~GraphicsContext();
 
 		void initialise(Window* window);
 

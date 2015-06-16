@@ -28,4 +28,6 @@ Log& Log::operator <<(const String16& value)
 
 // Private
 
+// Static
+
 // Log::writeToConsole() is defined in platform/*/*Log.cpp

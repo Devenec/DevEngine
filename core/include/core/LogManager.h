@@ -15,12 +15,12 @@ namespace Core
 	{
 	public:
 
-		LogManager();
+		LogManager() = default;
 
 		LogManager(const LogManager& logManager) = delete;
 		LogManager(LogManager&& logManager) = delete;
 
-		~LogManager();
+		~LogManager() = default;
 
 		void deinitialise();
 

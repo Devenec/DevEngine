@@ -10,7 +10,6 @@
 #include <png.h>
 #include <core/Types.h>
 #include <core/Vector.h>
-#include <graphics/ImageFormat.h>
 
 namespace Core
 {
@@ -19,6 +18,8 @@ namespace Core
 
 namespace Graphics
 {
+	enum class ImageFormat;
+
 	class PNGReader final
 	{
 	public:

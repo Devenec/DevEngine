@@ -12,7 +12,7 @@
 #include <core/UtilityMacros.h>
 #include <core/debug/Assert.h>
 
-#if DE_BUILD_CONFIG == DE_BUILD_CONFIG_PRODUCTION
+#if DE_BUILD == DE_BUILD_PRODUCTION
 	#define DE_ERROR(errorCode) \
 		Core::invokeError(errorCode)
 #else

@@ -10,18 +10,21 @@
 Icon::Icon()
 	: _iconHandle(nullptr) { }
 
-Icon::~Icon()
+Icon::Icon(Icon&& icon)
+	: _iconHandle(icon._iconHandle)
 {
-	deinitialise();
-}
-
-void Icon::deinitialise()
-{
-	if(_iconHandle != nullptr)
-		destroy();
+	icon._iconHandle = nullptr;
 }
 
 const HICON Icon::handle() const
 {
 	return _iconHandle;
+}
+
+// Operators
+
+Icon& Icon::operator =(Icon&& icon)
+{
+	std::swap(_iconHandle, icon._iconHandle);
+	return *this;
 }

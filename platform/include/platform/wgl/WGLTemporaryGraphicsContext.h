@@ -17,7 +17,7 @@ namespace Platform
 	{
 	public:
 
-		TemporaryGraphicsContext(HWND windowHandle);
+		explicit TemporaryGraphicsContext(HWND windowHandle);
 
 		TemporaryGraphicsContext(const TemporaryGraphicsContext& temporaryGraphicsContext) = delete;
 		TemporaryGraphicsContext(TemporaryGraphicsContext&& temporaryGraphicsContext) = delete;
