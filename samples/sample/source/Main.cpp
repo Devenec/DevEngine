@@ -130,12 +130,19 @@ static void testWindow()
 	while(window->processMessages()) { }
 }
 
+#include <platform/wgl/WGLGraphicsExtensionManager.h>
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>
 #include <gl/GL.h>
 
 static void testGraphics(Window* window)
 {
 	Platform::TemporaryGraphicsContext graphicsContext(static_cast<HWND>(window->handle()));
+
+	defaultLog << LogLevel::Debug << "OpenGL version: " << glGetString(GL_VERSION) << Log::Flush();
+
+	Platform::GraphicsExtensionManager graphicsExtensionManager;
+	graphicsExtensionManager.initialiseExtensions(GetDC(static_cast<HWND>(window->handle())));
+
 	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	graphicsContext.swapBuffers();

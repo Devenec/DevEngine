@@ -23,7 +23,7 @@
 	#define DE_COMPILER_VERSION _MSC_VER
 
 	#if DE_COMPILER_VERSION < DE_COMPILER_VERSION_MIN_MSVC
-		#error The compiler version is unsupported. The minimum supported version is DE_COMPILER_VERSION_MIN_MSVC.
+		#error The compiler version is not supported. The minimum supported version is DE_COMPILER_VERSION_MIN_MSVC.
 	#endif
 #else
 	#error The compiler is unsupported.
@@ -58,7 +58,7 @@
 #if !defined(_WIN64)
 	#define DE_ARCHITECTURE DE_ARCHITECTURE_X86
 #else
-	#error The target processor architecture is unsupported.
+	#error The target processor architecture is not supported.
 #endif
 
 
@@ -81,7 +81,7 @@
 #if defined(_WIN32)
 	#define DE_PLATFORM DE_PLATFORM_WINDOWS
 #else
-	#error The target platform is unsupported.
+	#error The target platform is not supported.
 #endif
 
 

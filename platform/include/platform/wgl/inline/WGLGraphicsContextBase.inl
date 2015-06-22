@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/WGLGraphicsContextBase.inl
+ * @file platform/wgl/inline/WGLGraphicsContextBase.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa

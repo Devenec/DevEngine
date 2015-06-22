@@ -5,10 +5,10 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-	<Filter Include="Header Files\wgl">
+    <Filter Include="Header Files\wgl">
       <UniqueIdentifier>{00b5cb3d-63d7-418c-8143-97d01ea7ce2c}</UniqueIdentifier>
     </Filter>
-	<Filter Include="Header Files\wgl\inline">
+    <Filter Include="Header Files\wgl\inline">
       <UniqueIdentifier>{edcf11c1-d55f-44c2-a2a2-a262d8fdafeb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\windows">
@@ -17,14 +17,14 @@
     <Filter Include="Header Files\windows\inline">
       <UniqueIdentifier>{5420f3dc-593a-4800-b8f5-193136ae7c5c}</UniqueIdentifier>
     </Filter>
-	<Filter Include="Source Files">
+    <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-	<Filter Include="Source Files\wgl">
+    <Filter Include="Source Files\wgl">
       <UniqueIdentifier>{8f5a2cf4-01df-47f0-be5b-2205bae57998}</UniqueIdentifier>
     </Filter>
-	<Filter Include="Source Files\windows">
+    <Filter Include="Source Files\windows">
       <UniqueIdentifier>{3b414000-a269-4c3b-b8b7-7192d2ea7f45}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files">
@@ -36,10 +36,16 @@
     <ClInclude Include="include\platform\PlatformInternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-	<ClInclude Include="include\platform\wgl\WGLGraphicsContextBase.h">
+    <ClInclude Include="include\platform\wgl\WGL.h">
       <Filter>Header Files\wgl</Filter>
     </ClInclude>
-	<ClInclude Include="include\platform\wgl\WGLTemporaryGraphicsContext.h">
+    <ClInclude Include="include\platform\wgl\WGLGraphicsContextBase.h">
+      <Filter>Header Files\wgl</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform\wgl\WGLGraphicsExtensionManager.h">
+      <Filter>Header Files\wgl</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform\wgl\WGLTemporaryGraphicsContext.h">
       <Filter>Header Files\wgl</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\windows\Windows.h">
@@ -53,15 +59,24 @@
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl">
       <Filter>Header Files\wgl\inline</Filter>
     </None>
+    <None Include="include\platform\wgl\inline\WGLGraphicsExtensionManager.inl">
+      <Filter>Header Files\wgl\inline</Filter>
+    </None>
     <None Include="include\platform\windows\inline\WindowsIcon.inl">
       <Filter>Header Files\windows\inline</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\wgl\WGL.cpp">
+      <Filter>Source Files\wgl</Filter>
+    </ClCompile>
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
-	<ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp">
+    <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp">
+      <Filter>Source Files\wgl</Filter>
+    </ClCompile>
+    <ClCompile Include="source\wgl\WGLGraphicsExtensionManager.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp">

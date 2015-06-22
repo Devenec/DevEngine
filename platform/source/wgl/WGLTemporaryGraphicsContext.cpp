@@ -5,12 +5,23 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
+// TODO: change to internal header
+#include <platform/windows/Windows.h>
+#include <gl/GL.h>
+
+#define GL_MAJOR_VERSION 0x821B
+#define GL_MINOR_VERSION 0x821C
+// /TODO
+
 #include <core/Error.h>
 #include <core/Log.h>
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>
 
 using namespace Core;
 using namespace Platform;
+
+static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 4;
+static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 5;
 
 static const Char8* TEMPORARYGRAPHICSCONTEXT_CONTEXT = "[Platform::TemporaryGraphicsContext - WGL]";
 
@@ -22,6 +33,7 @@ TemporaryGraphicsContext::TemporaryGraphicsContext(HWND windowHandle)
 	initialisePixelFormat();
 	createContext();
 	makeCurrent();
+	validateOpenGLVersion();
 }
 
 // Private
@@ -32,6 +44,30 @@ void TemporaryGraphicsContext::initialisePixelFormat() const
 	const Int32 pixelFormatIndex = choosePixelFormat(pixelFormatDescriptor);
 	validatePixelFormat(pixelFormatIndex);
 	setPixelFormat(pixelFormatIndex);
+}
+
+// TODO: add OpenGL error checking
+void TemporaryGraphicsContext::validateOpenGLVersion() const
+{
+	Int32 majorVersion;
+	glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+	Int32 minorVersion;
+	glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+	Bool isVersionUnsupported = false;
+
+	if(majorVersion < MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
+		isVersionUnsupported = true;
+	else if(majorVersion == MIN_SUPPORTED_OPENGL_VERSION_MAJOR && minorVersion < MIN_SUPPORTED_OPENGL_VERSION_MINOR)
+		isVersionUnsupported = true;
+
+	if(isVersionUnsupported)
+	{
+		defaultLog << LogLevel::Error << TEMPORARYGRAPHICSCONTEXT_CONTEXT << " The OpenGL version " << majorVersion <<
+			'.' << minorVersion << " is not supported. The minimum supported version is " <<
+			MIN_SUPPORTED_OPENGL_VERSION_MAJOR << '.' << MIN_SUPPORTED_OPENGL_VERSION_MINOR << '.' << Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+	}
 }
 
 Int32 TemporaryGraphicsContext::choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const

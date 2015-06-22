@@ -32,6 +32,7 @@ namespace Platform
 		using Base = GraphicsContextBase;
 
 		void initialisePixelFormat() const;
+		void validateOpenGLVersion() const;
 		Int32 choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const;
 		void validatePixelFormat(const Int32 pixelFormatIndex) const;
 
