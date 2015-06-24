@@ -15,19 +15,6 @@ static const Char8* GRAPHICSCONTEXTBASE_CONTEXT = "[Platform::GraphicsContextBas
 
 // Protected
 
-void GraphicsContextBase::createContext()
-{
-	_graphicsContextHandle = wglCreateContext(_deviceContextHandle);
-
-	if(_graphicsContextHandle == nullptr)
-	{
-		defaultLog << LogLevel::Error << GRAPHICSCONTEXTBASE_CONTEXT << " Failed to create the context." <<
-			Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
-	}
-}
-
 void GraphicsContextBase::destroyContext()
 {
 	const Int32 result = wglDeleteContext(_graphicsContextHandle);

@@ -20,6 +20,8 @@ namespace Platform
 		GraphicsContextBase(const GraphicsContextBase& graphicsContext) = delete;
 		GraphicsContextBase(GraphicsContextBase&& graphicsContext) = delete;
 
+		inline HDC deviceContextHandle() const;
+
 		inline void swapBuffers() const;
 
 		GraphicsContextBase& operator =(const GraphicsContextBase& graphicsContext) = delete;
@@ -33,8 +35,6 @@ namespace Platform
 		inline explicit GraphicsContextBase(HWND windowHandle);
 
 		inline ~GraphicsContextBase();
-
-		void createContext();
 
 		void destroyContext();
 

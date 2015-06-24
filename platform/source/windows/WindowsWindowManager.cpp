@@ -16,11 +16,15 @@
 #include <graphics/WindowManager.h>
 
 #define OEMRESOURCE
-#include <platform/windows/Windows.h>
+#include <platform/windows/Windows.h> // Needs to be the first to include Windows.h
 #undef OEMRESOURCE
+
+#include <platform/wgl/WGLGraphicsExtensionManager.h>
+#include <platform/wgl/WGLTemporaryGraphicsContext.h>
 
 using namespace Core;
 using namespace Graphics;
+using namespace Platform;
 
 static const Char16* WINDOW_CLASS_NAME	  = DE_CHAR16("devengine");
 static const Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
@@ -39,21 +43,9 @@ public:
 	Impl()
 		: _isCursorVisible(true)
 	{
-		WNDCLASSEXW windowClass;
-		windowClass.cbClsExtra = 0;
-		windowClass.cbSize = sizeof(windowClass);
-		windowClass.cbWndExtra = 0;
-		windowClass.hbrBackground = nullptr;
-		windowClass.hCursor = loadCursor();
-		windowClass.hIcon = nullptr;
-		windowClass.hIconSm = nullptr;
-		windowClass.hInstance = GetModuleHandleW(nullptr);
-		windowClass.lpfnWndProc = processMessage;
-		windowClass.lpszClassName = WINDOW_CLASS_NAME;
-		windowClass.lpszMenuName = nullptr;
-		windowClass.style = CS_OWNDC;
-
-		registerWindowClass(windowClass);
+		const WNDCLASSEX windowClassInfo = createWindowClassInfo();
+		registerWindowClass(windowClassInfo);
+		initialiseGraphicsExtensions();
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -72,6 +64,7 @@ public:
 		}
 	}
 
+	// TODO: make static
 	HWND createWindow() const
 	{
 		const RECT windowRectangle = createWindowRectangle();
@@ -114,17 +107,8 @@ public:
 private:
 
 	Bool _isCursorVisible;
-
-	HCURSOR loadCursor() const
-	{
-		HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
-
-		if(cursorHandle == nullptr)
-			return nullptr;
-		else
-			return static_cast<HCURSOR>(cursorHandle);
-	}
-
+	
+	// TODO: make static
 	RECT createWindowRectangle() const
 	{
 		DE_ASSERT(GraphicsAdapterManager::hasInstance());
@@ -149,7 +133,8 @@ private:
 
 		return rectangle;
 	}
-
+	
+	// TODO: move to Platform::Window::Impl
 	void setUserDataPointer(HWND windowHandle) const
 	{
 		SetLastError(0u);
@@ -175,6 +160,19 @@ private:
 		return false;
 	}
 
+	static WNDCLASSEX createWindowClassInfo()
+	{
+		WNDCLASSEXW windowClassInfo = WNDCLASSEXW();
+		windowClassInfo.cbSize = sizeof(WNDCLASSEXW);
+		windowClassInfo.hCursor = loadCursor();
+		windowClassInfo.hInstance = GetModuleHandleW(nullptr);
+		windowClassInfo.lpfnWndProc = processMessage;
+		windowClassInfo.lpszClassName = WINDOW_CLASS_NAME;
+		windowClassInfo.style = CS_OWNDC;
+
+		return windowClassInfo;
+	}
+
 	static void registerWindowClass(const WNDCLASSEX& windowClassInfo)
 	{
 		const Uint32 result = RegisterClassExW(&windowClassInfo);
@@ -186,6 +184,28 @@ private:
 
 			DE_ERROR_WINDOWS(0x000403);
 		}
+	}
+
+	// TODO: make static
+	void initialiseGraphicsExtensions()
+	{
+		HWND windowHandle = createWindow();
+		TemporaryGraphicsContext temporaryGraphicsContext(windowHandle);
+		temporaryGraphicsContext.initialise();
+		GraphicsExtensionManager graphicsExtensionManager;
+		graphicsExtensionManager.initialiseExtensions(temporaryGraphicsContext);
+		temporaryGraphicsContext.deinitialise();
+		destroyWindow(windowHandle);
+	}
+
+	static HCURSOR loadCursor()
+	{
+		HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
+
+		if(cursorHandle == nullptr)
+			return nullptr;
+		else
+			return static_cast<HCURSOR>(cursorHandle);
 	}
 
 	static LRESULT CALLBACK processMessage(HWND windowHandle, Uint32 message, WPARAM wParam, LPARAM lParam)

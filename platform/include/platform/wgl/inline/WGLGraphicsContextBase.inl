@@ -17,11 +17,16 @@ GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
 
 GraphicsContextBase::~GraphicsContextBase()
 {
-	if(_deviceContextHandle != nullptr)
+	if(_graphicsContextHandle != nullptr)
 	{
 		makeNonCurrent();
 		destroyContext();
 	}
+}
+
+HDC GraphicsContextBase::deviceContextHandle() const
+{
+	return _deviceContextHandle;
 }
 
 void GraphicsContextBase::swapBuffers() const

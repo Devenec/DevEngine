@@ -12,6 +12,8 @@
 
 namespace Platform
 {
+	class GraphicsContextBase;
+
 	class GraphicsExtensionManager
 	{
 	public:
@@ -23,7 +25,7 @@ namespace Platform
 
 		~GraphicsExtensionManager() = default;
 
-		void initialiseExtensions(HDC deviceContextHandle) const;
+		void initialiseExtensions(const GraphicsContextBase& graphicsContext) const;
 
 		GraphicsExtensionManager& operator =(const GraphicsExtensionManager& graphicsExtensionManager) = delete;
 		GraphicsExtensionManager& operator =(GraphicsExtensionManager&& graphicsExtensionManager) = delete;

@@ -15,6 +15,7 @@
 #include <core/UtilityMacros.h>
 #include <core/Vector.h>
 #include <graphics/GraphicsAdapterManager.h>
+#include <graphics/GraphicsContext.h>
 #include <graphics/Image.h>
 #include <graphics/Window.h>
 #include <graphics/WindowManager.h>
@@ -25,14 +26,13 @@ using namespace Graphics;
 
 static void testLog(const StartupParameters& startupParameters);
 static void testFileStream();
-static void testWindow();
-static void testGraphics(Window* window);
+static void testWindowAndGraphics();
 
 void devEngineMain(const StartupParameters& startupParameters)
 {
 	testLog(startupParameters);
 	testFileStream();
-	testWindow();
+	testWindowAndGraphics();
 }
 
 static void testLog(const StartupParameters& startupParameters)
@@ -109,7 +109,10 @@ static void testFileStream()
 	fileStream.close();
 }
 
-static void testWindow()
+#include <platform/windows/Windows.h>
+#include <gl/GL.h>
+
+static void testWindowAndGraphics()
 {
 	ContentManager contentManager;
 	Image* image = contentManager.load<Image>("assets/icon.png");
@@ -126,24 +129,13 @@ static void testWindow()
 	//window->setFullscreen(true);
 	//window->setFullscreen(false);
 
-	testGraphics(window);
-	while(window->processMessages()) { }
-}
-
-#include <platform/wgl/WGLGraphicsExtensionManager.h>
-#include <platform/wgl/WGLTemporaryGraphicsContext.h>
-#include <gl/GL.h>
-
-static void testGraphics(Window* window)
-{
-	Platform::TemporaryGraphicsContext graphicsContext(static_cast<HWND>(window->handle()));
-
-	defaultLog << LogLevel::Debug << "OpenGL version: " << glGetString(GL_VERSION) << Log::Flush();
-
-	Platform::GraphicsExtensionManager graphicsExtensionManager;
-	graphicsExtensionManager.initialiseExtensions(GetDC(static_cast<HWND>(window->handle())));
-
+	GraphicsContext graphicsContext;
+	graphicsContext.initialise(window);
 	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	graphicsContext.swapBuffers();
+
+	while(window->processMessages())
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		graphicsContext.swapBuffers();
+	}
 }

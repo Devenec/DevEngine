@@ -24,6 +24,10 @@ namespace Platform
 
 		~TemporaryGraphicsContext() = default;
 
+		void deinitialise();
+
+		void initialise();
+
 		TemporaryGraphicsContext& operator =(const TemporaryGraphicsContext& temporaryGraphicsContext) = delete;
 		TemporaryGraphicsContext& operator =(TemporaryGraphicsContext&& temporaryGraphicsContext) = delete;
 
@@ -32,6 +36,7 @@ namespace Platform
 		using Base = GraphicsContextBase;
 
 		void initialisePixelFormat() const;
+		void createContext();
 		void validateOpenGLVersion() const;
 		Int32 choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const;
 		void validatePixelFormat(const Int32 pixelFormatIndex) const;

@@ -8,6 +8,7 @@
 #include <core/Error.h>
 #include <core/Log.h>
 #include <platform/wgl/WGL.h>
+#include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/wgl/WGLGraphicsExtensionManager.h>
 
 using namespace Core;
@@ -17,11 +18,11 @@ static const Char8* GRAPHICSEXTENSIONMANAGER_CONTEXT = "[Platform::GraphicsExten
 
 // Public
 
-void GraphicsExtensionManager::initialiseExtensions(HDC deviceContextHandle) const
+void GraphicsExtensionManager::initialiseExtensions(const GraphicsContextBase& graphicsContext) const
 {
 	validateContextState();
 	getContextExtensionFunctions();
-	logSupportedContextExtensions(deviceContextHandle);
+	logSupportedContextExtensions(graphicsContext.deviceContextHandle());
 	getOpenGLExtensionFunction();
 }
 

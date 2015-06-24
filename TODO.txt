@@ -1,6 +1,11 @@
 DevEngine - TODO
 ----------------
 
+- Find cases where a pointer can potentially be nullptr, and add assertion
+
+- Should change Platform::TemporaryGraphicsContext from initialise()/deinitialise() behaviour to different? If not, make
+	initialise() and deinitialise() inline?
+
 - Design how Core::Log works with different builds, e.g. filtering levels and the default stream level
 
 - Design how content loaders (inherited from Content::ContentLoader) should work. Currently, an instance is created each

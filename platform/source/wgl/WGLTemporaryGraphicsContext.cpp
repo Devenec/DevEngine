@@ -28,7 +28,15 @@ static const Char8* TEMPORARYGRAPHICSCONTEXT_CONTEXT = "[Platform::TemporaryGrap
 // Public
 
 TemporaryGraphicsContext::TemporaryGraphicsContext(HWND windowHandle)
-	: Base(windowHandle)
+	: Base(windowHandle) { }
+
+void TemporaryGraphicsContext::deinitialise()
+{
+	makeNonCurrent();
+	destroyContext();
+}
+
+void TemporaryGraphicsContext::initialise()
 {
 	initialisePixelFormat();
 	createContext();
@@ -46,9 +54,24 @@ void TemporaryGraphicsContext::initialisePixelFormat() const
 	setPixelFormat(pixelFormatIndex);
 }
 
+void TemporaryGraphicsContext::createContext()
+{
+	_graphicsContextHandle = wglCreateContext(_deviceContextHandle);
+
+	if(_graphicsContextHandle == nullptr)
+	{
+		defaultLog << LogLevel::Error << TEMPORARYGRAPHICSCONTEXT_CONTEXT << " Failed to create the context." <<
+			Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+	}
+}
+
 // TODO: add OpenGL error checking
 void TemporaryGraphicsContext::validateOpenGLVersion() const
 {
+	// TODO: change GL_MAJOR_VERSION and GL_MINOR_VERSION to glGetString(GL_VERSION), since the former are not
+	// supported until OpenGL 2.x
 	Int32 majorVersion;
 	glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
 	Int32 minorVersion;
@@ -103,7 +126,7 @@ void TemporaryGraphicsContext::validatePixelFormat(const Int32 pixelFormatIndex)
 	if((pixelFormatDescriptor.dwFlags & PFD_SUPPORT_OPENGL) == 0u)
 	{
 		defaultLog << LogLevel::Error << TEMPORARYGRAPHICSCONTEXT_CONTEXT <<
-			" The device context doesn't support OpenGL." << Log::Flush();
+			" The device context does not support OpenGL." << Log::Flush();
 
 		DE_ERROR(0x0); // TODO: set errorCode
 	}
