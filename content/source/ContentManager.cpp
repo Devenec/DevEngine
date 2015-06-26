@@ -12,6 +12,9 @@ using namespace Content;
 
 // Public
 
+ContentManager::ContentManager(const Core::String8& contentDirectory)
+	: _contentRootDirectory(contentDirectory) { }
+
 ContentManager::~ContentManager()
 {
 	for(ContentMap::const_iterator i = _loadedContent.begin(), end = _loadedContent.end(); i != end; ++i)

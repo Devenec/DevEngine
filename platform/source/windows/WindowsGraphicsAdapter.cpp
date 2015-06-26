@@ -78,7 +78,7 @@ private:
 	void changeDisplaySettings(DEVMODEW* displayModeInfo, const Uint32 flags) const
 	{
 		const Int32 result = ChangeDisplaySettingsExW(_name.c_str(), displayModeInfo, nullptr, flags, nullptr);
-		DE_ASSERT(result == DISP_CHANGE_SUCCESSFUL);
+		DE_ASSERT(result == DISP_CHANGE_SUCCESSFUL); // TODO: should use other kind of error checking
 	}
 };
 

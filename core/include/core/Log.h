@@ -43,7 +43,7 @@ namespace Core
 
 		inline Log& operator <<(const Char16* characters);
 
-		inline Log& operator <<(const Flush& flush);
+		Log& operator <<(const Flush& flush);
 
 		inline Log& operator <<(const LogLevel& logLevel);
 
@@ -58,7 +58,7 @@ namespace Core
 		LogLevel _filterLevel;
 		LogLevel _streamLevel;
 
-		inline Log();
+		Log();
 
 		static void writeToConsole(const LogLevel& level, const String8& message);
 	};

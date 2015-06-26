@@ -14,6 +14,9 @@ using namespace Debug;
 
 // Public
 
+AllocationTracker::AllocationTracker()
+	: _isInitialised(false) { }
+
 void AllocationTracker::deregisterAllocation(Void* pointer, const Uint32 byteCount)
 {
 	DE_ASSERT(_isInitialised);

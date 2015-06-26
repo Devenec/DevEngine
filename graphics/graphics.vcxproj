@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\DisplayMode.cpp" />
+    <ClCompile Include="source\Image.cpp" />
     <ClCompile Include="source\ImageLoader.cpp" />
     <ClCompile Include="source\PNGReader.cpp" />
   </ItemGroup>

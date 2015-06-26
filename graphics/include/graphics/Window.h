@@ -17,9 +17,9 @@ namespace Core
 
 namespace Graphics
 {
-	using WindowHandle = Void*;
-
 	class Image;
+
+	using WindowHandle = Void*;
 
 	class Window final
 	{
@@ -30,10 +30,11 @@ namespace Graphics
 
 		WindowHandle handle() const;
 
-		// TODO: decouple from specific window when multiple windows are supported?
-		Bool processMessages() const;
+		void hide() const;
 
 		Core::Rectangle rectangle() const;
+
+		void setCursorVisibility(const Bool value) const;
 
 		void setFullscreen(const Bool value) const;
 
@@ -42,6 +43,8 @@ namespace Graphics
 		void setRectangle(const Core::Rectangle& value) const;
 
 		void setTitle(const Core::String8& value) const;
+
+		Bool shouldClose() const;
 
 		void show() const;
 

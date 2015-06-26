@@ -13,8 +13,6 @@
 
 using namespace Core;
 
-static const Char8* FILESTREAM_CONTEXT = "[Platform::FileStream - Windows]";
-
 // Implementation
 
 class FileStream::Impl final
@@ -44,7 +42,7 @@ public:
 
 			if(result == 0)
 			{
-				defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to close the file." << Log::Flush();
+				defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to close the file." << Log::Flush();
 				DE_ERROR_WINDOWS(0x000000);
 			}
 
@@ -70,7 +68,7 @@ public:
 
 		if(_handle == INVALID_HANDLE_VALUE)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to open file '" << filepath << "'." <<
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x000001);
@@ -88,8 +86,8 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT <<
-				" Failed to get the position of the file pointer." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the position of the file pointer." <<
+				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x000002);
 		}
@@ -105,7 +103,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to read the file." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to read the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000003);
 		}
 
@@ -125,7 +123,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to seek the file." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to seek the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000004);
 		}
 	}
@@ -137,9 +135,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to get the size of the file." <<
-				Log::Flush();
-
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the size of the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000005);
 		}
 
@@ -154,7 +150,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to write to the file." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to write to the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000006);
 		}
 
@@ -166,6 +162,8 @@ public:
 
 private:
 
+	static const Char8* COMPONENT_TAG;
+
 	HANDLE _handle;
 	OpenMode _openMode;
 
@@ -175,7 +173,7 @@ private:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << FILESTREAM_CONTEXT << " Failed to flush the file buffer." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to flush the file buffer." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000007);
 		}
 	}
@@ -206,6 +204,8 @@ private:
 		return mode;
 	}
 };
+
+const Char8* FileStream::Impl::COMPONENT_TAG = "[Platform::FileStream - Windows]";
 
 
 // Public

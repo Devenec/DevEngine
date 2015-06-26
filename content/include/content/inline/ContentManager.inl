@@ -7,9 +7,6 @@
 
 // Public
 
-ContentManager::ContentManager(const Core::String8& contentDirectory)
-	: _contentRootDirectory(contentDirectory) { }
-
 const Core::String8& ContentManager::contentRootDirectory() const
 {
 	return _contentRootDirectory;

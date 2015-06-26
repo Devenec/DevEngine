@@ -18,8 +18,7 @@ namespace Graphics
 	{
 	public:
 
-		inline Image(const Uint32 width, const Uint32 height, const ImageFormat& format,
-			const Core::Vector<Byte>& data);
+		Image(const Uint32 width, const Uint32 height, const ImageFormat& format, const Core::Vector<Byte>& data);
 
 		Image(const Image& image) = delete;
 		Image(Image&& image) = delete;

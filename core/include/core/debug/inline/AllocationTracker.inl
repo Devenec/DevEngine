@@ -7,9 +7,6 @@
 
 // Public
 
-AllocationTracker::AllocationTracker()
-	: _isInitialised(false) { }
-
 void AllocationTracker::deinitialise()
 {
 	_isInitialised = false;

@@ -7,23 +7,6 @@
 
 // Public
 
-GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
-	: _deviceContextHandle(nullptr),
-	  _graphicsContextHandle(nullptr)
-{
-	DE_ASSERT(windowHandle != nullptr);
-	initialiseDeviceContext(windowHandle);
-}
-
-GraphicsContextBase::~GraphicsContextBase()
-{
-	if(_graphicsContextHandle != nullptr)
-	{
-		makeNonCurrent();
-		destroyContext();
-	}
-}
-
 HDC GraphicsContextBase::deviceContextHandle() const
 {
 	return _deviceContextHandle;

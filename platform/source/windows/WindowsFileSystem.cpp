@@ -11,7 +11,7 @@
 
 using namespace Core;
 
-static const Char8* FILESYSTEM_CONTEXT = "[Platform::FileSystem - Windows]";
+static const Char8* FILESYSTEM_COMPONENT_TAG = "[Platform::FileSystem - Windows]";
 
 // Public
 
@@ -30,7 +30,7 @@ Bool FileSystem::fileExists(const String8& filepath)
 			return false;
 		}
 
-		defaultLog << LogLevel::Error << FILESYSTEM_CONTEXT << " Failed to get the attributes of file '" <<
+		defaultLog << LogLevel::Error << FILESYSTEM_COMPONENT_TAG << " Failed to get the attributes of file '" <<
 			filepath << "'." << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x000100);

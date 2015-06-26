@@ -33,9 +33,9 @@ namespace Core
 
 		static T* _instance;
 
-		inline Singleton();
+		Singleton();
 
-		inline ~Singleton();
+		~Singleton();
 	};
 
 #include "inline/Singleton.inl"

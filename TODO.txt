@@ -1,6 +1,10 @@
 DevEngine - TODO
 ----------------
 
+- Support absolute filepaths with Content::ContentManager. Create a platform-independent path component?
+
+- Investigate Windows foreground processes and windows (SetForegroundWindow()).
+
 - Find cases where a pointer can potentially be nullptr, and add assertion
 
 - Should change Platform::TemporaryGraphicsContext from initialise()/deinitialise() behaviour to different? If not, make

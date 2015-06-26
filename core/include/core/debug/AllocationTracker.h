@@ -17,7 +17,7 @@ namespace Debug
 	{
 	public:
 		
-		inline AllocationTracker();
+		AllocationTracker();
 
 		AllocationTracker(const AllocationTracker& allocationTracker) = delete;
 		AllocationTracker(AllocationTracker&& allocationTracker) = delete;

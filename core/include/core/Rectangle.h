@@ -25,7 +25,7 @@ namespace Core
 
 		Rectangle() = default;
 
-		inline Rectangle(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height);
+		Rectangle(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height);
 
 		Rectangle(const Rectangle& rectangle) = default;
 

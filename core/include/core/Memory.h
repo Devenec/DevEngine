@@ -58,10 +58,10 @@ namespace Core
 	void deallocateMemory(Void* pointer, const Uint32 byteCount = 0u);
 
 	template<typename T>
-	inline T* constructArray(T* pointer, const Uint32 size);
+	T* constructArray(T* pointer, const Uint32 size);
 
 	template<typename T>
-	inline void destructArray(T* pointer, const Uint32 size);
+	void destructArray(T* pointer, const Uint32 size);
 
 #include "inline/Memory.inl"
 }

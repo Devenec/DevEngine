@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <core/List.h>
 #include <core/Singleton.h>
 #include <core/Types.h>
 
@@ -27,9 +28,11 @@ namespace Graphics
 
 		Window* createWindow();
 
+		void destroyWindow(Window* window);
+
 		void initialise();
 
-		void setCursorVisibility(const Bool value) const;
+		void processMessages() const;
 
 		WindowManager& operator =(const WindowManager& windowManager) = delete;
 		WindowManager& operator =(WindowManager&& windowManager) = delete;
@@ -38,9 +41,9 @@ namespace Graphics
 
 		class Impl;
 
-		Impl* _impl;
-		Window* _window;
+		using WindowList = Core::List<Window*>;
 
-		void destroyWindow();
+		WindowList _windows; // TODO: move to implementation
+		Impl* _impl;
 	};
 }

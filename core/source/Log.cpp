@@ -19,6 +19,16 @@ void Log::write(const LogLevel& level, const String8& message) const
 
 // Operators
 
+Log& Log::operator <<(const Flush& flush)
+{
+	static_cast<Void>(flush);
+	write(_streamLevel, _stream.str());
+	_stream.str(String8());
+	_streamLevel = LogLevel::Debug;
+
+	return *this;
+}
+
 template<>
 Log& Log::operator <<(const String16& value)
 {
@@ -27,6 +37,10 @@ Log& Log::operator <<(const String16& value)
 }
 
 // Private
+
+Log::Log()
+	: _filterLevel(LogLevel::Debug),
+	  _streamLevel(LogLevel::Debug) { }
 
 // Static
 

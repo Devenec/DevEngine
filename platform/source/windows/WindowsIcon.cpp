@@ -6,7 +6,6 @@
  */
 
 #include <core/Log.h>
-#include <core/Types.h>
 #include <core/Vector.h>
 #include <core/debug/Assert.h>
 #include <graphics/Image.h>
@@ -17,9 +16,10 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
-static const Char8* ICON_CONTEXT = "[Platform::Icon - Windows]";
-
 // Public
+
+Icon::Icon()
+	: _iconHandle(nullptr) { }
 
 Icon::Icon(const Image* image)
 	: Icon()
@@ -34,6 +34,12 @@ Icon::Icon(const Image* image)
 	destroyBitmap(colourBitmapHandle);
 }
 
+Icon::Icon(Icon&& icon)
+	: _iconHandle(icon._iconHandle)
+{
+	icon._iconHandle = nullptr;
+}
+
 Icon::~Icon()
 {
 	if(_iconHandle != nullptr)
@@ -42,13 +48,15 @@ Icon::~Icon()
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to destroy the icon." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy the icon." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000201);
 		}
 	}
 }
 
 // Private
+
+const Char8* Icon::COMPONENT_TAG = "[Platform::Icon - Windows]";
 
 void Icon::create(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 {
@@ -61,7 +69,7 @@ void Icon::create(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 
 	if(_iconHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to create the icon." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the icon." << Log::Flush();
 		DE_ERROR_WINDOWS(0x000200);
 	}
 }
@@ -99,7 +107,7 @@ HBITMAP Icon::createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& data
 
 	if(bitmapHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to create the colour bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the colour bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x000202);
 	}
 
@@ -135,7 +143,7 @@ HBITMAP Icon::createMaskBitmap(const Image* image)
 
 	if(bitmapHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to create the mask bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the mask bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x000203);
 	}
 
@@ -148,7 +156,7 @@ void Icon::destroyBitmap(HBITMAP bitmapHandle)
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to destroy a bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy a bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x000204);
 	}
 
@@ -178,7 +186,7 @@ HDC Icon::getDeviceContext()
 
 	if(deviceContextHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to get a device context." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get a device context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x000205);
 	}
 
@@ -191,7 +199,7 @@ void Icon::releaseDeviceContext(HDC deviceContextHandle)
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ICON_CONTEXT << " Failed to release the device context." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to release the device context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x000206);
 	}
 }

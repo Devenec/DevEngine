@@ -5,6 +5,7 @@
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  */
 
+#include <algorithm>
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <core/UtilityMacros.h>
@@ -16,23 +17,16 @@
 #include <graphics/WindowManager.h>
 
 #define OEMRESOURCE
-#include <platform/windows/Windows.h> // Needs to be the first to include Windows.h
+#include <platform/windows/Windows.h> // Needs to be the first header to include Windows.h
 #undef OEMRESOURCE
 
 #include <platform/wgl/WGLGraphicsExtensionManager.h>
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>
+#include <platform/windows/WindowsWindow.h>
 
 using namespace Core;
 using namespace Graphics;
 using namespace Platform;
-
-static const Char16* WINDOW_CLASS_NAME	  = DE_CHAR16("devengine");
-static const Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
-static const Uint32 WINDOW_DEFAULT_WIDTH  = 800u;
-static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine");
-static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
-
-static const Char8* WINDOWMANAGER_CONTEXT = "[Platform::WindowManager - Windows]";
 
 // Implementation
 
@@ -41,7 +35,6 @@ class WindowManager::Impl final
 public:
 
 	Impl()
-		: _isCursorVisible(true)
 	{
 		const WNDCLASSEX windowClassInfo = createWindowClassInfo();
 		registerWindowClass(windowClassInfo);
@@ -57,15 +50,17 @@ public:
 		
 		if(result == 0u)
 		{
-			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to deregister the window class." <<
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to deregister the window class." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x000400);
 		}
 	}
 
-	// TODO: make static
-	HWND createWindow() const
+	Impl& operator =(const Impl& impl) = delete;
+	Impl& operator =(Impl&& impl) = delete;
+
+	static HWND createWindow()
 	{
 		const RECT windowRectangle = createWindowRectangle();
 		const Int32 windowWidth = windowRectangle.right - windowRectangle.left;
@@ -77,21 +72,12 @@ public:
 
 		if(windowHandle == nullptr)
 		{
-			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to create a window." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a window." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000401);
 		}
 
-		setUserDataPointer(windowHandle);
 		return windowHandle;
 	}
-
-	void setCursorVisibility(const Bool value)
-	{
-		_isCursorVisible = value;
-	}
-
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
 
 	static void destroyWindow(HWND windowHandle)
 	{
@@ -99,66 +85,42 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to destroy a window." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy a window." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000402);
 		}
 	}
 
-private:
-
-	Bool _isCursorVisible;
-	
-	// TODO: make static
-	RECT createWindowRectangle() const
+	static void processMessages()
 	{
-		DE_ASSERT(GraphicsAdapterManager::hasInstance());
-		const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
-		const DisplayMode& currentDisplayMode = graphicsAdapterManager.graphicsAdapters()[0]->currentDisplayMode();
+		MSG message;
 
-		RECT rectangle;
-		rectangle.left = currentDisplayMode.width() / 2 - WINDOW_DEFAULT_WIDTH / 2;
-		rectangle.top = currentDisplayMode.height() / 2 - WINDOW_DEFAULT_HEIGHT / 2;
-		rectangle.right = rectangle.left + WINDOW_DEFAULT_WIDTH;
-		rectangle.bottom = rectangle.top + WINDOW_DEFAULT_HEIGHT;
-
-		const Int32 result = AdjustWindowRectEx(&rectangle, WINDOW_STYLE, 0, 0u);
-
-		if(result == 0)
-		{
-			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to create a rectangle for a window." <<
-				Log::Flush();
-
-			DE_ERROR_WINDOWS(0x000404);
-		}
-
-		return rectangle;
+		while(PeekMessageW(&message, nullptr, 0u, 0u, PM_REMOVE) != FALSE)
+			DispatchMessageW(&message);
 	}
-	
-	// TODO: move to Platform::Window::Impl
-	void setUserDataPointer(HWND windowHandle) const
+
+	static void setWindowHandleUserDataPointer(HWND windowHandle, Window::Impl* windowImpl)
 	{
 		SetLastError(0u);
-		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(this));
+		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(windowImpl));
 
 		if(result == 0 && GetLastError() != 0u)
 		{
-			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT <<
-				" Failed to set the user data pointer of a window." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the user data pointer of a window." <<
+				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x000405);
 		}
 	}
 
-	Bool hideCursor(const Bool isCursorInClientArea) const
-	{
-		if(!_isCursorVisible && isCursorInClientArea)
-		{
-			SetCursor(nullptr);
-			return true;
-		}
+private:
 
-		return false;
-	}
+	static constexpr Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
+	static constexpr Uint32 WINDOW_DEFAULT_WIDTH  = 800u;
+	static constexpr Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
+
+	static const Char8* COMPONENT_TAG;
+	static const Char16* WINDOW_CLASS_NAME;
+	static const Char16* WINDOW_DEFAULT_TITLE;
 
 	static WNDCLASSEX createWindowClassInfo()
 	{
@@ -179,23 +141,43 @@ private:
 
 		if(result == 0u)
 		{
-			defaultLog << LogLevel::Error << WINDOWMANAGER_CONTEXT << " Failed to register the window class." <<
-				Log::Flush();
-
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to register the window class." << Log::Flush();
 			DE_ERROR_WINDOWS(0x000403);
 		}
 	}
 
-	// TODO: make static
-	void initialiseGraphicsExtensions()
+	static void initialiseGraphicsExtensions()
 	{
 		HWND windowHandle = createWindow();
 		TemporaryGraphicsContext temporaryGraphicsContext(windowHandle);
 		temporaryGraphicsContext.initialise();
-		GraphicsExtensionManager graphicsExtensionManager;
-		graphicsExtensionManager.initialiseExtensions(temporaryGraphicsContext);
+		GraphicsExtensionManager::initialiseExtensions(temporaryGraphicsContext);
 		temporaryGraphicsContext.deinitialise();
 		destroyWindow(windowHandle);
+	}
+
+	static RECT createWindowRectangle()
+	{
+		const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
+		const DisplayMode& currentDisplayMode = graphicsAdapterManager.graphicsAdapters()[0]->currentDisplayMode();
+
+		RECT rectangle;
+		rectangle.left = currentDisplayMode.width() / 2 - WINDOW_DEFAULT_WIDTH / 2;
+		rectangle.top = currentDisplayMode.height() / 2 - WINDOW_DEFAULT_HEIGHT / 2;
+		rectangle.right = rectangle.left + WINDOW_DEFAULT_WIDTH;
+		rectangle.bottom = rectangle.top + WINDOW_DEFAULT_HEIGHT;
+
+		const Int32 result = AdjustWindowRectEx(&rectangle, WINDOW_STYLE, 0, 0u);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a rectangle for a window." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x000404);
+		}
+
+		return rectangle;
 	}
 
 	static HCURSOR loadCursor()
@@ -210,16 +192,16 @@ private:
 
 	static LRESULT CALLBACK processMessage(HWND windowHandle, Uint32 message, WPARAM wParam, LPARAM lParam)
 	{
-		Impl* impl = reinterpret_cast<Impl*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
+		Window::Impl* windowImpl = reinterpret_cast<Window::Impl*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
 
 		switch(message)
 		{
 			case WM_CLOSE:
-				PostQuitMessage(0);
+				windowImpl->close();
 				break;
 
 			case WM_SETCURSOR:
-				if(impl->hideCursor(LOWORD(lParam) == HTCLIENT))
+				if(windowImpl->shouldHideCursor(LOWORD(lParam) == HTCLIENT))
 					return 1;
 
 			default:
@@ -230,46 +212,57 @@ private:
 	}
 };
 
+const Char8* WindowManager::Impl::COMPONENT_TAG			= "[Platform::WindowManager - Windows]";
+const Char16* WindowManager::Impl::WINDOW_CLASS_NAME	= DE_CHAR16("devengine");
+const Char16* WindowManager::Impl::WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine");
+
 
 // Public
 
 WindowManager::WindowManager()
-	: _impl(nullptr),
-	  _window(nullptr) { }
+	: _impl(nullptr) { }
 
 WindowManager::~WindowManager()
 {
-	if(_window != nullptr)
-		destroyWindow();
-	
+	for(WindowList::const_iterator i = _windows.begin(), end = _windows.end(); i != end; ++i)
+	{
+		Impl::destroyWindow(static_cast<HWND>((*i)->handle()));
+		DE_DELETE(*i, Window);
+	}
+
 	DE_DELETE(_impl, Impl);
 }
 
 Window* WindowManager::createWindow()
 {
-	if(_window == nullptr)
-	{
-		HWND windowHandle = _impl->createWindow();
-		_window = DE_NEW(Window)(windowHandle);
-	}
+	DE_ASSERT(_impl != nullptr);
+	HWND windowHandle = Impl::createWindow();
+	Window* window = DE_NEW(Window)(windowHandle);
+	Impl::setWindowHandleUserDataPointer(windowHandle, window->_impl);
+	_windows.push_back(window);
 
-	return _window;
+	return window;
+}
+
+void WindowManager::destroyWindow(Window* window)
+{
+	DE_ASSERT(_impl != nullptr);
+	DE_ASSERT(window != nullptr);
+	WindowList::const_iterator iterator = std::find(_windows.begin(), _windows.end(), window);
+	DE_ASSERT(iterator != _windows.end());
+	Impl::destroyWindow(static_cast<HWND>(window->handle()));
+	_windows.erase(iterator);
+	DE_DELETE(window, Window);
 }
 
 void WindowManager::initialise()
 {
+	DE_ASSERT(_impl == nullptr);
 	_impl = DE_NEW(Impl)();
 }
 
-void WindowManager::setCursorVisibility(const Bool value) const
+void WindowManager::processMessages() const
 {
-	_impl->setCursorVisibility(value);
-}
-
-// Private
-
-void WindowManager::destroyWindow()
-{
-	Impl::destroyWindow(static_cast<HWND>(_window->handle()));
-	DE_DELETE(_window, Window);
+	DE_ASSERT(_impl != nullptr);
+	Impl::processMessages();
 }

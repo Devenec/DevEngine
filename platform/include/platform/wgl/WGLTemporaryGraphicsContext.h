@@ -35,12 +35,17 @@ namespace Platform
 
 		using Base = GraphicsContextBase;
 
+		static constexpr Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 4;
+		static constexpr Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 5;
+
+		static const Char8* COMPONENT_TAG;
+
 		void initialisePixelFormat() const;
 		void createContext();
-		void validateOpenGLVersion() const;
 		Int32 choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const;
 		void validatePixelFormat(const Int32 pixelFormatIndex) const;
 
+		static void validateOpenGLVersion();
 		static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();
 	};
 }

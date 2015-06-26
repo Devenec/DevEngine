@@ -122,9 +122,14 @@ static void testWindowAndGraphics()
 	windowManager.initialise();
 
 	Window* window = windowManager.createWindow();
-	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	window->setIcon(image);
+	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	window->show();
+
+	/*Window* window2 = windowManager.createWindow();
+	window2->setTitle("A second window!");
+	window2->setCursorVisibility(false);
+	window2->show();*/
 
 	//window->setFullscreen(true);
 	//window->setFullscreen(false);
@@ -133,8 +138,9 @@ static void testWindowAndGraphics()
 	graphicsContext.initialise(window);
 	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 
-	while(window->processMessages())
+	while(window->shouldClose())// || window2->shouldClose())
 	{
+		windowManager.processMessages();
 		glClear(GL_COLOR_BUFFER_BIT);
 		graphicsContext.swapBuffers();
 	}

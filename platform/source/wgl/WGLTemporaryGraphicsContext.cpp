@@ -20,11 +20,6 @@
 using namespace Core;
 using namespace Platform;
 
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 4;
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 5;
-
-static const Char8* TEMPORARYGRAPHICSCONTEXT_CONTEXT = "[Platform::TemporaryGraphicsContext - WGL]";
-
 // Public
 
 TemporaryGraphicsContext::TemporaryGraphicsContext(HWND windowHandle)
@@ -46,6 +41,8 @@ void TemporaryGraphicsContext::initialise()
 
 // Private
 
+const Char8* TemporaryGraphicsContext::COMPONENT_TAG = "[Platform::TemporaryGraphicsContext - WGL]";
+
 void TemporaryGraphicsContext::initialisePixelFormat() const
 {
 	const PIXELFORMATDESCRIPTOR pixelFormatDescriptor = createPixelFormatDescriptor();
@@ -60,15 +57,52 @@ void TemporaryGraphicsContext::createContext()
 
 	if(_graphicsContextHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << TEMPORARYGRAPHICSCONTEXT_CONTEXT << " Failed to create the context." <<
-			Log::Flush();
-
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
 	}
 }
 
+Int32 TemporaryGraphicsContext::choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const
+{
+	const Int32 pixelFormatIndex = ChoosePixelFormat(_deviceContextHandle, &pixelFormatDescriptor);
+
+	if(pixelFormatIndex == 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to choose a pixel format." << Log::Flush();
+		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+	}
+
+	return pixelFormatIndex;
+}
+
+void TemporaryGraphicsContext::validatePixelFormat(const Int32 pixelFormatIndex) const
+{
+	PIXELFORMATDESCRIPTOR pixelFormatDescriptor;
+
+	const Int32 result = DescribePixelFormat(_deviceContextHandle, pixelFormatIndex, sizeof(PIXELFORMATDESCRIPTOR),
+		&pixelFormatDescriptor);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the description of a pixel format." <<
+			Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+	}
+
+	if((pixelFormatDescriptor.dwFlags & PFD_SUPPORT_OPENGL) == 0u)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " The device context does not support OpenGL." <<
+			Log::Flush();
+
+		DE_ERROR(0x0); // TODO: set errorCode
+	}
+}
+
+// Static
+
 // TODO: add OpenGL error checking
-void TemporaryGraphicsContext::validateOpenGLVersion() const
+void TemporaryGraphicsContext::validateOpenGLVersion()
 {
 	// TODO: change GL_MAJOR_VERSION and GL_MINOR_VERSION to glGetString(GL_VERSION), since the former are not
 	// supported until OpenGL 2.x
@@ -85,54 +119,13 @@ void TemporaryGraphicsContext::validateOpenGLVersion() const
 
 	if(isVersionUnsupported)
 	{
-		defaultLog << LogLevel::Error << TEMPORARYGRAPHICSCONTEXT_CONTEXT << " The OpenGL version " << majorVersion <<
-			'.' << minorVersion << " is not supported. The minimum supported version is " <<
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " The OpenGL version " << majorVersion << '.' <<
+			minorVersion << " is not supported. The minimum supported version is " <<
 			MIN_SUPPORTED_OPENGL_VERSION_MAJOR << '.' << MIN_SUPPORTED_OPENGL_VERSION_MINOR << '.' << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
 	}
 }
-
-Int32 TemporaryGraphicsContext::choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const
-{
-	const Int32 pixelFormatIndex = ChoosePixelFormat(_deviceContextHandle, &pixelFormatDescriptor);
-
-	if(pixelFormatIndex == 0)
-	{
-		defaultLog << LogLevel::Error << TEMPORARYGRAPHICSCONTEXT_CONTEXT << " Failed to choose a pixel format." <<
-			Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
-	}
-
-	return pixelFormatIndex;
-}
-
-void TemporaryGraphicsContext::validatePixelFormat(const Int32 pixelFormatIndex) const
-{
-	PIXELFORMATDESCRIPTOR pixelFormatDescriptor;
-
-	const Int32 result = DescribePixelFormat(_deviceContextHandle, pixelFormatIndex, sizeof(PIXELFORMATDESCRIPTOR),
-		&pixelFormatDescriptor);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << TEMPORARYGRAPHICSCONTEXT_CONTEXT <<
-			" Failed to get the description of a pixel format." << Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
-	}
-
-	if((pixelFormatDescriptor.dwFlags & PFD_SUPPORT_OPENGL) == 0u)
-	{
-		defaultLog << LogLevel::Error << TEMPORARYGRAPHICSCONTEXT_CONTEXT <<
-			" The device context does not support OpenGL." << Log::Flush();
-
-		DE_ERROR(0x0); // TODO: set errorCode
-	}
-}
-
-// Static
 
 PIXELFORMATDESCRIPTOR TemporaryGraphicsContext::createPixelFormatDescriptor()
 {

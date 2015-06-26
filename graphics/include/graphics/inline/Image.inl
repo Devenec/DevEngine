@@ -7,12 +7,6 @@
 
 // Public
 
-Image::Image(const Uint32 width, const Uint32 height, const ImageFormat& format,const Core::Vector<Byte>& data)
-	: _data(data),
-	  _format(format),
-	  _height(height),
-	  _width(width) { }
-
 const Core::Vector<Byte>& Image::data() const
 {
 	return _data;

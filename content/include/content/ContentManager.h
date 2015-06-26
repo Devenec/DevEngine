@@ -21,7 +21,7 @@ namespace Content
 	{
 	public:
 
-		inline explicit ContentManager(const Core::String8& contentRootDirectory = Core::String8());
+		explicit ContentManager(const Core::String8& contentRootDirectory = Core::String8());
 
 		ContentManager(const ContentManager& contentManager) = delete;
 		ContentManager(ContentManager&& contentManager) = delete;
@@ -32,9 +32,8 @@ namespace Content
 
 		inline void setContentRootDirectory(const Core::String8& value);
 
-		// TODO: support absolute filepaths
 		template<typename T>
-		inline T* load(const Core::String8& filepath);
+		T* load(const Core::String8& filepath);
 
 		ContentManager& operator =(const ContentManager& contentManager) = delete;
 		ContentManager& operator =(ContentManager&& contentManager) = delete;
@@ -47,7 +46,7 @@ namespace Content
 		ContentMap _loadedContent;
 
 		template<typename T>
-		inline T* loadContent(const Core::String8& filepath);
+		T* loadContent(const Core::String8& filepath);
 	};
 
 #include "inline/ContentManager.inl"

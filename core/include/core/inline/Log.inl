@@ -25,16 +25,6 @@ Log& Log::operator <<(const Char16* characters)
 	return *this;
 }
 
-Log& Log::operator <<(const Flush& flush)
-{
-	static_cast<Void>(flush);
-	write(_streamLevel, _stream.str());
-	_stream.str(String8());
-	_streamLevel = LogLevel::Debug;
-
-	return *this;
-}
-
 Log& Log::operator <<(const LogLevel& logLevel)
 {
 	_streamLevel = logLevel;
@@ -47,9 +37,3 @@ Log& Log::operator <<(const T& value)
 	_stream << value;
 	return *this;
 }
-
-// Private
-
-Log::Log()
-	: _filterLevel(LogLevel::Debug),
-	  _streamLevel(LogLevel::Debug) { }

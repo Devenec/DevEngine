@@ -32,9 +32,9 @@ namespace Platform
 		HDC _deviceContextHandle;
 		HGLRC _graphicsContextHandle;
 
-		inline explicit GraphicsContextBase(HWND windowHandle);
+		explicit GraphicsContextBase(HWND windowHandle);
 
-		inline ~GraphicsContextBase();
+		~GraphicsContextBase();
 
 		void destroyContext();
 
@@ -45,6 +45,8 @@ namespace Platform
 		void setPixelFormat(const Int32 pixelFormatIndex) const;
 
 	private:
+
+		static const Char8* COMPONENT_TAG;
 
 		void initialiseDeviceContext(HWND windowHandle);
 	};

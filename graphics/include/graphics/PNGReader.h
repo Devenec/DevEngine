@@ -24,12 +24,12 @@ namespace Graphics
 	{
 	public:
 
-		inline PNGReader();
+		PNGReader();
 
 		PNGReader(const PNGReader& pngReader) = delete;
 		PNGReader(PNGReader&& pngReader) = delete;
 
-		inline ~PNGReader();
+		~PNGReader();
 
 		ImageFormat imageFormat() const;
 
@@ -44,21 +44,20 @@ namespace Graphics
 
 	private:
 
-		using PNGInfo = png_info;
-		using PNGStructure = png_struct;
+		static const Char8* COMPONENT_TAG;
 
-		PNGInfo* _pngInfo;
-		PNGStructure* _pngStructure;
+		png_info* _pngInfo;
+		png_struct* _pngStructure;
 
 		void initialiseStructure();
 		void initialiseInfo();
 		void validateSignature(Core::FileStream& fileStream);
 
-		static void handleError(PNGStructure* pngReader, const Char8* message);
-		static void handleWarning(PNGStructure* pngReader, const Char8* message);
-		static Void* allocateMemory(PNGStructure* pngReader, Uint32 byteCount);
-		static void deallocateMemory(PNGStructure* pngReader, Void* pointer);
-		static void readData(PNGStructure* pngReader, Byte* buffer, Uint32 byteCount);
+		static void handleError(png_struct* pngReader, const Char8* message);
+		static void handleWarning(png_struct* pngReader, const Char8* message);
+		static Void* allocateMemory(png_struct* pngReader, Uint32 byteCount);
+		static void deallocateMemory(png_struct* pngReader, Void* pointer);
+		static void readData(png_struct* pngReader, Byte* buffer, Uint32 byteCount);
 	};
 
 #include "inline/PNGReader.inl"

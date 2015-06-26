@@ -11,9 +11,24 @@
 using namespace Core;
 using namespace Platform;
 
-static const Char8* GRAPHICSCONTEXTBASE_CONTEXT = "[Platform::GraphicsContextBase - WGL]";
-
 // Protected
+
+GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
+	: _deviceContextHandle(nullptr),
+	  _graphicsContextHandle(nullptr)
+{
+	DE_ASSERT(windowHandle != nullptr);
+	initialiseDeviceContext(windowHandle);
+}
+
+GraphicsContextBase::~GraphicsContextBase()
+{
+	if(_graphicsContextHandle != nullptr)
+	{
+		makeNonCurrent();
+		destroyContext();
+	}
+}
 
 void GraphicsContextBase::destroyContext()
 {
@@ -21,9 +36,7 @@ void GraphicsContextBase::destroyContext()
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << GRAPHICSCONTEXTBASE_CONTEXT << " Failed to destroy the context." <<
-			Log::Flush();
-
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy the context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
 	}
 
@@ -36,9 +49,7 @@ void GraphicsContextBase::makeCurrent() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << GRAPHICSCONTEXTBASE_CONTEXT << " Failed to make the context current." <<
-			Log::Flush();
-
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to make the context current." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
 	}
 }
@@ -49,9 +60,7 @@ void GraphicsContextBase::makeNonCurrent() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << GRAPHICSCONTEXTBASE_CONTEXT << " Failed to make the context non-current." <<
-			Log::Flush();
-
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to make the context non-current." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
 	}
 }
@@ -63,14 +72,14 @@ void GraphicsContextBase::setPixelFormat(const Int32 pixelFormatIndex) const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << GRAPHICSCONTEXTBASE_CONTEXT << " Failed to set a pixel format." <<
-			Log::Flush();
-
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set a pixel format." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
 	}
 }
 
 // Private
+
+const Char8* GraphicsContextBase::COMPONENT_TAG = "[Platform::GraphicsContextBase - WGL]";
 
 void GraphicsContextBase::initialiseDeviceContext(HWND windowHandle)
 {
@@ -78,8 +87,8 @@ void GraphicsContextBase::initialiseDeviceContext(HWND windowHandle)
 
 	if(_deviceContextHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << GRAPHICSCONTEXTBASE_CONTEXT <<
-			" Failed to get the device context of a window." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the device context of a window." <<
+			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
 	}

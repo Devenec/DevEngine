@@ -14,23 +14,25 @@ namespace Platform
 {
 	class GraphicsContextBase;
 
-	class GraphicsExtensionManager
+	class GraphicsExtensionManager final
 	{
 	public:
 
-		GraphicsExtensionManager() = default;
+		GraphicsExtensionManager() = delete;
 
 		GraphicsExtensionManager(const GraphicsExtensionManager& graphicsExtensionManager) = delete;
 		GraphicsExtensionManager(GraphicsExtensionManager&& graphicsExtensionManager) = delete;
 
-		~GraphicsExtensionManager() = default;
+		~GraphicsExtensionManager() = delete;
 
-		void initialiseExtensions(const GraphicsContextBase& graphicsContext) const;
+		static void initialiseExtensions(const GraphicsContextBase& graphicsContext);
 
 		GraphicsExtensionManager& operator =(const GraphicsExtensionManager& graphicsExtensionManager) = delete;
 		GraphicsExtensionManager& operator =(GraphicsExtensionManager&& graphicsExtensionManager) = delete;
 
 	private:
+
+		static const Char8* COMPONENT_TAG;
 
 		static void validateContextState();
 		static void getContextExtensionFunctions();

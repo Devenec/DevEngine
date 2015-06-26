@@ -54,6 +54,9 @@
     <ClInclude Include="include\platform\windows\WindowsIcon.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\windows\WindowsWindow.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl">
@@ -63,6 +66,9 @@
       <Filter>Header Files\wgl\inline</Filter>
     </None>
     <None Include="include\platform\windows\inline\WindowsIcon.inl">
+      <Filter>Header Files\windows\inline</Filter>
+    </None>
+    <None Include="include\platform\windows\inline\WindowsWindow.inl">
       <Filter>Header Files\windows\inline</Filter>
     </None>
   </ItemGroup>

@@ -14,11 +14,11 @@
 using namespace Core;
 using namespace Platform;
 
-static const Char8* GRAPHICSEXTENSIONMANAGER_CONTEXT = "[Platform::GraphicsExtensionManager - WGL]";
-
 // Public
 
-void GraphicsExtensionManager::initialiseExtensions(const GraphicsContextBase& graphicsContext) const
+// Static
+
+void GraphicsExtensionManager::initialiseExtensions(const GraphicsContextBase& graphicsContext)
 {
 	validateContextState();
 	getContextExtensionFunctions();
@@ -28,15 +28,15 @@ void GraphicsExtensionManager::initialiseExtensions(const GraphicsContextBase& g
 
 // Private
 
+const Char8* GraphicsExtensionManager::COMPONENT_TAG = "[Platform::GraphicsExtensionManager - WGL]";
+
 // Static
 
 void GraphicsExtensionManager::validateContextState()
 {
 	if(wglGetCurrentContext() == nullptr)
 	{
-		defaultLog << LogLevel::Error << GRAPHICSEXTENSIONMANAGER_CONTEXT << " No current context exists." <<
-			Log::Flush();
-
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " No current context exists." << Log::Flush();
 		DE_ERROR(0x0); // TODO: set errorCode
 	}
 }
@@ -54,7 +54,7 @@ void GraphicsExtensionManager::getContextExtensionFunctions()
 
 void GraphicsExtensionManager::logSupportedContextExtensions(HDC deviceContextHandle)
 {
-	defaultLog << LogLevel::Info << GRAPHICSEXTENSIONMANAGER_CONTEXT;
+	defaultLog << LogLevel::Info << COMPONENT_TAG;
 
 	if(wglGetExtensionsStringARB == nullptr)
 		defaultLog << " No WGL extensions are supported.";
@@ -66,5 +66,5 @@ void GraphicsExtensionManager::logSupportedContextExtensions(HDC deviceContextHa
 
 void GraphicsExtensionManager::getOpenGLExtensionFunction()
 {
-
+	// TODO: implement
 }

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <utility>
+#include <core/Types.h>
 #include <platform/windows/Windows.h>
 
 namespace Graphics
@@ -22,13 +23,13 @@ namespace Platform
 	{
 	public:
 
-		inline Icon();
+		Icon();
 
 		explicit Icon(const Graphics::Image* image);
 
 		Icon(const Icon& icon) = delete;
 
-		inline Icon(Icon&& icon);
+		Icon(Icon&& icon);
 
 		~Icon();
 
@@ -39,6 +40,8 @@ namespace Platform
 		inline Icon& operator =(Icon&& icon);
 
 	private:
+
+		static const Char8* COMPONENT_TAG;
 
 		HICON _iconHandle;
 

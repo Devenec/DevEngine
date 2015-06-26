@@ -7,19 +7,6 @@
 
 // Public
 
-PNGReader::PNGReader()
-	: _pngInfo(nullptr),
-	  _pngStructure(nullptr)
-{
-	initialiseStructure();
-	initialiseInfo();
-}
-
-PNGReader::~PNGReader()
-{
-	png_destroy_read_struct(&_pngStructure, &_pngInfo, nullptr);
-}
-
 const Uint32 PNGReader::imageHeight() const
 {
 	return png_get_image_height(_pngStructure, _pngInfo);

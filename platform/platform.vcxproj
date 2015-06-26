@@ -64,6 +64,7 @@
     <ClInclude Include="include\platform\wgl\WGLTemporaryGraphicsContext.h" />
     <ClInclude Include="include\platform\windows\Windows.h" />
     <ClInclude Include="include\platform\windows\WindowsIcon.h" />
+    <ClInclude Include="include\platform\windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\wgl\WGL.cpp" />
@@ -88,6 +89,7 @@
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl" />
     <None Include="include\platform\wgl\inline\WGLGraphicsExtensionManager.inl" />
     <None Include="include\platform\windows\inline\WindowsIcon.inl" />
+    <None Include="include\platform\windows\inline\WindowsWindow.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,9 +15,9 @@ namespace Graphics
 	{
 	public:
 
-		inline DisplayMode();
+		DisplayMode();
 
-		inline DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 frequency);
+		DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 frequency);
 
 		DisplayMode(const DisplayMode& displayMode) = default;
 

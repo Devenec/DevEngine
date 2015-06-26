@@ -11,6 +11,18 @@ using namespace Graphics;
 
 // Public
 
+DisplayMode::DisplayMode()
+	: _colourDepth(0u),
+	  _frequency(0u),
+	  _height(0u),
+	  _width(0u) { }
+
+DisplayMode::DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 frequency)
+	: _colourDepth(colourDepth),
+	  _frequency(frequency),
+	  _height(height),
+	  _width(width) { }
+
 // Operators
 
 Bool DisplayMode::operator <(const DisplayMode& displayMode) const
