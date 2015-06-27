@@ -24,8 +24,8 @@ static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
 
 // Static
 
-void Log::writeToConsole(const LogLevel& level, const String8& message)
+void Log::writeToConsole(const LogLevel& logLevel, const String8& message)
 {
-	const Char8* levelName = LOG_LEVEL_NAMES[static_cast<Int32>(level)];
+	const Char8* levelName = LOG_LEVEL_NAMES[static_cast<Int32>(logLevel)];
 	std::wprintf(DE_CHAR16("%S | %S\n"), levelName, message.c_str());
 }

@@ -24,6 +24,10 @@ namespace Graphics
 
 		void initialise(Window* window);
 
+		void makeCurrent() const;
+
+		void makeNonCurrent() const;
+
 		void swapBuffers() const;
 
 		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;

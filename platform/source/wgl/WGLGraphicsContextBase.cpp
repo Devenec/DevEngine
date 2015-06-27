@@ -11,37 +11,7 @@
 using namespace Core;
 using namespace Platform;
 
-// Protected
-
-GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
-	: _deviceContextHandle(nullptr),
-	  _graphicsContextHandle(nullptr)
-{
-	DE_ASSERT(windowHandle != nullptr);
-	initialiseDeviceContext(windowHandle);
-}
-
-GraphicsContextBase::~GraphicsContextBase()
-{
-	if(_graphicsContextHandle != nullptr)
-	{
-		makeNonCurrent();
-		destroyContext();
-	}
-}
-
-void GraphicsContextBase::destroyContext()
-{
-	const Int32 result = wglDeleteContext(_graphicsContextHandle);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy the context." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
-	}
-
-	_graphicsContextHandle = nullptr;
-}
+// Public
 
 void GraphicsContextBase::makeCurrent() const
 {
@@ -63,6 +33,35 @@ void GraphicsContextBase::makeNonCurrent() const
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to make the context non-current." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
 	}
+}
+
+// Protected
+
+GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
+	: _deviceContextHandle(nullptr),
+	  _graphicsContextHandle(nullptr)
+{
+	DE_ASSERT(windowHandle != nullptr);
+	initialiseDeviceContext(windowHandle);
+}
+
+GraphicsContextBase::~GraphicsContextBase()
+{
+	if(_graphicsContextHandle != nullptr)
+		destroyContext();
+}
+
+void GraphicsContextBase::destroyContext()
+{
+	const Int32 result = wglDeleteContext(_graphicsContextHandle);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy the context." << Log::Flush();
+		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+	}
+
+	_graphicsContextHandle = nullptr;
 }
 
 void GraphicsContextBase::setPixelFormat(const Int32 pixelFormatIndex) const

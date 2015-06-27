@@ -6,6 +6,7 @@
  */
 
 #include <algorithm>
+#include <core/List.h>
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <core/UtilityMacros.h>
@@ -46,49 +47,32 @@ public:
 
 	~Impl()
 	{
-		const Int32 result = UnregisterClassW(WINDOW_CLASS_NAME, GetModuleHandleW(nullptr));
-		
-		if(result == 0u)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to deregister the window class." <<
-				Log::Flush();
+		destroyWindowObjects();
+		deregisterWindowClass();
+	}
 
-			DE_ERROR_WINDOWS(0x000400);
-		}
+	Window* createWindowObject()
+	{
+		HWND windowHandle = createWindow();
+		Window* window = DE_NEW(Window)(windowHandle);
+		setWindowUserDataPointer(windowHandle, window->_impl);
+		_windows.push_back(window);
+
+		return window;
+	}
+
+	void destroyWindowObject(Window* window)
+	{
+		DE_ASSERT(window != nullptr);
+		WindowList::const_iterator iterator = std::find(_windows.begin(), _windows.end(), window);
+		DE_ASSERT(iterator != _windows.end());
+		destroyWindow(static_cast<HWND>(window->handle()));
+		_windows.erase(iterator);
+		DE_DELETE(window, Window);
 	}
 
 	Impl& operator =(const Impl& impl) = delete;
 	Impl& operator =(Impl&& impl) = delete;
-
-	static HWND createWindow()
-	{
-		const RECT windowRectangle = createWindowRectangle();
-		const Int32 windowWidth = windowRectangle.right - windowRectangle.left;
-		const Int32 windowHeight = windowRectangle.bottom - windowRectangle.top;
-		
-		HWND windowHandle = CreateWindowExW(0u, WINDOW_CLASS_NAME, WINDOW_DEFAULT_TITLE, WINDOW_STYLE,
-			windowRectangle.left, windowRectangle.top, windowWidth, windowHeight, nullptr, nullptr,
-			GetModuleHandleW(nullptr), nullptr);
-
-		if(windowHandle == nullptr)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a window." << Log::Flush();
-			DE_ERROR_WINDOWS(0x000401);
-		}
-
-		return windowHandle;
-	}
-
-	static void destroyWindow(HWND windowHandle)
-	{
-		const Int32 result = DestroyWindow(windowHandle);
-
-		if(result == 0)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy a window." << Log::Flush();
-			DE_ERROR_WINDOWS(0x000402);
-		}
-	}
 
 	static void processMessages()
 	{
@@ -98,21 +82,9 @@ public:
 			DispatchMessageW(&message);
 	}
 
-	static void setWindowHandleUserDataPointer(HWND windowHandle, Window::Impl* windowImpl)
-	{
-		SetLastError(0u);
-		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(windowImpl));
-
-		if(result == 0 && GetLastError() != 0u)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the user data pointer of a window." <<
-				Log::Flush();
-
-			DE_ERROR_WINDOWS(0x000405);
-		}
-	}
-
 private:
+
+	using WindowList = List<Window*>;
 
 	static constexpr Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
 	static constexpr Uint32 WINDOW_DEFAULT_WIDTH  = 800u;
@@ -121,6 +93,17 @@ private:
 	static const Char8* COMPONENT_TAG;
 	static const Char16* WINDOW_CLASS_NAME;
 	static const Char16* WINDOW_DEFAULT_TITLE;
+
+	WindowList _windows;
+
+	void destroyWindowObjects()
+	{
+		for(WindowList::const_iterator i = _windows.begin(), end = _windows.end(); i != end; ++i)
+		{
+			destroyWindow(static_cast<HWND>((*i)->handle()));
+			DE_DELETE(*i, Window);
+		}
+	}
 
 	static WNDCLASSEX createWindowClassInfo()
 	{
@@ -156,6 +139,73 @@ private:
 		destroyWindow(windowHandle);
 	}
 
+	static void deregisterWindowClass()
+	{
+		const Int32 result = UnregisterClassW(WINDOW_CLASS_NAME, GetModuleHandleW(nullptr));
+		
+		if(result == 0u)
+		{
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to deregister the window class." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x000400);
+		}
+	}
+
+	static HWND createWindow()
+	{
+		const RECT windowRectangle = createWindowRectangle();
+		const Int32 windowWidth = windowRectangle.right - windowRectangle.left;
+		const Int32 windowHeight = windowRectangle.bottom - windowRectangle.top;
+		
+		HWND windowHandle = CreateWindowExW(0u, WINDOW_CLASS_NAME, WINDOW_DEFAULT_TITLE, WINDOW_STYLE,
+			windowRectangle.left, windowRectangle.top, windowWidth, windowHeight, nullptr, nullptr,
+			GetModuleHandleW(nullptr), nullptr);
+
+		if(windowHandle == nullptr)
+		{
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a window." << Log::Flush();
+			DE_ERROR_WINDOWS(0x000401);
+		}
+
+		return windowHandle;
+	}
+
+	static void setWindowUserDataPointer(HWND windowHandle, Window::Impl* windowImpl)
+	{
+		SetLastError(0u);
+		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(windowImpl));
+
+		if(result == 0 && GetLastError() != 0u)
+		{
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the user data pointer of a window." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x000405);
+		}
+	}
+
+	static void destroyWindow(HWND windowHandle)
+	{
+		const Int32 result = DestroyWindow(windowHandle);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy a window." << Log::Flush();
+			DE_ERROR_WINDOWS(0x000402);
+		}
+	}
+
+	static HCURSOR loadCursor()
+	{
+		HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
+
+		if(cursorHandle == nullptr)
+			return nullptr;
+		else
+			return static_cast<HCURSOR>(cursorHandle);
+	}
+
 	static RECT createWindowRectangle()
 	{
 		const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
@@ -178,16 +228,6 @@ private:
 		}
 
 		return rectangle;
-	}
-
-	static HCURSOR loadCursor()
-	{
-		HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
-
-		if(cursorHandle == nullptr)
-			return nullptr;
-		else
-			return static_cast<HCURSOR>(cursorHandle);
 	}
 
 	static LRESULT CALLBACK processMessage(HWND windowHandle, Uint32 message, WPARAM wParam, LPARAM lParam)
@@ -224,35 +264,19 @@ WindowManager::WindowManager()
 
 WindowManager::~WindowManager()
 {
-	for(WindowList::const_iterator i = _windows.begin(), end = _windows.end(); i != end; ++i)
-	{
-		Impl::destroyWindow(static_cast<HWND>((*i)->handle()));
-		DE_DELETE(*i, Window);
-	}
-
 	DE_DELETE(_impl, Impl);
 }
 
 Window* WindowManager::createWindow()
 {
 	DE_ASSERT(_impl != nullptr);
-	HWND windowHandle = Impl::createWindow();
-	Window* window = DE_NEW(Window)(windowHandle);
-	Impl::setWindowHandleUserDataPointer(windowHandle, window->_impl);
-	_windows.push_back(window);
-
-	return window;
+	return _impl->createWindowObject();
 }
 
 void WindowManager::destroyWindow(Window* window)
 {
 	DE_ASSERT(_impl != nullptr);
-	DE_ASSERT(window != nullptr);
-	WindowList::const_iterator iterator = std::find(_windows.begin(), _windows.end(), window);
-	DE_ASSERT(iterator != _windows.end());
-	Impl::destroyWindow(static_cast<HWND>(window->handle()));
-	_windows.erase(iterator);
-	DE_DELETE(window, Window);
+	_impl->destroyWindowObject(window);
 }
 
 void WindowManager::initialise()

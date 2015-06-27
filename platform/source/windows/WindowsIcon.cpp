@@ -24,6 +24,7 @@ Icon::Icon()
 Icon::Icon(const Image* image)
 	: Icon()
 {
+	DE_ASSERT(image != nullptr);
 	BITMAPV5HEADER bitmapHeader = createBitmapHeader(image);
 	Byte* bitmapDataBuffer;
 	HBITMAP colourBitmapHandle = createColourBitmap(bitmapHeader, bitmapDataBuffer);
@@ -60,11 +61,7 @@ const Char8* Icon::COMPONENT_TAG = "[Platform::Icon - Windows]";
 
 void Icon::create(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 {
-	ICONINFO iconInfo = ICONINFO();
-	iconInfo.fIcon = TRUE;
-	iconInfo.hbmColor = colourBitmapHandle;
-	iconInfo.hbmMask = maskBitmapHandle;
-
+	ICONINFO iconInfo = createIconInfo(colourBitmapHandle, maskBitmapHandle);
 	_iconHandle = CreateIconIndirect(&iconInfo);
 
 	if(_iconHandle == nullptr)
@@ -115,7 +112,7 @@ HBITMAP Icon::createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& data
 	return bitmapHandle;
 }
 
-void Icon::setBitmapData(const Graphics::Image* image, Byte* dataBuffer)
+void Icon::setBitmapData(const Image* image, Byte* dataBuffer)
 {
 	const ImageFormat imageFormat = image->format();
 
@@ -159,7 +156,16 @@ void Icon::destroyBitmap(HBITMAP bitmapHandle)
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy a bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x000204);
 	}
+}
 
+ICONINFO Icon::createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
+{
+	ICONINFO iconInfo = ICONINFO();
+	iconInfo.fIcon = TRUE;
+	iconInfo.hbmColor = colourBitmapHandle;
+	iconInfo.hbmMask = maskBitmapHandle;
+
+	return iconInfo;
 }
 
 Uint32 Icon::getBitDepth(const ImageFormat& imageFormat)
@@ -204,7 +210,7 @@ void Icon::releaseDeviceContext(HDC deviceContextHandle)
 	}
 }
 
-void Icon::setGreyBitmapData(const Graphics::Image* image, Byte* dataBuffer, const Bool hasAlpha)
+void Icon::setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha)
 {
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 sourceComponentCount = hasAlpha ? 2u : 1u;
@@ -223,7 +229,7 @@ void Icon::setGreyBitmapData(const Graphics::Image* image, Byte* dataBuffer, con
 	}
 }
 
-void Icon::setColourBitmapData(const Graphics::Image* image, Byte* dataBuffer, const Bool hasAlpha)
+void Icon::setColourBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha)
 {
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 componentCount = hasAlpha ? 4u : 3u;

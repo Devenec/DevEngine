@@ -35,9 +35,9 @@ Core::Rectangle Window::Impl::rectangle() const
 		return _rectangle;
 }
 
-void Window::Impl::setCursorVisibility(const Bool value)
+void Window::Impl::setCursorVisibility(const Bool isCursorVisible)
 {
-	_isCursorVisible = value;
+	_isCursorVisible = isCursorVisible;
 }
 
 Bool Window::Impl::shouldClose() const

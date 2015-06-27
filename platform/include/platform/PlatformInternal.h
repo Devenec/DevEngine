@@ -33,9 +33,6 @@
 // Compiler specific internal functions
 
 #if DE_COMPILER == DE_COMPILER_MSVC
-	#define _DE_CHAR16(value) \
-		L ## value
-
 	#define _DE_COMPILER_WARN(msg) \
 		__pragma(message(__FILE__ "(" __DE_STRING8(__LINE__) ") : warning: " msg))
 

@@ -34,7 +34,7 @@ namespace Debug
 
 		~StackTrace();
 
-		StackEntryList generate(const Uint32 frameOffset = 0u) const;
+		StackEntryList generate(const Uint32 stackFrameOffset = 0u) const;
 
 		StackTrace& operator =(const StackTrace& stackTrace) = delete;
 		StackTrace& operator =(StackTrace&& stackTrace) = delete;

@@ -20,7 +20,7 @@ namespace Graphics
 	{
 	public:
 
-		explicit Impl(HWND handle);
+		explicit Impl(HWND windowHandle);
 
 		Impl(const Impl& impl) = delete;
 		Impl(Impl&& impl) = delete;
@@ -37,15 +37,15 @@ namespace Graphics
 
 		inline Core::Rectangle rectangle() const;
 
-		inline void setCursorVisibility(const Bool value);
+		inline void setCursorVisibility(const Bool isCursorVisible);
 
-		void setFullscreen(const Bool value);
+		void setFullscreen(const Bool isFullscreen);
 
-		void setIcon(const Image* value);
+		void setIcon(const Image* image);
 
-		void setRectangle(const Core::Rectangle& value, const Bool isFullscreenRectangle = false);
+		void setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle = false);
 
-		void setTitle(const Core::String8& value) const;
+		void setTitle(const Core::String8& title) const;
 
 		inline Bool shouldClose() const;
 
@@ -72,6 +72,7 @@ namespace Graphics
 		Core::Rectangle getRectangle() const;
 		void setFullscreenStyle(const Bool isFullscreen) const;
 		Core::Rectangle getFullscreenRectangle() const;
+		RECT getMonitorRectangle() const;
 	};
 
 #include "inline/WindowsWindow.inl"

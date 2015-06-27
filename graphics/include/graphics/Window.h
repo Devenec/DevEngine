@@ -34,15 +34,15 @@ namespace Graphics
 
 		Core::Rectangle rectangle() const;
 
-		void setCursorVisibility(const Bool value) const;
+		void setCursorVisibility(const Bool isCursorVisible) const;
 
-		void setFullscreen(const Bool value) const;
+		void setFullscreen(const Bool isFullscreen) const;
 
-		void setIcon(const Image* value) const;
+		void setIcon(const Image* image) const;
 
-		void setRectangle(const Core::Rectangle& value) const;
+		void setRectangle(const Core::Rectangle& rectangle) const;
 
-		void setTitle(const Core::String8& value) const;
+		void setTitle(const Core::String8& title) const;
 
 		Bool shouldClose() const;
 
@@ -59,7 +59,7 @@ namespace Graphics
 
 		Impl* _impl;
 
-		explicit Window(WindowHandle handle);
+		explicit Window(WindowHandle windowHandle);
 		~Window();
 	};
 }

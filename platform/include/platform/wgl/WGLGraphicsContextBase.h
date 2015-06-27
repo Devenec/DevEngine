@@ -22,6 +22,10 @@ namespace Platform
 
 		inline HDC deviceContextHandle() const;
 
+		void makeCurrent() const;
+
+		void makeNonCurrent() const;
+
 		inline void swapBuffers() const;
 
 		GraphicsContextBase& operator =(const GraphicsContextBase& graphicsContext) = delete;
@@ -37,10 +41,6 @@ namespace Platform
 		~GraphicsContextBase();
 
 		void destroyContext();
-
-		void makeCurrent() const;
-
-		void makeNonCurrent() const;
 
 		void setPixelFormat(const Int32 pixelFormatIndex) const;
 

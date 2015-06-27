@@ -11,10 +11,10 @@ using namespace Core;
 
 // Public
 
-void Log::write(const LogLevel& level, const String8& message) const
+void Log::write(const LogLevel& logLevel, const String8& message) const
 {
-	if(level >= _filterLevel)
-		writeToConsole(level, message);
+	if(logLevel >= _filterLevel)
+		writeToConsole(logLevel, message);
 }
 
 // Operators
@@ -30,9 +30,9 @@ Log& Log::operator <<(const Flush& flush)
 }
 
 template<>
-Log& Log::operator <<(const String16& value)
+Log& Log::operator <<(const String16& characters)
 {
-	_stream << toString8(value);
+	_stream << toString8(characters);
 	return *this;
 }
 

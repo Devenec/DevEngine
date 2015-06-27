@@ -33,9 +33,10 @@ void AllocationTracker::deregisterAllocation(Void* pointer, const Uint32 byteCou
 void AllocationTracker::registerAllocation(Void* pointer, const Uint32 byteCount, const Char8* file, const Uint32 line,
 	const Char8* function)
 {
+	DE_ASSERT(pointer != nullptr);
 	DE_ASSERT(_isInitialised);
 
-	std::pair<AllocationRecordMap::const_iterator, Bool> result = _allocationRecords.emplace(pointer,
+	const std::pair<AllocationRecordMap::const_iterator, Bool> result = _allocationRecords.emplace(pointer,
 		AllocationRecord(byteCount, file, line, function));
 
 	DE_ASSERT(result.second);

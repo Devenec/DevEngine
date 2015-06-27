@@ -52,6 +52,7 @@ namespace Platform
 		static void setBitmapData(const Graphics::Image* image, Byte* dataBuffer);
 		static HBITMAP createMaskBitmap(const Graphics::Image* image);
 		static void destroyBitmap(HBITMAP bitmapHandle);
+		static ICONINFO createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
 		static Uint32 getBitDepth(const Graphics::ImageFormat& imageFormat);
 		static HDC getDeviceContext();
 		static void releaseDeviceContext(HDC deviceContextHandle);

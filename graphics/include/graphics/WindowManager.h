@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <core/List.h>
 #include <core/Singleton.h>
 #include <core/Types.h>
 
@@ -41,9 +40,6 @@ namespace Graphics
 
 		class Impl;
 
-		using WindowList = Core::List<Window*>;
-
-		WindowList _windows; // TODO: move to implementation
 		Impl* _impl;
 	};
 }

@@ -33,7 +33,7 @@ public:
 
 	void close()
 	{
-		if(_handle != nullptr)
+		if(isOpen())
 		{
 			if((_openMode & OpenMode::Write) == OpenMode::Write)
 				flushBuffer();
@@ -53,12 +53,18 @@ public:
 
 	Bool isAtEndOfFile() const
 	{
+		DE_ASSERT(isOpen());
 		return position() >= size();
+	}
+
+	Bool isOpen() const
+	{
+		return _handle != nullptr;
 	}
 
 	void open(const String8& filepath, const OpenMode& openMode)
 	{
-		DE_ASSERT(_handle == nullptr);
+		DE_ASSERT(!isOpen());
 		const String16 filepath16 = toString16(filepath).c_str();
 		const Uint32 accessMode = getAccessMode(openMode);
 		const Uint32 creationMode = getCreationMode(openMode);
@@ -79,8 +85,8 @@ public:
 
 	Int64 position() const
 	{
-		LARGE_INTEGER offset;
-		offset.QuadPart = 0;
+		DE_ASSERT(isOpen());
+		const LARGE_INTEGER offset = createLargeInteger();
 		LARGE_INTEGER position;
 		const Int32 result = SetFilePointerEx(_handle, offset, &position, FILE_CURRENT);
 
@@ -97,6 +103,8 @@ public:
 
 	Uint32 read(Byte* buffer, const Uint32 byteCount) const
 	{
+		DE_ASSERT(buffer != nullptr);
+		DE_ASSERT(isOpen());
 		DE_ASSERT((_openMode & OpenMode::Read) == OpenMode::Read);
 		unsigned long byteCountRead;
 		const Int32 result = ReadFile(_handle, buffer, byteCount, &byteCountRead, nullptr);
@@ -110,15 +118,15 @@ public:
 		return byteCountRead;
 	}
 
-	void seek(const Int64 position) const
+	void seek(const Int64& position) const
 	{
 		seek(SeekPosition::Begin, position);
 	}
 
-	void seek(const SeekPosition& position, const Int64 offset) const
+	void seek(const SeekPosition& position, const Int64& offset) const
 	{
-		LARGE_INTEGER seekOffset;
-		seekOffset.QuadPart = offset;
+		DE_ASSERT(isOpen());
+		const LARGE_INTEGER seekOffset = createLargeInteger(offset);
 		const Int32 result = SetFilePointerEx(_handle, seekOffset, nullptr, static_cast<Int32>(position));
 
 		if(result == 0)
@@ -130,6 +138,7 @@ public:
 
 	Int64 size() const
 	{
+		DE_ASSERT(isOpen());
 		LARGE_INTEGER size;
 		const Int32 result = GetFileSizeEx(_handle, &size);
 
@@ -144,6 +153,8 @@ public:
 
 	Uint32 write(const Byte* data, const Uint32 byteCount) const
 	{
+		DE_ASSERT(data != nullptr);
+		DE_ASSERT(isOpen());
 		DE_ASSERT((_openMode & OpenMode::Write) == OpenMode::Write);
 		unsigned long byteCountWritten;
 		const Int32 result = WriteFile(_handle, data, byteCount, &byteCountWritten, nullptr);
@@ -203,6 +214,14 @@ private:
 
 		return mode;
 	}
+
+	static LARGE_INTEGER createLargeInteger(const Int64& value = 0)
+	{
+		LARGE_INTEGER integer;
+		integer.QuadPart = value;
+
+		return integer;
+	}
 };
 
 const Char8* FileStream::Impl::COMPONENT_TAG = "[Platform::FileStream - Windows]";
@@ -234,6 +253,11 @@ Bool FileStream::isAtEndOfFile() const
 	return _impl->isAtEndOfFile();
 }
 
+Bool FileStream::isOpen() const
+{
+	return _impl->isOpen();
+}
+
 void FileStream::open(const String8& filepath, const OpenMode& openMode) const
 {
 	_impl->open(filepath, openMode);
@@ -249,12 +273,12 @@ Uint32 FileStream::read(Byte* buffer, const Uint32 byteCount) const
 	return _impl->read(buffer, byteCount);
 }
 
-void FileStream::seek(const Int64 position) const
+void FileStream::seek(const Int64& position) const
 {
 	_impl->seek(position);
 }
 
-void FileStream::seek(const SeekPosition& position, const Int64 offset) const
+void FileStream::seek(const SeekPosition& position, const Int64& offset) const
 {
 	_impl->seek(position, offset);
 }

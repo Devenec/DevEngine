@@ -9,10 +9,11 @@
 #include <content/ContentManager.h>
 
 using namespace Content;
+using namespace Core;
 
 // Public
 
-ContentManager::ContentManager(const Core::String8& contentDirectory)
+ContentManager::ContentManager(const String8& contentDirectory)
 	: _contentRootDirectory(contentDirectory) { }
 
 ContentManager::~ContentManager()

@@ -12,9 +12,9 @@ const Core::String8& ContentManager::contentRootDirectory() const
 	return _contentRootDirectory;
 }
 
-void ContentManager::setContentRootDirectory(const Core::String8& value)
+void ContentManager::setContentRootDirectory(const Core::String8& directoryPath)
 {
-	_contentRootDirectory = value;
+	_contentRootDirectory = directoryPath;
 }
 
 template<typename T>

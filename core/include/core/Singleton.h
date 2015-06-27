@@ -27,8 +27,6 @@ namespace Core
 
 		static inline T& instance();
 
-		static inline T* instancePointer();
-
 	protected:
 
 		static T* _instance;

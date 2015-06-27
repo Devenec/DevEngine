@@ -19,6 +19,7 @@
 
 Void* Core::allocateMemory(const Uint32 byteCount)
 {
+	DE_ASSERT(byteCount > 0u);
 	Void* pointer = std::malloc(byteCount);
 
 	if(pointer == nullptr)
@@ -43,7 +44,8 @@ Void* Core::allocateMemory(const Uint32 byteCount, const Char8* file, const Uint
 void Core::deallocateMemory(Void* pointer, const Uint32 byteCount)
 {
 #if defined(_DE_TRACK_ALLOCATIONS)
-	Debug::AllocationTracker::instance().deregisterAllocation(pointer, byteCount);
+	if(pointer != nullptr)
+		Debug::AllocationTracker::instance().deregisterAllocation(pointer, byteCount);
 #endif
 
 	std::free(pointer);

@@ -46,12 +46,12 @@ public:
 
 // Public
 
-void LogManager::deinitialise()
+void LogManager::deinitialise() const
 {
 	defaultLog.~Log();
 }
 
-void LogManager::initialise()
+void LogManager::initialise() const
 {
 	Impl::initialiseConsole();
 	new (defaultLogMemory.data()) Log();

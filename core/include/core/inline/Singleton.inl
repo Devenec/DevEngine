@@ -22,12 +22,6 @@ T& Singleton<T>::instance()
 	return *_instance;
 }
 
-template<typename T>
-T* Singleton<T>::instancePointer()
-{
-	return _instance;
-}
-
 // Protected
 
 template<typename T>

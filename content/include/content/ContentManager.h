@@ -30,7 +30,7 @@ namespace Content
 
 		inline const Core::String8& contentRootDirectory() const;
 
-		inline void setContentRootDirectory(const Core::String8& value);
+		inline void setContentRootDirectory(const Core::String8& directoryPath);
 
 		template<typename T>
 		T* load(const Core::String8& filepath);

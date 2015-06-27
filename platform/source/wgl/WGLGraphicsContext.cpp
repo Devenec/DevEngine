@@ -30,7 +30,6 @@ public:
 	{
 		initialisePixelFormat();
 		createContext();
-		makeCurrent();
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -59,9 +58,7 @@ private:
 
 		if(_graphicsContextHandle == nullptr)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the context." <<
-				Log::Flush();
-
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the context." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
 		}
 	}
@@ -92,7 +89,19 @@ GraphicsContext::~GraphicsContext()
 
 void GraphicsContext::initialise(Window* window)
 {
+	DE_ASSERT(window != nullptr);
+	DE_ASSERT(_impl == nullptr);
 	_impl = DE_NEW(Impl)(static_cast<HWND>(window->handle()));
+}
+
+void GraphicsContext::makeCurrent() const
+{
+	_impl->makeCurrent();
+}
+
+void GraphicsContext::makeNonCurrent() const
+{
+	_impl->makeNonCurrent();
 }
 
 void GraphicsContext::swapBuffers() const

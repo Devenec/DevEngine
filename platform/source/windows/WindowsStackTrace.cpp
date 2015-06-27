@@ -47,9 +47,9 @@ public:
 
 	~Impl() = default;
 
-	StackEntryList generate(const Uint32 frameOffset)
+	StackEntryList generate(const Uint32 stackFrameOffset)
 	{
-		const Uint32 entryCount = RtlCaptureStackBackTrace(frameOffset, _maxEntryCount, _symbolAddresses.data(),
+		const Uint32 entryCount = RtlCaptureStackBackTrace(stackFrameOffset, _maxEntryCount, _symbolAddresses.data(),
 			nullptr);
 
 		StackEntryList entries;
@@ -110,7 +110,7 @@ private:
 		DE_ASSERT_WINDOWS(result != 0);
 	}
 
-	void getSymbolInfo(const Uint64 address)
+	void getSymbolInfo(const Uint64& address)
 	{
 		Int32 result = SymFromAddrW(_processHandle, address, nullptr, _symbolInfo);
 		DE_ASSERT_WINDOWS(result != 0);
@@ -138,7 +138,7 @@ StackTrace::~StackTrace()
 	DE_DELETE(_impl, Impl);
 }
 
-StackEntryList StackTrace::generate(const Uint32 frameOffset) const
+StackEntryList StackTrace::generate(const Uint32 stackFrameOffset) const
 {
-	return _impl->generate(frameOffset);
+	return _impl->generate(stackFrameOffset);
 }

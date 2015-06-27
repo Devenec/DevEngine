@@ -27,7 +27,6 @@ TemporaryGraphicsContext::TemporaryGraphicsContext(HWND windowHandle)
 
 void TemporaryGraphicsContext::deinitialise()
 {
-	makeNonCurrent();
 	destroyContext();
 }
 

@@ -12,13 +12,13 @@
 // Functions
 
 /**
- * Converts "value" to a Char16 literal.
+ * Converts "literal" to a Char16 literal by prefixing it with "L".
  *
- * @param value
+ * @param literal
  *   A Char8 character or string literal.
  */
-#define DE_CHAR16(value) \
-	_DE_CHAR16(value)
+#define DE_CHAR16(literal) \
+	_DE_CHAR16(literal)
 
 /**
  * Invokes a compiler warning.

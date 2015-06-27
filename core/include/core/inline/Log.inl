@@ -12,16 +12,18 @@ LogLevel Log::filterLevel() const
 	return _filterLevel;
 }
 
-void Log::setfilterLevel(const LogLevel& value)
+void Log::setfilterLevel(const LogLevel& level)
 {
-	_filterLevel = value;
+	_filterLevel = level;
 }
 
 // Operators
 
 Log& Log::operator <<(const Char16* characters)
 {
+	DE_ASSERT(characters != nullptr);
 	_stream << toString8(characters);
+
 	return *this;
 }
 

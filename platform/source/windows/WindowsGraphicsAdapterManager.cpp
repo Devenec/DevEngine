@@ -27,8 +27,7 @@ public:
 	Impl()
 	{
 		Bool areAdaptersAvailable = true;
-		DISPLAY_DEVICEW adapterInfo;
-		adapterInfo.cb = sizeof(adapterInfo);
+		DISPLAY_DEVICEW adapterInfo = createAdapterInfo();
 
 		for(Uint32 i = 0u; areAdaptersAvailable; ++i)
 			areAdaptersAvailable = initialiseAdapter(i, adapterInfo);
@@ -79,12 +78,18 @@ private:
 		return result != 0;
 	}
 
+	static DISPLAY_DEVICEW createAdapterInfo()
+	{
+		DISPLAY_DEVICEW adapterInfo;
+		adapterInfo.cb = sizeof(DISPLAY_DEVICEW);
+
+		return adapterInfo;
+	}
+
 	static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes)
 	{
 		DisplayMode displayMode(1u, 0u, 0u, 0u);
-		DEVMODEW displayModeInfo;
-		displayModeInfo.dmDriverExtra = 0u;
-		displayModeInfo.dmSize = sizeof(displayModeInfo);
+		DEVMODEW displayModeInfo = createDisplayModeInfo();
 
 		for(Uint32 i = 0u; displayMode.width() != 0u; ++i)
 		{
@@ -98,6 +103,14 @@ private:
 		std::sort(modes.begin(), modes.end());
 
 		return getCurrentAdapterDisplayModeIndex(adapterName, displayModeInfo, modes);
+	}
+
+	static DEVMODEW createDisplayModeInfo()
+	{
+		DEVMODEW displayModeInfo = DEVMODEW();
+		displayModeInfo.dmSize = sizeof(DEVMODEW);
+
+		return displayModeInfo;
 	}
 
 	static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo)
@@ -144,5 +157,6 @@ const GraphicsAdapterList& GraphicsAdapterManager::graphicsAdapters() const
 
 void GraphicsAdapterManager::initialise()
 {
+	DE_ASSERT(_impl == nullptr);
 	_impl = DE_NEW(Impl)();
 }

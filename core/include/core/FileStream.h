@@ -42,15 +42,17 @@ namespace Core
 
 		Bool isAtEndOfFile() const;
 
+		Bool isOpen() const;
+
 		void open(const String8& filepath, const OpenMode& openMode = OpenMode::Read) const;
 
 		Int64 position() const;
 
 		Uint32 read(Byte* buffer, const Uint32 byteCount) const;
 
-		void seek(const Int64 position) const;
+		void seek(const Int64& position) const;
 
-		void seek(const SeekPosition& position, const Int64 offset) const;
+		void seek(const SeekPosition& position, const Int64& offset) const;
 
 		Int64 size() const;
 

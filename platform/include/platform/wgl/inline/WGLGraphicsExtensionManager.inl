@@ -8,7 +8,7 @@
 // Private
 
 template<typename T>
-T GraphicsExtensionManager::getExtensionFunction(const Char8* name)
+T GraphicsExtensionManager::getExtensionFunction(const Char8* functionName)
 {
-	return reinterpret_cast<T>(wglGetProcAddress(name));
+	return reinterpret_cast<T>(wglGetProcAddress(functionName));
 }

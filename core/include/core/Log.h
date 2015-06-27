@@ -10,6 +10,7 @@
 #include <core/String.h>
 #include <core/StringStream.h>
 #include <core/Types.h>
+#include <core/debug/Assert.h>
 
 namespace Core
 {
@@ -34,9 +35,9 @@ namespace Core
 
 		inline LogLevel filterLevel() const;
 
-		inline void setfilterLevel(const LogLevel& value);
+		inline void setfilterLevel(const LogLevel& level);
 
-		void write(const LogLevel& level, const String8& message) const;
+		void write(const LogLevel& logLevel, const String8& message) const;
 
 		Log& operator =(const Log& log) = delete;
 		Log& operator =(Log&& log) = delete;
@@ -60,7 +61,7 @@ namespace Core
 
 		Log();
 
-		static void writeToConsole(const LogLevel& level, const String8& message);
+		static void writeToConsole(const LogLevel& logLevel, const String8& message);
 	};
 
 #include "inline/Log.inl"

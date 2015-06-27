@@ -22,9 +22,9 @@ namespace Core
 
 		~LogManager() = default;
 
-		void deinitialise();
+		void deinitialise() const;
 
-		void initialise();
+		void initialise() const;
 
 		LogManager& operator =(const LogManager& logManager) = delete;
 		LogManager& operator =(LogManager&& logManager) = delete;

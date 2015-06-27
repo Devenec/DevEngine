@@ -12,6 +12,7 @@
 #include <core/Platform.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
+#include <core/debug/Assert.h>
 
 #if DE_BUILD == DE_BUILD_PRODUCTION || !defined(DE_CONFIG_TRACK_ALLOCATIONS)
 	#define DE_ALLOCATE(byteCount) \

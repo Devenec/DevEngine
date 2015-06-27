@@ -136,6 +136,7 @@ static void testWindowAndGraphics()
 
 	GraphicsContext graphicsContext;
 	graphicsContext.initialise(window);
+	graphicsContext.makeCurrent();
 	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	while(window->shouldClose())// || window2->shouldClose())

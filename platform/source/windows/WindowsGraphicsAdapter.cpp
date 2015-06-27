@@ -47,15 +47,7 @@ public:
 			_supportedDisplayModes.end(), mode);
 
 		DE_ASSERT(iterator != _supportedDisplayModes.end());
-		DEVMODEW displayModeInfo;
-		displayModeInfo.dmBitsPerPel = mode.colourDepth();
-		displayModeInfo.dmDisplayFrequency = mode.frequency();
-		displayModeInfo.dmDriverExtra = 0u;
-		displayModeInfo.dmFields = DM_BITSPERPEL | DM_DISPLAYFREQUENCY | DM_PELSHEIGHT | DM_PELSWIDTH;
-		displayModeInfo.dmPelsHeight = mode.height();
-		displayModeInfo.dmPelsWidth = mode.width();
-		displayModeInfo.dmSize = sizeof(displayModeInfo);
-
+		DEVMODEW displayModeInfo = createDisplayModeInfo(mode);
 		changeDisplaySettings(&displayModeInfo, CDS_FULLSCREEN);
 		_currentDisplayModeIndex = iterator - _supportedDisplayModes.begin();
 	}
@@ -79,6 +71,19 @@ private:
 	{
 		const Int32 result = ChangeDisplaySettingsExW(_name.c_str(), displayModeInfo, nullptr, flags, nullptr);
 		DE_ASSERT(result == DISP_CHANGE_SUCCESSFUL); // TODO: should use other kind of error checking
+	}
+
+	static DEVMODEW createDisplayModeInfo(const DisplayMode& mode)
+	{
+		DEVMODEW displayModeInfo = DEVMODEW();
+		displayModeInfo.dmBitsPerPel = mode.colourDepth();
+		displayModeInfo.dmDisplayFrequency = mode.frequency();
+		displayModeInfo.dmFields = DM_BITSPERPEL | DM_DISPLAYFREQUENCY | DM_PELSHEIGHT | DM_PELSWIDTH;
+		displayModeInfo.dmPelsHeight = mode.height();
+		displayModeInfo.dmPelsWidth = mode.width();
+		displayModeInfo.dmSize = sizeof(DEVMODEW);
+
+		return displayModeInfo;
 	}
 };
 

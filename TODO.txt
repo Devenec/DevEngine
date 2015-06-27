@@ -5,7 +5,8 @@ DevEngine - TODO
 
 - Investigate Windows foreground processes and windows (SetForegroundWindow()).
 
-- Find cases where a pointer can potentially be nullptr, and add assertion
+- Investigate what errors WinAPI functions can generate. This info can be possibly used to remove error checking from
+	functions.
 
 - Should change Platform::TemporaryGraphicsContext from initialise()/deinitialise() behaviour to different? If not, make
 	initialise() and deinitialise() inline?

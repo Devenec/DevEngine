@@ -40,7 +40,7 @@ namespace Platform
 		static void getOpenGLExtensionFunction();
 
 		template<typename T>
-		static inline T getExtensionFunction(const Char8* name);
+		static inline T getExtensionFunction(const Char8* functionName);
 	};
 
 #include "inline/WGLGraphicsExtensionManager.inl"
