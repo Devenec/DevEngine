@@ -59,6 +59,7 @@
   <ItemGroup>
     <ClInclude Include="include\platform\PlatformInternal.h" />
     <ClInclude Include="include\platform\wgl\WGL.h" />
+    <ClInclude Include="include\platform\wgl\WGLGraphicsConfigChooser.h" />
     <ClInclude Include="include\platform\wgl\WGLGraphicsExtensionManager.h" />
     <ClInclude Include="include\platform\wgl\WGLGraphicsContextBase.h" />
     <ClInclude Include="include\platform\wgl\WGLTemporaryGraphicsContext.h" />
@@ -68,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\wgl\WGL.cpp" />
+    <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsExtensionManager.cpp" />

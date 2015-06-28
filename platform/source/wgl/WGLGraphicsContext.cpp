@@ -12,6 +12,7 @@
 #include <graphics/GraphicsContext.h>
 #include <graphics/Window.h>
 #include <platform/wgl/WGL.h>
+#include <platform/wgl/WGLGraphicsConfigChooser.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/windows/Windows.h>
 
@@ -49,7 +50,8 @@ private:
 
 	void initialisePixelFormat() const
 	{
-		setPixelFormat(1);
+		GraphicsConfigChooser configChooser(_deviceContextHandle);
+		setPixelFormat(configChooser.chooseConfig());
 	}
 
 	void createContext()
