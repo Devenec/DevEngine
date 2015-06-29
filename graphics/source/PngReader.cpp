@@ -3,6 +3,19 @@
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <algorithm>
@@ -84,7 +97,7 @@ void PNGReader::initialiseStructure()
 	if(_pngStructure == nullptr)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to initialise the PNG structure." << Log::Flush();
-		DE_ERROR(0x000000);
+		DE_ERROR(0x0);
 	}
 }
 
@@ -95,7 +108,7 @@ void PNGReader::initialiseInfo()
 	if(_pngInfo == nullptr)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to initialise the PNG info." << Log::Flush();
-		DE_ERROR(0x000001);
+		DE_ERROR(0x0);
 	}
 }
 
@@ -108,7 +121,7 @@ void PNGReader::validateSignature(FileStream& fileStream)
 	if(result != 0)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " The PNG signature is invalid." << Log::Flush();
-		DE_ERROR(0x000002);
+		DE_ERROR(0x0);
 	}
 
 	png_set_sig_bytes(_pngStructure, 8);
@@ -120,7 +133,7 @@ void PNGReader::handleError(png_struct* pngStructure, const Char8* message)
 {
 	static_cast<Void>(pngStructure);
 	defaultLog << LogLevel::Error << COMPONENT_TAG << " PNG error: " << message << '.' << Log::Flush();
-	DE_ERROR(0x000003);
+	DE_ERROR(0x0);
 }
 
 void PNGReader::handleWarning(png_struct* pngStructure, const Char8* message)

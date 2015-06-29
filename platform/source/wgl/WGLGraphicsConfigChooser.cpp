@@ -3,6 +3,19 @@
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/Error.h>
@@ -30,7 +43,6 @@ Int32 GraphicsConfigChooser::chooseConfig() const
 
 const Char8* GraphicsConfigChooser::COMPONENT_TAG = "[Platform::GraphicsConfigChooser - WGL]";
 
-// TODO: add WGL_SWAP_METHOD_ARB?
 const GraphicsConfigChooser::PixelFormatAttributeList GraphicsConfigChooser::PIXEL_FORMAT_ATTRIBUTE_IDS
 {{
 	WGL_ACCELERATION_ARB,
@@ -60,7 +72,7 @@ Uint32 GraphicsConfigChooser::getPixelFormatCount() const
 	if(result == 0)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the config count." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x0);
 	}
 
 	return formatCount;
@@ -80,13 +92,13 @@ GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelForma
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the matching configurations." <<
 			Log::Flush();
 
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x0);
 	}
 
 	if(matchingFormatCount == 0u)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " No matching configurations were found." << Log::Flush();
-		DE_ERROR(0x0); // TODO: set errorCode
+		DE_ERROR(0x0);
 	}
 
 	formatIndices.resize(matchingFormatCount);
@@ -127,7 +139,7 @@ GraphicsConfigChooser::PixelFormatAttributeList GraphicsConfigChooser::getPixelF
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the attributes of a configuration." <<
 			Log::Flush();
 		
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x0);
 	}
 
 	return attributes;

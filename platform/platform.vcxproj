@@ -57,6 +57,7 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\platform\opengl\OpenGL.h" />
     <ClInclude Include="include\platform\PlatformInternal.h" />
     <ClInclude Include="include\platform\wgl\WGL.h" />
     <ClInclude Include="include\platform\wgl\WGLGraphicsConfigChooser.h" />

@@ -5,6 +5,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Header Files\opengl">
+      <UniqueIdentifier>{6132255c-fa73-4875-bfcb-a77dacecfdf2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\wgl">
       <UniqueIdentifier>{00b5cb3d-63d7-418c-8143-97d01ea7ce2c}</UniqueIdentifier>
     </Filter>
@@ -31,6 +34,9 @@
   <ItemGroup>
     <ClInclude Include="include\platform\PlatformInternal.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform\opengl\OpenGL.h">
+      <Filter>Header Files\opengl</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\wgl\WGL.h">
       <Filter>Header Files\wgl</Filter>

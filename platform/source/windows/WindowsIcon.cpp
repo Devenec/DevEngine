@@ -3,6 +3,19 @@
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/Log.h>
@@ -50,7 +63,7 @@ Icon::~Icon()
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy the icon." << Log::Flush();
-			DE_ERROR_WINDOWS(0x000201);
+			DE_ERROR_WINDOWS(0x0);
 		}
 	}
 }
@@ -67,7 +80,7 @@ void Icon::create(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 	if(_iconHandle == nullptr)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the icon." << Log::Flush();
-		DE_ERROR_WINDOWS(0x000200);
+		DE_ERROR_WINDOWS(0x0);
 	}
 }
 
@@ -105,7 +118,7 @@ HBITMAP Icon::createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& data
 	if(bitmapHandle == nullptr)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the colour bitmap." << Log::Flush();
-		DE_ERROR_WINDOWS(0x000202);
+		DE_ERROR_WINDOWS(0x0);
 	}
 
 	releaseDeviceContext(deviceContextHandle);
@@ -141,7 +154,7 @@ HBITMAP Icon::createMaskBitmap(const Image* image)
 	if(bitmapHandle == nullptr)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the mask bitmap." << Log::Flush();
-		DE_ERROR_WINDOWS(0x000203);
+		DE_ERROR_WINDOWS(0x0);
 	}
 
 	return bitmapHandle;
@@ -154,7 +167,7 @@ void Icon::destroyBitmap(HBITMAP bitmapHandle)
 	if(result == 0)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy a bitmap." << Log::Flush();
-		DE_ERROR_WINDOWS(0x000204);
+		DE_ERROR_WINDOWS(0x0);
 	}
 }
 
@@ -193,7 +206,7 @@ HDC Icon::getDeviceContext()
 	if(deviceContextHandle == nullptr)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get a device context." << Log::Flush();
-		DE_ERROR_WINDOWS(0x000205);
+		DE_ERROR_WINDOWS(0x0);
 	}
 
 	return deviceContextHandle;
@@ -206,7 +219,7 @@ void Icon::releaseDeviceContext(HDC deviceContextHandle)
 	if(result == 0)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to release the device context." << Log::Flush();
-		DE_ERROR_WINDOWS(0x000206);
+		DE_ERROR_WINDOWS(0x0);
 	}
 }
 

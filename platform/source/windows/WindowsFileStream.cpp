@@ -3,6 +3,19 @@
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/FileStream.h>
@@ -43,7 +56,7 @@ public:
 			if(result == 0)
 			{
 				defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to close the file." << Log::Flush();
-				DE_ERROR_WINDOWS(0x000000);
+				DE_ERROR_WINDOWS(0x0);
 			}
 
 			_openMode = OpenMode();
@@ -77,7 +90,7 @@ public:
 			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0x000001);
+			DE_ERROR_WINDOWS(0x0);
 		}
 
 		_openMode = openMode;
@@ -95,7 +108,7 @@ public:
 			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the position of the file pointer." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0x000002);
+			DE_ERROR_WINDOWS(0x0);
 		}
 
 		return position.QuadPart;
@@ -112,7 +125,7 @@ public:
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to read the file." << Log::Flush();
-			DE_ERROR_WINDOWS(0x000003);
+			DE_ERROR_WINDOWS(0x0);
 		}
 
 		return byteCountRead;
@@ -132,7 +145,7 @@ public:
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to seek the file." << Log::Flush();
-			DE_ERROR_WINDOWS(0x000004);
+			DE_ERROR_WINDOWS(0x0);
 		}
 	}
 
@@ -145,7 +158,7 @@ public:
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the size of the file." << Log::Flush();
-			DE_ERROR_WINDOWS(0x000005);
+			DE_ERROR_WINDOWS(0x0);
 		}
 
 		return size.QuadPart;
@@ -162,7 +175,7 @@ public:
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to write to the file." << Log::Flush();
-			DE_ERROR_WINDOWS(0x000006);
+			DE_ERROR_WINDOWS(0x0);
 		}
 
 		return byteCountWritten;
@@ -185,7 +198,7 @@ private:
 		if(result == 0)
 		{
 			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to flush the file buffer." << Log::Flush();
-			DE_ERROR_WINDOWS(0x000007);
+			DE_ERROR_WINDOWS(0x0);
 		}
 	}
 

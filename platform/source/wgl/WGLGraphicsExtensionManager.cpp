@@ -3,6 +3,19 @@
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/Error.h>
@@ -23,7 +36,6 @@ void GraphicsExtensionManager::initialiseExtensions(const GraphicsContextBase& g
 	validateContextState();
 	getContextExtensionFunctions();
 	logSupportedContextExtensions(graphicsContext.deviceContextHandle());
-	getOpenGLExtensionFunction();
 }
 
 // Private
@@ -37,7 +49,7 @@ void GraphicsExtensionManager::validateContextState()
 	if(wglGetCurrentContext() == nullptr)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " No current context exists." << Log::Flush();
-		DE_ERROR(0x0); // TODO: set errorCode
+		DE_ERROR(0x0);
 	}
 }
 
@@ -62,9 +74,4 @@ void GraphicsExtensionManager::logSupportedContextExtensions(HDC deviceContextHa
 		defaultLog << " Supported WGL extensions: " << wglGetExtensionsStringARB(deviceContextHandle);
 	
 	defaultLog << Log::Flush();
-}
-
-void GraphicsExtensionManager::getOpenGLExtensionFunction()
-{
-	// TODO: implement
 }

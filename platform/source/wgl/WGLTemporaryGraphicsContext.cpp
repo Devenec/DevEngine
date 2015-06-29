@@ -3,18 +3,24 @@
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-// TODO: change to internal header
-#include <platform/windows/Windows.h>
-#include <gl/GL.h>
-
-#define GL_MAJOR_VERSION 0x821B
-#define GL_MINOR_VERSION 0x821C
-// /TODO
 
 #include <core/Error.h>
 #include <core/Log.h>
+#include <platform/opengl/OpenGL.h>
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>
 
 using namespace Core;
@@ -57,7 +63,7 @@ void TemporaryGraphicsContext::createContext()
 	if(_graphicsContextHandle == nullptr)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the context." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x0);
 	}
 }
 
@@ -68,7 +74,7 @@ Int32 TemporaryGraphicsContext::choosePixelFormat(const PIXELFORMATDESCRIPTOR& p
 	if(pixelFormatIndex == 0)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to choose a pixel format." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x0);
 	}
 
 	return pixelFormatIndex;
@@ -86,7 +92,7 @@ void TemporaryGraphicsContext::validatePixelFormat(const Int32 pixelFormatIndex)
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the description of a pixel format." <<
 			Log::Flush();
 
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x0);
 	}
 
 	if((pixelFormatDescriptor.dwFlags & PFD_SUPPORT_OPENGL) == 0u)
@@ -94,35 +100,25 @@ void TemporaryGraphicsContext::validatePixelFormat(const Int32 pixelFormatIndex)
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " The device context does not support OpenGL." <<
 			Log::Flush();
 
-		DE_ERROR(0x0); // TODO: set errorCode
+		DE_ERROR(0x0);
 	}
 }
 
 // Static
 
-// TODO: add OpenGL error checking
 void TemporaryGraphicsContext::validateOpenGLVersion()
 {
-	// TODO: change GL_MAJOR_VERSION and GL_MINOR_VERSION to glGetString(GL_VERSION), since the former are not
-	// supported until OpenGL 2.x
-	Int32 majorVersion;
-	glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
-	Int32 minorVersion;
-	glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
-	Bool isVersionUnsupported = false;
+	const String8 versionString(reinterpret_cast<const Char8*>(glGetString(GL_VERSION)));
+	const Uint32 majorVersion = getOpenGLMajorVersion(versionString);
+	const Uint32 minorVersion = getOpenGLMinorVersion(versionString);
 
-	if(majorVersion < MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
-		isVersionUnsupported = true;
-	else if(majorVersion == MIN_SUPPORTED_OPENGL_VERSION_MAJOR && minorVersion < MIN_SUPPORTED_OPENGL_VERSION_MINOR)
-		isVersionUnsupported = true;
-
-	if(isVersionUnsupported)
+	if(!isOpenGLVersionSupported(majorVersion, minorVersion))
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " The OpenGL version " << majorVersion << '.' <<
 			minorVersion << " is not supported. The minimum supported version is " <<
 			MIN_SUPPORTED_OPENGL_VERSION_MAJOR << '.' << MIN_SUPPORTED_OPENGL_VERSION_MINOR << '.' << Log::Flush();
 
-		DE_ERROR_WINDOWS(0x0); // TODO: set errorCode
+		DE_ERROR_WINDOWS(0x0);
 	}
 }
 
@@ -135,4 +131,32 @@ PIXELFORMATDESCRIPTOR TemporaryGraphicsContext::createPixelFormatDescriptor()
 	pixelFormatDescriptor.nVersion = 1u;
 
 	return pixelFormatDescriptor;
+}
+
+Uint32 TemporaryGraphicsContext::getOpenGLMajorVersion(const String8& versionString)
+{
+	const Uint32 delimiterPosition = versionString.find('.');
+	return std::stoi(versionString.substr(0u, delimiterPosition));
+}
+
+Uint32 TemporaryGraphicsContext::getOpenGLMinorVersion(const String8& versionString)
+{
+	const Uint32 minorNumberPosition = versionString.find('.') + 1u;
+	const Uint32 secondDelimiterPosition = versionString.find('.', minorNumberPosition);
+	Uint32 versionEndPosition = versionString.find(' ');
+
+	if(secondDelimiterPosition < versionEndPosition)
+		versionEndPosition = secondDelimiterPosition;
+
+	return std::stoi(versionString.substr(minorNumberPosition, versionEndPosition - minorNumberPosition));
+}
+
+Bool TemporaryGraphicsContext::isOpenGLVersionSupported(const Uint32 majorVersion, const Uint32 minorVersion)
+{
+	if(majorVersion < MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
+		return false;
+	else if(majorVersion == MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
+		return minorVersion >= MIN_SUPPORTED_OPENGL_VERSION_MINOR;
+	else
+		return true;
 }

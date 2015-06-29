@@ -3,9 +3,24 @@
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <algorithm>
+#include <core/Error.h>
+#include <core/Log.h>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
@@ -62,6 +77,8 @@ public:
 
 private:
 
+	static const Char8* COMPONENT_TAG;
+
 	String16 _name;
 	DisplayModeList _supportedDisplayModes;
 	Uint32 _currentDisplayModeIndex;
@@ -70,7 +87,14 @@ private:
 	void changeDisplaySettings(DEVMODEW* displayModeInfo, const Uint32 flags) const
 	{
 		const Int32 result = ChangeDisplaySettingsExW(_name.c_str(), displayModeInfo, nullptr, flags, nullptr);
-		DE_ASSERT(result == DISP_CHANGE_SUCCESSFUL); // TODO: should use other kind of error checking
+
+		if(result != DISP_CHANGE_SUCCESSFUL)
+		{
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to change the display mode (" << result <<
+				")." << Log::Flush();
+
+			DE_ERROR(0x0);
+		}
 	}
 
 	static DEVMODEW createDisplayModeInfo(const DisplayMode& mode)
@@ -86,6 +110,8 @@ private:
 		return displayModeInfo;
 	}
 };
+
+const Char8* GraphicsAdapter::Impl::COMPONENT_TAG = "[Platform::GraphicsAdapter - Windows]";
 
 
 // Public
