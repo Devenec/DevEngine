@@ -29,12 +29,12 @@
 #include <graphics/GraphicsAdapterManager.h>
 #include <graphics/Window.h>
 #include <graphics/WindowManager.h>
+#include <platform/GraphicsExtensionManager.h>
 
 #define OEMRESOURCE
 #include <platform/windows/Windows.h> // Needs to be the first header to include Windows.h
 #undef OEMRESOURCE
 
-#include <platform/wgl/WGLGraphicsExtensionManager.h>
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>
 #include <platform/windows/WindowsWindow.h>
 
@@ -147,7 +147,7 @@ private:
 		HWND windowHandle = createWindow();
 		TemporaryGraphicsContext temporaryGraphicsContext(windowHandle);
 		temporaryGraphicsContext.initialise();
-		GraphicsExtensionManager::initialiseExtensions(temporaryGraphicsContext);
+		GraphicsExtensionManager::initialiseContextExtensions(temporaryGraphicsContext);
 		temporaryGraphicsContext.deinitialise();
 		destroyWindow(windowHandle);
 	}

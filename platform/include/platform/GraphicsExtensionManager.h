@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/WGLGraphicsExtensionManager.h
+ * @file platform/GraphicsExtensionManager.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -21,7 +21,6 @@
 #pragma once
 
 #include <core/Types.h>
-#include <platform/windows/Windows.h>
 
 namespace Platform
 {
@@ -38,22 +37,17 @@ namespace Platform
 
 		~GraphicsExtensionManager() = delete;
 
-		static void initialiseExtensions(const GraphicsContextBase& graphicsContext);
-
 		GraphicsExtensionManager& operator =(const GraphicsExtensionManager& graphicsExtensionManager) = delete;
 		GraphicsExtensionManager& operator =(GraphicsExtensionManager&& graphicsExtensionManager) = delete;
+		
+		static Void* getExtensionFunction(const Char8* functionName);
+
+		static void initialiseContextExtensions(const GraphicsContextBase& graphicsContext);
 
 	private:
 
-		static const Char8* COMPONENT_TAG;
+		class Impl;
 
-		static void validateContextState();
-		static void getContextExtensionFunctions();
-		static void logSupportedContextExtensions(HDC deviceContextHandle);
-
-		template<typename T>
-		static inline T getExtensionFunction(const Char8* functionName);
+		Impl* _impl;
 	};
-
-#include "inline/WGLGraphicsExtensionManager.inl"
 }

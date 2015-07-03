@@ -123,6 +123,7 @@ static void testFileStream()
 }
 
 #include <platform/opengl/OpenGL.h>
+#include <platform/opengl/OpenGLInterface.h>
 
 static void testWindowAndGraphics()
 {
@@ -149,12 +150,14 @@ static void testWindowAndGraphics()
 	GraphicsContext graphicsContext;
 	graphicsContext.initialise(window);
 	graphicsContext.makeCurrent();
-	glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+
+	Platform::OpenGL openGl;
+	openGl.clearColor(0.0f, 1.0f, 0.0f, 1.0f);
 
 	while(window->shouldClose())// || window2->shouldClose())
 	{
 		windowManager.processMessages();
-		glClear(GL_COLOR_BUFFER_BIT);
+		openGl.clear(GL_COLOR_BUFFER_BIT);
 		graphicsContext.swapBuffers();
 	}
 }

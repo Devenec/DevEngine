@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/inline/WGLGraphicsExtensionManager.inl
+ * @file platform/opengl/OpenGLInterface.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,8 +20,21 @@
 
 // Private
 
+// Static
+
 template<typename T>
-T GraphicsExtensionManager::getExtensionFunction(const Char8* functionName)
+T OpenGL::getFunction(const Char8* functionName)
 {
-	return reinterpret_cast<T>(wglGetProcAddress(functionName));
+	using namespace Core;
+	T function = reinterpret_cast<T>(GraphicsExtensionManager::getExtensionFunction(functionName));
+
+	if(function == nullptr)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get function '" << functionName << "'." <<
+			Log::Flush();
+
+		DE_ERROR(0x0);
+	}
+
+	return function;
 }

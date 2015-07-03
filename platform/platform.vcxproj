@@ -57,11 +57,12 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\platform\GraphicsExtensionManager.h" />
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
+    <ClInclude Include="include\platform\opengl\OpenGLInterface.h" />
     <ClInclude Include="include\platform\PlatformInternal.h" />
     <ClInclude Include="include\platform\wgl\WGL.h" />
     <ClInclude Include="include\platform\wgl\WGLGraphicsConfigChooser.h" />
-    <ClInclude Include="include\platform\wgl\WGLGraphicsExtensionManager.h" />
     <ClInclude Include="include\platform\wgl\WGLGraphicsContextBase.h" />
     <ClInclude Include="include\platform\wgl\WGLTemporaryGraphicsContext.h" />
     <ClInclude Include="include\platform\windows\Windows.h" />
@@ -69,6 +70,7 @@
     <ClInclude Include="include\platform\windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\opengl\OpenGLInterface.cpp" />
     <ClCompile Include="source\wgl\WGL.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp" />
@@ -89,8 +91,8 @@
     <ClCompile Include="source\windows\WindowsWindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\platform\opengl\inline\OpenGLInterface.inl" />
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl" />
-    <None Include="include\platform\wgl\inline\WGLGraphicsExtensionManager.inl" />
     <None Include="include\platform\windows\inline\WindowsIcon.inl" />
     <None Include="include\platform\windows\inline\WindowsWindow.inl" />
   </ItemGroup>

@@ -43,6 +43,13 @@
 #pragma once
 
 #include <core/Types.h>
+#include <platform/PlatformInternal.h>
+
+#if DE_COMPILER == DE_COMPILER_MSVC
+	#define _DE_CALL_OPENGL _DE_CALL_STDCALL
+#else
+	#define _DE_CALL_OPENGL
+#endif
 
 // Version 1.0
 
@@ -56,62 +63,62 @@ using GLsizei	 = Int32;
 using GLubyte	 = Byte;
 using GLuint	 = Uint32;
 
-using GLBlendFunc = void (*)(GLenum sfactor, GLenum dfactor);
-using GLClear = void (*)(GLbitfield mask);
-using GLClearColor = void (*)(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
-using GLClearDepth = void (*)(GLdouble depth);
-using GLClearStencil = void (*)(GLint s);
-using GLColorMask = void (*)(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
-using GLCullFace = void (*)(GLenum mode);
-using GLDepthFunc = void (*)(GLenum func);
-using GLDepthMask = void (*)(GLboolean flag);
-using GLDepthRange = void (*)(GLdouble near, GLdouble far);
-using GLDisable = void (*)(GLenum cap);
-using GLDrawBuffer = void (*)(GLenum buf);
-using GLEnable = void (*)(GLenum cap);
-using GLFinish = void (*)();
-using GLFlush = void (*)();
-using GLFrontFace = void (*)(GLenum mode);
-using GLGetBooleanV = void (*)(GLenum pname, GLboolean* data);
-using GLGetDoubleV = void (*)(GLenum pname, GLdouble* data);
-using GLGetError = GLenum (*)();
-using GLGetFloatV = void (*)(GLenum pname, GLfloat* data);
-using GLGetIntegerV = void (*)(GLenum pname, GLint* data);
-using GLGetString = const GLubyte* (*)(GLenum name);
-using GLGetTexImage = void (*)(GLenum target, GLint level, GLenum format, GLenum type, Void* pixels);
-using GLGetTexLevelParameterFV = void (*)(GLenum target, GLint level, GLenum pname, GLfloat* params);
-using GLGetTexLevelParameterIV = void (*)(GLenum target, GLint level, GLenum pname, GLint* params);
-using GLGetTexParameterFV = void (*)(GLenum target, GLenum pname, GLfloat* params);
-using GLGetTexParameterIV = void (*)(GLenum target, GLenum pname, GLint* params);
-using GLHint = void (*)(GLenum target, GLenum mode);
-using GLIsEnabled = GLboolean (*)(GLenum cap);
-using GLLineWidth = void (*)(GLfloat width);
-using GLLogicOp = void (*)(GLenum opcode);
-using GLPixelStoreF = void (*)(GLenum pname, GLfloat param);
-using GLPixelStoreI = void (*)(GLenum pname, GLint param);
-using GLPointSize = void (*)(GLfloat size);
-using GLPolygonMode = void (*)(GLenum face, GLenum mode);
-using GLReadBuffer = void (*)(GLenum src);
+using GLBlendFunc = void (_DE_CALL_OPENGL*)(GLenum sfactor, GLenum dfactor);
+using GLClear = void (_DE_CALL_OPENGL*)(GLbitfield mask);
+using GLClearColor = void (_DE_CALL_OPENGL*)(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+using GLClearDepth = void (_DE_CALL_OPENGL*)(GLdouble depth);
+using GLClearStencil = void (_DE_CALL_OPENGL*)(GLint s);
+using GLColorMask = void (_DE_CALL_OPENGL*)(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
+using GLCullFace = void (_DE_CALL_OPENGL*)(GLenum mode);
+using GLDepthFunc = void (_DE_CALL_OPENGL*)(GLenum func);
+using GLDepthMask = void (_DE_CALL_OPENGL*)(GLboolean flag);
+using GLDepthRange = void (_DE_CALL_OPENGL*)(GLdouble near, GLdouble far);
+using GLDisable = void (_DE_CALL_OPENGL*)(GLenum cap);
+using GLDrawBuffer = void (_DE_CALL_OPENGL*)(GLenum buf);
+using GLEnable = void (_DE_CALL_OPENGL*)(GLenum cap);
+using GLFinish = void (_DE_CALL_OPENGL*)();
+using GLFlush = void (_DE_CALL_OPENGL*)();
+using GLFrontFace = void (_DE_CALL_OPENGL*)(GLenum mode);
+using GLGetBooleanV = void (_DE_CALL_OPENGL*)(GLenum pname, GLboolean* data);
+using GLGetDoubleV = void (_DE_CALL_OPENGL*)(GLenum pname, GLdouble* data);
+using GLGetError = GLenum (_DE_CALL_OPENGL*)();
+using GLGetFloatV = void (_DE_CALL_OPENGL*)(GLenum pname, GLfloat* data);
+using GLGetIntegerV = void (_DE_CALL_OPENGL*)(GLenum pname, GLint* data);
+using GLGetString = const GLubyte* (_DE_CALL_OPENGL*)(GLenum name);
+using GLGetTexImage = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLenum format, GLenum type, Void* pixels);
+using GLGetTexLevelParameterFV = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLenum pname, GLfloat* params);
+using GLGetTexLevelParameterIV = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLenum pname, GLint* params);
+using GLGetTexParameterFV = void (_DE_CALL_OPENGL*)(GLenum target, GLenum pname, GLfloat* params);
+using GLGetTexParameterIV = void (_DE_CALL_OPENGL*)(GLenum target, GLenum pname, GLint* params);
+using GLHint = void (_DE_CALL_OPENGL*)(GLenum target, GLenum mode);
+using GLIsEnabled = GLboolean (_DE_CALL_OPENGL*)(GLenum cap);
+using GLLineWidth = void (_DE_CALL_OPENGL*)(GLfloat width);
+using GLLogicOp = void (_DE_CALL_OPENGL*)(GLenum opcode);
+using GLPixelStoreF = void (_DE_CALL_OPENGL*)(GLenum pname, GLfloat param);
+using GLPixelStoreI = void (_DE_CALL_OPENGL*)(GLenum pname, GLint param);
+using GLPointSize = void (_DE_CALL_OPENGL*)(GLfloat size);
+using GLPolygonMode = void (_DE_CALL_OPENGL*)(GLenum face, GLenum mode);
+using GLReadBuffer = void (_DE_CALL_OPENGL*)(GLenum src);
 
-using GLReadPixels = void (*)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
-	Void* pixels);
+using GLReadPixels = void (_DE_CALL_OPENGL*)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
+	GLenum type, Void* pixels);
 
-using GLScissor = void (*)(GLint x, GLint y, GLsizei width, GLsizei height);
-using GLStencilFunc = void (*)(GLenum func, GLint ref, GLuint mask);
-using GLStencilMask = void (*)(GLuint mask);
-using GLStencilOp = void (*)(GLenum fail, GLenum zfail, GLenum zpass);
+using GLScissor = void (_DE_CALL_OPENGL*)(GLint x, GLint y, GLsizei width, GLsizei height);
+using GLStencilFunc = void (_DE_CALL_OPENGL*)(GLenum func, GLint ref, GLuint mask);
+using GLStencilMask = void (_DE_CALL_OPENGL*)(GLuint mask);
+using GLStencilOp = void (_DE_CALL_OPENGL*)(GLenum fail, GLenum zfail, GLenum zpass);
 
-using GLTexImage1D = void (*)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border,
-	GLenum format, GLenum type, const Void* pixels);
-
-using GLTexImage2D = void (*)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,
+using GLTexImage1D = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLint internalformat, GLsizei width,
 	GLint border, GLenum format, GLenum type, const Void* pixels);
 
-using GLTexParameterF = void (*)(GLenum target, GLenum pname, GLfloat param);
-using GLTexParameterFV = void (*)(GLenum target, GLenum pname, const GLfloat* params);
-using GLTexParameterI = void (*)(GLenum target, GLenum pname, GLint param);
-using GLTexParameterIV = void (*)(GLenum target, GLenum pname, const GLint* params);
-using GLViewport = void (*)(GLint x, GLint y, GLsizei width, GLsizei height);
+using GLTexImage2D = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLint internalformat, GLsizei width,
+	GLsizei height, GLint border, GLenum format, GLenum type, const Void* pixels);
+
+using GLTexParameterF = void (_DE_CALL_OPENGL*)(GLenum target, GLenum pname, GLfloat param);
+using GLTexParameterFV = void (_DE_CALL_OPENGL*)(GLenum target, GLenum pname, const GLfloat* params);
+using GLTexParameterI = void (_DE_CALL_OPENGL*)(GLenum target, GLenum pname, GLint param);
+using GLTexParameterIV = void (_DE_CALL_OPENGL*)(GLenum target, GLenum pname, const GLint* params);
+using GLViewport = void (_DE_CALL_OPENGL*)(GLint x, GLint y, GLsizei width, GLsizei height);
 
 
 // Version 1.1
@@ -324,32 +331,33 @@ using GLclampd = Float64;
 #define GL_TEXTURE_BINDING_2D	   0x8069
 #define GL_VERTEX_ARRAY			   0x8074
 
-using GLBindTexture = void (*)(GLenum target, GLuint texture);
+using GLBindTexture = void (_DE_CALL_OPENGL*)(GLenum target, GLuint texture);
 
-using GLCopyTexImage1D = void (*)(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width,
-	GLint border);
+using GLCopyTexImage1D = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y,
+	GLsizei width, GLint border);
 
-using GLCopyTexImage2D = void (*)(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width,
-	GLsizei height, GLint border);
+using GLCopyTexImage2D = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y,
+	GLsizei width, GLsizei height, GLint border);
 
-using GLCopyTexSubImage1D = void (*)(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width);
+using GLCopyTexSubImage1D = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLint xoffset, GLint x, GLint y,
+	GLsizei width);
 
-using GLCopyTexSubImage2D = void (*)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y,
-	GLsizei width, GLsizei height);
+using GLCopyTexSubImage2D = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x,
+	GLint y, GLsizei width, GLsizei height);
 
-using GLDeleteTextures = void (*)(GLsizei n, const GLuint* textures);
-using GLDrawArrays = void (*)(GLenum mode, GLint first, GLsizei count);
-using GLDrawElements = void (*)(GLenum mode, GLsizei count, GLenum type, const Void* indices);
-using GLGenTextures = void (*)(GLsizei n, GLuint* textures);
-using GLGetPointerV = void (*)(GLenum pname, Void** params);
-using GLIsTexture = GLboolean (*)(GLuint texture);
-using GLPolygonOffset = void (*)(GLfloat factor, GLfloat units);
+using GLDeleteTextures = void (_DE_CALL_OPENGL*)(GLsizei n, const GLuint* textures);
+using GLDrawArrays = void (_DE_CALL_OPENGL*)(GLenum mode, GLint first, GLsizei count);
+using GLDrawElements = void (_DE_CALL_OPENGL*)(GLenum mode, GLsizei count, GLenum type, const Void* indices);
+using GLGenTextures = void (_DE_CALL_OPENGL*)(GLsizei n, GLuint* textures);
+using GLGetPointerV = void (_DE_CALL_OPENGL*)(GLenum pname, Void** params);
+using GLIsTexture = GLboolean (_DE_CALL_OPENGL*)(GLuint texture);
+using GLPolygonOffset = void (_DE_CALL_OPENGL*)(GLfloat factor, GLfloat units);
 
-using GLTexSubImage1D = void (*)(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type,
-	const Void* pixels);
+using GLTexSubImage1D = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLint xoffset, GLsizei width,
+	GLenum format, GLenum type, const Void* pixels);
 
-using GLTexSubImage2D = void (*)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
-	GLsizei height, GLenum format, GLenum type, const Void* pixels);
+using GLTexSubImage2D = void (_DE_CALL_OPENGL*)(GLenum target, GLint level, GLint xoffset, GLint yoffset,
+	GLsizei width, GLsizei height, GLenum format, GLenum type, const Void* pixels);
 
 
 // Version 1.2
@@ -711,7 +719,7 @@ using GLGetVertexAttribPointerV = void (*)(GLuint index, GLenum pname, Void** po
 using GLIsProgram = GLboolean (*)(GLuint program);
 using GLIsShader = GLboolean (*)(GLuint shader);
 using GLLinkProgram = void (*)(GLuint program);
-using GLShaderSource = void (*)(GLuint shader, GLsizei count, const GLchar* const*string, const GLint* length);
+using GLShaderSource = void (*)(GLuint shader, GLsizei count, const GLchar* const* string, const GLint* length);
 using GLStencilFuncSeparate = void (*)(GLenum face, GLenum func, GLint ref, GLuint mask);
 using GLStencilMaskSeparate = void (*)(GLenum face, GLuint mask);
 using GLStencilOpSeparate = void (*)(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass);
@@ -796,12 +804,12 @@ using GLVertexAttribPointer = void (*)(GLuint index, GLint size, GLenum type, GL
 #define GL_COMPRESSED_SRGB			   0x8C48
 #define GL_COMPRESSED_SRGB_ALPHA	   0x8C49
 
-using GLUniformMatrix2x3FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
-using GLUniformMatrix2x4FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
-using GLUniformMatrix3x2FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
-using GLUniformMatrix3x4FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
-using GLUniformMatrix4x2FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
-using GLUniformMatrix4x3FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+using GLUniformMatrix2X3FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+using GLUniformMatrix2X4FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+using GLUniformMatrix3X2FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+using GLUniformMatrix3X4FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+using GLUniformMatrix4X2FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+using GLUniformMatrix4X3FV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
 
 
 // Version 3.0
@@ -1054,8 +1062,8 @@ using GLBlitFramebuffer = void (*)(GLint srcX0, GLint srcY0, GLint srcX1, GLint 
 
 using GLCheckFramebufferStatus = GLenum (*)(GLenum target);
 using GLClampColor = void (*)(GLenum target, GLenum clamp);
+using GLClearBufferFI = void (*)(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
 using GLClearBufferFV = void (*)(GLenum buffer, GLint drawbuffer, const GLfloat* value);
-using GLClearBufferI = void (*)(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
 using GLClearBufferIV = void (*)(GLenum buffer, GLint drawbuffer, const GLint* value);
 using GLClearBufferUIV = void (*)(GLenum buffer, GLint drawbuffer, const GLuint* value);
 using GLColorMaskI = void (*)(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
@@ -1113,7 +1121,7 @@ using GLRenderbufferStorageMultisample = void (*)(GLenum target, GLsizei samples
 using GLTexParameterIIV = void (*)(GLenum target, GLenum pname, const GLint* params);
 using GLTexParameterIUIV = void (*)(GLenum target, GLenum pname, const GLuint* params);
 
-using GLTransformFeedbackVaryings = void (*)(GLuint program, GLsizei count, const GLchar* const*varyings,
+using GLTransformFeedbackVaryings = void (*)(GLuint program, GLsizei count, const GLchar* const* varyings,
 	GLenum bufferMode);
 
 using GLUniform1UI = void (*)(GLint location, GLuint v0);
@@ -1147,101 +1155,1416 @@ using GLVertexAttribI4USV = void (*)(GLuint index, const GLushort* v);
 using GLVertexAttribIPointer = void (*)(GLuint index, GLint size, GLenum type, GLsizei stride, const Void* pointer);
 
 
-// Function declarations
+// Version 3.1
 
-#ifndef APIENTRY
-#define APIENTRY __stdcall
-#endif
+#define GL_TEXTURE_RECTANGLE						   0x84F5
+#define GL_TEXTURE_BINDING_RECTANGLE				   0x84F6
+#define GL_PROXY_TEXTURE_RECTANGLE					   0x84F7
+#define GL_MAX_RECTANGLE_TEXTURE_SIZE				   0x84F8
+#define GL_UNIFORM_BUFFER							   0x8A11
+#define GL_UNIFORM_BUFFER_BINDING					   0x8A28
+#define GL_UNIFORM_BUFFER_START						   0x8A29
+#define GL_UNIFORM_BUFFER_SIZE						   0x8A2A
+#define GL_MAX_VERTEX_UNIFORM_BLOCKS				   0x8A2B
+#define GL_MAX_GEOMETRY_UNIFORM_BLOCKS				   0x8A2C
+#define GL_MAX_FRAGMENT_UNIFORM_BLOCKS				   0x8A2D
+#define GL_MAX_COMBINED_UNIFORM_BLOCKS				   0x8A2E
+#define GL_MAX_UNIFORM_BUFFER_BINDINGS				   0x8A2F
+#define GL_MAX_UNIFORM_BLOCK_SIZE					   0x8A30
+#define GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS	   0x8A31
+#define GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS    0x8A32
+#define GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS    0x8A33
+#define GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT			   0x8A34
+#define GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH		   0x8A35
+#define GL_ACTIVE_UNIFORM_BLOCKS					   0x8A36
+#define GL_UNIFORM_TYPE								   0x8A37
+#define GL_UNIFORM_SIZE								   0x8A38
+#define GL_UNIFORM_NAME_LENGTH						   0x8A39
+#define GL_UNIFORM_BLOCK_INDEX						   0x8A3A
+#define GL_UNIFORM_OFFSET							   0x8A3B
+#define GL_UNIFORM_ARRAY_STRIDE						   0x8A3C
+#define GL_UNIFORM_MATRIX_STRIDE					   0x8A3D
+#define GL_UNIFORM_IS_ROW_MAJOR						   0x8A3E
+#define GL_UNIFORM_BLOCK_BINDING					   0x8A3F
+#define GL_UNIFORM_BLOCK_DATA_SIZE					   0x8A40
+#define GL_UNIFORM_BLOCK_NAME_LENGTH				   0x8A41
+#define GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS			   0x8A42
+#define GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES		   0x8A43
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER   0x8A44
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_GEOMETRY_SHADER 0x8A45
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER 0x8A46
+#define GL_SAMPLER_2D_RECT							   0x8B63
+#define GL_SAMPLER_2D_RECT_SHADOW					   0x8B64
+#define GL_TEXTURE_BUFFER							   0x8C2A
+#define GL_MAX_TEXTURE_BUFFER_SIZE					   0x8C2B
+#define GL_TEXTURE_BINDING_BUFFER					   0x8C2C
+#define GL_TEXTURE_BUFFER_DATA_STORE_BINDING		   0x8C2D
+#define GL_SAMPLER_BUFFER							   0x8DC2
+#define GL_INT_SAMPLER_2D_RECT						   0x8DCD
+#define GL_INT_SAMPLER_BUFFER						   0x8DD0
+#define GL_UNSIGNED_INT_SAMPLER_2D_RECT				   0x8DD5
+#define GL_UNSIGNED_INT_SAMPLER_BUFFER				   0x8DD8
+#define GL_COPY_READ_BUFFER							   0x8F36
+#define GL_COPY_WRITE_BUFFER						   0x8F37
+#define GL_R8_SNORM									   0x8F94
+#define GL_RG8_SNORM								   0x8F95
+#define GL_RGB8_SNORM								   0x8F96
+#define GL_RGBA8_SNORM								   0x8F97
+#define GL_R16_SNORM								   0x8F98
+#define GL_RG16_SNORM								   0x8F99
+#define GL_RGB16_SNORM								   0x8F9A
+#define GL_RGBA16_SNORM								   0x8F9B
+#define GL_SIGNED_NORMALIZED						   0x8F9C
+#define GL_PRIMITIVE_RESTART						   0x8F9D
+#define GL_PRIMITIVE_RESTART_INDEX					   0x8F9E
+#define GL_INVALID_INDEX							   0xFFFFFFFFu
+
+using GLCopyBufferSubData = void (*)(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset,
+	GLsizeiptr size);
+
+using GLDrawArraysInstanced = void (*)(GLenum mode, GLint first, GLsizei count, GLsizei instancecount);
+
+using GLDrawElementsInstanced = void (*)(GLenum mode, GLsizei count, GLenum type, const Void* indices,
+	GLsizei instancecount);
+
+using GLGetActiveUniformBlockIV = void (*)(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint* params);
+
+using GLGetActiveUniformBlockName = void (*)(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize,
+	GLsizei* length, GLchar* uniformBlockName);
+
+using GLGetActiveUniformName = void (*)(GLuint program, GLuint uniformIndex, GLsizei bufSize, GLsizei* length,
+	GLchar* uniformName);
+
+using GLGetActiveUniformsIV = void (*)(GLuint program, GLsizei uniformCount, const GLuint* uniformIndices,
+	GLenum pname, GLint* params);
+
+using GLGetUniformBlockIndex = GLuint (*)(GLuint program, const GLchar* uniformBlockName);
+
+using GLGetUniformIndices = void (*)(GLuint program, GLsizei uniformCount, const GLchar* const* uniformNames,
+	GLuint* uniformIndices);
+
+using GLPrimitiveRestartIndex = void (*)(GLuint index);
+using GLTexBuffer = void (*)(GLenum target, GLenum internalformat, GLuint buffer);
+using GLUniformBlockBinding = void (*)(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
+
+
+// Version 3.2
+
+struct __GLsync;
+using GLsync = __GLsync*;
+
+using GLint64  = Int64;
+using GLuint64 = Uint64;
+
+#define GL_CONTEXT_CORE_PROFILE_BIT					 0x0001
+#define GL_CONTEXT_COMPATIBILITY_PROFILE_BIT		 0x0002
+#define GL_SYNC_FLUSH_COMMANDS_BIT					 0x0001
+#define GL_LINES_ADJACENCY							 0x000A
+#define GL_LINE_STRIP_ADJACENCY						 0x000B
+#define GL_TRIANGLES_ADJACENCY						 0x000C
+#define GL_TRIANGLE_STRIP_ADJACENCY					 0x000D
+#define GL_PROGRAM_POINT_SIZE						 0x8642
+#define GL_DEPTH_CLAMP								 0x864F
+#define GL_TEXTURE_CUBE_MAP_SEAMLESS				 0x884F
+#define GL_GEOMETRY_VERTICES_OUT					 0x8916
+#define GL_GEOMETRY_INPUT_TYPE						 0x8917
+#define GL_GEOMETRY_OUTPUT_TYPE						 0x8918
+#define GL_MAX_GEOMETRY_TEXTURE_IMAGE_UNITS			 0x8C29
+#define GL_FRAMEBUFFER_ATTACHMENT_LAYERED			 0x8DA7
+#define GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS		 0x8DA8
+#define GL_GEOMETRY_SHADER							 0x8DD9
+#define GL_MAX_GEOMETRY_UNIFORM_COMPONENTS			 0x8DDF
+#define GL_MAX_GEOMETRY_OUTPUT_VERTICES				 0x8DE0
+#define GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS		 0x8DE1
+#define GL_QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION  0x8E4C
+#define GL_FIRST_VERTEX_CONVENTION					 0x8E4D
+#define GL_LAST_VERTEX_CONVENTION					 0x8E4E
+#define GL_PROVOKING_VERTEX							 0x8E4F
+#define GL_SAMPLE_POSITION							 0x8E50
+#define GL_SAMPLE_MASK								 0x8E51
+#define GL_SAMPLE_MASK_VALUE						 0x8E52
+#define GL_MAX_SAMPLE_MASK_WORDS					 0x8E59
+#define GL_TEXTURE_2D_MULTISAMPLE					 0x9100
+#define GL_PROXY_TEXTURE_2D_MULTISAMPLE				 0x9101
+#define GL_TEXTURE_2D_MULTISAMPLE_ARRAY				 0x9102
+#define GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY		 0x9103
+#define GL_TEXTURE_BINDING_2D_MULTISAMPLE			 0x9104
+#define GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY		 0x9105
+#define GL_TEXTURE_SAMPLES							 0x9106
+#define GL_TEXTURE_FIXED_SAMPLE_LOCATIONS			 0x9107
+#define GL_SAMPLER_2D_MULTISAMPLE					 0x9108
+#define GL_INT_SAMPLER_2D_MULTISAMPLE				 0x9109
+#define GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE		 0x910A
+#define GL_SAMPLER_2D_MULTISAMPLE_ARRAY				 0x910B
+#define GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY			 0x910C
+#define GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY 0x910D
+#define GL_MAX_COLOR_TEXTURE_SAMPLES				 0x910E
+#define GL_MAX_DEPTH_TEXTURE_SAMPLES				 0x910F
+#define GL_MAX_INTEGER_SAMPLES						 0x9110
+#define GL_MAX_SERVER_WAIT_TIMEOUT					 0x9111
+#define GL_OBJECT_TYPE								 0x9112
+#define GL_SYNC_CONDITION							 0x9113
+#define GL_SYNC_STATUS								 0x9114
+#define GL_SYNC_FLAGS								 0x9115
+#define GL_SYNC_FENCE								 0x9116
+#define GL_SYNC_GPU_COMMANDS_COMPLETE				 0x9117
+#define GL_UNSIGNALED								 0x9118
+#define GL_SIGNALED									 0x9119
+#define GL_ALREADY_SIGNALED							 0x911A
+#define GL_TIMEOUT_EXPIRED							 0x911B
+#define GL_CONDITION_SATISFIED						 0x911C
+#define GL_WAIT_FAILED								 0x911D
+#define GL_MAX_VERTEX_OUTPUT_COMPONENTS				 0x9122
+#define GL_MAX_GEOMETRY_INPUT_COMPONENTS			 0x9123
+#define GL_MAX_GEOMETRY_OUTPUT_COMPONENTS			 0x9124
+#define GL_MAX_FRAGMENT_INPUT_COMPONENTS			 0x9125
+#define GL_CONTEXT_PROFILE_MASK						 0x9126
+#define GL_TIMEOUT_IGNORED							 0xFFFFFFFFFFFFFFFFull
+
+using GLClientWaitSync = GLenum (*)(GLsync sync, GLbitfield flags, GLuint64 timeout);
+using GLDeleteSync = void (*)(GLsync sync);
+
+using GLDrawElementsBaseVertex = void (*)(GLenum mode, GLsizei count, GLenum type, const Void* indices,
+	GLint basevertex);
+
+using GLDrawElementsInstancedBaseVertex = void (*)(GLenum mode, GLsizei count, GLenum type, const Void* indices,
+	GLsizei instancecount, GLint basevertex);
+
+using GLDrawRangeElementsBaseVertex = void (*)(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type,
+	const Void* indices, GLint basevertex);
+
+using GLFenceSync = GLsync (*)(GLenum condition, GLbitfield flags);
+using GLFramebufferTexture = void (*)(GLenum target, GLenum attachment, GLuint texture, GLint level);
+using GLGetBufferParameterI64V = void (*)(GLenum target, GLenum pname, GLint64* params);
+using GLGetInteger64I_V = void (*)(GLenum target, GLuint index, GLint64* data);
+using GLGetInteger64V = void (*)(GLenum pname, GLint64* data);
+using GLGetMultisampleFV = void (*)(GLenum pname, GLuint index, GLfloat* val);
+using GLGetSyncIV = void (*)(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* length, GLint* values);
+using GLIsSync = GLboolean (*)(GLsync sync);
+
+using GLMultiDrawElementsBaseVertex = void (*)(GLenum mode, const GLsizei* count, GLenum type,
+	const Void* const* indices, GLsizei drawcount, const GLint* basevertex);
+
+using GLProvokingVertex = void (*)(GLenum mode);
+using GLSampleMaskI = void (*)(GLuint maskNumber, GLbitfield mask);
+
+using GLTexImage2DMultisample = void (*)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width,
+	GLsizei height, GLboolean fixedsamplelocations);
+
+using GLTexImage3DMultisample = void (*)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width,
+	GLsizei height, GLsizei depth, GLboolean fixedsamplelocations);
+
+using GLWaitSync = void (*)(GLsync sync, GLbitfield flags, GLuint64 timeout);
+
+
+// Version 3.3
+
+#define GL_TIME_ELAPSED                   0x88BF
+#define GL_SRC1_COLOR                     0x88F9
+#define GL_ONE_MINUS_SRC1_COLOR           0x88FA
+#define GL_ONE_MINUS_SRC1_ALPHA           0x88FB
+#define GL_MAX_DUAL_SOURCE_DRAW_BUFFERS   0x88FC
+#define GL_VERTEX_ATTRIB_ARRAY_DIVISOR    0x88FE
+#define GL_SAMPLER_BINDING                0x8919
+#define GL_ANY_SAMPLES_PASSED             0x8C2F
+#define GL_INT_2_10_10_10_REV             0x8D9F
+#define GL_TIMESTAMP                      0x8E28
+#define GL_TEXTURE_SWIZZLE_R              0x8E42
+#define GL_TEXTURE_SWIZZLE_G              0x8E43
+#define GL_TEXTURE_SWIZZLE_B              0x8E44
+#define GL_TEXTURE_SWIZZLE_A              0x8E45
+#define GL_TEXTURE_SWIZZLE_RGBA           0x8E46
+#define GL_RGB10_A2UI                     0x906F
+
+using GLBindFragDataLocationIndexed = void (*)(GLuint program, GLuint colorNumber, GLuint index, const GLchar* name);
+using GLBindSampler = void (*)(GLuint unit, GLuint sampler);
+using GLDeleteSamplers = void (*)(GLsizei count, const GLuint* samplers);
+using GLGenSamplers = void (*)(GLsizei count, GLuint* samplers);
+using GLGetFragDataIndex = GLint (*)(GLuint program, const GLchar* name);
+using GLGetQueryObjectI64V = void (*)(GLuint id, GLenum pname, GLint64* params);
+using GLGetQueryObjectUI64V = void (*)(GLuint id, GLenum pname, GLuint64* params);
+using GLGetSamplerParameterFV = void (*)(GLuint sampler, GLenum pname, GLfloat* params);
+using GLGetSamplerParameterIIV = void (*)(GLuint sampler, GLenum pname, GLint* params);
+using GLGetSamplerParameterIUIV = void (*)(GLuint sampler, GLenum pname, GLuint* params);
+using GLGetSamplerParameterIV = void (*)(GLuint sampler, GLenum pname, GLint* params);
+using GLIsSampler = GLboolean (*)(GLuint sampler);
+using GLQueryCounter = void (*)(GLuint id, GLenum target);
+using GLSamplerParameterF = void (*)(GLuint sampler, GLenum pname, GLfloat param);
+using GLSamplerParameterFV = void (*)(GLuint sampler, GLenum pname, const GLfloat* param);
+using GLSamplerParameterI = void (*)(GLuint sampler, GLenum pname, GLint param);
+using GLSamplerParameterIV = void (*)(GLuint sampler, GLenum pname, const GLint* param);
+using GLSamplerParameterIIV = void (*)(GLuint sampler, GLenum pname, const GLint* param);
+using GLSamplerParameterIUIV = void (*)(GLuint sampler, GLenum pname, const GLuint* param);
+using GLVertexAttribDivisor = void (*)(GLuint index, GLuint divisor);
+using GLVertexAttribP1UI = void (*)(GLuint index, GLenum type, GLboolean normalized, GLuint value);
+using GLVertexAttribP1UIV = void (*)(GLuint index, GLenum type, GLboolean normalized, const GLuint* value);
+using GLVertexAttribP2UI = void (*)(GLuint index, GLenum type, GLboolean normalized, GLuint value);
+using GLVertexAttribP2UIV = void (*)(GLuint index, GLenum type, GLboolean normalized, const GLuint* value);
+using GLVertexAttribP3UI = void (*)(GLuint index, GLenum type, GLboolean normalized, GLuint value);
+using GLVertexAttribP3UIV = void (*)(GLuint index, GLenum type, GLboolean normalized, const GLuint* value);
+using GLVertexAttribP4UI = void (*)(GLuint index, GLenum type, GLboolean normalized, GLuint value);
+using GLVertexAttribP4UIV = void (*)(GLuint index, GLenum type, GLboolean normalized, const GLuint* value);
+
+
+// Version 4.0
+
+#define GL_PATCHES											  0x000E
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER	  0x84F0
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER 0x84F1
+#define GL_MAX_TESS_CONTROL_INPUT_COMPONENTS				  0x886C
+#define GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS				  0x886D
+#define GL_GEOMETRY_SHADER_INVOCATIONS						  0x887F
+#define GL_SAMPLE_SHADING									  0x8C36
+#define GL_MIN_SAMPLE_SHADING_VALUE							  0x8C37
+#define GL_ACTIVE_SUBROUTINES								  0x8DE5
+#define GL_ACTIVE_SUBROUTINE_UNIFORMS						  0x8DE6
+#define GL_MAX_SUBROUTINES									  0x8DE7
+#define GL_MAX_SUBROUTINE_UNIFORM_LOCATIONS					  0x8DE8
+#define GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS		  0x8E1E
+#define GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS	  0x8E1F
+#define GL_TRANSFORM_FEEDBACK								  0x8E22
+#define GL_TRANSFORM_FEEDBACK_BUFFER_PAUSED					  0x8E23
+#define GL_TRANSFORM_FEEDBACK_BUFFER_ACTIVE					  0x8E24
+#define GL_TRANSFORM_FEEDBACK_BINDING						  0x8E25
+#define GL_ACTIVE_SUBROUTINE_UNIFORM_LOCATIONS				  0x8E47
+#define GL_ACTIVE_SUBROUTINE_MAX_LENGTH						  0x8E48
+#define GL_ACTIVE_SUBROUTINE_UNIFORM_MAX_LENGTH				  0x8E49
+#define GL_NUM_COMPATIBLE_SUBROUTINES						  0x8E4A
+#define GL_COMPATIBLE_SUBROUTINES							  0x8E4B
+#define GL_MAX_GEOMETRY_SHADER_INVOCATIONS					  0x8E5A
+#define GL_MIN_FRAGMENT_INTERPOLATION_OFFSET				  0x8E5B
+#define GL_MAX_FRAGMENT_INTERPOLATION_OFFSET				  0x8E5C
+#define GL_FRAGMENT_INTERPOLATION_OFFSET_BITS				  0x8E5D
+#define GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET				  0x8E5E
+#define GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET				  0x8E5F
+#define GL_MAX_TRANSFORM_FEEDBACK_BUFFERS					  0x8E70
+#define GL_MAX_VERTEX_STREAMS								  0x8E71
+#define GL_PATCH_VERTICES									  0x8E72
+#define GL_PATCH_DEFAULT_INNER_LEVEL						  0x8E73
+#define GL_PATCH_DEFAULT_OUTER_LEVEL						  0x8E74
+#define GL_TESS_CONTROL_OUTPUT_VERTICES						  0x8E75
+#define GL_TESS_GEN_MODE									  0x8E76
+#define GL_TESS_GEN_SPACING									  0x8E77
+#define GL_TESS_GEN_VERTEX_ORDER							  0x8E78
+#define GL_TESS_GEN_POINT_MODE								  0x8E79
+#define GL_ISOLINES											  0x8E7A
+#define GL_FRACTIONAL_ODD									  0x8E7B
+#define GL_FRACTIONAL_EVEN									  0x8E7C
+#define GL_MAX_PATCH_VERTICES								  0x8E7D
+#define GL_MAX_TESS_GEN_LEVEL								  0x8E7E
+#define GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS				  0x8E7F
+#define GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS			  0x8E80
+#define GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS				  0x8E81
+#define GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS			  0x8E82
+#define GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS				  0x8E83
+#define GL_MAX_TESS_PATCH_COMPONENTS						  0x8E84
+#define GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS			  0x8E85
+#define GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS			  0x8E86
+#define GL_TESS_EVALUATION_SHADER							  0x8E87
+#define GL_TESS_CONTROL_SHADER								  0x8E88
+#define GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS					  0x8E89
+#define GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS				  0x8E8A
+#define GL_DRAW_INDIRECT_BUFFER								  0x8F3F
+#define GL_DRAW_INDIRECT_BUFFER_BINDING						  0x8F43
+#define GL_DOUBLE_MAT2										  0x8F46
+#define GL_DOUBLE_MAT3										  0x8F47
+#define GL_DOUBLE_MAT4										  0x8F48
+#define GL_DOUBLE_MAT2x3									  0x8F49
+#define GL_DOUBLE_MAT2x4									  0x8F4A
+#define GL_DOUBLE_MAT3x2									  0x8F4B
+#define GL_DOUBLE_MAT3x4									  0x8F4C
+#define GL_DOUBLE_MAT4x2									  0x8F4D
+#define GL_DOUBLE_MAT4x3									  0x8F4E
+#define GL_DOUBLE_VEC2										  0x8FFC
+#define GL_DOUBLE_VEC3										  0x8FFD
+#define GL_DOUBLE_VEC4										  0x8FFE
+#define GL_TEXTURE_CUBE_MAP_ARRAY							  0x9009
+#define GL_TEXTURE_BINDING_CUBE_MAP_ARRAY					  0x900A
+#define GL_PROXY_TEXTURE_CUBE_MAP_ARRAY						  0x900B
+#define GL_SAMPLER_CUBE_MAP_ARRAY							  0x900C
+#define GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW					  0x900D
+#define GL_INT_SAMPLER_CUBE_MAP_ARRAY						  0x900E
+#define GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY				  0x900F
+
+using GLBeginQueryIndexed = void (*)(GLenum target, GLuint index, GLuint id);
+using GLBindTransformFeedback = void (*)(GLenum target, GLuint id);
+using GLBlendEquationI = void (*)(GLuint buf, GLenum mode);
+using GLBlendEquationSeparateI = void (*)(GLuint buf, GLenum modeRGB, GLenum modeAlpha);
+using GLBlendFuncI = void (*)(GLuint buf, GLenum src, GLenum dst);
+using GLBlendFuncSeparateI = void (*)(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha);
+using GLDeleteTransformFeedbacks = void (*)(GLsizei n, const GLuint* ids);
+using GLDrawArraysIndirect = void (*)(GLenum mode, const Void* indirect);
+using GLDrawElementsIndirect = void (*)(GLenum mode, GLenum type, const Void* indirect);
+using GLDrawTransformFeedback = void (*)(GLenum mode, GLuint id);
+using GLDrawTransformFeedbackStream = void (*)(GLenum mode, GLuint id, GLuint stream);
+using GLEndQueryIndexed = void (*)(GLenum target, GLuint index);
+using GLGenTransformFeedbacks = void (*)(GLsizei n, GLuint* ids);
+
+using GLGetActiveSubroutineName = void (*)(GLuint program, GLenum shadertype, GLuint index, GLsizei bufsize,
+	GLsizei* length, GLchar* name);
+
+using GLGetActiveSubroutineUniformIV = void (*)(GLuint program, GLenum shadertype, GLuint index, GLenum pname,
+	GLint* values);
+
+using GLGetActiveSubroutineUniformName = void (*)(GLuint program, GLenum shadertype, GLuint index, GLsizei bufsize,
+	GLsizei* length, GLchar* name);
+
+using GLGetProgramStageIV = void (*)(GLuint program, GLenum shadertype, GLenum pname, GLint* values);
+using GLGetQueryIndexedIV = void (*)(GLenum target, GLuint index, GLenum pname, GLint* params);
+using GLGetSubroutineIndex = GLuint (*)(GLuint program, GLenum shadertype, const GLchar* name);
+using GLGetSubroutineUniformLocation = GLint (*)(GLuint program, GLenum shadertype, const GLchar* name);
+using GLGetUniformDV = void (*)(GLuint program, GLint location, GLdouble* params);
+using GLGetUniformSubroutineUIV = void (*)(GLenum shadertype, GLint location, GLuint* params);
+using GLIsTransformFeedback = GLboolean (*)(GLuint id);
+using GLMinSampleShading = void (*)(GLfloat value);
+using GLPatchParameterFV = void (*)(GLenum pname, const GLfloat* values);
+using GLPatchParameterI = void (*)(GLenum pname, GLint value);
+using GLPauseTransformFeedback = void (*)();
+using GLResumeTransformFeedback = void (*)();
+using GLUniform1D = void (*)(GLint location, GLdouble x);
+using GLUniform1DV = void (*)(GLint location, GLsizei count, const GLdouble* value);
+using GLUniform2D = void (*)(GLint location, GLdouble x, GLdouble y);
+using GLUniform2DV = void (*)(GLint location, GLsizei count, const GLdouble* value);
+using GLUniform3D = void (*)(GLint location, GLdouble x, GLdouble y, GLdouble z);
+using GLUniform3DV = void (*)(GLint location, GLsizei count, const GLdouble* value);
+using GLUniform4D = void (*)(GLint location, GLdouble x, GLdouble y, GLdouble z, GLdouble w);
+using GLUniform4DV = void (*)(GLint location, GLsizei count, const GLdouble* value);
+using GLUniformMatrix2DV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLdouble* value);
+using GLUniformMatrix2X3DV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLdouble* value);
+using GLUniformMatrix2X4DV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLdouble* value);
+using GLUniformMatrix3DV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLdouble* value);
+using GLUniformMatrix3X2DV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLdouble* value);
+using GLUniformMatrix3X4DV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLdouble* value);
+using GLUniformMatrix4DV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLdouble* value);
+using GLUniformMatrix4X2DV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLdouble* value);
+using GLUniformMatrix4X3DV = void (*)(GLint location, GLsizei count, GLboolean transpose, const GLdouble* value);
+using GLUniformSubroutineSUIV = void (*)(GLenum shadertype, GLsizei count, const GLuint* indices);
+
+
+// Version 4.1
+
+#define GL_VERTEX_SHADER_BIT				0x00000001
+#define GL_FRAGMENT_SHADER_BIT				0x00000002
+#define GL_GEOMETRY_SHADER_BIT				0x00000004
+#define GL_TESS_CONTROL_SHADER_BIT			0x00000008
+#define GL_TESS_EVALUATION_SHADER_BIT		0x00000010
+#define GL_ALL_SHADER_BITS					0xFFFFFFFF
+#define GL_FIXED							0x140C
+#define GL_PROGRAM_BINARY_RETRIEVABLE_HINT	0x8257
+#define GL_PROGRAM_SEPARABLE				0x8258
+#define GL_ACTIVE_PROGRAM					0x8259
+#define GL_PROGRAM_PIPELINE_BINDING			0x825A
+#define GL_MAX_VIEWPORTS					0x825B
+#define GL_VIEWPORT_SUBPIXEL_BITS			0x825C
+#define GL_VIEWPORT_BOUNDS_RANGE			0x825D
+#define GL_LAYER_PROVOKING_VERTEX			0x825E
+#define GL_VIEWPORT_INDEX_PROVOKING_VERTEX	0x825F
+#define GL_UNDEFINED_VERTEX					0x8260
+#define GL_PROGRAM_BINARY_LENGTH			0x8741
+#define GL_NUM_PROGRAM_BINARY_FORMATS		0x87FE
+#define GL_PROGRAM_BINARY_FORMATS			0x87FF
+#define GL_IMPLEMENTATION_COLOR_READ_TYPE	0x8B9A
+#define GL_IMPLEMENTATION_COLOR_READ_FORMAT 0x8B9B
+#define GL_RGB565							0x8D62
+#define GL_LOW_FLOAT						0x8DF0
+#define GL_MEDIUM_FLOAT						0x8DF1
+#define GL_HIGH_FLOAT						0x8DF2
+#define GL_LOW_INT							0x8DF3
+#define GL_MEDIUM_INT						0x8DF4
+#define GL_HIGH_INT							0x8DF5
+#define GL_SHADER_BINARY_FORMATS			0x8DF8
+#define GL_NUM_SHADER_BINARY_FORMATS		0x8DF9
+#define GL_SHADER_COMPILER					0x8DFA
+#define GL_MAX_VERTEX_UNIFORM_VECTORS		0x8DFB
+#define GL_MAX_VARYING_VECTORS				0x8DFC
+#define GL_MAX_FRAGMENT_UNIFORM_VECTORS		0x8DFD
+
+using GLActiveShaderProgram = void (*)(GLuint pipeline, GLuint program);
+using GLBindProgramPipeline = void (*)(GLuint pipeline);
+using GLClearDepthF = void (*)(GLfloat d);
+using GLCreateShaderProgramV = GLuint (*)(GLenum type, GLsizei count, const GLchar* const* strings);
+using GLDeleteProgramPipelines = void (*)(GLsizei n, const GLuint* pipelines);
+using GLDepthRangeArrayV = void (*)(GLuint first, GLsizei count, const GLdouble* v);
+using GLDepthRangeF = void (*)(GLfloat n, GLfloat f);
+using GLDepthRangeIndexed = void (*)(GLuint index, GLdouble n, GLdouble f);
+using GLGenProgramPipelines = void (*)(GLsizei n, GLuint* pipelines);
+using GLGetDoubleI_V = void (*)(GLenum target, GLuint index, GLdouble* data);
+using GLGetFloatI_V = void (*)(GLenum target, GLuint index, GLfloat* data);
+
+using GLGetProgramBinary = void (*)(GLuint program, GLsizei bufSize, GLsizei* length, GLenum* binaryFormat,
+	Void* binary);
+
+using GLGetProgramPipelineInfoLog = void (*)(GLuint pipeline, GLsizei bufSize, GLsizei* length, GLchar* infoLog);
+using GLGetProgramPipelineIV = void (*)(GLuint pipeline, GLenum pname, GLint* params);
+using GLGetShaderPrecisionFormat = void (*)(GLenum shadertype, GLenum precisiontype, GLint* range, GLint* precision);
+using GLGetVertexAttribLDV = void (*)(GLuint index, GLenum pname, GLdouble* params);
+using GLIsProgramPipeline = GLboolean (*)(GLuint pipeline);
+using GLProgramBinary = void (*)(GLuint program, GLenum binaryFormat, const Void* binary, GLsizei length);
+using GLProgramParameterI = void (*)(GLuint program, GLenum pname, GLint value);
+using GLProgramUniform1D = void (*)(GLuint program, GLint location, GLdouble v0);
+using GLProgramUniform1DV = void (*)(GLuint program, GLint location, GLsizei count, const GLdouble* value);
+using GLProgramUniform1F = void (*)(GLuint program, GLint location, GLfloat v0);
+using GLProgramUniform1FV = void (*)(GLuint program, GLint location, GLsizei count, const GLfloat* value);
+using GLProgramUniform1I = void (*)(GLuint program, GLint location, GLint v0);
+using GLProgramUniform1IV = void (*)(GLuint program, GLint location, GLsizei count, const GLint* value);
+using GLProgramUniform1UI = void (*)(GLuint program, GLint location, GLuint v0);
+using GLProgramUniform1UIV = void (*)(GLuint program, GLint location, GLsizei count, const GLuint* value);
+using GLProgramUniform2D = void (*)(GLuint program, GLint location, GLdouble v0, GLdouble v1);
+using GLProgramUniform2DV = void (*)(GLuint program, GLint location, GLsizei count, const GLdouble* value);
+using GLProgramUniform2F = void (*)(GLuint program, GLint location, GLfloat v0, GLfloat v1);
+using GLProgramUniform2FV = void (*)(GLuint program, GLint location, GLsizei count, const GLfloat* value);
+using GLProgramUniform2I = void (*)(GLuint program, GLint location, GLint v0, GLint v1);
+using GLProgramUniform2IV = void (*)(GLuint program, GLint location, GLsizei count, const GLint* value);
+using GLProgramUniform2UI = void (*)(GLuint program, GLint location, GLuint v0, GLuint v1);
+using GLProgramUniform2UIV = void (*)(GLuint program, GLint location, GLsizei count, const GLuint* value);
+using GLProgramUniform3D = void (*)(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2);
+using GLProgramUniform3DV = void (*)(GLuint program, GLint location, GLsizei count, const GLdouble* value);
+using GLProgramUniform3F = void (*)(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2);
+using GLProgramUniform3FV = void (*)(GLuint program, GLint location, GLsizei count, const GLfloat* value);
+using GLProgramUniform3I = void (*)(GLuint program, GLint location, GLint v0, GLint v1, GLint v2);
+using GLProgramUniform3IV = void (*)(GLuint program, GLint location, GLsizei count, const GLint* value);
+using GLProgramUniform3UI = void (*)(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2);
+using GLProgramUniform3UIV = void (*)(GLuint program, GLint location, GLsizei count, const GLuint* value);
+
+using GLProgramUniform4D = void (*)(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2,
+	GLdouble v3);
+
+using GLProgramUniform4DV = void (*)(GLuint program, GLint location, GLsizei count, const GLdouble* value);
+using GLProgramUniform4F = void (*)(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
+using GLProgramUniform4FV = void (*)(GLuint program, GLint location, GLsizei count, const GLfloat* value);
+using GLProgramUniform4I = void (*)(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3);
+using GLProgramUniform4IV = void (*)(GLuint program, GLint location, GLsizei count, const GLint* value);
+using GLProgramUniform4UI = void (*)(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3);
+using GLProgramUniform4UIV = void (*)(GLuint program, GLint location, GLsizei count, const GLuint* value);
+
+using GLProgramUniformMatrix2DV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLdouble* value);
+
+using GLProgramUniformMatrix2FV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLfloat* value);
+
+using GLProgramUniformMatrix2X3DV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLdouble* value);
+
+using GLProgramUniformMatrix2X3FV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLfloat* value);
+
+using GLProgramUniformMatrix2X4DV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLdouble* value);
+
+using GLProgramUniformMatrix2X4FV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLfloat* value);
+
+using GLProgramUniformMatrix3DV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLdouble* value);
+
+using GLProgramUniformMatrix3FV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLfloat* value);
+
+using GLProgramUniformMatrix3X2DV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLdouble* value);
+
+using GLProgramUniformMatrix3X2FV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLfloat* value);
+
+using GLProgramUniformMatrix3X4DV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLdouble* value);
+
+using GLProgramUniformMatrix3X4FV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLfloat* value);
+
+using GLProgramUniformMatrix4DV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLdouble* value);
+
+using GLProgramUniformMatrix4FV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLfloat* value);
+
+using GLProgramUniformMatrix4X2DV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLdouble* value);
+
+using GLProgramUniformMatrix4X2FV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLfloat* value);
+
+using GLProgramUniformMatrix4X3DV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLdouble* value);
+
+using GLProgramUniformMatrix4X3FV = void (*)(GLuint program, GLint location, GLsizei count, GLboolean transpose,
+	const GLfloat* value);
+
+using GLReleaseShaderCompiler = void (*)();
+
+using GLShaderBinary = void (*)(GLsizei count, const GLuint* shaders, GLenum binaryformat, const Void* binary,
+	GLsizei length);
+
+using GLScissorArrayV = void (*)(GLuint first, GLsizei count, const GLint* v);
+using GLScissorIndexed = void (*)(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei height);
+using GLScissorIndexedV = void (*)(GLuint index, const GLint* v);
+using GLUseProgramStages = void (*)(GLuint pipeline, GLbitfield stages, GLuint program);
+using GLValidateProgramPipeline = void (*)(GLuint pipeline);
+using GLVertexAttribL1D = void (*)(GLuint index, GLdouble x);
+using GLVertexAttribL1DV = void (*)(GLuint index, const GLdouble* v);
+using GLVertexAttribL2D = void (*)(GLuint index, GLdouble x, GLdouble y);
+using GLVertexAttribL2DV = void (*)(GLuint index, const GLdouble* v);
+using GLVertexAttribL3D = void (*)(GLuint index, GLdouble x, GLdouble y, GLdouble z);
+using GLVertexAttribL3DV = void (*)(GLuint index, const GLdouble* v);
+using GLVertexAttribL4D = void (*)(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w);
+using GLVertexAttribL4DV = void (*)(GLuint index, const GLdouble* v);
+using GLVertexAttribLPointer = void (*)(GLuint index, GLint size, GLenum type, GLsizei stride, const Void* pointer);
+using GLViewportArrayV = void (*)(GLuint first, GLsizei count, const GLfloat* v);
+using GLViewportIndexedF = void (*)(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h);
+using GLViewportIndexedFV = void (*)(GLuint index, const GLfloat* v);
+
+
+// Version 4.2
+
+#define GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT							  0x00000001
+#define GL_ELEMENT_ARRAY_BARRIER_BIT								  0x00000002
+#define GL_UNIFORM_BARRIER_BIT										  0x00000004
+#define GL_TEXTURE_FETCH_BARRIER_BIT								  0x00000008
+#define GL_SHADER_IMAGE_ACCESS_BARRIER_BIT							  0x00000020
+#define GL_COMMAND_BARRIER_BIT										  0x00000040
+#define GL_PIXEL_BUFFER_BARRIER_BIT									  0x00000080
+#define GL_TEXTURE_UPDATE_BARRIER_BIT								  0x00000100
+#define GL_BUFFER_UPDATE_BARRIER_BIT								  0x00000200
+#define GL_FRAMEBUFFER_BARRIER_BIT									  0x00000400
+#define GL_TRANSFORM_FEEDBACK_BARRIER_BIT							  0x00000800
+#define GL_ATOMIC_COUNTER_BARRIER_BIT								  0x00001000
+#define GL_ALL_BARRIER_BITS											  0xFFFFFFFF
+#define GL_TRANSFORM_FEEDBACK_ACTIVE								  0x8E24
+#define GL_TRANSFORM_FEEDBACK_PAUSED								  0x8E23
+#define GL_COMPRESSED_RGBA_BPTC_UNORM								  0x8E8C
+#define GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM							  0x8E8D
+#define GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT							  0x8E8E
+#define GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT						  0x8E8F
+#define GL_COPY_READ_BUFFER_BINDING									  0x8F36
+#define GL_COPY_WRITE_BUFFER_BINDING								  0x8F37
+#define GL_MAX_IMAGE_UNITS											  0x8F38
+#define GL_MAX_COMBINED_IMAGE_UNITS_AND_FRAGMENT_OUTPUTS			  0x8F39
+#define GL_IMAGE_BINDING_NAME										  0x8F3A
+#define GL_IMAGE_BINDING_LEVEL										  0x8F3B
+#define GL_IMAGE_BINDING_LAYERED									  0x8F3C
+#define GL_IMAGE_BINDING_LAYER										  0x8F3D
+#define GL_IMAGE_BINDING_ACCESS										  0x8F3E
+#define GL_IMAGE_1D													  0x904C
+#define GL_IMAGE_2D													  0x904D
+#define GL_IMAGE_3D													  0x904E
+#define GL_IMAGE_2D_RECT											  0x904F
+#define GL_IMAGE_CUBE												  0x9050
+#define GL_IMAGE_BUFFER												  0x9051
+#define GL_IMAGE_1D_ARRAY											  0x9052
+#define GL_IMAGE_2D_ARRAY											  0x9053
+#define GL_IMAGE_CUBE_MAP_ARRAY										  0x9054
+#define GL_IMAGE_2D_MULTISAMPLE										  0x9055
+#define GL_IMAGE_2D_MULTISAMPLE_ARRAY								  0x9056
+#define GL_INT_IMAGE_1D												  0x9057
+#define GL_INT_IMAGE_2D												  0x9058
+#define GL_INT_IMAGE_3D												  0x9059
+#define GL_INT_IMAGE_2D_RECT										  0x905A
+#define GL_INT_IMAGE_CUBE											  0x905B
+#define GL_INT_IMAGE_BUFFER											  0x905C
+#define GL_INT_IMAGE_1D_ARRAY										  0x905D
+#define GL_INT_IMAGE_2D_ARRAY										  0x905E
+#define GL_INT_IMAGE_CUBE_MAP_ARRAY									  0x905F
+#define GL_INT_IMAGE_2D_MULTISAMPLE									  0x9060
+#define GL_INT_IMAGE_2D_MULTISAMPLE_ARRAY							  0x9061
+#define GL_UNSIGNED_INT_IMAGE_1D									  0x9062
+#define GL_UNSIGNED_INT_IMAGE_2D									  0x9063
+#define GL_UNSIGNED_INT_IMAGE_3D									  0x9064
+#define GL_UNSIGNED_INT_IMAGE_2D_RECT								  0x9065
+#define GL_UNSIGNED_INT_IMAGE_CUBE									  0x9066
+#define GL_UNSIGNED_INT_IMAGE_BUFFER								  0x9067
+#define GL_UNSIGNED_INT_IMAGE_1D_ARRAY								  0x9068
+#define GL_UNSIGNED_INT_IMAGE_2D_ARRAY								  0x9069
+#define GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY						  0x906A
+#define GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE						  0x906B
+#define GL_UNSIGNED_INT_IMAGE_2D_MULTISAMPLE_ARRAY					  0x906C
+#define GL_MAX_IMAGE_SAMPLES										  0x906D
+#define GL_IMAGE_BINDING_FORMAT										  0x906E
+#define GL_MIN_MAP_BUFFER_ALIGNMENT									  0x90BC
+#define GL_IMAGE_FORMAT_COMPATIBILITY_TYPE							  0x90C7
+#define GL_IMAGE_FORMAT_COMPATIBILITY_BY_SIZE						  0x90C8
+#define GL_IMAGE_FORMAT_COMPATIBILITY_BY_CLASS						  0x90C9
+#define GL_MAX_VERTEX_IMAGE_UNIFORMS								  0x90CA
+#define GL_MAX_TESS_CONTROL_IMAGE_UNIFORMS							  0x90CB
+#define GL_MAX_TESS_EVALUATION_IMAGE_UNIFORMS						  0x90CC
+#define GL_MAX_GEOMETRY_IMAGE_UNIFORMS								  0x90CD
+#define GL_MAX_FRAGMENT_IMAGE_UNIFORMS								  0x90CE
+#define GL_MAX_COMBINED_IMAGE_UNIFORMS								  0x90CF
+#define GL_UNPACK_COMPRESSED_BLOCK_WIDTH							  0x9127
+#define GL_UNPACK_COMPRESSED_BLOCK_HEIGHT							  0x9128
+#define GL_UNPACK_COMPRESSED_BLOCK_DEPTH							  0x9129
+#define GL_UNPACK_COMPRESSED_BLOCK_SIZE								  0x912A
+#define GL_PACK_COMPRESSED_BLOCK_WIDTH								  0x912B
+#define GL_PACK_COMPRESSED_BLOCK_HEIGHT								  0x912C
+#define GL_PACK_COMPRESSED_BLOCK_DEPTH								  0x912D
+#define GL_PACK_COMPRESSED_BLOCK_SIZE								  0x912E
+#define GL_TEXTURE_IMMUTABLE_FORMAT									  0x912F
+#define GL_ATOMIC_COUNTER_BUFFER									  0x92C0
+#define GL_ATOMIC_COUNTER_BUFFER_BINDING							  0x92C1
+#define GL_ATOMIC_COUNTER_BUFFER_START								  0x92C2
+#define GL_ATOMIC_COUNTER_BUFFER_SIZE								  0x92C3
+#define GL_ATOMIC_COUNTER_BUFFER_DATA_SIZE							  0x92C4
+#define GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTERS				  0x92C5
+#define GL_ATOMIC_COUNTER_BUFFER_ACTIVE_ATOMIC_COUNTER_INDICES		  0x92C6
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_VERTEX_SHADER		  0x92C7
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_CONTROL_SHADER	  0x92C8
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_TESS_EVALUATION_SHADER 0x92C9
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_GEOMETRY_SHADER		  0x92CA
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_FRAGMENT_SHADER		  0x92CB
+#define GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS						  0x92CC
+#define GL_MAX_TESS_CONTROL_ATOMIC_COUNTER_BUFFERS					  0x92CD
+#define GL_MAX_TESS_EVALUATION_ATOMIC_COUNTER_BUFFERS				  0x92CE
+#define GL_MAX_GEOMETRY_ATOMIC_COUNTER_BUFFERS						  0x92CF
+#define GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS						  0x92D0
+#define GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS						  0x92D1
+#define GL_MAX_VERTEX_ATOMIC_COUNTERS								  0x92D2
+#define GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS							  0x92D3
+#define GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS						  0x92D4
+#define GL_MAX_GEOMETRY_ATOMIC_COUNTERS								  0x92D5
+#define GL_MAX_FRAGMENT_ATOMIC_COUNTERS								  0x92D6
+#define GL_MAX_COMBINED_ATOMIC_COUNTERS								  0x92D7
+#define GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE							  0x92D8
+#define GL_ACTIVE_ATOMIC_COUNTER_BUFFERS							  0x92D9
+#define GL_UNIFORM_ATOMIC_COUNTER_BUFFER_INDEX						  0x92DA
+#define GL_UNSIGNED_INT_ATOMIC_COUNTER								  0x92DB
+#define GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS						  0x92DC
+#define GL_NUM_SAMPLE_COUNTS										  0x9380
+
+using GLBindImageTexture = void (*)(GLuint unit, GLuint texture, GLint level, GLboolean layered, GLint layer,
+	GLenum access, GLenum format);
+
+using GLDrawArraysInstancedBaseInstance = void (*)(GLenum mode, GLint first, GLsizei count, GLsizei instancecount,
+	GLuint baseinstance);
+
+using GLDrawElementsInstancedBaseInstance = void (*)(GLenum mode, GLsizei count, GLenum type, const Void* indices,
+	GLsizei instancecount, GLuint baseinstance);
+
+using GLDrawElementsInstancedBaseVertexBaseInstance = void (*)(GLenum mode, GLsizei count, GLenum type,
+	const Void* indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance);
+
+using GLDrawTransformFeedbackInstanced = void (*)(GLenum mode, GLuint id, GLsizei instancecount);
+using GLDrawTransformFeedbackStreamInstanced = void (*)(GLenum mode, GLuint id, GLuint stream, GLsizei instancecount);
+using GLGetActiveAtomicCounterBufferIV = void (*)(GLuint program, GLuint bufferIndex, GLenum pname, GLint* params);
+
+using GLGetInternalformatIV = void (*)(GLenum target, GLenum internalformat, GLenum pname, GLsizei bufSize,
+	GLint* params);
+
+using GLMemoryBarrier = void (*)(GLbitfield barriers);
+using GLTexStorage1D = void (*)(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width);
+using GLTexStorage2D = void (*)(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
+
+using GLTexStorage3D = void (*)(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height,
+	GLsizei depth);
+
+
+// Version 4.3
+
+#define GL_CONTEXT_FLAG_DEBUG_BIT							  0x00000002
+#define GL_COMPUTE_SHADER_BIT								  0x00000020
+#define GL_SHADER_STORAGE_BARRIER_BIT						  0x00002000
+#define GL_DEBUG_OUTPUT_SYNCHRONOUS							  0x8242
+#define GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH					  0x8243
+#define GL_DEBUG_CALLBACK_FUNCTION							  0x8244
+#define GL_DEBUG_CALLBACK_USER_PARAM						  0x8245
+#define GL_DEBUG_SOURCE_API									  0x8246
+#define GL_DEBUG_SOURCE_WINDOW_SYSTEM						  0x8247
+#define GL_DEBUG_SOURCE_SHADER_COMPILER						  0x8248
+#define GL_DEBUG_SOURCE_THIRD_PARTY							  0x8249
+#define GL_DEBUG_SOURCE_APPLICATION							  0x824A
+#define GL_DEBUG_SOURCE_OTHER								  0x824B
+#define GL_DEBUG_TYPE_ERROR									  0x824C
+#define GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR					  0x824D
+#define GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR					  0x824E
+#define GL_DEBUG_TYPE_PORTABILITY							  0x824F
+#define GL_DEBUG_TYPE_PERFORMANCE							  0x8250
+#define GL_DEBUG_TYPE_OTHER									  0x8251
+#define GL_MAX_COMPUTE_SHARED_MEMORY_SIZE					  0x8262
+#define GL_MAX_COMPUTE_UNIFORM_COMPONENTS					  0x8263
+#define GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS				  0x8264
+#define GL_MAX_COMPUTE_ATOMIC_COUNTERS						  0x8265
+#define GL_MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS			  0x8266
+#define GL_COMPUTE_WORK_GROUP_SIZE							  0x8267
+#define GL_DEBUG_TYPE_MARKER								  0x8268
+#define GL_DEBUG_TYPE_PUSH_GROUP							  0x8269
+#define GL_DEBUG_TYPE_POP_GROUP								  0x826A
+#define GL_DEBUG_SEVERITY_NOTIFICATION						  0x826B
+#define GL_MAX_DEBUG_GROUP_STACK_DEPTH						  0x826C
+#define GL_DEBUG_GROUP_STACK_DEPTH							  0x826D
+#define GL_MAX_UNIFORM_LOCATIONS							  0x826E
+#define GL_INTERNALFORMAT_SUPPORTED							  0x826F
+#define GL_INTERNALFORMAT_PREFERRED							  0x8270
+#define GL_INTERNALFORMAT_RED_SIZE							  0x8271
+#define GL_INTERNALFORMAT_GREEN_SIZE						  0x8272
+#define GL_INTERNALFORMAT_BLUE_SIZE							  0x8273
+#define GL_INTERNALFORMAT_ALPHA_SIZE						  0x8274
+#define GL_INTERNALFORMAT_DEPTH_SIZE						  0x8275
+#define GL_INTERNALFORMAT_STENCIL_SIZE						  0x8276
+#define GL_INTERNALFORMAT_SHARED_SIZE						  0x8277
+#define GL_INTERNALFORMAT_RED_TYPE							  0x8278
+#define GL_INTERNALFORMAT_GREEN_TYPE						  0x8279
+#define GL_INTERNALFORMAT_BLUE_TYPE							  0x827A
+#define GL_INTERNALFORMAT_ALPHA_TYPE						  0x827B
+#define GL_INTERNALFORMAT_DEPTH_TYPE						  0x827C
+#define GL_INTERNALFORMAT_STENCIL_TYPE						  0x827D
+#define GL_MAX_WIDTH										  0x827E
+#define GL_MAX_HEIGHT										  0x827F
+#define GL_MAX_DEPTH										  0x8280
+#define GL_MAX_LAYERS										  0x8281
+#define GL_MAX_COMBINED_DIMENSIONS							  0x8282
+#define GL_COLOR_COMPONENTS									  0x8283
+#define GL_DEPTH_COMPONENTS									  0x8284
+#define GL_STENCIL_COMPONENTS								  0x8285
+#define GL_COLOR_RENDERABLE									  0x8286
+#define GL_DEPTH_RENDERABLE									  0x8287
+#define GL_STENCIL_RENDERABLE								  0x8288
+#define GL_FRAMEBUFFER_RENDERABLE							  0x8289
+#define GL_FRAMEBUFFER_RENDERABLE_LAYERED					  0x828A
+#define GL_FRAMEBUFFER_BLEND								  0x828B
+#define GL_READ_PIXELS										  0x828C
+#define GL_READ_PIXELS_FORMAT								  0x828D
+#define GL_READ_PIXELS_TYPE									  0x828E
+#define GL_TEXTURE_IMAGE_FORMAT								  0x828F
+#define GL_TEXTURE_IMAGE_TYPE								  0x8290
+#define GL_GET_TEXTURE_IMAGE_FORMAT							  0x8291
+#define GL_GET_TEXTURE_IMAGE_TYPE							  0x8292
+#define GL_MIPMAP											  0x8293
+#define GL_MANUAL_GENERATE_MIPMAP							  0x8294
+#define GL_AUTO_GENERATE_MIPMAP								  0x8295
+#define GL_COLOR_ENCODING									  0x8296
+#define GL_SRGB_READ										  0x8297
+#define GL_SRGB_WRITE										  0x8298
+#define GL_FILTER											  0x829A
+#define GL_VERTEX_TEXTURE									  0x829B
+#define GL_TESS_CONTROL_TEXTURE								  0x829C
+#define GL_TESS_EVALUATION_TEXTURE							  0x829D
+#define GL_GEOMETRY_TEXTURE									  0x829E
+#define GL_FRAGMENT_TEXTURE									  0x829F
+#define GL_COMPUTE_TEXTURE									  0x82A0
+#define GL_TEXTURE_SHADOW									  0x82A1
+#define GL_TEXTURE_GATHER									  0x82A2
+#define GL_TEXTURE_GATHER_SHADOW							  0x82A3
+#define GL_SHADER_IMAGE_LOAD								  0x82A4
+#define GL_SHADER_IMAGE_STORE								  0x82A5
+#define GL_SHADER_IMAGE_ATOMIC								  0x82A6
+#define GL_IMAGE_TEXEL_SIZE									  0x82A7
+#define GL_IMAGE_COMPATIBILITY_CLASS						  0x82A8
+#define GL_IMAGE_PIXEL_FORMAT								  0x82A9
+#define GL_IMAGE_PIXEL_TYPE									  0x82AA
+#define GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_TEST				  0x82AC
+#define GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_TEST			  0x82AD
+#define GL_SIMULTANEOUS_TEXTURE_AND_DEPTH_WRITE				  0x82AE
+#define GL_SIMULTANEOUS_TEXTURE_AND_STENCIL_WRITE			  0x82AF
+#define GL_TEXTURE_COMPRESSED_BLOCK_WIDTH					  0x82B1
+#define GL_TEXTURE_COMPRESSED_BLOCK_HEIGHT					  0x82B2
+#define GL_TEXTURE_COMPRESSED_BLOCK_SIZE					  0x82B3
+#define GL_CLEAR_BUFFER										  0x82B4
+#define GL_TEXTURE_VIEW										  0x82B5
+#define GL_VIEW_COMPATIBILITY_CLASS							  0x82B6
+#define GL_FULL_SUPPORT										  0x82B7
+#define GL_CAVEAT_SUPPORT									  0x82B8
+#define GL_IMAGE_CLASS_4_X_32								  0x82B9
+#define GL_IMAGE_CLASS_2_X_32								  0x82BA
+#define GL_IMAGE_CLASS_1_X_32								  0x82BB
+#define GL_IMAGE_CLASS_4_X_16								  0x82BC
+#define GL_IMAGE_CLASS_2_X_16								  0x82BD
+#define GL_IMAGE_CLASS_1_X_16								  0x82BE
+#define GL_IMAGE_CLASS_4_X_8								  0x82BF
+#define GL_IMAGE_CLASS_2_X_8								  0x82C0
+#define GL_IMAGE_CLASS_1_X_8								  0x82C1
+#define GL_IMAGE_CLASS_11_11_10								  0x82C2
+#define GL_IMAGE_CLASS_10_10_10_2							  0x82C3
+#define GL_VIEW_CLASS_128_BITS								  0x82C4
+#define GL_VIEW_CLASS_96_BITS								  0x82C5
+#define GL_VIEW_CLASS_64_BITS								  0x82C6
+#define GL_VIEW_CLASS_48_BITS								  0x82C7
+#define GL_VIEW_CLASS_32_BITS								  0x82C8
+#define GL_VIEW_CLASS_24_BITS								  0x82C9
+#define GL_VIEW_CLASS_16_BITS								  0x82CA
+#define GL_VIEW_CLASS_8_BITS								  0x82CB
+#define GL_VIEW_CLASS_S3TC_DXT1_RGB							  0x82CC
+#define GL_VIEW_CLASS_S3TC_DXT1_RGBA						  0x82CD
+#define GL_VIEW_CLASS_S3TC_DXT3_RGBA						  0x82CE
+#define GL_VIEW_CLASS_S3TC_DXT5_RGBA						  0x82CF
+#define GL_VIEW_CLASS_RGTC1_RED								  0x82D0
+#define GL_VIEW_CLASS_RGTC2_RG								  0x82D1
+#define GL_VIEW_CLASS_BPTC_UNORM							  0x82D2
+#define GL_VIEW_CLASS_BPTC_FLOAT							  0x82D3
+#define GL_VERTEX_ATTRIB_BINDING							  0x82D4
+#define GL_VERTEX_ATTRIB_RELATIVE_OFFSET					  0x82D5
+#define GL_VERTEX_BINDING_DIVISOR							  0x82D6
+#define GL_VERTEX_BINDING_OFFSET							  0x82D7
+#define GL_VERTEX_BINDING_STRIDE							  0x82D8
+#define GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET				  0x82D9
+#define GL_MAX_VERTEX_ATTRIB_BINDINGS						  0x82DA
+#define GL_TEXTURE_VIEW_MIN_LEVEL							  0x82DB
+#define GL_TEXTURE_VIEW_NUM_LEVELS							  0x82DC
+#define GL_TEXTURE_VIEW_MIN_LAYER							  0x82DD
+#define GL_TEXTURE_VIEW_NUM_LAYERS							  0x82DE
+#define GL_TEXTURE_IMMUTABLE_LEVELS							  0x82DF
+#define GL_BUFFER											  0x82E0
+#define GL_SHADER											  0x82E1
+#define GL_PROGRAM											  0x82E2
+#define GL_QUERY											  0x82E3
+#define GL_PROGRAM_PIPELINE									  0x82E4
+#define GL_SAMPLER											  0x82E6
+#define GL_MAX_LABEL_LENGTH									  0x82E8
+#define GL_NUM_SHADING_LANGUAGE_VERSIONS					  0x82E9
+#define GL_VERTEX_ATTRIB_ARRAY_LONG							  0x874E
+#define GL_PRIMITIVE_RESTART_FIXED_INDEX					  0x8D69
+#define GL_ANY_SAMPLES_PASSED_CONSERVATIVE					  0x8D6A
+#define GL_MAX_ELEMENT_INDEX								  0x8D6B
+#define GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES				  0x8F39
+#define GL_VERTEX_BINDING_BUFFER							  0x8F4F
+#define GL_SHADER_STORAGE_BUFFER							  0x90D2
+#define GL_SHADER_STORAGE_BUFFER_BINDING					  0x90D3
+#define GL_SHADER_STORAGE_BUFFER_START						  0x90D4
+#define GL_SHADER_STORAGE_BUFFER_SIZE						  0x90D5
+#define GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS					  0x90D6
+#define GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS				  0x90D7
+#define GL_MAX_TESS_CONTROL_SHADER_STORAGE_BLOCKS			  0x90D8
+#define GL_MAX_TESS_EVALUATION_SHADER_STORAGE_BLOCKS		  0x90D9
+#define GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS				  0x90DA
+#define GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS				  0x90DB
+#define GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS				  0x90DC
+#define GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS				  0x90DD
+#define GL_MAX_SHADER_STORAGE_BLOCK_SIZE					  0x90DE
+#define GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT			  0x90DF
+#define GL_DEPTH_STENCIL_TEXTURE_MODE						  0x90EA
+#define GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS				  0x90EB
+#define GL_UNIFORM_BLOCK_REFERENCED_BY_COMPUTE_SHADER		  0x90EC
+#define GL_ATOMIC_COUNTER_BUFFER_REFERENCED_BY_COMPUTE_SHADER 0x90ED
+#define GL_DISPATCH_INDIRECT_BUFFER							  0x90EE
+#define GL_DISPATCH_INDIRECT_BUFFER_BINDING					  0x90EF
+#define GL_MAX_DEBUG_MESSAGE_LENGTH							  0x9143
+#define GL_MAX_DEBUG_LOGGED_MESSAGES						  0x9144
+#define GL_DEBUG_LOGGED_MESSAGES							  0x9145
+#define GL_DEBUG_SEVERITY_HIGH								  0x9146
+#define GL_DEBUG_SEVERITY_MEDIUM							  0x9147
+#define GL_DEBUG_SEVERITY_LOW								  0x9148
+#define GL_TEXTURE_BUFFER_OFFSET							  0x919D
+#define GL_TEXTURE_BUFFER_SIZE								  0x919E
+#define GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT					  0x919F
+#define GL_COMPUTE_SHADER									  0x91B9
+#define GL_MAX_COMPUTE_UNIFORM_BLOCKS						  0x91BB
+#define GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS					  0x91BC
+#define GL_MAX_COMPUTE_IMAGE_UNIFORMS						  0x91BD
+#define GL_MAX_COMPUTE_WORK_GROUP_COUNT						  0x91BE
+#define GL_MAX_COMPUTE_WORK_GROUP_SIZE						  0x91BF
+#define GL_COMPRESSED_R11_EAC								  0x9270
+#define GL_COMPRESSED_SIGNED_R11_EAC						  0x9271
+#define GL_COMPRESSED_RG11_EAC								  0x9272
+#define GL_COMPRESSED_SIGNED_RG11_EAC						  0x9273
+#define GL_COMPRESSED_RGB8_ETC2								  0x9274
+#define GL_COMPRESSED_SRGB8_ETC2							  0x9275
+#define GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2			  0x9276
+#define GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2		  0x9277
+#define GL_COMPRESSED_RGBA8_ETC2_EAC						  0x9278
+#define GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC					  0x9279
+#define GL_DEBUG_OUTPUT										  0x92E0
+#define GL_UNIFORM											  0x92E1
+#define GL_UNIFORM_BLOCK									  0x92E2
+#define GL_PROGRAM_INPUT									  0x92E3
+#define GL_PROGRAM_OUTPUT									  0x92E4
+#define GL_BUFFER_VARIABLE									  0x92E5
+#define GL_SHADER_STORAGE_BLOCK								  0x92E6
+#define GL_IS_PER_PATCH										  0x92E7
+#define GL_VERTEX_SUBROUTINE								  0x92E8
+#define GL_TESS_CONTROL_SUBROUTINE							  0x92E9
+#define GL_TESS_EVALUATION_SUBROUTINE						  0x92EA
+#define GL_GEOMETRY_SUBROUTINE								  0x92EB
+#define GL_FRAGMENT_SUBROUTINE								  0x92EC
+#define GL_COMPUTE_SUBROUTINE								  0x92ED
+#define GL_VERTEX_SUBROUTINE_UNIFORM						  0x92EE
+#define GL_TESS_CONTROL_SUBROUTINE_UNIFORM					  0x92EF
+#define GL_TESS_EVALUATION_SUBROUTINE_UNIFORM				  0x92F0
+#define GL_GEOMETRY_SUBROUTINE_UNIFORM						  0x92F1
+#define GL_FRAGMENT_SUBROUTINE_UNIFORM						  0x92F2
+#define GL_COMPUTE_SUBROUTINE_UNIFORM						  0x92F3
+#define GL_TRANSFORM_FEEDBACK_VARYING						  0x92F4
+#define GL_ACTIVE_RESOURCES									  0x92F5
+#define GL_MAX_NAME_LENGTH									  0x92F6
+#define GL_MAX_NUM_ACTIVE_VARIABLES							  0x92F7
+#define GL_MAX_NUM_COMPATIBLE_SUBROUTINES					  0x92F8
+#define GL_NAME_LENGTH										  0x92F9
+#define GL_TYPE												  0x92FA
+#define GL_ARRAY_SIZE										  0x92FB
+#define GL_OFFSET											  0x92FC
+#define GL_BLOCK_INDEX										  0x92FD
+#define GL_ARRAY_STRIDE										  0x92FE
+#define GL_MATRIX_STRIDE									  0x92FF
+#define GL_IS_ROW_MAJOR										  0x9300
+#define GL_ATOMIC_COUNTER_BUFFER_INDEX						  0x9301
+#define GL_BUFFER_BINDING									  0x9302
+#define GL_BUFFER_DATA_SIZE									  0x9303
+#define GL_NUM_ACTIVE_VARIABLES								  0x9304
+#define GL_ACTIVE_VARIABLES									  0x9305
+#define GL_REFERENCED_BY_VERTEX_SHADER						  0x9306
+#define GL_REFERENCED_BY_TESS_CONTROL_SHADER				  0x9307
+#define GL_REFERENCED_BY_TESS_EVALUATION_SHADER				  0x9308
+#define GL_REFERENCED_BY_GEOMETRY_SHADER					  0x9309
+#define GL_REFERENCED_BY_FRAGMENT_SHADER					  0x930A
+#define GL_REFERENCED_BY_COMPUTE_SHADER						  0x930B
+#define GL_TOP_LEVEL_ARRAY_SIZE								  0x930C
+#define GL_TOP_LEVEL_ARRAY_STRIDE							  0x930D
+#define GL_LOCATION											  0x930E
+#define GL_LOCATION_INDEX									  0x930F
+#define GL_FRAMEBUFFER_DEFAULT_WIDTH						  0x9310
+#define GL_FRAMEBUFFER_DEFAULT_HEIGHT						  0x9311
+#define GL_FRAMEBUFFER_DEFAULT_LAYERS						  0x9312
+#define GL_FRAMEBUFFER_DEFAULT_SAMPLES						  0x9313
+#define GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS		  0x9314
+#define GL_MAX_FRAMEBUFFER_WIDTH							  0x9315
+#define GL_MAX_FRAMEBUFFER_HEIGHT							  0x9316
+#define GL_MAX_FRAMEBUFFER_LAYERS							  0x9317
+#define GL_MAX_FRAMEBUFFER_SAMPLES							  0x9318
+
+using GLDebug = void (_DE_CALL_OPENGL*)(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+	const GLchar* message, const Void* userParam);
+
+using GLBindVertexBuffer = void (*)(GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
+using GLClearBufferData = void (*)(GLenum target, GLenum internalformat, GLenum format, GLenum type, const Void* data);
+
+using GLClearBufferSubData = void (*)(GLenum target, GLenum internalformat, GLintptr offset, GLsizeiptr size,
+	GLenum format, GLenum type, const Void* data);
+
+using GLCopyImageSubData = void (*)(GLuint srcName, GLenum srcTarget, GLint srcLevel, GLint srcX, GLint srcY,
+	GLint srcZ, GLuint dstName, GLenum dstTarget, GLint dstLevel, GLint dstX, GLint dstY, GLint dstZ, GLsizei srcWidth,
+	GLsizei srcHeight, GLsizei srcDepth);
+
+using GLDispatchCompute = void (*)(GLuint num_groups_x, GLuint num_groups_y, GLuint num_groups_z);
+using GLDispatchComputeIndirect = void (*)(GLintptr indirect);
+using GLDebugMessageCallback = void (*)(GLDebug callback, const Void* userParam);
+
+using GLDebugMessageControl = void (*)(GLenum source, GLenum type, GLenum severity, GLsizei count, const GLuint* ids,
+	GLboolean enabled);
+
+using GLDebugMessageInsert = void (*)(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+	const GLchar* buf);
+
+using GLFramebufferParameterI = void (*)(GLenum target, GLenum pname, GLint param);
+
+using GLGetDebugMessageLog = GLuint(*)(GLuint count, GLsizei bufSize, GLenum* sources, GLenum* types, GLuint* ids,
+	GLenum* severities, GLsizei* lengths, GLchar* messageLog);
+
+using GLGetFramebufferParameterIV = void (*)(GLenum target, GLenum pname, GLint* params);
+
+using GLGetInternalformatI64V = void (*)(GLenum target, GLenum internalformat, GLenum pname, GLsizei bufSize,
+	GLint64* params);
+
+using GLGetObjectLabel = void (*)(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei* length, GLchar* label);
+using GLGetObjectPtrLabel = void (*)(const Void* ptr, GLsizei bufSize, GLsizei* length, GLchar* label);
+using GLGetProgramInterfaceIV = void (*)(GLuint program, GLenum programInterface, GLenum pname, GLint* params);
+using GLGetProgramResourceIndex = GLuint (*)(GLuint program, GLenum programInterface, const GLchar* name);
+
+using GLGetProgramResourceIV = void (*)(GLuint program, GLenum programInterface, GLuint index, GLsizei propCount,
+	const GLenum* props, GLsizei bufSize, GLsizei* length, GLint* params);
+
+using GLGetProgramResourceLocation = GLint (*)(GLuint program, GLenum programInterface, const GLchar* name);
+using GLGetProgramResourceLocationIndex = GLint (*)(GLuint program, GLenum programInterface, const GLchar* name);
+
+using GLGetProgramResourceName = void (*)(GLuint program, GLenum programInterface, GLuint index, GLsizei bufSize,
+	GLsizei* length, GLchar* name);
+
+using GLInvalidateBufferData = void (*)(GLuint buffer);
+using GLInvalidateBufferSubData = void (*)(GLuint buffer, GLintptr offset, GLsizeiptr length);
+using GLInvalidateFramebuffer = void (*)(GLenum target, GLsizei numAttachments, const GLenum* attachments);
+
+using GLInvalidateSubFramebuffer = void (*)(GLenum target, GLsizei numAttachments, const GLenum* attachments,
+	GLint x, GLint y, GLsizei width, GLsizei height);
+
+using GLInvalidateTexImage = void (*)(GLuint texture, GLint level);
+
+using GLInvalidateTexSubImage = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
+	GLsizei width, GLsizei height, GLsizei depth);
+
+using GLMultiDrawArraysIndirect = void (*)(GLenum mode, const Void* indirect, GLsizei drawcount, GLsizei stride);
+
+using GLMultiDrawElementsIndirect = void (*)(GLenum mode, GLenum type, const Void* indirect, GLsizei drawcount,
+	GLsizei stride);
+
+using GLObjectLabel = void (*)(GLenum identifier, GLuint name, GLsizei length, const GLchar* label);
+using GLObjectPtrLabel = void (*)(const Void* ptr, GLsizei length, const GLchar* label);
+using GLPopDebugGroup = void (*)();
+using GLPushDebugGroup = void (*)(GLenum source, GLuint id, GLsizei length, const GLchar* message);
+using GLShaderStorageBlockBinding = void (*)(GLuint program, GLuint storageBlockIndex, GLuint storageBlockBinding);
+
+using GLTexBufferRange = void (*)(GLenum target, GLenum internalformat, GLuint buffer, GLintptr offset,
+	GLsizeiptr size);
+
+using GLTexStorage2DMultisample = void (*)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width,
+	GLsizei height, GLboolean fixedsamplelocations);
+
+using GLTexStorage3DMultisample = void (*)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width,
+	GLsizei height, GLsizei depth, GLboolean fixedsamplelocations);
+
+using GLTextureView = void (*)(GLuint texture, GLenum target, GLuint origtexture, GLenum internalformat,
+	GLuint minlevel, GLuint numlevels, GLuint minlayer, GLuint numlayers);
+
+using GLVertexAttribBinding = void (*)(GLuint attribindex, GLuint bindingindex);
+
+using GLVertexAttribFormat = void (*)(GLuint attribindex, GLint size, GLenum type, GLboolean normalized,
+	GLuint relativeoffset);
+
+using GLVertexAttribIFormat = void (*)(GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset);
+using GLVertexAttribLFormat = void (*)(GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset);
+using GLVertexBindingDivisor = void (*)(GLuint bindingindex, GLuint divisor);
+
+
+// Version 4.4
+
+#define GL_MAP_PERSISTENT_BIT					   0x0040
+#define GL_MAP_COHERENT_BIT						   0x0080
+#define GL_DYNAMIC_STORAGE_BIT					   0x0100
+#define GL_CLIENT_STORAGE_BIT					   0x0200
+#define GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT		   0x00004000
+#define GL_QUERY_BUFFER_BARRIER_BIT				   0x00008000
+#define GL_BUFFER_IMMUTABLE_STORAGE				   0x821F
+#define GL_BUFFER_STORAGE_FLAGS					   0x8220
+#define GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED 0x8221
+#define GL_MAX_VERTEX_ATTRIB_STRIDE				   0x82E5
+#define GL_MIRROR_CLAMP_TO_EDGE					   0x8743
+#define GL_TEXTURE_BUFFER_BINDING				   0x8C2A
+#define GL_QUERY_BUFFER							   0x9192
+#define GL_QUERY_BUFFER_BINDING					   0x9193
+#define GL_QUERY_RESULT_NO_WAIT					   0x9194
+#define GL_LOCATION_COMPONENT					   0x934A
+#define GL_TRANSFORM_FEEDBACK_BUFFER_INDEX		   0x934B
+#define GL_TRANSFORM_FEEDBACK_BUFFER_STRIDE		   0x934C
+#define GL_CLEAR_TEXTURE						   0x9365
+
+using GLBindBuffersBase = void (*)(GLenum target, GLuint first, GLsizei count, const GLuint* buffers);
+
+using GLBindBuffersRange = void (*)(GLenum target, GLuint first, GLsizei count, const GLuint* buffers,
+	const GLintptr* offsets, const GLsizeiptr* sizes);
+
+using GLBindImageTextures = void (*)(GLuint first, GLsizei count, const GLuint* textures);
+using GLBindSamplers = void (*)(GLuint first, GLsizei count, const GLuint* samplers);
+using GLBindTextures = void (*)(GLuint first, GLsizei count, const GLuint* textures);
+
+using GLBindVertexBuffers = void (*)(GLuint first, GLsizei count, const GLuint* buffers, const GLintptr* offsets,
+	const GLsizei* strides);
+
+using GLBufferStorage = void (*)(GLenum target, GLsizeiptr size, const Void* data, GLbitfield flags);
+using GLClearTexImage = void (*)(GLuint texture, GLint level, GLenum format, GLenum type, const Void* data);
+
+using GLClearTexSubImage = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
+	GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const Void* data);
+
+
+// Version 4.5
+
+#define GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT		0x0004
+#define GL_CONTEXT_LOST							0x0507
+#define GL_TEXTURE_TARGET						0x1006
+#define GL_LOSE_CONTEXT_ON_RESET				0x8252
+#define GL_GUILTY_CONTEXT_RESET					0x8253
+#define GL_INNOCENT_CONTEXT_RESET				0x8254
+#define GL_UNKNOWN_CONTEXT_RESET				0x8255
+#define GL_RESET_NOTIFICATION_STRATEGY			0x8256
+#define GL_NO_RESET_NOTIFICATION				0x8261
+#define GL_QUERY_TARGET							0x82EA
+#define GL_MAX_CULL_DISTANCES					0x82F9
+#define GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES 0x82FA
+#define GL_CONTEXT_RELEASE_BEHAVIOR				0x82FB
+#define GL_CONTEXT_RELEASE_BEHAVIOR_FLUSH		0x82FC
+#define GL_QUERY_WAIT_INVERTED					0x8E17
+#define GL_QUERY_NO_WAIT_INVERTED				0x8E18
+#define GL_QUERY_BY_REGION_WAIT_INVERTED		0x8E19
+#define GL_QUERY_BY_REGION_NO_WAIT_INVERTED		0x8E1A
+#define GL_CLIP_ORIGIN							0x935C
+#define GL_CLIP_DEPTH_MODE						0x935D
+#define GL_NEGATIVE_ONE_TO_ONE					0x935E
+#define GL_ZERO_TO_ONE							0x935F
+
+using GLBindTextureUnit = void (*)(GLuint unit, GLuint texture);
+
+using GLBlitNamedFramebuffer = void (*)(GLuint readFramebuffer, GLuint drawFramebuffer, GLint srcX0, GLint srcY0,
+	GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
+
+using GLCheckNamedFramebufferStatus = GLenum (*)(GLuint framebuffer, GLenum target);
+
+using GLClearNamedBufferData = void (*)(GLuint buffer, GLenum internalformat, GLenum format, GLenum type,
+	const Void* data);
+
+using GLClearNamedBufferSubData = void (*)(GLuint buffer, GLenum internalformat, GLintptr offset, GLsizeiptr size,
+	GLenum format, GLenum type, const Void* data);
+
+using GLClearNamedFramebufferFI = void (*)(GLuint framebuffer, GLenum buffer, const GLfloat depth, GLint stencil);
+using GLClearNamedFramebufferFV = void (*)(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLfloat* value);
+using GLClearNamedFramebufferIV = void (*)(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLint* value);
+using GLClearNamedFramebufferUIV = void (*)(GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLuint* value);
+using GLClipControl = void (*)(GLenum origin, GLenum depth);
+
+using GLCompressedTextureSubImage1D = void (*)(GLuint texture, GLint level, GLint xoffset, GLsizei width,
+	GLenum format, GLsizei imageSize, const Void* data);
+
+using GLCompressedTextureSubImage2D = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset,
+	GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const Void* data);
+
+using GLCompressedTextureSubImage3D = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset,
+	GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const Void* data);
+
+using GLCopyNamedBufferSubData = void (*)(GLuint readBuffer, GLuint writeBuffer, GLintptr readOffset,
+	GLintptr writeOffset, GLsizeiptr size);
+
+using GLCopyTextureSubImage1D = void (*)(GLuint texture, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width);
+
+using GLCopyTextureSubImage2D = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y,
+	GLsizei width, GLsizei height);
+
+using GLCopyTextureSubImage3D = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
+	GLint x, GLint y, GLsizei width, GLsizei height);
+
+using GLCreateBuffers = void (*)(GLsizei n, GLuint* buffers);
+using GLCreateFramebuffers = void (*)(GLsizei n, GLuint* framebuffers);
+using GLCreateProgramPipelines = void (*)(GLsizei n, GLuint* pipelines);
+using GLCreateQueries = void (*)(GLenum target, GLsizei n, GLuint* ids);
+using GLCreateRenderbuffers = void (*)(GLsizei n, GLuint* renderbuffers);
+using GLCreateSamplers = void (*)(GLsizei n, GLuint* samplers);
+using GLCreateTextures = void (*)(GLenum target, GLsizei n, GLuint* textures);
+using GLCreateTransformFeedbacks = void (*)(GLsizei n, GLuint* ids);
+using GLCreateVertexArrays = void (*)(GLsizei n, GLuint* arrays);
+using GLDisableVertexArrayAttrib = void (*)(GLuint vaobj, GLuint index);
+using GLEnableVertexArrayAttrib = void (*)(GLuint vaobj, GLuint index);
+using GLFlushMappedNamedBufferRange = void (*)(GLuint buffer, GLintptr offset, GLsizeiptr length);
+using GLGenerateTextureMipmap = void (*)(GLuint texture);
+using GLGetCompressedTextureImage = void (*)(GLuint texture, GLint level, GLsizei bufSize, Void* pixels);
+
+using GLGetCompressedTextureSubImage = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset,
+	GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLsizei bufSize, Void* pixels);
+
+using GLGetGraphicsResetStatus = GLenum (*)();
+using GLGetNamedBufferParameterI64V = void (*)(GLuint buffer, GLenum pname, GLint64* params);
+using GLGetNamedBufferParameterIV = void (*)(GLuint buffer, GLenum pname, GLint* params);
+using GLGetNamedBufferPointerV = void (*)(GLuint buffer, GLenum pname, Void** params);
+using GLGetNamedBufferSubData = void (*)(GLuint buffer, GLintptr offset, GLsizeiptr size, Void* data);
+
+using GLGetNamedFramebufferAttachmentParameterIV = void (*)(GLuint framebuffer, GLenum attachment, GLenum pname,
+	GLint* params);
+
+using GLGetNamedFramebufferParameterIV = void (*)(GLuint framebuffer, GLenum pname, GLint* param);
+using GLGetNamedRenderbufferParameterIV = void (*)(GLuint renderbuffer, GLenum pname, GLint* params);
+using GLGetnCompressedTexImage = void (*)(GLenum target, GLint lod, GLsizei bufSize, Void* pixels);
+using GLGetnTexImage = void (*)(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, Void* pixels);
+using GLGetnUniformDV = void (*)(GLuint program, GLint location, GLsizei bufSize, GLdouble* params);
+using GLGetnUniformFV = void (*)(GLuint program, GLint location, GLsizei bufSize, GLfloat* params);
+using GLGetnUniformIV = void (*)(GLuint program, GLint location, GLsizei bufSize, GLint* params);
+using GLGetnUniformUIV = void (*)(GLuint program, GLint location, GLsizei bufSize, GLuint* params);
+using GLGetQueryBufferObjectI64V = void (*)(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+using GLGetQueryBufferObjectIV = void (*)(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+using GLGetQueryBufferObjectUI64V = void (*)(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+using GLGetQueryBufferObjectUIV = void (*)(GLuint id, GLuint buffer, GLenum pname, GLintptr offset);
+
+using GLGetTextureImage = void (*)(GLuint texture, GLint level, GLenum format, GLenum type, GLsizei bufSize,
+	Void* pixels);
+
+using GLGetTextureLevelParameterFV = void (*)(GLuint texture, GLint level, GLenum pname, GLfloat* params);
+using GLGetTextureLevelParameterIV = void (*)(GLuint texture, GLint level, GLenum pname, GLint* params);
+using GLGetTextureParameterFV = void (*)(GLuint texture, GLenum pname, GLfloat* params);
+using GLGetTextureParameterIIV = void (*)(GLuint texture, GLenum pname, GLint* params);
+using GLGetTextureParameterIV = void (*)(GLuint texture, GLenum pname, GLint* params);
+using GLGetTextureParameterIUIV = void (*)(GLuint texture, GLenum pname, GLuint* params);
+
+using GLGetTextureSubImage = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
+	GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLsizei bufSize, Void* pixels);
+
+using GLGetTransformFeedbackI64_V = void (*)(GLuint xfb, GLenum pname, GLuint index, GLint64* param);
+using GLGetTransformFeedbackIV = void (*)(GLuint xfb, GLenum pname, GLint* param);
+using GLGetTransformFeedbackI_V = void (*)(GLuint xfb, GLenum pname, GLuint index, GLint* param);
+using GLGetVertexArrayIndexed64IV = void (*)(GLuint vaobj, GLuint index, GLenum pname, GLint64* param);
+using GLGetVertexArrayIndexedIV = void (*)(GLuint vaobj, GLuint index, GLenum pname, GLint* param);
+using GLGetVertexArrayIV = void (*)(GLuint vaobj, GLenum pname, GLint* param);
+
+using GLInvalidateNamedFramebufferData = void (*)(GLuint framebuffer, GLsizei numAttachments,
+	const GLenum* attachments);
+
+using GLInvalidateNamedFramebufferSubData = void (*)(GLuint framebuffer, GLsizei numAttachments,
+	const GLenum* attachments, GLint x, GLint y, GLsizei width, GLsizei height);
+
+using GLMapNamedBuffer = Void* (*)(GLuint buffer, GLenum access);
+using GLMapNamedBufferRange = Void* (*)(GLuint buffer, GLintptr offset, GLsizeiptr length, GLbitfield access);
+using GLMemoryBarrierByRegion = void (*)(GLbitfield barriers);
+using GLNamedBufferData = void (*)(GLuint buffer, GLsizeiptr size, const Void* data, GLenum usage);
+using GLNamedBufferStorage = void (*)(GLuint buffer, GLsizeiptr size, const Void* data, GLbitfield flags);
+using GLNamedBufferSubData = void (*)(GLuint buffer, GLintptr offset, GLsizeiptr size, const Void* data);
+using GLNamedFramebufferDrawBuffer = void (*)(GLuint framebuffer, GLenum buf);
+using GLNamedFramebufferDrawBuffers = void (*)(GLuint framebuffer, GLsizei n, const GLenum* bufs);
+using GLNamedFramebufferParameterI = void (*)(GLuint framebuffer, GLenum pname, GLint param);
+using GLNamedFramebufferReadBuffer = void (*)(GLuint framebuffer, GLenum src);
+
+using GLNamedFramebufferRenderbuffer = void (*)(GLuint framebuffer, GLenum attachment, GLenum renderbuffertarget,
+	GLuint renderbuffer);
+
+using GLNamedFramebufferTexture = void (*)(GLuint framebuffer, GLenum attachment, GLuint texture, GLint level);
+
+using GLNamedFramebufferTextureLayer = void (*)(GLuint framebuffer, GLenum attachment, GLuint texture, GLint level,
+	GLint layer);
+
+using GLNamedRenderbufferStorage = void (*)(GLuint renderbuffer, GLenum internalformat, GLsizei width, GLsizei height);
+
+using GLNamedRenderbufferStorageMultisample = void (*)(GLuint renderbuffer, GLsizei samples, GLenum internalformat,
+	GLsizei width, GLsizei height);
+
+using GLReadnPixels = void (*)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
+	GLsizei bufSize, Void* data);
+
+using GLTransformFeedbackBufferBase = void (*)(GLuint xfb, GLuint index, GLuint buffer);
+
+using GLTransformFeedbackBufferRange = void (*)(GLuint xfb, GLuint index, GLuint buffer, GLintptr offset,
+	GLsizeiptr size);
+
+using GLTextureBarrier = void (*)();
+using GLTextureBuffer = void (*)(GLuint texture, GLenum internalformat, GLuint buffer);
+
+using GLTextureBufferRange = void (*)(GLuint texture, GLenum internalformat, GLuint buffer, GLintptr offset,
+	GLsizeiptr size);
+
+using GLTextureParameterF = void (*)(GLuint texture, GLenum pname, GLfloat param);
+using GLTextureParameterFV = void (*)(GLuint texture, GLenum pname, const GLfloat* param);
+using GLTextureParameterI = void (*)(GLuint texture, GLenum pname, GLint param);
+using GLTextureParameterIIV = void (*)(GLuint texture, GLenum pname, const GLint* params);
+using GLTextureParameterIUIV = void (*)(GLuint texture, GLenum pname, const GLuint* params);
+using GLTextureParameterIV = void (*)(GLuint texture, GLenum pname, const GLint* param);
+using GLTextureStorage1D = void (*)(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width);
+
+using GLTextureStorage2D = void (*)(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width,
+	GLsizei height);
+
+using GLTextureStorage2DMultisample = void (*)(GLuint texture, GLsizei samples, GLenum internalformat, GLsizei width,
+	GLsizei height, GLboolean fixedsamplelocations);
+
+using GLTextureStorage3D = void (*)(GLuint texture, GLsizei levels, GLenum internalformat, GLsizei width,
+	GLsizei height, GLsizei depth);
+
+using GLTextureStorage3DMultisample = void (*)(GLuint texture, GLsizei samples, GLenum internalformat, GLsizei width,
+	GLsizei height, GLsizei depth, GLboolean fixedsamplelocations);
+
+using GLTextureSubImage1D = void (*)(GLuint texture, GLint level, GLint xoffset, GLsizei width, GLenum format,
+	GLenum type, const Void* pixels);
+
+using GLTextureSubImage2D = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
+	GLsizei height, GLenum format, GLenum type, const Void* pixels);
+
+using GLTextureSubImage3D = void (*)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset,
+	GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const Void* pixels);
+
+using GLUnmapNamedBuffer = GLboolean (*)(GLuint buffer);
+using GLVertexArrayAttribBinding = void (*)(GLuint vaobj, GLuint attribindex, GLuint bindingindex);
+
+using GLVertexArrayAttribFormat = void (*)(GLuint vaobj, GLuint attribindex, GLint size, GLenum type,
+	GLboolean normalized, GLuint relativeoffset);
+
+using GLVertexArrayAttribIFormat = void (*)(GLuint vaobj, GLuint attribindex, GLint size, GLenum type,
+	GLuint relativeoffset);
+
+using GLVertexArrayAttribLFormat = void (*)(GLuint vaobj, GLuint attribindex, GLint size, GLenum type,
+	GLuint relativeoffset);
+
+using GLVertexArrayBindingDivisor = void (*)(GLuint vaobj, GLuint bindingindex, GLuint divisor);
+using GLVertexArrayElementBuffer = void (*)(GLuint vaobj, GLuint buffer);
+
+using GLVertexArrayVertexBuffer = void (*)(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset,
+	GLsizei stride);
+
+using GLVertexArrayVertexBuffers = void (*)(GLuint vaobj, GLuint first, GLsizei count, const GLuint* buffers,
+	const GLintptr* offsets, const GLsizei* strides);
+
+
+// TODO: add ARB and KHR extensions?
+
+
+// Function declarations
 
 extern "C"
 {
 	// Version 1.0
 
-	void APIENTRY glBlendFunc(GLenum sfactor, GLenum dfactor);
-	void APIENTRY glClear(GLbitfield mask);
-	void APIENTRY glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
-	void APIENTRY glClearDepth(GLdouble depth);
-	void APIENTRY glClearStencil(GLint s);
-	void APIENTRY glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
-	void APIENTRY glCullFace(GLenum mode);
-	void APIENTRY glDepthFunc(GLenum func);
-	void APIENTRY glDepthMask(GLboolean flag);
-	void APIENTRY glDepthRange(GLdouble near, GLdouble far);
-	void APIENTRY glDisable(GLenum cap);
-	void APIENTRY glDrawBuffer(GLenum buf);
-	void APIENTRY glEnable(GLenum cap);
-	void APIENTRY glFinish();
-	void APIENTRY glFlush();
-	void APIENTRY glFrontFace(GLenum mode);
-	void APIENTRY glGetBooleanv(GLenum pname, GLboolean* data);
-	void APIENTRY glGetDoublev(GLenum pname, GLdouble* data);
-	GLenum APIENTRY glGetError();
-	void APIENTRY glGetFloatv(GLenum pname, GLfloat* data);
-	void APIENTRY glGetIntegerv(GLenum pname, GLint* data);
-	const GLubyte* APIENTRY glGetString(GLenum name);
-	void APIENTRY glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, Void* pixels);
-	void APIENTRY glGetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat* params);
-	void APIENTRY glGetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint* params);
-	void APIENTRY glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params);
-	void APIENTRY glGetTexParameteriv(GLenum target, GLenum pname, GLint* params);
-	void APIENTRY glHint(GLenum target, GLenum mode);
-	GLboolean APIENTRY glIsEnabled(GLenum cap);
-	void APIENTRY glLineWidth(GLfloat width);
-	void APIENTRY glLogicOp(GLenum opcode);
-	void APIENTRY glPixelStoref(GLenum pname, GLfloat param);
-	void APIENTRY glPixelStorei(GLenum pname, GLint param);
-	void APIENTRY glPointSize(GLfloat size);
-	void APIENTRY glPolygonMode(GLenum face, GLenum mode);
-	void APIENTRY glReadBuffer(GLenum src);
+	void _DE_CALL_OPENGL glBlendFunc(GLenum sfactor, GLenum dfactor);
+	void _DE_CALL_OPENGL glClear(GLbitfield mask);
+	void _DE_CALL_OPENGL glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+	void _DE_CALL_OPENGL glClearDepth(GLdouble depth);
+	void _DE_CALL_OPENGL glClearStencil(GLint s);
+	void _DE_CALL_OPENGL glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
+	void _DE_CALL_OPENGL glCullFace(GLenum mode);
+	void _DE_CALL_OPENGL glDepthFunc(GLenum func);
+	void _DE_CALL_OPENGL glDepthMask(GLboolean flag);
+	void _DE_CALL_OPENGL glDepthRange(GLdouble near, GLdouble far);
+	void _DE_CALL_OPENGL glDisable(GLenum cap);
+	void _DE_CALL_OPENGL glDrawBuffer(GLenum buf);
+	void _DE_CALL_OPENGL glEnable(GLenum cap);
+	void _DE_CALL_OPENGL glFinish();
+	void _DE_CALL_OPENGL glFlush();
+	void _DE_CALL_OPENGL glFrontFace(GLenum mode);
+	void _DE_CALL_OPENGL glGetBooleanv(GLenum pname, GLboolean* data);
+	void _DE_CALL_OPENGL glGetDoublev(GLenum pname, GLdouble* data);
+	GLenum _DE_CALL_OPENGL glGetError();
+	void _DE_CALL_OPENGL glGetFloatv(GLenum pname, GLfloat* data);
+	void _DE_CALL_OPENGL glGetIntegerv(GLenum pname, GLint* data);
+	const GLubyte* _DE_CALL_OPENGL glGetString(GLenum name);
+	void _DE_CALL_OPENGL glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, Void* pixels);
+	void _DE_CALL_OPENGL glGetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat* params);
+	void _DE_CALL_OPENGL glGetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint* params);
+	void _DE_CALL_OPENGL glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params);
+	void _DE_CALL_OPENGL glGetTexParameteriv(GLenum target, GLenum pname, GLint* params);
+	void _DE_CALL_OPENGL glHint(GLenum target, GLenum mode);
+	GLboolean _DE_CALL_OPENGL glIsEnabled(GLenum cap);
+	void _DE_CALL_OPENGL glLineWidth(GLfloat width);
+	void _DE_CALL_OPENGL glLogicOp(GLenum opcode);
+	void _DE_CALL_OPENGL glPixelStoref(GLenum pname, GLfloat param);
+	void _DE_CALL_OPENGL glPixelStorei(GLenum pname, GLint param);
+	void _DE_CALL_OPENGL glPointSize(GLfloat size);
+	void _DE_CALL_OPENGL glPolygonMode(GLenum face, GLenum mode);
+	void _DE_CALL_OPENGL glReadBuffer(GLenum src);
 
-	void APIENTRY glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
+	void _DE_CALL_OPENGL glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
 		Void* pixels);
 
-	void APIENTRY glScissor(GLint x, GLint y, GLsizei width, GLsizei height);
-	void APIENTRY glStencilFunc(GLenum func, GLint ref, GLuint mask);
-	void APIENTRY glStencilMask(GLuint mask);
-	void APIENTRY glStencilOp(GLenum fail, GLenum zfail, GLenum zpass);
+	void _DE_CALL_OPENGL glScissor(GLint x, GLint y, GLsizei width, GLsizei height);
+	void _DE_CALL_OPENGL glStencilFunc(GLenum func, GLint ref, GLuint mask);
+	void _DE_CALL_OPENGL glStencilMask(GLuint mask);
+	void _DE_CALL_OPENGL glStencilOp(GLenum fail, GLenum zfail, GLenum zpass);
 
-	void APIENTRY glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border,
+	void _DE_CALL_OPENGL glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border,
 		GLenum format, GLenum type, const Void* pixels);
 
-	void APIENTRY glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,
+	void _DE_CALL_OPENGL glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,
 		GLint border, GLenum format, GLenum type, const Void* pixels);
 
-	void APIENTRY glTexParameterf(GLenum target, GLenum pname, GLfloat param);
-	void APIENTRY glTexParameterfv(GLenum target, GLenum pname, const GLfloat* params);
-	void APIENTRY glTexParameteri(GLenum target, GLenum pname, GLint param);
-	void APIENTRY glTexParameteriv(GLenum target, GLenum pname, const GLint* params);
-	void APIENTRY glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
+	void _DE_CALL_OPENGL glTexParameterf(GLenum target, GLenum pname, GLfloat param);
+	void _DE_CALL_OPENGL glTexParameterfv(GLenum target, GLenum pname, const GLfloat* params);
+	void _DE_CALL_OPENGL glTexParameteri(GLenum target, GLenum pname, GLint param);
+	void _DE_CALL_OPENGL glTexParameteriv(GLenum target, GLenum pname, const GLint* params);
+	void _DE_CALL_OPENGL glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
 
 	// Version 1.1
 
-	void APIENTRY glBindTexture(GLenum target, GLuint texture);
+	void _DE_CALL_OPENGL glBindTexture(GLenum target, GLuint texture);
 
-	void APIENTRY glCopyTexImage1D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width,
-		GLint border);
+	void _DE_CALL_OPENGL glCopyTexImage1D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y,
+		GLsizei width, GLint border);
 
-	void APIENTRY glCopyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width,
-		GLsizei height, GLint border);
+	void _DE_CALL_OPENGL glCopyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y,
+		GLsizei width, GLsizei height, GLint border);
 
-	void APIENTRY glCopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width);
+	void _DE_CALL_OPENGL glCopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y,
+		GLsizei width);
 
-	void APIENTRY glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y,
-		GLsizei width, GLsizei height);
+	void _DE_CALL_OPENGL glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x,
+		GLint y, GLsizei width, GLsizei height);
 
-	void APIENTRY glDeleteTextures(GLsizei n, const GLuint* textures);
-	void APIENTRY glDrawArrays(GLenum mode, GLint first, GLsizei count);
-	void APIENTRY glDrawElements(GLenum mode, GLsizei count, GLenum type, const Void* indices);
-	void APIENTRY glGenTextures(GLsizei n, GLuint* textures);
-	void APIENTRY glGetPointerv(GLenum pname, Void* *params);
-	GLboolean APIENTRY glIsTexture(GLuint texture);
-	void APIENTRY glPolygonOffset(GLfloat factor, GLfloat units);
+	void _DE_CALL_OPENGL glDeleteTextures(GLsizei n, const GLuint* textures);
+	void _DE_CALL_OPENGL glDrawArrays(GLenum mode, GLint first, GLsizei count);
+	void _DE_CALL_OPENGL glDrawElements(GLenum mode, GLsizei count, GLenum type, const Void* indices);
+	void _DE_CALL_OPENGL glGenTextures(GLsizei n, GLuint* textures);
+	void _DE_CALL_OPENGL glGetPointerv(GLenum pname, Void** params);
+	GLboolean _DE_CALL_OPENGL glIsTexture(GLuint texture);
+	void _DE_CALL_OPENGL glPolygonOffset(GLfloat factor, GLfloat units);
 
-	void APIENTRY glTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type,
-		const Void* pixels);
+	void _DE_CALL_OPENGL glTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format,
+		GLenum type, const Void* pixels);
 
-	void APIENTRY glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
+	void _DE_CALL_OPENGL glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width,
 		GLsizei height, GLenum format, GLenum type, const Void* pixels);
 }
 
-#undef APIENTRY
+#undef _DE_CALL_OPENGL

@@ -57,6 +57,7 @@
 // Compiler specific internal keywords and variables
 
 #if DE_COMPILER == DE_COMPILER_MSVC
+	#define _DE_CALL_STDCALL __stdcall
 	#define _DE_CONSTEXPR	 inline const
 	#define _DE_FUNCTION	 __FUNCTION__
 	#define _DE_NO_OPERATION __noop

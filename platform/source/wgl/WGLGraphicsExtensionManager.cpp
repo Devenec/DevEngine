@@ -20,58 +20,93 @@
 
 #include <core/Error.h>
 #include <core/Log.h>
+#include <platform/GraphicsExtensionManager.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
-#include <platform/wgl/WGLGraphicsExtensionManager.h>
+#include <platform/windows/Windows.h>
 
 using namespace Core;
 using namespace Platform;
+
+// Implementation
+
+class GraphicsExtensionManager::Impl
+{
+public:
+
+	Impl() = delete;
+
+	Impl(const Impl& impl) = delete;
+	Impl(Impl&& impl) = delete;
+
+	~Impl() = delete;
+
+	Impl& operator =(const Impl& impl) = delete;
+	Impl& operator =(Impl&& impl) = delete;
+
+	static void validateContextState()
+	{
+		if(wglGetCurrentContext() == nullptr)
+		{
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " No current context exists." << Log::Flush();
+			DE_ERROR(0x0);
+		}
+	}
+
+	static void getContextExtensionFunctions()
+	{
+		wglChoosePixelFormatARB = getExtensionFunction<WGLChoosePixelFormatARB>("wglChoosePixelFormatARB");
+		wglCreateContextAttribsARB = getExtensionFunction<WGLCreateContextAttribsARB>("wglCreateContextAttribsARB");
+		wglGetExtensionsStringARB = getExtensionFunction<WGLGetExtensionsStringARB>("wglGetExtensionsStringARB");
+
+		wglGetPixelFormatAttribfvARB = getExtensionFunction<WGLGetPixelFormatAttribFVARB>(
+			"wglGetPixelFormatAttribfvARB");
+
+		wglGetPixelFormatAttribivARB = getExtensionFunction<WGLGetPixelFormatAttribIVARB>(
+			"wglGetPixelFormatAttribivARB");
+
+		wglGetSwapIntervalEXT = getExtensionFunction<WGLGetSwapIntervalEXT>("wglGetSwapIntervalEXT");
+		wglSwapIntervalEXT = getExtensionFunction<WGLSwapIntervalEXT>("wglSwapIntervalEXT");
+	}
+
+	static void logSupportedContextExtensions(HDC deviceContextHandle)
+	{
+		defaultLog << LogLevel::Info << COMPONENT_TAG;
+
+		if(wglGetExtensionsStringARB == nullptr)
+			defaultLog << " No WGL extensions are supported.";
+		else
+			defaultLog << " Supported WGL extensions: " << wglGetExtensionsStringARB(deviceContextHandle);
+	
+		defaultLog << Log::Flush();
+	}
+
+	template<typename T>
+	static T getExtensionFunction(const Char8* functionName)
+	{
+		return reinterpret_cast<T>(wglGetProcAddress(functionName));
+	}
+
+private:
+
+	static const Char8* COMPONENT_TAG;
+};
+
+const Char8* GraphicsExtensionManager::Impl::COMPONENT_TAG = "[Platform::GraphicsExtensionManager - WGL]";
+
 
 // Public
 
 // Static
 
-void GraphicsExtensionManager::initialiseExtensions(const GraphicsContextBase& graphicsContext)
+Void* GraphicsExtensionManager::getExtensionFunction(const Char8* functionName)
 {
-	validateContextState();
-	getContextExtensionFunctions();
-	logSupportedContextExtensions(graphicsContext.deviceContextHandle());
+	return Impl::getExtensionFunction<Void*>(functionName);
 }
 
-// Private
-
-const Char8* GraphicsExtensionManager::COMPONENT_TAG = "[Platform::GraphicsExtensionManager - WGL]";
-
-// Static
-
-void GraphicsExtensionManager::validateContextState()
+void GraphicsExtensionManager::initialiseContextExtensions(const GraphicsContextBase& graphicsContext)
 {
-	if(wglGetCurrentContext() == nullptr)
-	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " No current context exists." << Log::Flush();
-		DE_ERROR(0x0);
-	}
-}
-
-void GraphicsExtensionManager::getContextExtensionFunctions()
-{
-	wglChoosePixelFormatARB = getExtensionFunction<WGLChoosePixelFormatARB>("wglChoosePixelFormatARB");
-	wglCreateContextAttribsARB = getExtensionFunction<WGLCreateContextAttribsARB>("wglCreateContextAttribsARB");
-	wglGetExtensionsStringARB = getExtensionFunction<WGLGetExtensionsStringARB>("wglGetExtensionsStringARB");
-	wglGetPixelFormatAttribfvARB = getExtensionFunction<WGLGetPixelFormatAttribFVARB>("wglGetPixelFormatAttribfvARB");
-	wglGetPixelFormatAttribivARB = getExtensionFunction<WGLGetPixelFormatAttribIVARB>("wglGetPixelFormatAttribivARB");
-	wglGetSwapIntervalEXT = getExtensionFunction<WGLGetSwapIntervalEXT>("wglGetSwapIntervalEXT");
-	wglSwapIntervalEXT = getExtensionFunction<WGLSwapIntervalEXT>("wglSwapIntervalEXT");
-}
-
-void GraphicsExtensionManager::logSupportedContextExtensions(HDC deviceContextHandle)
-{
-	defaultLog << LogLevel::Info << COMPONENT_TAG;
-
-	if(wglGetExtensionsStringARB == nullptr)
-		defaultLog << " No WGL extensions are supported.";
-	else
-		defaultLog << " Supported WGL extensions: " << wglGetExtensionsStringARB(deviceContextHandle);
-	
-	defaultLog << Log::Flush();
+	Impl::validateContextState();
+	Impl::getContextExtensionFunctions();
+	Impl::logSupportedContextExtensions(graphicsContext.deviceContextHandle());
 }
