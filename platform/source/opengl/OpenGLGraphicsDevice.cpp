@@ -19,12 +19,14 @@
  */
 
 #include <core/Memory.h>
+#include <core/Rectangle.h>
 #include <graphics/Colour.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/Viewport.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLInterface.h>
 
+using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
@@ -54,6 +56,8 @@ public:
 	void setViewport(const Viewport& viewport)
 	{
 		_viewport = viewport;
+		const Rectangle& bounds = viewport.bounds();
+		_openGl.viewport(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 
 	const Viewport& viewport() const

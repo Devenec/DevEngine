@@ -30,7 +30,7 @@ namespace Graphics
 
 		Viewport() = default;
 
-		Viewport(const Core::Rectangle& bounds);
+		explicit Viewport(const Core::Rectangle& bounds);
 
 		Viewport(const Viewport& viewport) = default;
 
@@ -38,11 +38,11 @@ namespace Graphics
 
 		~Viewport() = default;
 
-		Float32 aspectRatio() const;
+		inline Float32 aspectRatio() const;
 
-		const Core::Rectangle& bounds() const;
+		inline const Core::Rectangle& bounds() const;
 
-		void setBounds(const Core::Rectangle& bounds);
+		inline void setBounds(const Core::Rectangle& bounds);
 
 		Viewport& operator =(const Viewport& viewport) = default;
 

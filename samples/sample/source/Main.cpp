@@ -28,6 +28,8 @@
 #include <graphics/Window.h>
 #include <graphics/WindowManager.h>
 
+#include <graphics/Viewport.h>
+
 using namespace Content;
 using namespace Core;
 using namespace Graphics;
@@ -48,6 +50,7 @@ void devEngineMain(const StartupParameters& startupParameters)
 	GraphicsContext graphicsContext(window);
 	graphicsContext.makeCurrent();
 	GraphicsDevice graphicsDevice;
+	graphicsDevice.setViewport(Viewport(Rectangle(400, 300, 400u, 300u)));
 
 	while(!window->shouldClose())
 	{
