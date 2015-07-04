@@ -87,6 +87,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp">
+      <Filter>Source Files\opengl</Filter>
+    </ClCompile>
     <ClCompile Include="source\opengl\OpenGLInterface.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>

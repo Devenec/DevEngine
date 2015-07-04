@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/inline/Viewport.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,36 +18,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Public
 
-namespace Graphics
+Float32 Viewport::aspectRatio() const
 {
-	class Window;
+	return static_cast<Float32>(_bounds.width) / _bounds.height;
+}
 
-	class GraphicsContext final
-	{
-	public:
+const Core::Rectangle& Viewport::bounds() const
+{
+	return _bounds;
+}
 
-		GraphicsContext(Window* window);
-
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
-
-		~GraphicsContext();
-
-		void makeCurrent() const;
-
-		void makeNonCurrent() const;
-
-		void swapBuffers() const;
-
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
-
-	private:
-
-		class Impl;
-
-		Impl* _impl;
-	};
+void Viewport::setBounds(const Core::Rectangle& bounds)
+{
+	_bounds = bounds;
 }

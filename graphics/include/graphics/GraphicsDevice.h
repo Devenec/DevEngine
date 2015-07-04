@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/GraphicsDevice.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -22,27 +22,28 @@
 
 namespace Graphics
 {
-	class Window;
+	class Colour;
+	class Viewport;
 
-	class GraphicsContext final
+	class GraphicsDevice final
 	{
 	public:
 
-		GraphicsContext(Window* window);
+		GraphicsDevice();
 
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
+		GraphicsDevice(const GraphicsDevice& graphicsDevice) = delete;
+		GraphicsDevice(GraphicsDevice&& graphicsDevice) = delete;
 
-		~GraphicsContext();
+		~GraphicsDevice();
 
-		void makeCurrent() const;
+		void clear(const Colour& colour) const;
 
-		void makeNonCurrent() const;
+		void setViewport(const Viewport& viewport);
 
-		void swapBuffers() const;
+		const Viewport& viewport() const;
 
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
+		GraphicsDevice& operator =(const GraphicsDevice& graphicsDevice) = delete;
+		GraphicsDevice& operator =(GraphicsDevice&& graphicsDevice) = delete;
 
 	private:
 

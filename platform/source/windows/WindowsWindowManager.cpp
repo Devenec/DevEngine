@@ -243,7 +243,8 @@ private:
 		return rectangle;
 	}
 
-	static LRESULT CALLBACK processMessage(HWND windowHandle, Uint32 message, WPARAM wParam, LPARAM lParam)
+	static LRESULT CALLBACK processMessage(HWND windowHandle, const Uint32 message, const WPARAM wParam,
+		const LPARAM lParam)
 	{
 		Window::Impl* windowImpl = reinterpret_cast<Window::Impl*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
 
@@ -273,7 +274,7 @@ const Char16* WindowManager::Impl::WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine")
 // Public
 
 WindowManager::WindowManager()
-	: _impl(nullptr) { }
+	: _impl(DE_NEW(Impl)()) { }
 
 WindowManager::~WindowManager()
 {
@@ -282,24 +283,15 @@ WindowManager::~WindowManager()
 
 Window* WindowManager::createWindow()
 {
-	DE_ASSERT(_impl != nullptr);
 	return _impl->createWindowObject();
 }
 
 void WindowManager::destroyWindow(Window* window)
 {
-	DE_ASSERT(_impl != nullptr);
 	_impl->destroyWindowObject(window);
-}
-
-void WindowManager::initialise()
-{
-	DE_ASSERT(_impl == nullptr);
-	_impl = DE_NEW(Impl)();
 }
 
 void WindowManager::processMessages() const
 {
-	DE_ASSERT(_impl != nullptr);
 	Impl::processMessages();
 }

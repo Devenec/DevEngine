@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/Colour.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,34 +20,41 @@
 
 #pragma once
 
+#include <core/Types.h>
+#include <core/Numeric.h>
+
 namespace Graphics
 {
-	class Window;
-
-	class GraphicsContext final
+	class Colour
 	{
 	public:
 
-		GraphicsContext(Window* window);
+		Float32 alpha;
 
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
+		Float32 blue;
 
-		~GraphicsContext();
+		Float32 green;
 
-		void makeCurrent() const;
+		Float32 red;
 
-		void makeNonCurrent() const;
+		Colour() = default;
 
-		void swapBuffers() const;
+		Colour(const Float32 red, const Float32 green, const Float32 blue, const Float32 alpha = 1.0f);
 
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
+		Colour(const Uint8 red, const Uint8 green, const Uint8 blue,
+			const Uint8 alpha = Core::Numeric<Uint8>::maximum());
+
+		Colour(const Colour& colour) = default;
+
+		Colour(Colour&& colour) = default;
+
+		~Colour() = default;
+
+		Colour& operator =(const Colour& colour) = default;
+
+		Colour& operator =(Colour&& colour) = default;
 
 	private:
 
-		class Impl;
-
-		Impl* _impl;
 	};
 }

@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/Viewport.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,36 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <graphics/Viewport.h>
 
-namespace Graphics
-{
-	class Window;
+using namespace Core;
+using namespace Graphics;
 
-	class GraphicsContext final
-	{
-	public:
+// Public
 
-		GraphicsContext(Window* window);
-
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
-
-		~GraphicsContext();
-
-		void makeCurrent() const;
-
-		void makeNonCurrent() const;
-
-		void swapBuffers() const;
-
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
-
-	private:
-
-		class Impl;
-
-		Impl* _impl;
-	};
-}
+Viewport::Viewport(const Rectangle& bounds)
+	: _bounds(bounds) { }

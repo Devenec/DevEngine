@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/Colour.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,36 +18,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <graphics/Colour.h>
 
-namespace Graphics
-{
-	class Window;
+using namespace Core;
+using namespace Graphics;
 
-	class GraphicsContext final
-	{
-	public:
+// Public
 
-		GraphicsContext(Window* window);
+Colour::Colour(const Float32 red, const Float32 green, const Float32 blue, const Float32 alpha)
+	: alpha(alpha),
+	  blue(blue),
+	  green(green),
+	  red(red) { }
 
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
-
-		~GraphicsContext();
-
-		void makeCurrent() const;
-
-		void makeNonCurrent() const;
-
-		void swapBuffers() const;
-
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
-
-	private:
-
-		class Impl;
-
-		Impl* _impl;
-	};
-}
+Colour::Colour(const Uint8 red, const Uint8 green, const Uint8 blue, const Uint8 alpha)
+	: alpha(static_cast<Float32>(alpha) / Numeric<Uint8>::maximum()),
+	  blue(static_cast<Float32>(blue) / Numeric<Uint8>::maximum()),
+	  green(static_cast<Float32>(green) / Numeric<Uint8>::maximum()),
+	  red(static_cast<Float32>(red) / Numeric<Uint8>::maximum()) { }

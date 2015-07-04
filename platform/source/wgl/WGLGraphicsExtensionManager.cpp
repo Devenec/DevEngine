@@ -30,7 +30,7 @@ using namespace Platform;
 
 // Implementation
 
-class GraphicsExtensionManager::Impl
+class GraphicsExtensionManager::Impl final
 {
 public:
 

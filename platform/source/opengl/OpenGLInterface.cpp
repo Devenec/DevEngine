@@ -18,8 +18,11 @@
  * along with this program. If not, see <http:  //www.gnu.org/licenses/>.
  */
 
+#include <core/StringStream.h>
+#include <core/debug/Assert.h>
 #include <platform/opengl/OpenGLInterface.h>
 
+using namespace Core;
 using namespace Platform;
 
 // Public
@@ -27,11 +30,43 @@ using namespace Platform;
 OpenGL::OpenGL()
 {
 	getFunctions();
+	initialiseDebugMessaging();
+}
+
+void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const
+{
+	Uint32 errorCode;
+
+	while((errorCode = getError()) != GL_NO_ERROR)
+		reportError(errorCode, file, line, function);
 }
 
 // Private
 
 const Char8* OpenGL::COMPONENT_TAG = "[Platform::OpenGL]";
+
+const Array<Char8*, 6u> OpenGL::DEBUG_MESSAGE_SOURCE_NAMES
+{{
+	"application",
+	"OpenGL",
+	"other source",
+	"shader compiler",
+	"third party",
+	"window system"
+}};
+
+const Array<Char8*, 9u> OpenGL::DEBUG_MESSAGE_TYPE_NAMES
+{{
+	"Deprecated behaviour",
+	"Error",
+	"Group pop",
+	"Group push"
+	"Marker",
+	"Other",
+	"Performance",
+	"Portability",
+	"Undefined behaviour"
+}};
 
 void OpenGL::getFunctions()
 {
@@ -801,4 +836,119 @@ void OpenGL::getFunctions()
 	vertexArrayElementBuffer = getFunction<GLVertexArrayElementBuffer>("glVertexArrayElementBuffer");
 	vertexArrayVertexBuffer = getFunction<GLVertexArrayVertexBuffer>("glVertexArrayVertexBuffer");
 	vertexArrayVertexBuffers = getFunction<GLVertexArrayVertexBuffers>("glVertexArrayVertexBuffers");
+}
+
+void OpenGL::initialiseDebugMessaging() const
+{
+	enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+	debugMessageCallback(processDebugMessage, this);
+}
+
+void OpenGL::reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function) const
+{
+	StringStream8 stringStream;
+	stringStream << "Error caught at " << file << " on line " << line << " in function " << function << '.';
+
+	debugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, errorCode, GL_DEBUG_SEVERITY_HIGH, -1,
+		stringStream.str().c_str());
+}
+
+// Static
+
+void OpenGL::processDebugMessage(const Uint32 messageSource, const Uint32 messageType, const Uint32 messageId,
+	const Uint32 messageSeverity, const Int32 messageLength, const Char8* message, const Void* userData)
+{
+	static_cast<Void>(messageLength);
+	static_cast<Void>(userData);
+
+	defaultLog << getDebugMessageLogLevel(messageSeverity) << COMPONENT_TAG << ' ' <<
+		getDebugMessageTypeName(messageType) << " message (0x" << std::hex << std::uppercase << messageId <<
+		std::nouppercase << std::dec << ") from " << getDebugMessageSourceName(messageSource) << ": '" << message <<
+		'\'' << Log::Flush();
+}
+
+LogLevel OpenGL::getDebugMessageLogLevel(const Uint32 messageSeverity)
+{
+	switch(messageSeverity)
+	{
+		case GL_DEBUG_SEVERITY_HIGH:
+			return LogLevel::Error;
+
+		case GL_DEBUG_SEVERITY_MEDIUM:
+		case GL_DEBUG_SEVERITY_LOW:
+			return LogLevel::Warning;
+
+		case GL_DEBUG_SEVERITY_NOTIFICATION:
+			return LogLevel::Info;
+
+		default:
+			DE_ASSERT(false);
+			return LogLevel();
+	}
+}
+
+const Char8* OpenGL::getDebugMessageTypeName(const Uint32 messageType)
+{
+	switch(messageType)
+	{
+		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+			return DEBUG_MESSAGE_TYPE_NAMES[0];
+
+		case GL_DEBUG_TYPE_ERROR:
+			return DEBUG_MESSAGE_TYPE_NAMES[1];
+
+		case GL_DEBUG_TYPE_MARKER:
+			return DEBUG_MESSAGE_TYPE_NAMES[4];
+
+		case GL_DEBUG_TYPE_OTHER:
+			return DEBUG_MESSAGE_TYPE_NAMES[5];
+
+		case GL_DEBUG_TYPE_PERFORMANCE:
+			return DEBUG_MESSAGE_TYPE_NAMES[6];
+
+		case GL_DEBUG_TYPE_POP_GROUP:
+			return DEBUG_MESSAGE_TYPE_NAMES[2];
+
+		case GL_DEBUG_TYPE_PORTABILITY:
+			return DEBUG_MESSAGE_TYPE_NAMES[7];
+
+		case GL_DEBUG_TYPE_PUSH_GROUP:
+			return DEBUG_MESSAGE_TYPE_NAMES[3];
+
+		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+			return DEBUG_MESSAGE_TYPE_NAMES[8];
+
+		default:
+			DE_ASSERT(false);
+			return DEBUG_MESSAGE_TYPE_NAMES[0];
+	}
+}
+
+const Char8* OpenGL::getDebugMessageSourceName(const Uint32 messageSource)
+{
+	switch(messageSource)
+	{
+		case GL_DEBUG_SOURCE_API:
+			return DEBUG_MESSAGE_SOURCE_NAMES[1];
+
+		case GL_DEBUG_SOURCE_APPLICATION:
+			return DEBUG_MESSAGE_SOURCE_NAMES[0];
+
+		case GL_DEBUG_SOURCE_OTHER:
+			return DEBUG_MESSAGE_SOURCE_NAMES[2];
+
+		case GL_DEBUG_SOURCE_SHADER_COMPILER:
+			return DEBUG_MESSAGE_SOURCE_NAMES[3];
+
+		case GL_DEBUG_SOURCE_THIRD_PARTY:
+			return DEBUG_MESSAGE_SOURCE_NAMES[4];
+
+		case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+			return DEBUG_MESSAGE_SOURCE_NAMES[5];
+
+		default:
+			DE_ASSERT(false);
+			return DEBUG_MESSAGE_SOURCE_NAMES[0];
+	}
 }

@@ -14,6 +14,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\graphics\Colour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\DisplayMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -26,6 +29,9 @@
     <ClInclude Include="include\graphics\GraphicsContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\GraphicsDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,6 +42,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\PNGReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\Viewport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\Window.h">
@@ -55,8 +64,14 @@
     <None Include="include\graphics\inline\PNGReader.inl">
       <Filter>Header Files\inline</Filter>
     </None>
+    <None Include="include\graphics\inline\Viewport.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Colour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\DisplayMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -67,6 +82,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\PNGReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Viewport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

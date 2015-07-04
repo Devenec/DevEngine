@@ -93,19 +93,16 @@ const Array<Int32, 9u> GraphicsContext::Impl::CONTEXT_ATTRIBUTES
 
 // Public
 
-GraphicsContext::GraphicsContext()
-	: _impl(nullptr) { }
+GraphicsContext::GraphicsContext(Window* window)
+	: _impl(nullptr)
+{
+	DE_ASSERT(window != nullptr);
+	_impl = DE_NEW(Impl)(static_cast<HWND>(window->handle()));
+}
 
 GraphicsContext::~GraphicsContext()
 {
 	DE_DELETE(_impl, Impl);
-}
-
-void GraphicsContext::initialise(Window* window)
-{
-	DE_ASSERT(window != nullptr);
-	DE_ASSERT(_impl == nullptr);
-	_impl = DE_NEW(Impl)(static_cast<HWND>(window->handle()));
 }
 
 void GraphicsContext::makeCurrent() const
@@ -120,6 +117,5 @@ void GraphicsContext::makeNonCurrent() const
 
 void GraphicsContext::swapBuffers() const
 {
-	DE_ASSERT(_impl != nullptr);
 	_impl->swapBuffers();
 }

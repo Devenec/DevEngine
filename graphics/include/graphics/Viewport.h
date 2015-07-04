@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/Viewport.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,34 +20,38 @@
 
 #pragma once
 
+#include <core/Rectangle.h>
+
 namespace Graphics
 {
-	class Window;
-
-	class GraphicsContext final
+	class Viewport final
 	{
 	public:
 
-		GraphicsContext(Window* window);
+		Viewport() = default;
 
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
+		Viewport(const Core::Rectangle& bounds);
 
-		~GraphicsContext();
+		Viewport(const Viewport& viewport) = default;
 
-		void makeCurrent() const;
+		Viewport(Viewport&& viewport) = default;
 
-		void makeNonCurrent() const;
+		~Viewport() = default;
 
-		void swapBuffers() const;
+		Float32 aspectRatio() const;
 
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
+		const Core::Rectangle& bounds() const;
+
+		void setBounds(const Core::Rectangle& bounds);
+
+		Viewport& operator =(const Viewport& viewport) = default;
+
+		Viewport& operator =(Viewport&& viewport) = default;
 
 	private:
 
-		class Impl;
-
-		Impl* _impl;
+		Core::Rectangle _bounds;
 	};
+
+#include "inline/Viewport.inl"
 }

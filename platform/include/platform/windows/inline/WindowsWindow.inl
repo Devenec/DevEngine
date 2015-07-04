@@ -55,7 +55,7 @@ void Window::Impl::setCursorVisibility(const Bool isCursorVisible)
 
 Bool Window::Impl::shouldClose() const
 {
-	return _isOpen;
+	return !_isOpen;
 }
 
 void Window::Impl::show() const

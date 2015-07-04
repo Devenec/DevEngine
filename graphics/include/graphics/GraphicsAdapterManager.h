@@ -42,8 +42,6 @@ namespace Graphics
 
 		const GraphicsAdapterList& graphicsAdapters() const;
 
-		void initialise();
-
 		GraphicsAdapterManager& operator =(const GraphicsAdapterManager& graphicsAdapterManager) = delete;
 		GraphicsAdapterManager& operator =(GraphicsAdapterManager&& graphicsAdapterManager) = delete;
 

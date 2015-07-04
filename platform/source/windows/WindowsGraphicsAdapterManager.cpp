@@ -22,7 +22,6 @@
 #include <core/Memory.h>
 #include <core/String.h>
 #include <core/Types.h>
-#include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
 #include <graphics/GraphicsAdapter.h>
 #include <graphics/GraphicsAdapterManager.h>
@@ -155,7 +154,7 @@ private:
 // Public
 
 GraphicsAdapterManager::GraphicsAdapterManager()
-	: _impl(nullptr) { }
+	: _impl(DE_NEW(Impl)()) { }
 
 GraphicsAdapterManager::~GraphicsAdapterManager()
 {
@@ -164,12 +163,5 @@ GraphicsAdapterManager::~GraphicsAdapterManager()
 
 const GraphicsAdapterList& GraphicsAdapterManager::graphicsAdapters() const
 {
-	DE_ASSERT(_impl != nullptr);
 	return _impl->graphicsAdapters();
-}
-
-void GraphicsAdapterManager::initialise()
-{
-	DE_ASSERT(_impl == nullptr);
-	_impl = DE_NEW(Impl)();
 }

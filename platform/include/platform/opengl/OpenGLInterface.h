@@ -20,11 +20,22 @@
 
 #pragma once
 
+#include <core/Array.h>
 #include <core/Error.h>
 #include <core/Log.h>
+#include <core/Platform.h>
 #include <core/Types.h>
+#include <core/UtilityMacros.h>
 #include <platform/GraphicsExtensionManager.h>
 #include <platform/opengl/OpenGL.h>
+
+#if DE_BUILD == DE_BUILD_PRODUCTION
+	#define DE_CHECK_ERROR_OPENGL(instance) \
+		DE_NO_OPERATION
+#else
+	#define DE_CHECK_ERROR_OPENGL(instance) \
+		instance.checkForErrors(DE_FILE, DE_LINE, DE_FUNCTION)
+#endif
 
 namespace Platform
 {
@@ -766,11 +777,25 @@ namespace Platform
 		OpenGL& operator =(const OpenGL& openGl) = delete;
 		OpenGL& operator =(OpenGL&& openGl) = delete;
 
+		void checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const;
+
 	private:
 
 		static const Char8* COMPONENT_TAG;
+		static const Core::Array<Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES;
+		static const Core::Array<Char8*, 9u> DEBUG_MESSAGE_TYPE_NAMES;
 
 		void getFunctions();
+		void initialiseDebugMessaging() const;
+		void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function) const;
+
+		static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
+			const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
+			const Void* userData);
+
+		static Core::LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
+		static const Char8* getDebugMessageTypeName(const Uint32 messageType);
+		static const Char8* getDebugMessageSourceName(const Uint32 messageSource);
 
 		template<typename T>
 		static T getFunction(const Char8* functionName);

@@ -70,6 +70,7 @@
     <ClInclude Include="include\platform\windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp" />
     <ClCompile Include="source\opengl\OpenGLInterface.cpp" />
     <ClCompile Include="source\wgl\WGL.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp" />

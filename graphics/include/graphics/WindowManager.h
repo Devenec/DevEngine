@@ -42,8 +42,6 @@ namespace Graphics
 
 		void destroyWindow(Window* window);
 
-		void initialise();
-
 		void processMessages() const;
 
 		WindowManager& operator =(const WindowManager& windowManager) = delete;
