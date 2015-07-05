@@ -60,7 +60,7 @@ using GLenum	 = Uint32;
 using GLfloat	 = Float32;
 using GLint		 = Int32;
 using GLsizei	 = Int32;
-using GLubyte	 = Byte;
+using GLubyte	 = Uint8;
 using GLuint	 = Uint32;
 
 using GLBlendFunc = void (DE_CALL_OPENGL*)(GLenum sfactor, GLenum dfactor);
@@ -122,9 +122,6 @@ using GLViewport = void (DE_CALL_OPENGL*)(GLint x, GLint y, GLsizei width, GLsiz
 
 
 // Version 1.1
-
-using GLclampf = Float32;
-using GLclampd = Float64;
 
 #define GL_FALSE				   0
 #define GL_TRUE					   1
@@ -601,7 +598,7 @@ using GLUnmapBuffer = GLboolean (DE_CALL_OPENGL*)(GLenum target);
 
 // Version 2.0
 
-using GLbyte   = Char8;
+using GLbyte   = Int8;
 using GLchar   = Char8;
 using GLshort  = Int16;
 using GLushort = Uint16;
