@@ -27,18 +27,727 @@ using namespace Platform;
 
 // Public
 
-OpenGL::OpenGL()
-{
-	getFunctions();
-	initialiseDebugMessaging();
-}
+// Version 1.0
 
-void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const
+GLBlendFunc OpenGL::blendFunc = nullptr;
+GLClear OpenGL::clear = nullptr;
+GLClearColor OpenGL::clearColor = nullptr;
+GLClearDepth OpenGL::clearDepth = nullptr;
+GLClearStencil OpenGL::clearStencil = nullptr;
+GLColorMask OpenGL::colorMask = nullptr;
+GLCullFace OpenGL::cullFace = nullptr;
+GLDepthFunc OpenGL::depthFunc = nullptr;
+GLDepthMask OpenGL::depthMask = nullptr;
+GLDepthRange OpenGL::depthRange = nullptr;
+GLDisable OpenGL::disable = nullptr;
+GLDrawBuffer OpenGL::drawBuffer = nullptr;
+GLEnable OpenGL::enable = nullptr;
+GLFinish OpenGL::finish = nullptr;
+GLFlush OpenGL::flush = nullptr;
+GLFrontFace OpenGL::frontFace = nullptr;
+GLGetBooleanV OpenGL::getBooleanv = nullptr;
+GLGetDoubleV OpenGL::getDoublev = nullptr;
+GLGetError OpenGL::getError = nullptr;
+GLGetFloatV OpenGL::getFloatv = nullptr;
+GLGetIntegerV OpenGL::getIntegerv = nullptr;
+GLGetString OpenGL::getString = nullptr;
+GLGetTexImage OpenGL::getTexImage = nullptr;
+GLGetTexLevelParameterFV OpenGL::getTexLevelParameterfv = nullptr;
+GLGetTexLevelParameterIV OpenGL::getTexLevelParameteriv = nullptr;
+GLGetTexParameterFV OpenGL::getTexParameterfv = nullptr;
+GLGetTexParameterIV OpenGL::getTexParameteriv = nullptr;
+GLHint OpenGL::hint = nullptr;
+GLIsEnabled OpenGL::isEnabled = nullptr;
+GLLineWidth OpenGL::lineWidth = nullptr;
+GLLogicOp OpenGL::logicOp = nullptr;
+GLPixelStoreF OpenGL::pixelStoref = nullptr;
+GLPixelStoreI OpenGL::pixelStorei = nullptr;
+GLPointSize OpenGL::pointSize = nullptr;
+GLPolygonMode OpenGL::polygonMode = nullptr;
+GLReadBuffer OpenGL::readBuffer = nullptr;
+GLReadPixels OpenGL::readPixels = nullptr;
+GLScissor OpenGL::scissor = nullptr;
+GLStencilFunc OpenGL::stencilFunc = nullptr;
+GLStencilMask OpenGL::stencilMask = nullptr;
+GLStencilOp OpenGL::stencilOp = nullptr;
+GLTexImage1D OpenGL::texImage1D = nullptr;
+GLTexImage2D OpenGL::texImage2D = nullptr;
+GLTexParameterF OpenGL::texParameterf = nullptr;
+GLTexParameterFV OpenGL::texParameterfv = nullptr;
+GLTexParameterI OpenGL::texParameteri = nullptr;
+GLTexParameterIV OpenGL::texParameteriv = nullptr;
+GLViewport OpenGL::viewport = nullptr;
+
+// Version 1.1
+
+GLBindTexture OpenGL::bindTexture = nullptr;
+GLCopyTexImage1D OpenGL::copyTexImage1D = nullptr;
+GLCopyTexImage2D OpenGL::copyTexImage2D = nullptr;
+GLCopyTexSubImage1D OpenGL::copyTexSubImage1D = nullptr;
+GLCopyTexSubImage2D OpenGL::copyTexSubImage2D = nullptr;
+GLDeleteTextures OpenGL::deleteTextures = nullptr;
+GLDrawArrays OpenGL::drawArrays = nullptr;
+GLDrawElements OpenGL::drawElements = nullptr;
+GLGenTextures OpenGL::genTextures = nullptr;
+GLGetPointerV OpenGL::getPointerv = nullptr;
+GLIsTexture OpenGL::isTexture = nullptr;
+GLPolygonOffset OpenGL::polygonOffset = nullptr;
+GLTexSubImage1D OpenGL::texSubImage1D = nullptr;
+GLTexSubImage2D OpenGL::texSubImage2D = nullptr;
+
+// Version 1.2
+
+GLCopyTexSubImage3D OpenGL::copyTexSubImage3D = nullptr;
+GLDrawRangeElements OpenGL::drawRangeElements = nullptr;
+GLTexImage3D OpenGL::texImage3D = nullptr;
+GLTexSubImage3D OpenGL::texSubImage3D = nullptr;
+
+// Version 1.3
+
+GLActiveTexture OpenGL::activeTexture = nullptr;
+GLCompressedTexImage1D OpenGL::compressedTexImage1D = nullptr;
+GLCompressedTexImage2D OpenGL::compressedTexImage2D = nullptr;
+GLCompressedTexImage3D OpenGL::compressedTexImage3D = nullptr;
+GLCompressedTexSubImage1D OpenGL::compressedTexSubImage1D = nullptr;
+GLCompressedTexSubImage2D OpenGL::compressedTexSubImage2D = nullptr;
+GLCompressedTexSubImage3D OpenGL::compressedTexSubImage3D = nullptr;
+GLGetCompressedTexImage OpenGL::getCompressedTexImage = nullptr;
+GLSampleCoverage OpenGL::sampleCoverage = nullptr;
+
+// Version 1.4
+
+GLBlendColor OpenGL::blendColor = nullptr;
+GLBlendEquation OpenGL::blendEquation = nullptr;
+GLBlendFuncSeparate OpenGL::blendFuncSeparate = nullptr;
+GLMultiDrawArrays OpenGL::multiDrawArrays = nullptr;
+GLMultiDrawElements OpenGL::multiDrawElements = nullptr;
+GLPointParameterF OpenGL::pointParameterf = nullptr;
+GLPointParameterFV OpenGL::pointParameterfv = nullptr;
+GLPointParameterI OpenGL::pointParameteri = nullptr;
+GLPointParameterIV OpenGL::pointParameteriv = nullptr;
+
+// Version 1.5
+
+GLBeginQuery OpenGL::beginQuery = nullptr;
+GLBindBuffer OpenGL::bindBuffer = nullptr;
+GLBufferData OpenGL::bufferData = nullptr;
+GLBufferSubData OpenGL::bufferSubData = nullptr;
+GLDeleteBuffers OpenGL::deleteBuffers = nullptr;
+GLDeleteQueries OpenGL::deleteQueries = nullptr;
+GLEndQuery OpenGL::endQuery = nullptr;
+GLGenBuffers OpenGL::genBuffers = nullptr;
+GLGenQueries OpenGL::genQueries = nullptr;
+GLGetBufferParameterIV OpenGL::getBufferParameteriv = nullptr;
+GLGetBufferPointerV OpenGL::getBufferPointerv = nullptr;
+GLGetBufferSubData OpenGL::getBufferSubData = nullptr;
+GLGetQueryIV OpenGL::getQueryiv = nullptr;
+GLGetQueryObjectIV OpenGL::getQueryObjectiv = nullptr;
+GLGetQueryObjectUIV OpenGL::getQueryObjectuiv = nullptr;
+GLIsBuffer OpenGL::isBuffer = nullptr;
+GLIsQuery OpenGL::isQuery = nullptr;
+GLMapBuffer OpenGL::mapBuffer = nullptr;
+GLUnmapBuffer OpenGL::unmapBuffer = nullptr;
+
+// Version 2.0
+
+GLAttachShader OpenGL::attachShader = nullptr;
+GLBindAttribLocation OpenGL::bindAttribLocation = nullptr;
+GLBlendEquationSeparate OpenGL::blendEquationSeparate = nullptr;
+GLCompileShader OpenGL::compileShader = nullptr;
+GLCreateProgram OpenGL::createProgram = nullptr;
+GLCreateShader OpenGL::createShader = nullptr;
+GLDeleteProgram OpenGL::deleteProgram = nullptr;
+GLDeleteShader OpenGL::deleteShader = nullptr;
+GLDetachShader OpenGL::detachShader = nullptr;
+GLDisableVertexAttribArray OpenGL::disableVertexAttribArray = nullptr;
+GLDrawBuffers OpenGL::drawBuffers = nullptr;
+GLEnableVertexAttribArray OpenGL::enableVertexAttribArray = nullptr;
+GLGetActiveAttrib OpenGL::getActiveAttrib = nullptr;
+GLGetActiveUniform OpenGL::getActiveUniform = nullptr;
+GLGetAttachedShaders OpenGL::getAttachedShaders = nullptr;
+GLGetAttribLocation OpenGL::getAttribLocation = nullptr;
+GLGetProgramInfoLog OpenGL::getProgramInfoLog = nullptr;
+GLGetProgramIV OpenGL::getProgramiv = nullptr;
+GLGetShaderInfoLog OpenGL::getShaderInfoLog = nullptr;
+GLGetShaderIV OpenGL::getShaderiv = nullptr;
+GLGetShaderSource OpenGL::getShaderSource = nullptr;
+GLGetUniformFV OpenGL::getUniformfv = nullptr;
+GLGetUniformIV OpenGL::getUniformiv = nullptr;
+GLGetUniformLocation OpenGL::getUniformLocation = nullptr;
+GLGetVertexAttribDV OpenGL::getVertexAttribdv = nullptr;
+GLGetVertexAttribFV OpenGL::getVertexAttribfv = nullptr;
+GLGetVertexAttribIV OpenGL::getVertexAttribiv = nullptr;
+GLGetVertexAttribPointerV OpenGL::getVertexAttribPointerv = nullptr;
+GLIsProgram OpenGL::isProgram = nullptr;
+GLIsShader OpenGL::isShader = nullptr;
+GLLinkProgram OpenGL::linkProgram = nullptr;
+GLShaderSource OpenGL::shaderSource = nullptr;
+GLStencilFuncSeparate OpenGL::stencilFuncSeparate = nullptr;
+GLStencilMaskSeparate OpenGL::stencilMaskSeparate = nullptr;
+GLStencilOpSeparate OpenGL::stencilOpSeparate = nullptr;
+GLUniform1F OpenGL::uniform1f = nullptr;
+GLUniform1FV OpenGL::uniform1fv = nullptr;
+GLUniform1I OpenGL::uniform1i = nullptr;
+GLUniform1IV OpenGL::uniform1iv = nullptr;
+GLUniform2F OpenGL::uniform2f = nullptr;
+GLUniform2FV OpenGL::uniform2fv = nullptr;
+GLUniform2I OpenGL::uniform2i = nullptr;
+GLUniform2IV OpenGL::uniform2iv = nullptr;
+GLUniform3F OpenGL::uniform3f = nullptr;
+GLUniform3FV OpenGL::uniform3fv = nullptr;
+GLUniform3I OpenGL::uniform3i = nullptr;
+GLUniform3IV OpenGL::uniform3iv = nullptr;
+GLUniform4F OpenGL::uniform4f = nullptr;
+GLUniform4FV OpenGL::uniform4fv = nullptr;
+GLUniform4I OpenGL::uniform4i = nullptr;
+GLUniform4IV OpenGL::uniform4iv = nullptr;
+GLUniformMatrix2FV OpenGL::uniformMatrix2fv = nullptr;
+GLUniformMatrix3FV OpenGL::uniformMatrix3fv = nullptr;
+GLUniformMatrix4FV OpenGL::uniformMatrix4fv = nullptr;
+GLUseProgram OpenGL::useProgram = nullptr;
+GLValidateProgram OpenGL::validateProgram = nullptr;
+GLVertexAttrib1D OpenGL::vertexAttrib1d = nullptr;
+GLVertexAttrib1DV OpenGL::vertexAttrib1dv = nullptr;
+GLVertexAttrib1F OpenGL::vertexAttrib1f = nullptr;
+GLVertexAttrib1FV OpenGL::vertexAttrib1fv = nullptr;
+GLVertexAttrib1S OpenGL::vertexAttrib1s = nullptr;
+GLVertexAttrib1SV OpenGL::vertexAttrib1sv = nullptr;
+GLVertexAttrib2D OpenGL::vertexAttrib2d = nullptr;
+GLVertexAttrib2DV OpenGL::vertexAttrib2dv = nullptr;
+GLVertexAttrib2F OpenGL::vertexAttrib2f = nullptr;
+GLVertexAttrib2FV OpenGL::vertexAttrib2fv = nullptr;
+GLVertexAttrib2S OpenGL::vertexAttrib2s = nullptr;
+GLVertexAttrib2SV OpenGL::vertexAttrib2sv = nullptr;
+GLVertexAttrib3D OpenGL::vertexAttrib3d = nullptr;
+GLVertexAttrib3DV OpenGL::vertexAttrib3dv = nullptr;
+GLVertexAttrib3F OpenGL::vertexAttrib3f = nullptr;
+GLVertexAttrib3FV OpenGL::vertexAttrib3fv = nullptr;
+GLVertexAttrib3S OpenGL::vertexAttrib3s = nullptr;
+GLVertexAttrib3SV OpenGL::vertexAttrib3sv = nullptr;
+GLVertexAttrib4BV OpenGL::vertexAttrib4bv = nullptr;
+GLVertexAttrib4D OpenGL::vertexAttrib4d = nullptr;
+GLVertexAttrib4DV OpenGL::vertexAttrib4dv = nullptr;
+GLVertexAttrib4F OpenGL::vertexAttrib4f = nullptr;
+GLVertexAttrib4FV OpenGL::vertexAttrib4fv = nullptr;
+GLVertexAttrib4IV OpenGL::vertexAttrib4iv = nullptr;
+GLVertexAttrib4NBV OpenGL::vertexAttrib4Nbv = nullptr;
+GLVertexAttrib4NIV OpenGL::vertexAttrib4Niv = nullptr;
+GLVertexAttrib4NSV OpenGL::vertexAttrib4Nsv = nullptr;
+GLVertexAttrib4NUB OpenGL::vertexAttrib4Nub = nullptr;
+GLVertexAttrib4NUBV OpenGL::vertexAttrib4Nubv = nullptr;
+GLVertexAttrib4NUIV OpenGL::vertexAttrib4Nuiv = nullptr;
+GLVertexAttrib4NUSV OpenGL::vertexAttrib4Nusv = nullptr;
+GLVertexAttrib4S OpenGL::vertexAttrib4s = nullptr;
+GLVertexAttrib4SV OpenGL::vertexAttrib4sv = nullptr;
+GLVertexAttrib4UBV OpenGL::vertexAttrib4ubv = nullptr;
+GLVertexAttrib4UIV OpenGL::vertexAttrib4uiv = nullptr;
+GLVertexAttrib4USV OpenGL::vertexAttrib4usv = nullptr;
+GLVertexAttribPointer OpenGL::vertexAttribPointer = nullptr;
+
+// Version 2.1
+
+GLUniformMatrix2X3FV OpenGL::uniformMatrix2x3fv = nullptr;
+GLUniformMatrix2X4FV OpenGL::uniformMatrix2x4fv = nullptr;
+GLUniformMatrix3X2FV OpenGL::uniformMatrix3x2fv = nullptr;
+GLUniformMatrix3X4FV OpenGL::uniformMatrix3x4fv = nullptr;
+GLUniformMatrix4X2FV OpenGL::uniformMatrix4x2fv = nullptr;
+GLUniformMatrix4X3FV OpenGL::uniformMatrix4x3fv = nullptr;
+
+// Version 3.0
+
+GLBeginConditionalRender OpenGL::beginConditionalRender = nullptr;
+GLBeginTransformFeedback OpenGL::beginTransformFeedback = nullptr;
+GLBindBufferBase OpenGL::bindBufferBase = nullptr;
+GLBindBufferRange OpenGL::bindBufferRange = nullptr;
+GLBindFragDataLocation OpenGL::bindFragDataLocation = nullptr;
+GLBindFramebuffer OpenGL::bindFramebuffer = nullptr;
+GLBindRenderbuffer OpenGL::bindRenderbuffer = nullptr;
+GLBindVertexArray OpenGL::bindVertexArray = nullptr;
+GLBlitFramebuffer OpenGL::blitFramebuffer = nullptr;
+GLCheckFramebufferStatus OpenGL::checkFramebufferStatus = nullptr;
+GLClampColor OpenGL::clampColor = nullptr;
+GLClearBufferFI OpenGL::clearBufferfi = nullptr;
+GLClearBufferFV OpenGL::clearBufferfv = nullptr;
+GLClearBufferIV OpenGL::clearBufferiv = nullptr;
+GLClearBufferUIV OpenGL::clearBufferuiv = nullptr;
+GLColorMaskI OpenGL::colorMaski = nullptr;
+GLDeleteFramebuffers OpenGL::deleteFramebuffers = nullptr;
+GLDeleteRenderbuffers OpenGL::deleteRenderbuffers = nullptr;
+GLDeleteVertexArrays OpenGL::deleteVertexArrays = nullptr;
+GLDisableI OpenGL::disablei = nullptr;
+GLEnableI OpenGL::enablei = nullptr;
+GLEndConditionalRender OpenGL::endConditionalRender = nullptr;
+GLEndTransformFeedback OpenGL::endTransformFeedback = nullptr;
+GLFlushMappedBufferRange OpenGL::flushMappedBufferRange = nullptr;
+GLFramebufferRenderbuffer OpenGL::framebufferRenderbuffer = nullptr;
+GLFramebufferTexture1D OpenGL::framebufferTexture1D = nullptr;
+GLFramebufferTexture2D OpenGL::framebufferTexture2D = nullptr;
+GLFramebufferTexture3D OpenGL::framebufferTexture3D = nullptr;
+GLFramebufferTextureLayer OpenGL::framebufferTextureLayer = nullptr;
+GLGenerateMipmap OpenGL::generateMipmap = nullptr;
+GLGenFramebuffers OpenGL::genFramebuffers = nullptr;
+GLGenRenderbuffers OpenGL::genRenderbuffers = nullptr;
+GLGenVertexArrays OpenGL::genVertexArrays = nullptr;
+GLGetBooleanI_V OpenGL::getBooleani_v = nullptr;
+GLGetFragDataLocation OpenGL::getFragDataLocation = nullptr;
+GLGetFramebufferAttachmentParameterIV OpenGL::getFramebufferAttachmentParameteriv = nullptr;
+GLGetIntegerI_V OpenGL::getIntegeri_v = nullptr;
+GLGetRenderbufferParameterIV OpenGL::getRenderbufferParameteriv = nullptr;
+GLGetStringI OpenGL::getStringi = nullptr;
+GLGetTexParameterIIV OpenGL::getTexParameterIiv = nullptr;
+GLGetTexParameterIUIV OpenGL::getTexParameterIuiv = nullptr;
+GLGetTransformFeedbackVarying OpenGL::getTransformFeedbackVarying = nullptr;
+GLGetUniformUIV OpenGL::getUniformuiv = nullptr;
+GLGetVertexAttribIIV OpenGL::getVertexAttribIiv = nullptr;
+GLGetVertexAttribIUIV OpenGL::getVertexAttribIuiv = nullptr;
+GLIsEnabledI OpenGL::isEnabledi = nullptr;
+GLIsFramebuffer OpenGL::isFramebuffer = nullptr;
+GLIsRenderbuffer OpenGL::isRenderbuffer = nullptr;
+GLIsVertexArray OpenGL::isVertexArray = nullptr;
+GLMapBufferRange OpenGL::mapBufferRange = nullptr;
+GLRenderbufferStorage OpenGL::renderbufferStorage = nullptr;
+GLRenderbufferStorageMultisample OpenGL::renderbufferStorageMultisample = nullptr;
+GLTexParameterIIV OpenGL::texParameterIiv = nullptr;
+GLTexParameterIUIV OpenGL::texParameterIuiv = nullptr;
+GLTransformFeedbackVaryings OpenGL::transformFeedbackVaryings = nullptr;
+GLUniform1UI OpenGL::uniform1ui = nullptr;
+GLUniform1UIV OpenGL::uniform1uiv = nullptr;
+GLUniform2UI OpenGL::uniform2ui = nullptr;
+GLUniform2UIV OpenGL::uniform2uiv = nullptr;
+GLUniform3UI OpenGL::uniform3ui = nullptr;
+GLUniform3UIV OpenGL::uniform3uiv = nullptr;
+GLUniform4UI OpenGL::uniform4ui = nullptr;
+GLUniform4UIV OpenGL::uniform4uiv = nullptr;
+GLVertexAttribI1I OpenGL::vertexAttribI1i = nullptr;
+GLVertexAttribI1IV OpenGL::vertexAttribI1iv = nullptr;
+GLVertexAttribI1UI OpenGL::vertexAttribI1ui = nullptr;
+GLVertexAttribI1UIV OpenGL::vertexAttribI1uiv = nullptr;
+GLVertexAttribI2I OpenGL::vertexAttribI2i = nullptr;
+GLVertexAttribI2IV OpenGL::vertexAttribI2iv = nullptr;
+GLVertexAttribI2UI OpenGL::vertexAttribI2ui = nullptr;
+GLVertexAttribI2UIV OpenGL::vertexAttribI2uiv = nullptr;
+GLVertexAttribI3I OpenGL::vertexAttribI3i = nullptr;
+GLVertexAttribI3IV OpenGL::vertexAttribI3iv = nullptr;
+GLVertexAttribI3UI OpenGL::vertexAttribI3ui = nullptr;
+GLVertexAttribI3UIV OpenGL::vertexAttribI3uiv = nullptr;
+GLVertexAttribI4BV OpenGL::vertexAttribI4bv = nullptr;
+GLVertexAttribI4I OpenGL::vertexAttribI4i = nullptr;
+GLVertexAttribI4IV OpenGL::vertexAttribI4iv = nullptr;
+GLVertexAttribI4SV OpenGL::vertexAttribI4sv = nullptr;
+GLVertexAttribI4UBV OpenGL::vertexAttribI4ubv = nullptr;
+GLVertexAttribI4UI OpenGL::vertexAttribI4ui = nullptr;
+GLVertexAttribI4UIV OpenGL::vertexAttribI4uiv = nullptr;
+GLVertexAttribI4USV OpenGL::vertexAttribI4usv = nullptr;
+GLVertexAttribIPointer OpenGL::vertexAttribIPointer = nullptr;
+
+// Version 3.1
+
+GLCopyBufferSubData OpenGL::copyBufferSubData = nullptr;
+GLDrawArraysInstanced OpenGL::drawArraysInstanced = nullptr;
+GLDrawElementsInstanced OpenGL::drawElementsInstanced = nullptr;
+GLGetActiveUniformBlockIV OpenGL::getActiveUniformBlockiv = nullptr;
+GLGetActiveUniformBlockName OpenGL::getActiveUniformBlockName = nullptr;
+GLGetActiveUniformName OpenGL::getActiveUniformName = nullptr;
+GLGetActiveUniformsIV OpenGL::getActiveUniformsiv = nullptr;
+GLGetUniformBlockIndex OpenGL::getUniformBlockIndex = nullptr;
+GLGetUniformIndices OpenGL::getUniformIndices = nullptr;
+GLPrimitiveRestartIndex OpenGL::primitiveRestartIndex = nullptr;
+GLTexBuffer OpenGL::texBuffer = nullptr;
+GLUniformBlockBinding OpenGL::uniformBlockBinding = nullptr;
+
+// Version 3.2
+
+GLClientWaitSync OpenGL::clientWaitSync = nullptr;
+GLDeleteSync OpenGL::deleteSync = nullptr;
+GLDrawElementsBaseVertex OpenGL::drawElementsBaseVertex = nullptr;
+GLDrawElementsInstancedBaseVertex OpenGL::drawElementsInstancedBaseVertex = nullptr;
+GLDrawRangeElementsBaseVertex OpenGL::drawRangeElementsBaseVertex = nullptr;
+GLFenceSync OpenGL::fenceSync = nullptr;
+GLFramebufferTexture OpenGL::framebufferTexture = nullptr;
+GLGetBufferParameterI64V OpenGL::getBufferParameteri64v = nullptr;
+GLGetInteger64I_V OpenGL::getInteger64i_v = nullptr;
+GLGetInteger64V OpenGL::getInteger64v = nullptr;
+GLGetMultisampleFV OpenGL::getMultisamplefv = nullptr;
+GLGetSyncIV OpenGL::getSynciv = nullptr;
+GLIsSync OpenGL::isSync = nullptr;
+GLMultiDrawElementsBaseVertex OpenGL::multiDrawElementsBaseVertex = nullptr;
+GLProvokingVertex OpenGL::provokingVertex = nullptr;
+GLSampleMaskI OpenGL::sampleMaski = nullptr;
+GLTexImage2DMultisample OpenGL::texImage2DMultisample = nullptr;
+GLTexImage3DMultisample OpenGL::texImage3DMultisample = nullptr;
+GLWaitSync OpenGL::waitSync = nullptr;
+
+// Version 3.3
+
+GLBindFragDataLocationIndexed OpenGL::bindFragDataLocationIndexed = nullptr;
+GLBindSampler OpenGL::bindSampler = nullptr;
+GLDeleteSamplers OpenGL::deleteSamplers = nullptr;
+GLGenSamplers OpenGL::genSamplers = nullptr;
+GLGetFragDataIndex OpenGL::getFragDataIndex = nullptr;
+GLGetQueryObjectI64V OpenGL::getQueryObjecti64v = nullptr;
+GLGetQueryObjectUI64V OpenGL::getQueryObjectui64v = nullptr;
+GLGetSamplerParameterFV OpenGL::getSamplerParameterfv = nullptr;
+GLGetSamplerParameterIIV OpenGL::getSamplerParameterIiv = nullptr;
+GLGetSamplerParameterIUIV OpenGL::getSamplerParameterIuiv = nullptr;
+GLGetSamplerParameterIV OpenGL::getSamplerParameteriv = nullptr;
+GLIsSampler OpenGL::isSampler = nullptr;
+GLQueryCounter OpenGL::queryCounter = nullptr;
+GLSamplerParameterF OpenGL::samplerParameterf = nullptr;
+GLSamplerParameterFV OpenGL::samplerParameterfv = nullptr;
+GLSamplerParameterI OpenGL::samplerParameteri = nullptr;
+GLSamplerParameterIV OpenGL::samplerParameteriv = nullptr;
+GLSamplerParameterIIV OpenGL::samplerParameterIiv = nullptr;
+GLSamplerParameterIUIV OpenGL::samplerParameterIuiv = nullptr;
+GLVertexAttribDivisor OpenGL::vertexAttribDivisor = nullptr;
+GLVertexAttribP1UI OpenGL::vertexAttribP1ui = nullptr;
+GLVertexAttribP1UIV OpenGL::vertexAttribP1uiv = nullptr;
+GLVertexAttribP2UI OpenGL::vertexAttribP2ui = nullptr;
+GLVertexAttribP2UIV OpenGL::vertexAttribP2uiv = nullptr;
+GLVertexAttribP3UI OpenGL::vertexAttribP3ui = nullptr;
+GLVertexAttribP3UIV OpenGL::vertexAttribP3uiv = nullptr;
+GLVertexAttribP4UI OpenGL::vertexAttribP4ui = nullptr;
+GLVertexAttribP4UIV OpenGL::vertexAttribP4uiv = nullptr;
+
+// Version 4.0
+
+GLBeginQueryIndexed OpenGL::beginQueryIndexed = nullptr;
+GLBindTransformFeedback OpenGL::bindTransformFeedback = nullptr;
+GLBlendEquationI OpenGL::blendEquationi = nullptr;
+GLBlendEquationSeparateI OpenGL::blendEquationSeparatei = nullptr;
+GLBlendFuncI OpenGL::blendFunci = nullptr;
+GLBlendFuncSeparateI OpenGL::blendFuncSeparatei = nullptr;
+GLDeleteTransformFeedbacks OpenGL::deleteTransformFeedbacks = nullptr;
+GLDrawArraysIndirect OpenGL::drawArraysIndirect = nullptr;
+GLDrawElementsIndirect OpenGL::drawElementsIndirect = nullptr;
+GLDrawTransformFeedback OpenGL::drawTransformFeedback = nullptr;
+GLDrawTransformFeedbackStream OpenGL::drawTransformFeedbackStream = nullptr;
+GLEndQueryIndexed OpenGL::endQueryIndexed = nullptr;
+GLGenTransformFeedbacks OpenGL::genTransformFeedbacks = nullptr;
+GLGetActiveSubroutineName OpenGL::getActiveSubroutineName = nullptr;
+GLGetActiveSubroutineUniformIV OpenGL::getActiveSubroutineUniformiv = nullptr;
+GLGetActiveSubroutineUniformName OpenGL::getActiveSubroutineUniformName = nullptr;
+GLGetProgramStageIV OpenGL::getProgramStageiv = nullptr;
+GLGetQueryIndexedIV OpenGL::getQueryIndexediv = nullptr;
+GLGetSubroutineIndex OpenGL::getSubroutineIndex = nullptr;
+GLGetSubroutineUniformLocation OpenGL::getSubroutineUniformLocation = nullptr;
+GLGetUniformDV OpenGL::getUniformdv = nullptr;
+GLGetUniformSubroutineUIV OpenGL::getUniformSubroutineuiv = nullptr;
+GLIsTransformFeedback OpenGL::isTransformFeedback = nullptr;
+GLMinSampleShading OpenGL::minSampleShading = nullptr;
+GLPatchParameterFV OpenGL::patchParameterfv = nullptr;
+GLPatchParameterI OpenGL::patchParameteri = nullptr;
+GLPauseTransformFeedback OpenGL::pauseTransformFeedback = nullptr;
+GLResumeTransformFeedback OpenGL::resumeTransformFeedback = nullptr;
+GLUniform1D OpenGL::uniform1d = nullptr;
+GLUniform1DV OpenGL::uniform1dv = nullptr;
+GLUniform2D OpenGL::uniform2d = nullptr;
+GLUniform2DV OpenGL::uniform2dv = nullptr;
+GLUniform3D OpenGL::uniform3d = nullptr;
+GLUniform3DV OpenGL::uniform3dv = nullptr;
+GLUniform4D OpenGL::uniform4d = nullptr;
+GLUniform4DV OpenGL::uniform4dv = nullptr;
+GLUniformMatrix2DV OpenGL::uniformMatrix2dv = nullptr;
+GLUniformMatrix2X3DV OpenGL::uniformMatrix2x3dv = nullptr;
+GLUniformMatrix2X4DV OpenGL::uniformMatrix2x4dv = nullptr;
+GLUniformMatrix3DV OpenGL::uniformMatrix3dv = nullptr;
+GLUniformMatrix3X2DV OpenGL::uniformMatrix3x2dv = nullptr;
+GLUniformMatrix3X4DV OpenGL::uniformMatrix3x4dv = nullptr;
+GLUniformMatrix4DV OpenGL::uniformMatrix4dv = nullptr;
+GLUniformMatrix4X2DV OpenGL::uniformMatrix4x2dv = nullptr;
+GLUniformMatrix4X3DV OpenGL::uniformMatrix4x3dv = nullptr;
+GLUniformSubroutineSUIV OpenGL::uniformSubroutinesuiv = nullptr;
+
+// Version 4.1
+
+GLActiveShaderProgram OpenGL::activeShaderProgram = nullptr;
+GLBindProgramPipeline OpenGL::bindProgramPipeline = nullptr;
+GLClearDepthF OpenGL::clearDepthf = nullptr;
+GLCreateShaderProgramV OpenGL::createShaderProgramv = nullptr;
+GLDeleteProgramPipelines OpenGL::deleteProgramPipelines = nullptr;
+GLDepthRangeArrayV OpenGL::depthRangeArrayv = nullptr;
+GLDepthRangeF OpenGL::depthRangef = nullptr;
+GLDepthRangeIndexed OpenGL::depthRangeIndexed = nullptr;
+GLGenProgramPipelines OpenGL::genProgramPipelines = nullptr;
+GLGetDoubleI_V OpenGL::getDoublei_v = nullptr;
+GLGetFloatI_V OpenGL::getFloati_v = nullptr;
+GLGetProgramBinary OpenGL::getProgramBinary = nullptr;
+GLGetProgramPipelineInfoLog OpenGL::getProgramPipelineInfoLog = nullptr;
+GLGetProgramPipelineIV OpenGL::getProgramPipelineiv = nullptr;
+GLGetShaderPrecisionFormat OpenGL::getShaderPrecisionFormat = nullptr;
+GLGetVertexAttribLDV OpenGL::getVertexAttribLdv = nullptr;
+GLIsProgramPipeline OpenGL::isProgramPipeline = nullptr;
+GLProgramBinary OpenGL::programBinary = nullptr;
+GLProgramParameterI OpenGL::programParameteri = nullptr;
+GLProgramUniform1D OpenGL::programUniform1d = nullptr;
+GLProgramUniform1DV OpenGL::programUniform1dv = nullptr;
+GLProgramUniform1F OpenGL::programUniform1f = nullptr;
+GLProgramUniform1FV OpenGL::programUniform1fv = nullptr;
+GLProgramUniform1I OpenGL::programUniform1i = nullptr;
+GLProgramUniform1IV OpenGL::programUniform1iv = nullptr;
+GLProgramUniform1UI OpenGL::programUniform1ui = nullptr;
+GLProgramUniform1UIV OpenGL::programUniform1uiv = nullptr;
+GLProgramUniform2D OpenGL::programUniform2d = nullptr;
+GLProgramUniform2DV OpenGL::programUniform2dv = nullptr;
+GLProgramUniform2F OpenGL::programUniform2f = nullptr;
+GLProgramUniform2FV OpenGL::programUniform2fv = nullptr;
+GLProgramUniform2I OpenGL::programUniform2i = nullptr;
+GLProgramUniform2IV OpenGL::programUniform2iv = nullptr;
+GLProgramUniform2UI OpenGL::programUniform2ui = nullptr;
+GLProgramUniform2UIV OpenGL::programUniform2uiv = nullptr;
+GLProgramUniform3D OpenGL::programUniform3d = nullptr;
+GLProgramUniform3DV OpenGL::programUniform3dv = nullptr;
+GLProgramUniform3F OpenGL::programUniform3f = nullptr;
+GLProgramUniform3FV OpenGL::programUniform3fv = nullptr;
+GLProgramUniform3I OpenGL::programUniform3i = nullptr;
+GLProgramUniform3IV OpenGL::programUniform3iv = nullptr;
+GLProgramUniform3UI OpenGL::programUniform3ui = nullptr;
+GLProgramUniform3UIV OpenGL::programUniform3uiv = nullptr;
+GLProgramUniform4D OpenGL::programUniform4d = nullptr;
+GLProgramUniform4DV OpenGL::programUniform4dv = nullptr;
+GLProgramUniform4F OpenGL::programUniform4f = nullptr;
+GLProgramUniform4FV OpenGL::programUniform4fv = nullptr;
+GLProgramUniform4I OpenGL::programUniform4i = nullptr;
+GLProgramUniform4IV OpenGL::programUniform4iv = nullptr;
+GLProgramUniform4UI OpenGL::programUniform4ui = nullptr;
+GLProgramUniform4UIV OpenGL::programUniform4uiv = nullptr;
+GLProgramUniformMatrix2DV OpenGL::programUniformMatrix2dv = nullptr;
+GLProgramUniformMatrix2FV OpenGL::programUniformMatrix2fv = nullptr;
+GLProgramUniformMatrix2X3DV OpenGL::programUniformMatrix2x3dv = nullptr;
+GLProgramUniformMatrix2X3FV OpenGL::programUniformMatrix2x3fv = nullptr;
+GLProgramUniformMatrix2X4DV OpenGL::programUniformMatrix2x4dv = nullptr;
+GLProgramUniformMatrix2X4FV OpenGL::programUniformMatrix2x4fv = nullptr;
+GLProgramUniformMatrix3DV OpenGL::programUniformMatrix3dv = nullptr;
+GLProgramUniformMatrix3FV OpenGL::programUniformMatrix3fv = nullptr;
+GLProgramUniformMatrix3X2DV OpenGL::programUniformMatrix3x2dv = nullptr;
+GLProgramUniformMatrix3X2FV OpenGL::programUniformMatrix3x2fv = nullptr;
+GLProgramUniformMatrix3X4DV OpenGL::programUniformMatrix3x4dv = nullptr;
+GLProgramUniformMatrix3X4FV OpenGL::programUniformMatrix3x4fv = nullptr;
+GLProgramUniformMatrix4DV OpenGL::programUniformMatrix4dv = nullptr;
+GLProgramUniformMatrix4FV OpenGL::programUniformMatrix4fv = nullptr;
+GLProgramUniformMatrix4X2DV OpenGL::programUniformMatrix4x2dv = nullptr;
+GLProgramUniformMatrix4X2FV OpenGL::programUniformMatrix4x2fv = nullptr;
+GLProgramUniformMatrix4X3DV OpenGL::programUniformMatrix4x3dv = nullptr;
+GLProgramUniformMatrix4X3FV OpenGL::programUniformMatrix4x3fv = nullptr;
+GLReleaseShaderCompiler OpenGL::releaseShaderCompiler = nullptr;
+GLShaderBinary OpenGL::shaderBinary = nullptr;
+GLScissorArrayV OpenGL::scissorArrayv = nullptr;
+GLScissorIndexed OpenGL::scissorIndexed = nullptr;
+GLScissorIndexedV OpenGL::scissorIndexedv = nullptr;
+GLUseProgramStages OpenGL::useProgramStages = nullptr;
+GLValidateProgramPipeline OpenGL::validateProgramPipeline = nullptr;
+GLVertexAttribL1D OpenGL::vertexAttribL1d = nullptr;
+GLVertexAttribL1DV OpenGL::vertexAttribL1dv = nullptr;
+GLVertexAttribL2D OpenGL::vertexAttribL2d = nullptr;
+GLVertexAttribL2DV OpenGL::vertexAttribL2dv = nullptr;
+GLVertexAttribL3D OpenGL::vertexAttribL3d = nullptr;
+GLVertexAttribL3DV OpenGL::vertexAttribL3dv = nullptr;
+GLVertexAttribL4D OpenGL::vertexAttribL4d = nullptr;
+GLVertexAttribL4DV OpenGL::vertexAttribL4dv = nullptr;
+GLVertexAttribLPointer OpenGL::vertexAttribLPointer = nullptr;
+GLViewportArrayV OpenGL::viewportArrayv = nullptr;
+GLViewportIndexedF OpenGL::viewportIndexedf = nullptr;
+GLViewportIndexedFV OpenGL::viewportIndexedfv = nullptr;
+
+// Version 4.2
+
+GLBindImageTexture OpenGL::bindImageTexture = nullptr;
+GLDrawArraysInstancedBaseInstance OpenGL::drawArraysInstancedBaseInstance = nullptr;
+GLDrawElementsInstancedBaseInstance OpenGL::drawElementsInstancedBaseInstance = nullptr;
+GLDrawElementsInstancedBaseVertexBaseInstance OpenGL::drawElementsInstancedBaseVertexBaseInstance = nullptr;
+GLDrawTransformFeedbackInstanced OpenGL::drawTransformFeedbackInstanced = nullptr;
+GLDrawTransformFeedbackStreamInstanced OpenGL::drawTransformFeedbackStreamInstanced = nullptr;
+GLGetActiveAtomicCounterBufferIV OpenGL::getActiveAtomicCounterBufferiv = nullptr;
+GLGetInternalformatIV OpenGL::getInternalformativ = nullptr;
+GLMemoryBarrier OpenGL::memoryBarrier = nullptr;
+GLTexStorage1D OpenGL::texStorage1D = nullptr;
+GLTexStorage2D OpenGL::texStorage2D = nullptr;
+GLTexStorage3D OpenGL::texStorage3D = nullptr;
+
+// Version 4.3
+
+GLBindVertexBuffer OpenGL::bindVertexBuffer = nullptr;
+GLClearBufferData OpenGL::clearBufferData = nullptr;
+GLClearBufferSubData OpenGL::clearBufferSubData = nullptr;
+GLCopyImageSubData OpenGL::copyImageSubData = nullptr;
+GLDispatchCompute OpenGL::dispatchCompute = nullptr;
+GLDispatchComputeIndirect OpenGL::dispatchComputeIndirect = nullptr;
+GLDebugMessageCallback OpenGL::debugMessageCallback = nullptr;
+GLDebugMessageControl OpenGL::debugMessageControl = nullptr;
+GLDebugMessageInsert OpenGL::debugMessageInsert = nullptr;
+GLFramebufferParameterI OpenGL::framebufferParameteri = nullptr;
+GLGetDebugMessageLog OpenGL::getDebugMessageLog = nullptr;
+GLGetFramebufferParameterIV OpenGL::getFramebufferParameteriv = nullptr;
+GLGetInternalformatI64V OpenGL::getInternalformati64v = nullptr;
+GLGetObjectLabel OpenGL::getObjectLabel = nullptr;
+GLGetObjectPtrLabel OpenGL::getObjectPtrLabel = nullptr;
+GLGetProgramInterfaceIV OpenGL::getProgramInterfaceiv = nullptr;
+GLGetProgramResourceIndex OpenGL::getProgramResourceIndex = nullptr;
+GLGetProgramResourceIV OpenGL::getProgramResourceiv = nullptr;
+GLGetProgramResourceLocation OpenGL::getProgramResourceLocation = nullptr;
+GLGetProgramResourceLocationIndex OpenGL::getProgramResourceLocationIndex = nullptr;
+GLGetProgramResourceName OpenGL::getProgramResourceName = nullptr;
+GLInvalidateBufferData OpenGL::invalidateBufferData = nullptr;
+GLInvalidateBufferSubData OpenGL::invalidateBufferSubData = nullptr;
+GLInvalidateFramebuffer OpenGL::invalidateFramebuffer = nullptr;
+GLInvalidateSubFramebuffer OpenGL::invalidateSubFramebuffer = nullptr;
+GLInvalidateTexImage OpenGL::invalidateTexImage = nullptr;
+GLInvalidateTexSubImage OpenGL::invalidateTexSubImage = nullptr;
+GLMultiDrawArraysIndirect OpenGL::multiDrawArraysIndirect = nullptr;
+GLMultiDrawElementsIndirect OpenGL::multiDrawElementsIndirect = nullptr;
+GLObjectLabel OpenGL::objectLabel = nullptr;
+GLObjectPtrLabel OpenGL::objectPtrLabel = nullptr;
+GLPopDebugGroup OpenGL::popDebugGroup = nullptr;
+GLPushDebugGroup OpenGL::pushDebugGroup = nullptr;
+GLShaderStorageBlockBinding OpenGL::shaderStorageBlockBinding = nullptr;
+GLTexBufferRange OpenGL::texBufferRange = nullptr;
+GLTexStorage2DMultisample OpenGL::texStorage2DMultisample = nullptr;
+GLTexStorage3DMultisample OpenGL::texStorage3DMultisample = nullptr;
+GLTextureView OpenGL::textureView = nullptr;
+GLVertexAttribBinding OpenGL::vertexAttribBinding = nullptr;
+GLVertexAttribFormat OpenGL::vertexAttribFormat = nullptr;
+GLVertexAttribIFormat OpenGL::vertexAttribIFormat = nullptr;
+GLVertexAttribLFormat OpenGL::vertexAttribLFormat = nullptr;
+GLVertexBindingDivisor OpenGL::vertexBindingDivisor = nullptr;
+
+// Version 4.4
+
+GLBindBuffersBase OpenGL::bindBuffersBase = nullptr;
+GLBindBuffersRange OpenGL::bindBuffersRange = nullptr;
+GLBindImageTextures OpenGL::bindImageTextures = nullptr;
+GLBindSamplers OpenGL::bindSamplers = nullptr;
+GLBindTextures OpenGL::bindTextures = nullptr;
+GLBindVertexBuffers OpenGL::bindVertexBuffers = nullptr;
+GLBufferStorage OpenGL::bufferStorage = nullptr;
+GLClearTexImage OpenGL::clearTexImage = nullptr;
+GLClearTexSubImage OpenGL::clearTexSubImage = nullptr;
+
+// Version 4.5
+
+GLBindTextureUnit OpenGL::bindTextureUnit = nullptr;
+GLBlitNamedFramebuffer OpenGL::blitNamedFramebuffer = nullptr;
+GLCheckNamedFramebufferStatus OpenGL::checkNamedFramebufferStatus = nullptr;
+GLClearNamedBufferData OpenGL::clearNamedBufferData = nullptr;
+GLClearNamedBufferSubData OpenGL::clearNamedBufferSubData = nullptr;
+GLClearNamedFramebufferFI OpenGL::clearNamedFramebufferfi = nullptr;
+GLClearNamedFramebufferFV OpenGL::clearNamedFramebufferfv = nullptr;
+GLClearNamedFramebufferIV OpenGL::clearNamedFramebufferiv = nullptr;
+GLClearNamedFramebufferUIV OpenGL::clearNamedFramebufferuiv = nullptr;
+GLClipControl OpenGL::clipControl = nullptr;
+GLCompressedTextureSubImage1D OpenGL::compressedTextureSubImage1D = nullptr;
+GLCompressedTextureSubImage2D OpenGL::compressedTextureSubImage2D = nullptr;
+GLCompressedTextureSubImage3D OpenGL::compressedTextureSubImage3D = nullptr;
+GLCopyNamedBufferSubData OpenGL::copyNamedBufferSubData = nullptr;
+GLCopyTextureSubImage1D OpenGL::copyTextureSubImage1D = nullptr;
+GLCopyTextureSubImage2D OpenGL::copyTextureSubImage2D = nullptr;
+GLCopyTextureSubImage3D OpenGL::copyTextureSubImage3D = nullptr;
+GLCreateBuffers OpenGL::createBuffers = nullptr;
+GLCreateFramebuffers OpenGL::createFramebuffers = nullptr;
+GLCreateProgramPipelines OpenGL::createProgramPipelines = nullptr;
+GLCreateQueries OpenGL::createQueries = nullptr;
+GLCreateRenderbuffers OpenGL::createRenderbuffers = nullptr;
+GLCreateSamplers OpenGL::createSamplers = nullptr;
+GLCreateTextures OpenGL::createTextures = nullptr;
+GLCreateTransformFeedbacks OpenGL::createTransformFeedbacks = nullptr;
+GLCreateVertexArrays OpenGL::createVertexArrays = nullptr;
+GLDisableVertexArrayAttrib OpenGL::disableVertexArrayAttrib = nullptr;
+GLEnableVertexArrayAttrib OpenGL::enableVertexArrayAttrib = nullptr;
+GLFlushMappedNamedBufferRange OpenGL::flushMappedNamedBufferRange = nullptr;
+GLGenerateTextureMipmap OpenGL::generateTextureMipmap = nullptr;
+GLGetCompressedTextureImage OpenGL::getCompressedTextureImage = nullptr;
+GLGetCompressedTextureSubImage OpenGL::getCompressedTextureSubImage = nullptr;
+GLGetGraphicsResetStatus OpenGL::getGraphicsResetStatus = nullptr;
+GLGetNamedBufferParameterI64V OpenGL::getNamedBufferParameteri64v = nullptr;
+GLGetNamedBufferParameterIV OpenGL::getNamedBufferParameteriv = nullptr;
+GLGetNamedBufferPointerV OpenGL::getNamedBufferPointerv = nullptr;
+GLGetNamedBufferSubData OpenGL::getNamedBufferSubData = nullptr;
+GLGetNamedFramebufferAttachmentParameterIV OpenGL::getNamedFramebufferAttachmentParameteriv = nullptr;
+GLGetNamedFramebufferParameterIV OpenGL::getNamedFramebufferParameteriv = nullptr;
+GLGetNamedRenderbufferParameterIV OpenGL::getNamedRenderbufferParameteriv = nullptr;
+GLGetnCompressedTexImage OpenGL::getnCompressedTexImage = nullptr;
+GLGetnTexImage OpenGL::getnTexImage = nullptr;
+GLGetnUniformDV OpenGL::getnUniformdv = nullptr;
+GLGetnUniformFV OpenGL::getnUniformfv = nullptr;
+GLGetnUniformIV OpenGL::getnUniformiv = nullptr;
+GLGetnUniformUIV OpenGL::getnUniformuiv = nullptr;
+GLGetQueryBufferObjectI64V OpenGL::getQueryBufferObjecti64v = nullptr;
+GLGetQueryBufferObjectIV OpenGL::getQueryBufferObjectiv = nullptr;
+GLGetQueryBufferObjectUI64V OpenGL::getQueryBufferObjectui64v = nullptr;
+GLGetQueryBufferObjectUIV OpenGL::getQueryBufferObjectuiv = nullptr;
+GLGetTextureImage OpenGL::getTextureImage = nullptr;
+GLGetTextureLevelParameterFV OpenGL::getTextureLevelParameterfv = nullptr;
+GLGetTextureLevelParameterIV OpenGL::getTextureLevelParameteriv = nullptr;
+GLGetTextureParameterFV OpenGL::getTextureParameterfv = nullptr;
+GLGetTextureParameterIIV OpenGL::getTextureParameterIiv = nullptr;
+GLGetTextureParameterIV OpenGL::getTextureParameteriv = nullptr;
+GLGetTextureParameterIUIV OpenGL::getTextureParameterIuiv = nullptr;
+GLGetTextureSubImage OpenGL::getTextureSubImage = nullptr;
+GLGetTransformFeedbackI64_V OpenGL::getTransformFeedbacki64_v = nullptr;
+GLGetTransformFeedbackIV OpenGL::getTransformFeedbackiv = nullptr;
+GLGetTransformFeedbackI_V OpenGL::getTransformFeedbacki_v = nullptr;
+GLGetVertexArrayIndexed64IV OpenGL::getVertexArrayIndexed64iv = nullptr;
+GLGetVertexArrayIndexedIV OpenGL::getVertexArrayIndexediv = nullptr;
+GLGetVertexArrayIV OpenGL::getVertexArrayiv = nullptr;
+GLInvalidateNamedFramebufferData OpenGL::invalidateNamedFramebufferData = nullptr;
+GLInvalidateNamedFramebufferSubData OpenGL::invalidateNamedFramebufferSubData = nullptr;
+GLMapNamedBuffer OpenGL::mapNamedBuffer = nullptr;
+GLMapNamedBufferRange OpenGL::mapNamedBufferRange = nullptr;
+GLMemoryBarrierByRegion OpenGL::memoryBarrierByRegion = nullptr;
+GLNamedBufferData OpenGL::namedBufferData = nullptr;
+GLNamedBufferStorage OpenGL::namedBufferStorage = nullptr;
+GLNamedBufferSubData OpenGL::namedBufferSubData = nullptr;
+GLNamedFramebufferDrawBuffer OpenGL::namedFramebufferDrawBuffer = nullptr;
+GLNamedFramebufferDrawBuffers OpenGL::namedFramebufferDrawBuffers = nullptr;
+GLNamedFramebufferParameterI OpenGL::namedFramebufferParameteri = nullptr;
+GLNamedFramebufferReadBuffer OpenGL::namedFramebufferReadBuffer = nullptr;
+GLNamedFramebufferRenderbuffer OpenGL::namedFramebufferRenderbuffer = nullptr;
+GLNamedFramebufferTexture OpenGL::namedFramebufferTexture = nullptr;
+GLNamedFramebufferTextureLayer OpenGL::namedFramebufferTextureLayer = nullptr;
+GLNamedRenderbufferStorage OpenGL::namedRenderbufferStorage = nullptr;
+GLNamedRenderbufferStorageMultisample OpenGL::namedRenderbufferStorageMultisample = nullptr;
+GLReadnPixels OpenGL::readnPixels = nullptr;
+GLTransformFeedbackBufferBase OpenGL::transformFeedbackBufferBase = nullptr;
+GLTransformFeedbackBufferRange OpenGL::transformFeedbackBufferRange = nullptr;
+GLTextureBarrier OpenGL::textureBarrier = nullptr;
+GLTextureBuffer OpenGL::textureBuffer = nullptr;
+GLTextureBufferRange OpenGL::textureBufferRange = nullptr;
+GLTextureParameterF OpenGL::textureParameterf = nullptr;
+GLTextureParameterFV OpenGL::textureParameterfv = nullptr;
+GLTextureParameterI OpenGL::textureParameteri = nullptr;
+GLTextureParameterIIV OpenGL::textureParameterIiv = nullptr;
+GLTextureParameterIUIV OpenGL::textureParameterIuiv = nullptr;
+GLTextureParameterIV OpenGL::textureParameteriv = nullptr;
+GLTextureStorage1D OpenGL::textureStorage1D = nullptr;
+GLTextureStorage2D OpenGL::textureStorage2D = nullptr;
+GLTextureStorage2DMultisample OpenGL::textureStorage2DMultisample = nullptr;
+GLTextureStorage3D OpenGL::textureStorage3D = nullptr;
+GLTextureStorage3DMultisample OpenGL::textureStorage3DMultisample = nullptr;
+GLTextureSubImage1D OpenGL::textureSubImage1D = nullptr;
+GLTextureSubImage2D OpenGL::textureSubImage2D = nullptr;
+GLTextureSubImage3D OpenGL::textureSubImage3D = nullptr;
+GLUnmapNamedBuffer OpenGL::unmapNamedBuffer = nullptr;
+GLVertexArrayAttribBinding OpenGL::vertexArrayAttribBinding = nullptr;
+GLVertexArrayAttribFormat OpenGL::vertexArrayAttribFormat = nullptr;
+GLVertexArrayAttribIFormat OpenGL::vertexArrayAttribIFormat = nullptr;
+GLVertexArrayAttribLFormat OpenGL::vertexArrayAttribLFormat = nullptr;
+GLVertexArrayBindingDivisor OpenGL::vertexArrayBindingDivisor = nullptr;
+GLVertexArrayElementBuffer OpenGL::vertexArrayElementBuffer = nullptr;
+GLVertexArrayVertexBuffer OpenGL::vertexArrayVertexBuffer = nullptr;
+GLVertexArrayVertexBuffers OpenGL::vertexArrayVertexBuffers = nullptr;
+
+// Static
+
+void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* function)
 {
 	Uint32 errorCode;
 
 	while((errorCode = getError()) != GL_NO_ERROR)
 		reportError(errorCode, file, line, function);
+}
+
+void OpenGL::initialise()
+{
+	getFunctions();
+	initialiseDebugMessaging();
 }
 
 // Private
@@ -67,6 +776,17 @@ const Array<Char8*, 9u> OpenGL::DEBUG_MESSAGE_TYPE_NAMES
 	"Portability",
 	"Undefined behaviour"
 }};
+
+// Static
+
+void OpenGL::reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
+{
+	StringStream8 stringStream;
+	stringStream << "Error caught at " << file << " on line " << line << " in function " << function << '.';
+
+	debugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, errorCode, GL_DEBUG_SEVERITY_HIGH, -1,
+		stringStream.str().c_str());
+}
 
 void OpenGL::getFunctions()
 {
@@ -121,7 +841,6 @@ void OpenGL::getFunctions()
 	texParameteriv = glTexParameteriv;
 	viewport = glViewport;
 
-
 	// Version 1.1
 
 	bindTexture = glBindTexture;
@@ -139,17 +858,15 @@ void OpenGL::getFunctions()
 	texSubImage1D = glTexSubImage1D;
 	texSubImage2D = glTexSubImage2D;
 
-
 	// Version 1.2
 
 	copyTexSubImage3D = getFunction<GLCopyTexSubImage3D>("glCopyTexSubImage3D");
 	drawRangeElements = getFunction<GLDrawRangeElements>("glDrawRangeElements");
 	texImage3D = getFunction<GLTexImage3D>("glTexImage3D");
 	texSubImage3D = getFunction<GLTexSubImage3D>("glTexSubImage3D");
-	  
-	  
+
 	// Version 1.3
-	  
+
 	activeTexture = getFunction<GLActiveTexture>("glActiveTexture");
 	compressedTexImage1D = getFunction<GLCompressedTexImage1D>("glCompressedTexImage1D");
 	compressedTexImage2D = getFunction<GLCompressedTexImage2D>("glCompressedTexImage2D");
@@ -159,10 +876,9 @@ void OpenGL::getFunctions()
 	compressedTexSubImage3D = getFunction<GLCompressedTexSubImage3D>("glCompressedTexSubImage3D");
 	getCompressedTexImage = getFunction<GLGetCompressedTexImage>("glGetCompressedTexImage");
 	sampleCoverage = getFunction<GLSampleCoverage>("glSampleCoverage");
-	  
-	  
+
 	// Version 1.4
-	  
+
 	blendColor = getFunction<GLBlendColor>("glBlendColor");
 	blendEquation = getFunction<GLBlendEquation>("glBlendEquation");
 	blendFuncSeparate = getFunction<GLBlendFuncSeparate>("glBlendFuncSeparate");
@@ -172,10 +888,9 @@ void OpenGL::getFunctions()
 	pointParameterfv = getFunction<GLPointParameterFV>("glPointParameterfv");
 	pointParameteri = getFunction<GLPointParameterI>("glPointParameteri");
 	pointParameteriv = getFunction<GLPointParameterIV>("glPointParameteriv");
-	  
-	  
+
 	// Version 1.5
-	  
+
 	beginQuery = getFunction<GLBeginQuery>("glBeginQuery");
 	bindBuffer = getFunction<GLBindBuffer>("glBindBuffer");
 	bufferData = getFunction<GLBufferData>("glBufferData");
@@ -195,10 +910,9 @@ void OpenGL::getFunctions()
 	isQuery = getFunction<GLIsQuery>("glIsQuery");
 	mapBuffer = getFunction<GLMapBuffer>("glMapBuffer");
 	unmapBuffer = getFunction<GLUnmapBuffer>("glUnmapBuffer");
-	  
-	  
+
 	// Version 2.0
-	  
+
 	attachShader = getFunction<GLAttachShader>("glAttachShader");
 	bindAttribLocation = getFunction<GLBindAttribLocation>("glBindAttribLocation");
 	blendEquationSeparate = getFunction<GLBlendEquationSeparate>("glBlendEquationSeparate");
@@ -292,20 +1006,18 @@ void OpenGL::getFunctions()
 	vertexAttrib4uiv = getFunction<GLVertexAttrib4UIV>("glVertexAttrib4uiv");
 	vertexAttrib4usv = getFunction<GLVertexAttrib4USV>("glVertexAttrib4usv");
 	vertexAttribPointer = getFunction<GLVertexAttribPointer>("glVertexAttribPointer");
-	  
-	  
+
 	// Version 2.1
-	  
+
 	uniformMatrix2x3fv = getFunction<GLUniformMatrix2X3FV>("glUniformMatrix2x3fv");
 	uniformMatrix2x4fv = getFunction<GLUniformMatrix2X4FV>("glUniformMatrix2x4fv");
 	uniformMatrix3x2fv = getFunction<GLUniformMatrix3X2FV>("glUniformMatrix3x2fv");
 	uniformMatrix3x4fv = getFunction<GLUniformMatrix3X4FV>("glUniformMatrix3x4fv");
 	uniformMatrix4x2fv = getFunction<GLUniformMatrix4X2FV>("glUniformMatrix4x2fv");
 	uniformMatrix4x3fv = getFunction<GLUniformMatrix4X3FV>("glUniformMatrix4x3fv");
-	  
-	  
+
 	// Version 3.0
-	  
+
 	beginConditionalRender = getFunction<GLBeginConditionalRender>("glBeginConditionalRender");
 	beginTransformFeedback = getFunction<GLBeginTransformFeedback>("glBeginTransformFeedback");
 	bindBufferBase = getFunction<GLBindBufferBase>("glBindBufferBase");
@@ -396,10 +1108,9 @@ void OpenGL::getFunctions()
 	vertexAttribI4uiv = getFunction<GLVertexAttribI4UIV>("glVertexAttribI4uiv");
 	vertexAttribI4usv = getFunction<GLVertexAttribI4USV>("glVertexAttribI4usv");
 	vertexAttribIPointer = getFunction<GLVertexAttribIPointer>("glVertexAttribIPointer");
-	  
-	  
+
 	// Version 3.1
-	  
+
 	copyBufferSubData = getFunction<GLCopyBufferSubData>("glCopyBufferSubData");
 	drawArraysInstanced = getFunction<GLDrawArraysInstanced>("glDrawArraysInstanced");
 	drawElementsInstanced = getFunction<GLDrawElementsInstanced>("glDrawElementsInstanced");
@@ -412,10 +1123,9 @@ void OpenGL::getFunctions()
 	primitiveRestartIndex = getFunction<GLPrimitiveRestartIndex>("glPrimitiveRestartIndex");
 	texBuffer = getFunction<GLTexBuffer>("glTexBuffer");
 	uniformBlockBinding = getFunction<GLUniformBlockBinding>("glUniformBlockBinding");
-	  
-	  
+
 	// Version 3.2
-	  
+
 	clientWaitSync = getFunction<GLClientWaitSync>("glClientWaitSync");
 	deleteSync = getFunction<GLDeleteSync>("glDeleteSync");
 	drawElementsBaseVertex = getFunction<GLDrawElementsBaseVertex>("glDrawElementsBaseVertex");
@@ -438,10 +1148,9 @@ void OpenGL::getFunctions()
 	texImage2DMultisample = getFunction<GLTexImage2DMultisample>("glTexImage2DMultisample");
 	texImage3DMultisample = getFunction<GLTexImage3DMultisample>("glTexImage3DMultisample");
 	waitSync = getFunction<GLWaitSync>("glWaitSync");
-	  
-	  
+
 	// Version 3.3
-	  
+
 	bindFragDataLocationIndexed = getFunction<GLBindFragDataLocationIndexed>("glBindFragDataLocationIndexed");
 	bindSampler = getFunction<GLBindSampler>("glBindSampler");
 	deleteSamplers = getFunction<GLDeleteSamplers>("glDeleteSamplers");
@@ -470,10 +1179,9 @@ void OpenGL::getFunctions()
 	vertexAttribP3uiv = getFunction<GLVertexAttribP3UIV>("glVertexAttribP3uiv");
 	vertexAttribP4ui = getFunction<GLVertexAttribP4UI>("glVertexAttribP4ui");
 	vertexAttribP4uiv = getFunction<GLVertexAttribP4UIV>("glVertexAttribP4uiv");
-	  
-	  
+
 	// Version 4.0
-	  
+
 	beginQueryIndexed = getFunction<GLBeginQueryIndexed>("glBeginQueryIndexed");
 	bindTransformFeedback = getFunction<GLBindTransformFeedback>("glBindTransformFeedback");
 	blendEquationi = getFunction<GLBlendEquationI>("glBlendEquationi");
@@ -523,10 +1231,9 @@ void OpenGL::getFunctions()
 	uniformMatrix4x2dv = getFunction<GLUniformMatrix4X2DV>("glUniformMatrix4x2dv");
 	uniformMatrix4x3dv = getFunction<GLUniformMatrix4X3DV>("glUniformMatrix4x3dv");
 	uniformSubroutinesuiv = getFunction<GLUniformSubroutineSUIV>("glUniformSubroutinesuiv");
-	  
-	  
+
 	// Version 4.1
-	  
+
 	activeShaderProgram = getFunction<GLActiveShaderProgram>("glActiveShaderProgram");
 	bindProgramPipeline = getFunction<GLBindProgramPipeline>("glBindProgramPipeline");
 	clearDepthf = getFunction<GLClearDepthF>("glClearDepthf");
@@ -615,10 +1322,9 @@ void OpenGL::getFunctions()
 	viewportArrayv = getFunction<GLViewportArrayV>("glViewportArrayv");
 	viewportIndexedf = getFunction<GLViewportIndexedF>("glViewportIndexedf");
 	viewportIndexedfv = getFunction<GLViewportIndexedFV>("glViewportIndexedfv");
-	  
-	  
+
 	// Version 4.2
-	  
+
 	bindImageTexture = getFunction<GLBindImageTexture>("glBindImageTexture");
 
 	drawArraysInstancedBaseInstance = getFunction<GLDrawArraysInstancedBaseInstance>(
@@ -644,10 +1350,9 @@ void OpenGL::getFunctions()
 	texStorage1D = getFunction<GLTexStorage1D>("glTexStorage1D");
 	texStorage2D = getFunction<GLTexStorage2D>("glTexStorage2D");
 	texStorage3D = getFunction<GLTexStorage3D>("glTexStorage3D");
-	  
-	  
+
 	// Version 4.3
-	  
+
 	bindVertexBuffer = getFunction<GLBindVertexBuffer>("glBindVertexBuffer");
 	clearBufferData = getFunction<GLClearBufferData>("glClearBufferData");
 	clearBufferSubData = getFunction<GLClearBufferSubData>("glClearBufferSubData");
@@ -694,10 +1399,9 @@ void OpenGL::getFunctions()
 	vertexAttribIFormat = getFunction<GLVertexAttribIFormat>("glVertexAttribIFormat");
 	vertexAttribLFormat = getFunction<GLVertexAttribLFormat>("glVertexAttribLFormat");
 	vertexBindingDivisor = getFunction<GLVertexBindingDivisor>("glVertexBindingDivisor");
-	  
-	  
+
 	// Version 4.4
-	  
+
 	bindBuffersBase = getFunction<GLBindBuffersBase>("glBindBuffersBase");
 	bindBuffersRange = getFunction<GLBindBuffersRange>("glBindBuffersRange");
 	bindImageTextures = getFunction<GLBindImageTextures>("glBindImageTextures");
@@ -707,10 +1411,9 @@ void OpenGL::getFunctions()
 	bufferStorage = getFunction<GLBufferStorage>("glBufferStorage");
 	clearTexImage = getFunction<GLClearTexImage>("glClearTexImage");
 	clearTexSubImage = getFunction<GLClearTexSubImage>("glClearTexSubImage");
-	  
-	  
+
 	// Version 4.5
-	  
+
 	bindTextureUnit = getFunction<GLBindTextureUnit>("glBindTextureUnit");
 	blitNamedFramebuffer = getFunction<GLBlitNamedFramebuffer>("glBlitNamedFramebuffer");
 	checkNamedFramebufferStatus = getFunction<GLCheckNamedFramebufferStatus>("glCheckNamedFramebufferStatus");
@@ -838,23 +1541,12 @@ void OpenGL::getFunctions()
 	vertexArrayVertexBuffers = getFunction<GLVertexArrayVertexBuffers>("glVertexArrayVertexBuffers");
 }
 
-void OpenGL::initialiseDebugMessaging() const
+void OpenGL::initialiseDebugMessaging()
 {
 	enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-	debugMessageCallback(processDebugMessage, this);
+	debugMessageCallback(processDebugMessage, nullptr);
 }
-
-void OpenGL::reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function) const
-{
-	StringStream8 stringStream;
-	stringStream << "Error caught at " << file << " on line " << line << " in function " << function << '.';
-
-	debugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, errorCode, GL_DEBUG_SEVERITY_HIGH, -1,
-		stringStream.str().c_str());
-}
-
-// Static
 
 void OpenGL::processDebugMessage(const Uint32 messageSource, const Uint32 messageType, const Uint32 messageId,
 	const Uint32 messageSeverity, const Int32 messageLength, const Char8* message, const Void* userData)

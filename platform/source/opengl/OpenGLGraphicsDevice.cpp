@@ -38,7 +38,8 @@ public:
 
 	Impl()
 	{
-		_openGl.getIntegerv(GL_VIEWPORT, reinterpret_cast<Int32*>(&_viewport));
+		OpenGL::initialise();
+		OpenGL::getIntegerv(GL_VIEWPORT, reinterpret_cast<Int32*>(&_viewport));
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -48,16 +49,16 @@ public:
 
 	void clear(const Colour& colour) const
 	{
-		_openGl.clearColor(colour.red, colour.green, colour.blue, colour.alpha);
-		_openGl.clear(GL_COLOR_BUFFER_BIT);
-		DE_CHECK_ERROR_OPENGL(_openGl);
+		OpenGL::clearColor(colour.red, colour.green, colour.blue, colour.alpha);
+		OpenGL::clear(GL_COLOR_BUFFER_BIT);
+		DE_CHECK_ERROR_OPENGL();
 	}
 
 	void setViewport(const Viewport& viewport)
 	{
 		_viewport = viewport;
 		const Rectangle& bounds = viewport.bounds();
-		_openGl.viewport(bounds.x, bounds.y, bounds.width, bounds.height);
+		OpenGL::viewport(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 
 	const Viewport& viewport() const
@@ -70,7 +71,6 @@ public:
 
 private:
 
-	OpenGL _openGl;
 	Viewport _viewport;
 };
 
