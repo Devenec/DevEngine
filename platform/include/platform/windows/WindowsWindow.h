@@ -69,8 +69,6 @@ namespace Graphics
 		Impl& operator =(const Impl& impl) = delete;
 		Impl& operator =(Impl&& impl) = delete;
 
-		static Bool processMessages();
-
 	private:
 
 		static const Char8* COMPONENT_TAG;

@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/GraphicsResource.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -22,32 +22,24 @@
 
 namespace Graphics
 {
-	class Window;
-
-	class GraphicsContext final
+	class GraphicsResource
 	{
 	public:
 
-		explicit GraphicsContext(Window* window);
+		GraphicsResource(const GraphicsResource& graphicsResource) = delete;
+		GraphicsResource(GraphicsResource&& graphicsResource) = delete;
 
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
+		GraphicsResource& operator =(const GraphicsResource& graphicsResource) = delete;
+		GraphicsResource& operator =(GraphicsResource&& graphicsResource) = delete;
 
-		~GraphicsContext();
+	protected:
 
-		void makeCurrent() const;
+		GraphicsResource() = default;
 
-		void makeNonCurrent() const;
-
-		void swapBuffers() const;
-
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
+		virtual ~GraphicsResource() = default;
 
 	private:
 
-		class Impl;
-
-		Impl* _impl;
+		friend class GraphicsDevice;
 	};
 }

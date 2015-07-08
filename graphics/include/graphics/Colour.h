@@ -53,8 +53,5 @@ namespace Graphics
 		Colour& operator =(const Colour& colour) = default;
 
 		Colour& operator =(Colour&& colour) = default;
-
-	private:
-
 	};
 }

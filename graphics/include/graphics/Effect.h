@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/Effect.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,34 +20,35 @@
 
 #pragma once
 
+#include <graphics/GraphicsResource.h>
+
 namespace Graphics
 {
-	class Window;
+	class Shader;
 
-	class GraphicsContext final
+	class Effect final : public GraphicsResource
 	{
 	public:
 
-		explicit GraphicsContext(Window* window);
+		Effect(const Effect& effect) = delete;
+		Effect(Effect&& effect) = delete;
 
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
+		void attachShader(Shader* shader) const;
 
-		~GraphicsContext();
+		void link() const;
 
-		void makeCurrent() const;
-
-		void makeNonCurrent() const;
-
-		void swapBuffers() const;
-
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
+		Effect& operator =(const Effect& effect) = delete;
+		Effect& operator =(Effect&& effect) = delete;
 
 	private:
+
+		friend class GraphicsDevice;
 
 		class Impl;
 
 		Impl* _impl;
+
+		Effect();
+		~Effect();
 	};
 }

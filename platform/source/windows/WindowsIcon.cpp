@@ -43,7 +43,7 @@ Icon::Icon(const Image* image)
 	HBITMAP colourBitmapHandle = createColourBitmap(bitmapHeader, bitmapDataBuffer);
 	setBitmapData(image, bitmapDataBuffer);
 	HBITMAP maskBitmapHandle = createMaskBitmap(image);
-	create(colourBitmapHandle, maskBitmapHandle);
+	createIcon(colourBitmapHandle, maskBitmapHandle);
 	destroyBitmap(maskBitmapHandle);
 	destroyBitmap(colourBitmapHandle);
 }
@@ -72,7 +72,7 @@ Icon::~Icon()
 
 const Char8* Icon::COMPONENT_TAG = "[Platform::Icon - Windows]";
 
-void Icon::create(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
+void Icon::createIcon(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 {
 	ICONINFO iconInfo = createIconInfo(colourBitmapHandle, maskBitmapHandle);
 	_iconHandle = CreateIconIndirect(&iconInfo);

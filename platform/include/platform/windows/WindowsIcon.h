@@ -58,7 +58,7 @@ namespace Platform
 
 		HICON _iconHandle;
 
-		void create(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
+		void createIcon(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
 
 		static BITMAPV5HEADER createBitmapHeader(const Graphics::Image* image);
 		static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer);

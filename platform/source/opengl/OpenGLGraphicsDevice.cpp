@@ -21,7 +21,10 @@
 #include <core/Memory.h>
 #include <core/Rectangle.h>
 #include <graphics/Colour.h>
+#include <graphics/Effect.h>
 #include <graphics/GraphicsDevice.h>
+#include <graphics/GraphicsResource.h>
+#include <graphics/Shader.h>
 #include <graphics/Viewport.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLInterface.h>
@@ -40,6 +43,7 @@ public:
 	{
 		OpenGL::initialise();
 		OpenGL::getIntegerv(GL_VIEWPORT, reinterpret_cast<Int32*>(&_viewport));
+		DE_CHECK_ERROR_OPENGL();
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -59,6 +63,7 @@ public:
 		_viewport = viewport;
 		const Rectangle& bounds = viewport.bounds();
 		OpenGL::viewport(bounds.x, bounds.y, bounds.width, bounds.height);
+		DE_CHECK_ERROR_OPENGL();
 	}
 
 	const Viewport& viewport() const
@@ -82,6 +87,7 @@ GraphicsDevice::GraphicsDevice()
 
 GraphicsDevice::~GraphicsDevice()
 {
+	destroyResources();
 	DE_DELETE(_impl, Impl);
 }
 
@@ -90,7 +96,29 @@ void GraphicsDevice::clear(const Colour& colour) const
 	_impl->clear(colour);
 }
 
-void GraphicsDevice::setViewport(const Viewport& viewport)
+Effect* GraphicsDevice::createEffect()
+{
+	Effect* effect = DE_NEW(Effect)();
+	_resources.push_back(effect);
+
+	return effect;
+}
+
+Shader* GraphicsDevice::createShader(const ShaderType& type, const String8& source)
+{
+	Shader* shader = DE_NEW(Shader)(type, source);
+	_resources.push_back(shader);
+
+	return shader;
+}
+
+void GraphicsDevice::destroyResource(GraphicsResource* resource)
+{
+	_resources.remove(resource);
+	DE_DELETE(resource, GraphicsResource);
+}
+
+void GraphicsDevice::setViewport(const Viewport& viewport) const
 {
 	_impl->setViewport(viewport);
 }
@@ -98,4 +126,12 @@ void GraphicsDevice::setViewport(const Viewport& viewport)
 const Viewport& GraphicsDevice::viewport() const
 {
 	return _impl->viewport();
+}
+
+// Private
+
+void GraphicsDevice::destroyResources() const
+{
+	for(GraphicsResourceList::const_reverse_iterator i = _resources.rbegin(), end = _resources.rend(); i != end; ++i)
+		DE_DELETE(*i, GraphicsResource);
 }

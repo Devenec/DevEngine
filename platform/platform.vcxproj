@@ -60,6 +60,7 @@
     <ClInclude Include="include\platform\GraphicsExtensionManager.h" />
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
     <ClInclude Include="include\platform\opengl\OpenGLInterface.h" />
+    <ClInclude Include="include\platform\opengl\OpenGLShader.h" />
     <ClInclude Include="include\platform\PlatformInternal.h" />
     <ClInclude Include="include\platform\wgl\WGL.h" />
     <ClInclude Include="include\platform\wgl\WGLGraphicsConfigChooser.h" />
@@ -70,8 +71,10 @@
     <ClInclude Include="include\platform\windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\opengl\OpenGLEffect.cpp" />
     <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp" />
     <ClCompile Include="source\opengl\OpenGLInterface.cpp" />
+    <ClCompile Include="source\opengl\OpenGLShader.cpp" />
     <ClCompile Include="source\wgl\WGL.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp" />

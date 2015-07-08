@@ -41,7 +41,7 @@ void TemporaryGraphicsContext::initialise()
 	initialisePixelFormat();
 	createContext();
 	makeCurrent();
-	validateOpenGLVersion();
+	checkOpenGLVersion();
 }
 
 // Private
@@ -52,7 +52,7 @@ void TemporaryGraphicsContext::initialisePixelFormat() const
 {
 	const PIXELFORMATDESCRIPTOR pixelFormatDescriptor = createPixelFormatDescriptor();
 	const Int32 pixelFormatIndex = choosePixelFormat(pixelFormatDescriptor);
-	validatePixelFormat(pixelFormatIndex);
+	checkPixelFormat(pixelFormatIndex);
 	setPixelFormat(pixelFormatIndex);
 }
 
@@ -80,7 +80,7 @@ Int32 TemporaryGraphicsContext::choosePixelFormat(const PIXELFORMATDESCRIPTOR& p
 	return pixelFormatIndex;
 }
 
-void TemporaryGraphicsContext::validatePixelFormat(const Int32 pixelFormatIndex) const
+void TemporaryGraphicsContext::checkPixelFormat(const Int32 pixelFormatIndex) const
 {
 	PIXELFORMATDESCRIPTOR pixelFormatDescriptor;
 
@@ -106,7 +106,7 @@ void TemporaryGraphicsContext::validatePixelFormat(const Int32 pixelFormatIndex)
 
 // Static
 
-void TemporaryGraphicsContext::validateOpenGLVersion()
+void TemporaryGraphicsContext::checkOpenGLVersion()
 {
 	const String8 versionString(reinterpret_cast<const Char8*>(glGetString(GL_VERSION)));
 	const Uint32 majorVersion = getOpenGLMajorVersion(versionString);

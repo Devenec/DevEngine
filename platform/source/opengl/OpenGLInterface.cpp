@@ -784,8 +784,11 @@ void OpenGL::reportError(const Uint32 errorCode, const Char8* file, const Uint32
 	StringStream8 stringStream;
 	stringStream << "Error caught at " << file << " on line " << line << " in function " << function << '.';
 
+	// TODO: check GL_MAX_DEBUG_MESSAGE_LENGTH
 	debugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_ERROR, errorCode, GL_DEBUG_SEVERITY_HIGH, -1,
 		stringStream.str().c_str());
+
+	DE_CHECK_ERROR_OPENGL();
 }
 
 void OpenGL::getFunctions()
@@ -1544,7 +1547,9 @@ void OpenGL::getFunctions()
 void OpenGL::initialiseDebugMessaging()
 {
 	enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	DE_CHECK_ERROR_OPENGL();
 	debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+	DE_CHECK_ERROR_OPENGL();
 	debugMessageCallback(processDebugMessage, nullptr);
 }
 

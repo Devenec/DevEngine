@@ -61,14 +61,17 @@
   <ItemGroup>
     <ClInclude Include="include\graphics\Colour.h" />
     <ClInclude Include="include\graphics\DisplayMode.h" />
+    <ClInclude Include="include\graphics\Effect.h" />
     <ClInclude Include="include\graphics\GraphicsAdapter.h" />
     <ClInclude Include="include\graphics\GraphicsAdapterManager.h" />
     <ClInclude Include="include\graphics\GraphicsContext.h" />
     <ClInclude Include="include\graphics\GraphicsDevice.h" />
+    <ClInclude Include="include\graphics\GraphicsResource.h" />
     <ClInclude Include="include\graphics\Image.h" />
     <ClInclude Include="include\graphics\ImageFormat.h" />
     <ClInclude Include="include\graphics\ImageLoader.h" />
     <ClInclude Include="include\graphics\PNGReader.h" />
+    <ClInclude Include="include\graphics\Shader.h" />
     <ClInclude Include="include\graphics\Viewport.h" />
     <ClInclude Include="include\graphics\Window.h" />
     <ClInclude Include="include\graphics\WindowManager.h" />

@@ -20,9 +20,17 @@
 
 #pragma once
 
+#include <core/List.h>
+#include <core/String.h>
+
 namespace Graphics
 {
+	enum class ShaderType;
+
 	class Colour;
+	class Effect;
+	class GraphicsResource;
+	class Shader;
 	class Viewport;
 
 	class GraphicsDevice final
@@ -38,7 +46,13 @@ namespace Graphics
 
 		void clear(const Colour& colour) const;
 
-		void setViewport(const Viewport& viewport);
+		Effect* createEffect();
+
+		Shader* createShader(const ShaderType& type, const Core::String8& source);
+
+		void destroyResource(GraphicsResource* resource);
+
+		void setViewport(const Viewport& viewport) const;
 
 		const Viewport& viewport() const;
 
@@ -49,6 +63,11 @@ namespace Graphics
 
 		class Impl;
 
+		using GraphicsResourceList = Core::List<GraphicsResource*>;
+
+		GraphicsResourceList _resources;
 		Impl* _impl;
+
+		void destroyResources() const;
 	};
 }

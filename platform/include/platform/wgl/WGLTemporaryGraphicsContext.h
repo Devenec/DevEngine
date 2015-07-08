@@ -57,9 +57,9 @@ namespace Platform
 		void initialisePixelFormat() const;
 		void createContext();
 		Int32 choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const;
-		void validatePixelFormat(const Int32 pixelFormatIndex) const;
+		void checkPixelFormat(const Int32 pixelFormatIndex) const;
 
-		static void validateOpenGLVersion();
+		static void checkOpenGLVersion();
 		static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();
 		static Uint32 getOpenGLMajorVersion(const Core::String8& versionString);
 		static Uint32 getOpenGLMinorVersion(const Core::String8& versionString);

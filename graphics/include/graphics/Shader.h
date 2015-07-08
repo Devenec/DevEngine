@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/Shader.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,34 +20,41 @@
 
 #pragma once
 
+#include <core/String.h>
+#include <graphics/GraphicsResource.h>
+
 namespace Graphics
 {
-	class Window;
+	enum class ShaderType
+	{
+		Compute,
+		Fragment,
+		Geometry,
+		TessellationControl,
+		TessellationEvaluation,
+		Vertex
+	};
 
-	class GraphicsContext final
+	class Shader final : public GraphicsResource
 	{
 	public:
 
-		explicit GraphicsContext(Window* window);
+		Shader(const Shader& shader) = delete;
+		Shader(Shader&& shader) = delete;
 
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
-
-		~GraphicsContext();
-
-		void makeCurrent() const;
-
-		void makeNonCurrent() const;
-
-		void swapBuffers() const;
-
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
+		Shader& operator =(const Shader& shader) = delete;
+		Shader& operator =(Shader&& shader) = delete;
 
 	private:
+
+		friend class Effect;
+		friend class GraphicsDevice;
 
 		class Impl;
 
 		Impl* _impl;
+
+		Shader(const ShaderType& type, const Core::String8& source);
+		~Shader();
 	};
 }

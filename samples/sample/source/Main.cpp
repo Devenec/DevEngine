@@ -20,19 +20,45 @@
 
 #include <content/ContentManager.h>
 #include <core/Application.h>
+#include <core/Types.h>
 #include <graphics/Colour.h>
+#include <graphics/Effect.h>
 #include <graphics/GraphicsAdapterManager.h>
 #include <graphics/GraphicsContext.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/Image.h>
+#include <graphics/Shader.h>
+#include <graphics/Viewport.h>
 #include <graphics/Window.h>
 #include <graphics/WindowManager.h>
-
-#include <graphics/Viewport.h>
 
 using namespace Content;
 using namespace Core;
 using namespace Graphics;
+
+static const String8 VERTEX_SHADER_SOURCE
+(
+	"#version 450\n"
+	"\n"
+	"layout(location = 0) in vec4 inPosition;\n"
+	"\n"
+	"void main()\n"
+	"{\n"
+	"	gl_Position = inPosition;\n"
+	"}\n"
+);
+
+static const String8 FRAGMENT_SHADER_SOURCE
+(
+	"#version 450\n"
+	"\n"
+	"out vec4 outColour;\n"
+	"\n"
+	"void main()\n"
+	"{\n"
+	"	outColour = vec4(0.0, 1.0, 0.0, 1.0);\n"
+	"}\n"
+);
 
 void devEngineMain(const StartupParameters& startupParameters)
 {
@@ -51,6 +77,15 @@ void devEngineMain(const StartupParameters& startupParameters)
 	graphicsContext.makeCurrent();
 	GraphicsDevice graphicsDevice;
 	graphicsDevice.setViewport(Viewport(Rectangle(400, 300, 400u, 300u)));
+
+	Shader* vertexShader = graphicsDevice.createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
+	Shader* fragmentShader = graphicsDevice.createShader(ShaderType::Fragment, FRAGMENT_SHADER_SOURCE);
+	Effect* effect = graphicsDevice.createEffect();
+	effect->attachShader(vertexShader);
+	effect->attachShader(fragmentShader);
+	effect->link();
+	graphicsDevice.destroyResource(fragmentShader);
+	graphicsDevice.destroyResource(vertexShader);
 
 	while(!window->shouldClose())
 	{
