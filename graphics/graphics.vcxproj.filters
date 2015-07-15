@@ -14,6 +14,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\graphics\AccessMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\Colour.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -27,6 +30,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\GraphicsAdapterManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\GraphicsBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\GraphicsContext.h">
@@ -53,6 +59,12 @@
     <ClInclude Include="include\graphics\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\VertexBufferState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\VertexElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\Viewport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -64,6 +76,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\graphics\inline\AccessMode.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
     <None Include="include\graphics\inline\DisplayMode.inl">
       <Filter>Header Files\inline</Filter>
     </None>

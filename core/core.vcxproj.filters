@@ -41,6 +41,9 @@
     <ClInclude Include="include\core\FileSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\InitialiserList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\List.h">
       <Filter>Header Files</Filter>
     </ClInclude>

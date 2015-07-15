@@ -21,13 +21,17 @@
 #include <content/ContentManager.h>
 #include <core/Application.h>
 #include <core/Types.h>
+#include <core/Vector.h>
 #include <graphics/Colour.h>
 #include <graphics/Effect.h>
 #include <graphics/GraphicsAdapterManager.h>
+#include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsContext.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/Image.h>
 #include <graphics/Shader.h>
+#include <graphics/VertexBufferState.h>
+#include <graphics/VertexElement.h>
 #include <graphics/Viewport.h>
 #include <graphics/Window.h>
 #include <graphics/WindowManager.h>
@@ -87,10 +91,32 @@ void devEngineMain(const StartupParameters& startupParameters)
 	graphicsDevice.destroyResource(fragmentShader);
 	graphicsDevice.destroyResource(vertexShader);
 
+	const Vector<Float32> VERTEX_DATA
+	{
+		 0.0f,	0.8f, 0.0f,
+		-0.8f, -0.8f, 0.0f,
+		 0.8f, -0.8f, 0.0f
+	};
+
+	GraphicsBuffer* vertexBuffer = graphicsDevice.createBuffer(sizeof(Float32) * VERTEX_DATA.size());
+	vertexBuffer->setData(reinterpret_cast<const Byte*>(VERTEX_DATA.data()), sizeof(Float32) * VERTEX_DATA.size());
+	VertexBufferState* vertexBufferState = graphicsDevice.createVertexBufferState();
+
+	vertexBufferState->setVertexLayout(
+	{
+		{ 0u, 0u, 3u, VertexElementType::Float32, false }
+	},
+	true);
+
+	vertexBufferState->setVertexBuffer(vertexBuffer, 0u, 3u * sizeof(Float32));
+	graphicsDevice.setEffect(effect);
+	graphicsDevice.setVertexBufferState(vertexBufferState);
+
 	while(!window->shouldClose())
 	{
 		windowManager.processMessages();
 		graphicsDevice.clear(Colour(0.8f, 0.0f, 1.0f));
+		graphicsDevice.draw(PrimitiveType::Triangle, 3u);
 		graphicsContext.swapBuffers();
 	}
 }

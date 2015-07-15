@@ -1,5 +1,5 @@
 /**
- * @file graphics/Effect.h
+ * @file graphics/VertexElement.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,39 +20,40 @@
 
 #pragma once
 
-#include <graphics/GraphicsResource.h>
+#include <core/Types.h>
 
 namespace Graphics
 {
-	class Shader;
-
-	class Effect final : public GraphicsResource
+	// TODO: support packed types
+	enum class VertexElementType
 	{
-	public:
+		Float16,
+		Float32,
+		Float64,
+		Int8,
+		Int16,
+		Int32,
+		Uint8,
+		Uint16,
+		Uint32
+	};
 
-		Effect(const Effect& effect) = delete;
-		Effect(Effect&& effect) = delete;
+	struct VertexElement final
+	{
+		Uint32 componentCount;
+		Uint32 index;
+		Uint32 offset;
+		Uint32 slot;
+		VertexElementType type;
+		Bool normalise;
 
-		void apply() const;
-
-		void attachShader(Shader* shader) const;
-
-		void deapply() const;
-
-		void link() const;
-
-		Effect& operator =(const Effect& effect) = delete;
-		Effect& operator =(Effect&& effect) = delete;
-
-	private:
-
-		friend class GraphicsDevice;
-
-		class Impl;
-
-		Impl* _impl;
-
-		Effect();
-		~Effect();
+		VertexElement(const Uint32 index, const Uint32 slot, const Uint32 componentCount,
+			const VertexElementType& type, const Bool normalise, const Uint32 offset = 0u)
+			: index(index),
+			  slot(slot),
+			  componentCount(componentCount),
+			  type(type),
+			  normalise(normalise),
+			  offset(offset) { }  
 	};
 }

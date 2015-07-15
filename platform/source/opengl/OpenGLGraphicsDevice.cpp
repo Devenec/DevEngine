@@ -20,11 +20,14 @@
 
 #include <core/Memory.h>
 #include <core/Rectangle.h>
+#include <core/debug/Assert.h>
 #include <graphics/Colour.h>
 #include <graphics/Effect.h>
+#include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/GraphicsResource.h>
 #include <graphics/Shader.h>
+#include <graphics/VertexBufferState.h>
 #include <graphics/Viewport.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLInterface.h>
@@ -40,6 +43,8 @@ class GraphicsDevice::Impl final
 public:
 
 	Impl()
+		: _activeEffect(nullptr),
+		  _activeVertexBufferState(nullptr)
 	{
 		OpenGL::initialise();
 		OpenGL::getIntegerv(GL_VIEWPORT, reinterpret_cast<Int32*>(&_viewport));
@@ -56,6 +61,29 @@ public:
 		OpenGL::clearColor(colour.red, colour.green, colour.blue, colour.alpha);
 		OpenGL::clear(GL_COLOR_BUFFER_BIT);
 		DE_CHECK_ERROR_OPENGL();
+	}
+
+	void draw(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset) const
+	{
+		DE_ASSERT(_activeEffect != nullptr);
+		DE_ASSERT(_activeVertexBufferState != nullptr);
+		_activeEffect->apply();
+		_activeVertexBufferState->apply();
+		// TODO: optimise the primitive type processing
+		OpenGL::drawArrays(getPrimitiveType(primitiveType), indexOffset, indexCount);
+		DE_CHECK_ERROR_OPENGL();
+		_activeVertexBufferState->deapply();
+		_activeEffect->deapply();
+	}
+
+	void setEffect(Effect* effect)
+	{
+		_activeEffect = effect;
+	}
+
+	void setVertexBufferState(VertexBufferState* vertexBufferState)
+	{
+		_activeVertexBufferState = vertexBufferState;
 	}
 
 	void setViewport(const Viewport& viewport)
@@ -77,6 +105,39 @@ public:
 private:
 
 	Viewport _viewport;
+	Effect* _activeEffect;
+	VertexBufferState* _activeVertexBufferState;
+
+	static Uint32 getPrimitiveType(const PrimitiveType& type)
+	{
+		switch(type)
+		{
+			case PrimitiveType::Line:
+				return GL_LINES;
+
+			case PrimitiveType::LineLoop:
+				return GL_LINE_LOOP;
+
+			case PrimitiveType::LineStrip:
+				return GL_LINE_STRIP;
+
+			case PrimitiveType::Point:
+				return GL_POINTS;
+
+			case PrimitiveType::Triangle:
+				return GL_TRIANGLES;
+
+			case PrimitiveType::TriangleFan:
+				return GL_TRIANGLE_FAN;
+
+			case PrimitiveType::TriangleStrip:
+				return GL_TRIANGLE_STRIP;
+
+			default:
+				DE_ASSERT(false);
+				return 0u;
+		}
+	}
 };
 
 
@@ -96,6 +157,14 @@ void GraphicsDevice::clear(const Colour& colour) const
 	_impl->clear(colour);
 }
 
+GraphicsBuffer* GraphicsDevice::createBuffer(const Uint32 size, const AccessMode& accessMode)
+{
+	GraphicsBuffer* buffer = DE_NEW(GraphicsBuffer)(size, accessMode);
+	_resources.push_back(buffer);
+
+	return buffer;
+}
+
 Effect* GraphicsDevice::createEffect()
 {
 	Effect* effect = DE_NEW(Effect)();
@@ -112,10 +181,33 @@ Shader* GraphicsDevice::createShader(const ShaderType& type, const String8& sour
 	return shader;
 }
 
+VertexBufferState* GraphicsDevice::createVertexBufferState()
+{
+	VertexBufferState* vertexBufferState = DE_NEW(VertexBufferState)();
+	_resources.push_back(vertexBufferState);
+
+	return vertexBufferState;
+}
+
 void GraphicsDevice::destroyResource(GraphicsResource* resource)
 {
 	_resources.remove(resource);
 	DE_DELETE(resource, GraphicsResource);
+}
+
+void GraphicsDevice::draw(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset) const
+{
+	_impl->draw(primitiveType, indexCount, indexOffset);
+}
+
+void GraphicsDevice::setEffect(Effect* effect) const
+{
+	_impl->setEffect(effect);
+}
+
+void GraphicsDevice::setVertexBufferState(VertexBufferState* vertexBufferState) const
+{
+	_impl->setVertexBufferState(vertexBufferState);
 }
 
 void GraphicsDevice::setViewport(const Viewport& viewport) const

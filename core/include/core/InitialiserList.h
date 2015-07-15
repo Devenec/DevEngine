@@ -1,5 +1,5 @@
 /**
- * @file graphics/Effect.h
+ * @file core/InitialiserList.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,39 +20,10 @@
 
 #pragma once
 
-#include <graphics/GraphicsResource.h>
+#include <initializer_list>
 
-namespace Graphics
+namespace Core
 {
-	class Shader;
-
-	class Effect final : public GraphicsResource
-	{
-	public:
-
-		Effect(const Effect& effect) = delete;
-		Effect(Effect&& effect) = delete;
-
-		void apply() const;
-
-		void attachShader(Shader* shader) const;
-
-		void deapply() const;
-
-		void link() const;
-
-		Effect& operator =(const Effect& effect) = delete;
-		Effect& operator =(Effect&& effect) = delete;
-
-	private:
-
-		friend class GraphicsDevice;
-
-		class Impl;
-
-		Impl* _impl;
-
-		Effect();
-		~Effect();
-	};
+	template<typename T>
+	using InitialiserList = std::initializer_list<T>;
 }

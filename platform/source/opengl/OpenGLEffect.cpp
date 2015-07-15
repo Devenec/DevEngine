@@ -54,14 +54,25 @@ public:
 		DE_CHECK_ERROR_OPENGL();
 	}
 
-	void attachShader(Shader* shader)
+	// TODO: should store the previously applied program and restore it at deapply?
+	void apply() const
+	{
+		applyProgram(_programHandle);
+	}
+
+	void deapply() const
+	{
+		applyProgram(0u);
+	}
+
+	void attachShader(Shader* shader) const
 	{
 		const Uint32 shaderHandle = shader->_impl->handle();
 		OpenGL::attachShader(_programHandle, shaderHandle);
 		DE_CHECK_ERROR_OPENGL();
 	}
 
-	void link()
+	void link() const
 	{
 		OpenGL::linkProgram(_programHandle);
 		DE_CHECK_ERROR_OPENGL();
@@ -164,6 +175,12 @@ private:
 
 		return logBuffer;
 	}
+
+	static void applyProgram(const Uint32 programHandle)
+	{
+		OpenGL::useProgram(programHandle);
+		DE_CHECK_ERROR_OPENGL();
+	}
 };
 
 const Char8* Effect::Impl::COMPONENT_TAG = "[Platform::Effect - OpenGL]";
@@ -179,9 +196,19 @@ Effect::~Effect()
 	DE_DELETE(_impl, Impl);
 }
 
+void Effect::apply() const
+{
+	_impl->apply();
+}
+
 void Effect::attachShader(Shader* shader) const
 {
 	_impl->attachShader(shader);
+}
+
+void Effect::deapply() const
+{
+	_impl->deapply();
 }
 
 void Effect::link() const

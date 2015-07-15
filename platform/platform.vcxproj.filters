@@ -47,6 +47,9 @@
     <ClInclude Include="include\platform\opengl\OpenGL.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h">
+      <Filter>Header Files\opengl</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\opengl\OpenGLInterface.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
@@ -93,6 +96,9 @@
     <ClCompile Include="source\opengl\OpenGLEffect.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
+    <ClCompile Include="source\opengl\OpenGLGraphicsBuffer.cpp">
+      <Filter>Source Files\opengl</Filter>
+    </ClCompile>
     <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
@@ -100,6 +106,9 @@
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
     <ClCompile Include="source\opengl\OpenGLShader.cpp">
+      <Filter>Source Files\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="source\opengl\OpenGLVertexBufferState.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGL.cpp">

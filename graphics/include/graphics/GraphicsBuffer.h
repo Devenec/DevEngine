@@ -1,5 +1,5 @@
 /**
- * @file graphics/Effect.h
+ * @file graphics/GraphicsBuffer.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,39 +20,39 @@
 
 #pragma once
 
+#include <core/Types.h>
 #include <graphics/GraphicsResource.h>
 
 namespace Graphics
 {
-	class Shader;
+	enum class AccessMode;
 
-	class Effect final : public GraphicsResource
+	class GraphicsBuffer final : public GraphicsResource
 	{
 	public:
 
-		Effect(const Effect& effect) = delete;
-		Effect(Effect&& effect) = delete;
+		GraphicsBuffer(const GraphicsBuffer& graphicsBuffer) = delete;
+		GraphicsBuffer(GraphicsBuffer&& graphicsBuffer) = delete;
 
-		void apply() const;
+		Byte* mapData(const Uint32 size, const Uint32 bufferOffset = 0u) const;
 
-		void attachShader(Shader* shader) const;
+		void setData(const Byte* data, const Uint32 dataSize, const Uint32 bufferOffset = 0u) const;
 
-		void deapply() const;
+		void unmapData() const;
 
-		void link() const;
-
-		Effect& operator =(const Effect& effect) = delete;
-		Effect& operator =(Effect&& effect) = delete;
+		GraphicsBuffer& operator =(const GraphicsBuffer& graphicsBuffer) = delete;
+		GraphicsBuffer& operator =(GraphicsBuffer&& graphicsBuffer) = delete;
 
 	private:
 
 		friend class GraphicsDevice;
+		friend class VertexBufferState;
 
 		class Impl;
 
 		Impl* _impl;
 
-		Effect();
-		~Effect();
+		GraphicsBuffer(const Uint32 size, const AccessMode& accessMode);
+		~GraphicsBuffer();
 	};
 }

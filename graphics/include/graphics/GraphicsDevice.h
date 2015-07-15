@@ -22,6 +22,7 @@
 
 #include <core/List.h>
 #include <core/String.h>
+#include <graphics/AccessMode.h>
 
 namespace Graphics
 {
@@ -29,9 +30,22 @@ namespace Graphics
 
 	class Colour;
 	class Effect;
+	class GraphicsBuffer;
 	class GraphicsResource;
 	class Shader;
+	class VertexBufferState;
 	class Viewport;
+
+	enum class PrimitiveType
+	{
+		Line,
+		LineLoop,
+		LineStrip,
+		Point,
+		Triangle,
+		TriangleFan,
+		TriangleStrip
+	};
 
 	class GraphicsDevice final
 	{
@@ -46,11 +60,22 @@ namespace Graphics
 
 		void clear(const Colour& colour) const;
 
+		GraphicsBuffer* createBuffer(const Uint32 size,
+			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
+
 		Effect* createEffect();
 
 		Shader* createShader(const ShaderType& type, const Core::String8& source);
 
+		VertexBufferState* createVertexBufferState();
+
 		void destroyResource(GraphicsResource* resource);
+
+		void draw(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset = 0u) const;
+
+		void setEffect(Effect* effect) const;
+
+		void setVertexBufferState(VertexBufferState* vertexBufferState) const;
 
 		void setViewport(const Viewport& viewport) const;
 

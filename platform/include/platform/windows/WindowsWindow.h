@@ -56,7 +56,7 @@ namespace Graphics
 
 		void setIcon(const Image* image);
 
-		void setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle = false);
+		void setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle);
 
 		void setTitle(const Core::String8& title) const;
 

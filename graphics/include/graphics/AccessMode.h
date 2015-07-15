@@ -1,5 +1,5 @@
 /**
- * @file graphics/Effect.h
+ * @file graphics/AccessMode.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,39 +20,23 @@
 
 #pragma once
 
-#include <graphics/GraphicsResource.h>
+#include <core/Types.h>
 
 namespace Graphics
 {
-	class Shader;
-
-	class Effect final : public GraphicsResource
+	enum class AccessMode
 	{
-	public:
-
-		Effect(const Effect& effect) = delete;
-		Effect(Effect&& effect) = delete;
-
-		void apply() const;
-
-		void attachShader(Shader* shader) const;
-
-		void deapply() const;
-
-		void link() const;
-
-		Effect& operator =(const Effect& effect) = delete;
-		Effect& operator =(Effect&& effect) = delete;
-
-	private:
-
-		friend class GraphicsDevice;
-
-		class Impl;
-
-		Impl* _impl;
-
-		Effect();
-		~Effect();
+		Read  = 1,
+		Write = 2
 	};
+
+	inline AccessMode operator &(const AccessMode& accessModeA, const AccessMode& accessModeB);
+
+	inline AccessMode& operator &=(AccessMode& accessModeA, const AccessMode& accessModeB);
+
+	inline AccessMode operator |(const AccessMode& accessModeA, const AccessMode& accessModeB);
+
+	inline AccessMode& operator |=(AccessMode& accessModeA, const AccessMode& accessModeB);
+
+#include "inline/AccessMode.inl"
 }

@@ -63,6 +63,7 @@
     <ClInclude Include="include\core\Error.h" />
     <ClInclude Include="include\core\FileStream.h" />
     <ClInclude Include="include\core\FileSystem.h" />
+    <ClInclude Include="include\core\InitialiserList.h" />
     <ClInclude Include="include\core\List.h" />
     <ClInclude Include="include\core\Log.h" />
     <ClInclude Include="include\core\LogManager.h" />

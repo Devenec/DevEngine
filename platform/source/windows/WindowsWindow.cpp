@@ -49,7 +49,7 @@ void Window::Impl::setFullscreen(const Bool isFullscreen)
 		if(isFullscreen)
 			setRectangle(getFullscreenRectangle(), isFullscreen);
 		else
-			setRectangle(_rectangle);
+			setRectangle(_rectangle, isFullscreen);
 
 		_isFullscreen = isFullscreen;
 	}
@@ -209,7 +209,7 @@ void Window::setIcon(const Image* image) const
 void Window::setRectangle(const Core::Rectangle& rectangle) const
 {
 	if(!_impl->isFullscreen())
-		_impl->setRectangle(rectangle);
+		_impl->setRectangle(rectangle, false);
 }
 
 void Window::setTitle(const String8& title) const

@@ -1,5 +1,5 @@
 /**
- * @file graphics/Effect.h
+ * @file graphics/VertexBufferState.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,29 +20,34 @@
 
 #pragma once
 
+#include <core/InitialiserList.h>
+#include <core/Types.h>
 #include <graphics/GraphicsResource.h>
 
 namespace Graphics
 {
-	class Shader;
+	struct VertexElement;
+	class GraphicsBuffer;
 
-	class Effect final : public GraphicsResource
+	class VertexBufferState final : public GraphicsResource
 	{
 	public:
 
-		Effect(const Effect& effect) = delete;
-		Effect(Effect&& effect) = delete;
+		VertexBufferState(const VertexBufferState& vertexBufferState) = delete;
+		VertexBufferState(VertexBufferState&& vertexBufferState) = delete;
 
 		void apply() const;
 
-		void attachShader(Shader* shader) const;
-
 		void deapply() const;
 
-		void link() const;
+		void setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 slot, const Uint32 stride,
+			const Uint32 bufferOffset = 0u) const;
 
-		Effect& operator =(const Effect& effect) = delete;
-		Effect& operator =(Effect&& effect) = delete;
+		void setVertexLayout(const Core::InitialiserList<VertexElement>& vertexElements,
+			const Bool calculateOffsets) const;
+
+		VertexBufferState& operator =(const VertexBufferState& vertexBufferState) = delete;
+		VertexBufferState& operator =(VertexBufferState&& vertexBufferState) = delete;
 
 	private:
 
@@ -52,7 +57,7 @@ namespace Graphics
 
 		Impl* _impl;
 
-		Effect();
-		~Effect();
+		explicit VertexBufferState();
+		~VertexBufferState();
 	};
 }

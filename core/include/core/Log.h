@@ -39,7 +39,7 @@ namespace Core
 	{
 	public:
 
-		struct Flush { };
+		struct Flush final { };
 
 		Log(const Log& log) = delete;
 		Log(Log&& log) = delete;

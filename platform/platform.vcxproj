@@ -45,6 +45,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
@@ -53,12 +54,14 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\platform\GraphicsExtensionManager.h" />
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
+    <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h" />
     <ClInclude Include="include\platform\opengl\OpenGLInterface.h" />
     <ClInclude Include="include\platform\opengl\OpenGLShader.h" />
     <ClInclude Include="include\platform\PlatformInternal.h" />
@@ -72,9 +75,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\opengl\OpenGLEffect.cpp" />
+    <ClCompile Include="source\opengl\OpenGLGraphicsBuffer.cpp" />
     <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp" />
     <ClCompile Include="source\opengl\OpenGLInterface.cpp" />
     <ClCompile Include="source\opengl\OpenGLShader.cpp" />
+    <ClCompile Include="source\opengl\OpenGLVertexBufferState.cpp" />
     <ClCompile Include="source\wgl\WGL.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp" />

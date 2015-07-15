@@ -1,5 +1,5 @@
 /**
- * @file graphics/Effect.h
+ * @file graphics/inline/AccessMode.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,41 +18,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Graphics
 
-#include <graphics/GraphicsResource.h>
-
-namespace Graphics
+AccessMode operator &(const AccessMode& accessModeA, const AccessMode& accessModeB)
 {
-	class Shader;
+	return static_cast<AccessMode>(static_cast<Int32>(accessModeA) & static_cast<Int32>(accessModeB));
+}
 
-	class Effect final : public GraphicsResource
-	{
-	public:
+AccessMode& operator &=(AccessMode& accessModeA, const AccessMode& accessModeB)
+{
+	accessModeA = accessModeA & accessModeB;
+	return accessModeA;
+}
 
-		Effect(const Effect& effect) = delete;
-		Effect(Effect&& effect) = delete;
+AccessMode operator |(const AccessMode& accessModeA, const AccessMode& accessModeB)
+{
+	return static_cast<AccessMode>(static_cast<Int32>(accessModeA) | static_cast<Int32>(accessModeB));
+}
 
-		void apply() const;
-
-		void attachShader(Shader* shader) const;
-
-		void deapply() const;
-
-		void link() const;
-
-		Effect& operator =(const Effect& effect) = delete;
-		Effect& operator =(Effect&& effect) = delete;
-
-	private:
-
-		friend class GraphicsDevice;
-
-		class Impl;
-
-		Impl* _impl;
-
-		Effect();
-		~Effect();
-	};
+AccessMode& operator |=(AccessMode& accessModeA, const AccessMode& accessModeB)
+{
+	accessModeA = accessModeA | accessModeB;
+	return accessModeA;
 }
