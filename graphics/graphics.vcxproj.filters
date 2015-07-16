@@ -41,6 +41,9 @@
     <ClInclude Include="include\graphics\GraphicsDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\GraphicsEnumerations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\GraphicsResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\ImageLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\PNGReader.h">
@@ -85,6 +91,9 @@
     <None Include="include\graphics\inline\Image.inl">
       <Filter>Header Files\inline</Filter>
     </None>
+    <None Include="include\graphics\inline\IndexBuffer.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
     <None Include="include\graphics\inline\PNGReader.inl">
       <Filter>Header Files\inline</Filter>
     </None>
@@ -103,6 +112,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\ImageLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\PNGReader.cpp">

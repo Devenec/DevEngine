@@ -1,5 +1,5 @@
 /**
- * @file core/UtilityMacrosInternal.h
+ * @file graphics/IndexBuffer.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,15 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <graphics/IndexBuffer.h>
 
-// Internal functions
+using namespace Graphics;
 
-#define DE_INTERNAL_CHAR16(literal) \
-	L ## literal
+// Private
 
-#define DE_INTERNAL_STRING8(value) \
-	#value
-
-
-#include <core/Platform.h>
+IndexBuffer::IndexBuffer(const Uint32 size, const IndexType& indexType, const AccessMode& accessMode)
+	: Base(size, accessMode),
+	_indexType(indexType) { }

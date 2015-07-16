@@ -61,7 +61,7 @@ namespace Core
 
 		Int64 position() const;
 
-		Uint32 read(Byte* buffer, const Uint32 byteCount) const;
+		Uint32 read(Byte* buffer, const Uint32 size) const;
 
 		void seek(const Int64& position) const;
 
@@ -69,7 +69,7 @@ namespace Core
 
 		Int64 size() const;
 
-		Uint32 write(const Byte* data, const Uint32 byteCount) const;
+		Uint32 write(const Byte* data, const Uint32 size) const;
 
 		FileStream& operator =(const FileStream& fileStream) = delete;
 		FileStream& operator =(FileStream&& fileStream) = delete;

@@ -38,13 +38,13 @@ namespace Graphics
 
 		~Impl();
 
+		void demapData() const;
+
 		Uint32 handle() const;
 
 		Byte* mapData(const Uint32 size, const Uint32 bufferOffset) const;
 
 		void setData(const Byte* data, const Uint32 dataSize, const Uint32 bufferOffset) const;
-
-		void unmapData() const;
 
 		Impl& operator =(const Impl& impl) = delete;
 		Impl& operator =(Impl&& impl) = delete;

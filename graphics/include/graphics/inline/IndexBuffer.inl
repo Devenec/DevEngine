@@ -1,5 +1,5 @@
 /**
- * @file core/UtilityMacrosInternal.h
+ * @file graphics/inline/IndexBuffer.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,15 +18,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Public
 
-// Internal functions
-
-#define DE_INTERNAL_CHAR16(literal) \
-	L ## literal
-
-#define DE_INTERNAL_STRING8(value) \
-	#value
-
-
-#include <core/Platform.h>
+IndexType IndexBuffer::indexType() const
+{
+	return _indexType;
+}

@@ -46,7 +46,7 @@
 #include <platform/PlatformInternal.h>
 
 #if DE_COMPILER == DE_COMPILER_MSVC
-	#define DE_CALL_OPENGL _DE_CALL_STDCALL
+	#define DE_CALL_OPENGL DE_INTERNAL_CALL_STDCALL
 #else
 	#define DE_CALL_OPENGL
 #endif
@@ -1287,8 +1287,8 @@ using GLUniformBlockBinding = void (DE_CALL_OPENGL*)(GLuint program, GLuint unif
 
 // Version 3.2
 
-struct __GLsync;
-using GLsync = __GLsync*;
+struct GLsyncStruct;
+using GLsync = GLsyncStruct*;
 
 using GLint64  = Int64;
 using GLuint64 = Uint64;

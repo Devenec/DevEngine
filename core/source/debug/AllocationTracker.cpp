@@ -31,7 +31,7 @@ using namespace Debug;
 AllocationTracker::AllocationTracker()
 	: _isInitialised(false) { }
 
-void AllocationTracker::deregisterAllocation(Void* pointer, const Uint32 byteCount)
+void AllocationTracker::deregisterAllocation(Void* pointer, const Uint32 size)
 {
 	DE_ASSERT(_isInitialised);
 	AllocationRecordMap::const_iterator iterator = _allocationRecords.find(pointer);
@@ -39,19 +39,19 @@ void AllocationTracker::deregisterAllocation(Void* pointer, const Uint32 byteCou
 
 	if(iterator != _allocationRecords.end())
 	{
-		DE_ASSERT(byteCount == 0u || byteCount == iterator->second.byteCount);
+		DE_ASSERT(size == 0u || size == iterator->second.size);
 		_allocationRecords.erase(iterator);
 	}
 }
 
-void AllocationTracker::registerAllocation(Void* pointer, const Uint32 byteCount, const Char8* file, const Uint32 line,
+void AllocationTracker::registerAllocation(Void* pointer, const Uint32 size, const Char8* file, const Uint32 line,
 	const Char8* function)
 {
 	DE_ASSERT(pointer != nullptr);
 	DE_ASSERT(_isInitialised);
 
 	const std::pair<AllocationRecordMap::const_iterator, Bool> result = _allocationRecords.emplace(pointer,
-		AllocationRecord(byteCount, file, line, function));
+		AllocationRecord(size, file, line, function));
 
 	DE_ASSERT(result.second);
 }
@@ -69,7 +69,7 @@ void AllocationTracker::checkForMemoryLeaks() const
 			i != end; ++i)
 		{
 			defaultLog << "0x" << std::hex << std::uppercase << i->first << std::nouppercase << std::dec << " (" <<
-				i->second.byteCount << " bytes) at " << i->second.file << " on line " << i->second.line <<
+				i->second.size << " bytes) at " << i->second.file << " on line " << i->second.line <<
 				" in function " << i->second.function << Log::Flush();
 		}
 	}

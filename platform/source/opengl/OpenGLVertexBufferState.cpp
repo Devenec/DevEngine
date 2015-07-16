@@ -22,6 +22,7 @@
 #include <core/Types.h>
 #include <core/debug/Assert.h>
 #include <graphics/GraphicsBuffer.h>
+#include <graphics/IndexBuffer.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
 #include <platform/opengl/OpenGL.h>
@@ -39,7 +40,8 @@ class VertexBufferState::Impl final
 public:
 
 	Impl()
-		: _vertexArrayHandle(0u)
+		: _indexBuffer(nullptr),
+		  _vertexArrayHandle(0u)
 	{
 		OpenGL::createVertexArrays(1, &_vertexArrayHandle);
 		DE_CHECK_ERROR_OPENGL();
@@ -54,7 +56,6 @@ public:
 		DE_CHECK_ERROR_OPENGL();
 	}
 
-	// TODO: should store the previously applied program and restore it at deapply?
 	void apply() const
 	{
 		applyVertexArray(_vertexArrayHandle);
@@ -65,34 +66,48 @@ public:
 		applyVertexArray(0u);
 	}
 
-	void setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 slot, const Uint32 stride,
-		const Uint32 bufferOffset) const
+	IndexBuffer* indexBuffer() const
 	{
-		OpenGL::vertexArrayVertexBuffer(_vertexArrayHandle, slot, buffer->_impl->handle(), bufferOffset, stride);
+		return _indexBuffer;
+	}
+
+	void setIndexBuffer(IndexBuffer* buffer)
+	{
+		_indexBuffer = buffer;
+		Uint32 bufferHandle = 0u;
+
+		if(buffer != nullptr)
+			bufferHandle = buffer->_impl->handle();
+
+		OpenGL::vertexArrayElementBuffer(_vertexArrayHandle, bufferHandle);
 		DE_CHECK_ERROR_OPENGL();
 	}
 
-	void setVertexLayout(const InitialiserList<VertexElement>& vertexElements, const Bool calculateOffsets) const
+	void setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 bufferIndex, const Uint32 stride,
+		const Uint32 offset) const
+	{
+		Uint32 bufferHandle = 0u;
+
+		if(buffer != nullptr)
+			bufferHandle = buffer->_impl->handle();
+
+		OpenGL::vertexArrayVertexBuffer(_vertexArrayHandle, bufferIndex, bufferHandle, offset, stride);
+		DE_CHECK_ERROR_OPENGL();
+	}
+
+	void setVertexLayout(const InitialiserList<VertexElement>& vertexElements) const
 	{
 		Uint32 offset = 0u;
 
 		for(InitialiserList<VertexElement>::const_iterator i = vertexElements.begin(), end = vertexElements.end();
 			i != end; ++i)
 		{
-			if(!calculateOffsets)
+			if(i->offset != VertexElement::AFTER_PREVIOUS)
 				offset = i->offset;
 
-			OpenGL::vertexArrayAttribFormat(_vertexArrayHandle, i->index, i->componentCount, getVertexElementType(*i),
-				i->normalise, offset);
-
-			DE_CHECK_ERROR_OPENGL();
-			OpenGL::enableVertexArrayAttrib(_vertexArrayHandle, i->index);
-			DE_CHECK_ERROR_OPENGL();
-			OpenGL::vertexArrayAttribBinding(_vertexArrayHandle, i->index, i->slot);
-			DE_CHECK_ERROR_OPENGL();
-
-			if(calculateOffsets)
-				offset += getVertexElementSize(*i);
+			setVertexElementFormat(*i, offset);
+			setVertexElementBinding(*i);
+			offset += getVertexElementSize(*i);
 		}
 	}
 
@@ -101,7 +116,28 @@ public:
 
 private:
 
+	IndexBuffer* _indexBuffer;
 	Uint32 _vertexArrayHandle;
+
+	void setVertexElementFormat(const VertexElement& element, const Uint32 offset) const
+	{
+		Bool normalise;
+		const Uint32 componentCount = getVertexElementComponentCount(element, normalise);
+		const Uint32 vertexElementType = static_cast<Uint32>(element.type) >> 3;
+
+		OpenGL::vertexArrayAttribFormat(_vertexArrayHandle, element.vertexIndex, componentCount, vertexElementType,
+			normalise, offset);
+
+		DE_CHECK_ERROR_OPENGL();
+		OpenGL::enableVertexArrayAttrib(_vertexArrayHandle, element.vertexIndex);
+		DE_CHECK_ERROR_OPENGL();
+	}
+
+	void setVertexElementBinding(const VertexElement& element) const
+	{
+		OpenGL::vertexArrayAttribBinding(_vertexArrayHandle, element.vertexIndex, element.bufferIndex);
+		DE_CHECK_ERROR_OPENGL();
+	}
 
 	static void applyVertexArray(const Uint32 vertexArrayHandle)
 	{
@@ -114,21 +150,65 @@ private:
 		switch(element.type)
 		{
 			case VertexElementType::Float16:
+			case VertexElementType::Int8Vector2:
 			case VertexElementType::Int16:
+			case VertexElementType::Uint8Vector2:
 			case VertexElementType::Uint16:
-				return 2u;
+				 return 2u;
 
+			case VertexElementType::Float16Vector2:
 			case VertexElementType::Float32:
+			case VertexElementType::Int8Vector4:
+			case VertexElementType::Int16Vector2:
 			case VertexElementType::Int32:
+			case VertexElementType::Int32_B10G10R10A2:
+			case VertexElementType::Int32_R10G10B10A2:
+			case VertexElementType::Uint8Vector4:
+			case VertexElementType::Uint16Vector2:
 			case VertexElementType::Uint32:
-				return 4u;
+			case VertexElementType::Uint32_B10G10R10A2:
+			case VertexElementType::Uint32_R10G10B10A2:
+			case VertexElementType::Uint32_R11G11B10_Float:
+				 return 4u;
 
+			case VertexElementType::Float16Vector3:
+			case VertexElementType::Int16Vector3:
+			case VertexElementType::Uint16Vector3:
+				 return 6u;
+
+			case VertexElementType::Float16Vector4:
+			case VertexElementType::Float32Vector2:
 			case VertexElementType::Float64:
-				return 8u;
+			case VertexElementType::Int16Vector4:
+			case VertexElementType::Int32Vector2:
+			case VertexElementType::Uint16Vector4:
+			case VertexElementType::Uint32Vector2:
+				 return 8u;
+
+			case VertexElementType::Float32Vector3:
+			case VertexElementType::Int32Vector3:
+			case VertexElementType::Uint32Vector3:
+				 return 12u;
+
+			case VertexElementType::Float32Vector4:
+			case VertexElementType::Float64Vector2:
+			case VertexElementType::Int32Vector4:
+			case VertexElementType::Uint32Vector4:
+				 return 16u;
+
+			case VertexElementType::Float64Vector3:
+				 return 24u;
+
+			case VertexElementType::Float64Vector4:
+				 return 32u;
 
 			case VertexElementType::Int8:
 			case VertexElementType::Uint8:
-				return 1u;
+				 return 1u;
+
+			case VertexElementType::Int8Vector3:
+			case VertexElementType::Uint8Vector3:
+				 return 3u;
 
 			default:
 				DE_ASSERT(false);
@@ -136,54 +216,26 @@ private:
 		}
 	}
 
-	static Uint32 getVertexElementType(const VertexElement& element)
+	static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise)
 	{
-		switch(element.type)
+		normalise = element.normalise;
+		Uint32 componentCount = static_cast<Int32>(element.type) & 0x07;
+
+		if(componentCount > 4u)
 		{
-			case VertexElementType::Float16:
-				return GL_HALF_FLOAT;
-
-			case VertexElementType::Float32:
-				return GL_FLOAT;
-
-			case VertexElementType::Float64:
-				return GL_DOUBLE;
-
-			case VertexElementType::Int8:
-				return GL_BYTE;
-
-			case VertexElementType::Int16:
-				return GL_SHORT;
-
-			case VertexElementType::Int32:
-				return GL_INT;
-
-			case VertexElementType::Uint8:
-				return GL_UNSIGNED_BYTE;
-
-			case VertexElementType::Uint16:
-				return GL_UNSIGNED_SHORT;
-
-			case VertexElementType::Uint32:
-				return GL_UNSIGNED_INT;
-
-			default:
-				DE_ASSERT(false);
-				return 0u;
+			--componentCount;
+			normalise = true;
 		}
+
+		if(componentCount == 5u)
+			componentCount = GL_BGRA;
+
+		return componentCount;
 	}
 };
 
 
 // Public
-
-VertexBufferState::VertexBufferState()
-	: _impl(DE_NEW(Impl)()) { }
-
-VertexBufferState::~VertexBufferState()
-{
-	DE_DELETE(_impl, Impl);
-}
 
 void VertexBufferState::apply() const
 {
@@ -195,14 +247,33 @@ void VertexBufferState::deapply() const
 	_impl->deapply();
 }
 
-void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 slot, const Uint32 stride,
-	const Uint32 bufferOffset) const
+IndexBuffer* VertexBufferState::indexBuffer() const
 {
-	_impl->setVertexBuffer(buffer, slot, stride, bufferOffset);
+	return _impl->indexBuffer();
 }
 
-void VertexBufferState::setVertexLayout(const InitialiserList<VertexElement>& vertexElements,
-	const Bool calculateOffsets) const
+void VertexBufferState::setIndexBuffer(IndexBuffer* indexBuffer) const
 {
-	_impl->setVertexLayout(vertexElements, calculateOffsets);
+	return _impl->setIndexBuffer(indexBuffer);
+}
+
+void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 bufferIndex, const Uint32 stride,
+	const Uint32 offset) const
+{
+	_impl->setVertexBuffer(buffer, bufferIndex, stride, offset);
+}
+
+void VertexBufferState::setVertexLayout(const InitialiserList<VertexElement>& vertexElements) const
+{
+	_impl->setVertexLayout(vertexElements);
+}
+
+// Private
+
+VertexBufferState::VertexBufferState()
+	: _impl(DE_NEW(Impl)()) { }
+
+VertexBufferState::~VertexBufferState()
+{
+	DE_DELETE(_impl, Impl);
 }

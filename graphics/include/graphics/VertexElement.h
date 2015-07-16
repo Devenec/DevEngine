@@ -21,39 +21,26 @@
 #pragma once
 
 #include <core/Types.h>
+#include <graphics/GraphicsEnumerations.h>
 
 namespace Graphics
 {
-	// TODO: support packed types
-	enum class VertexElementType
-	{
-		Float16,
-		Float32,
-		Float64,
-		Int8,
-		Int16,
-		Int32,
-		Uint8,
-		Uint16,
-		Uint32
-	};
-
 	struct VertexElement final
 	{
-		Uint32 componentCount;
-		Uint32 index;
+		static const Uint32 AFTER_PREVIOUS = 0xFFFFFFFF;
+
+		Uint32 bufferIndex;
 		Uint32 offset;
-		Uint32 slot;
 		VertexElementType type;
+		Uint32 vertexIndex;
 		Bool normalise;
 
-		VertexElement(const Uint32 index, const Uint32 slot, const Uint32 componentCount,
-			const VertexElementType& type, const Bool normalise, const Uint32 offset = 0u)
-			: index(index),
-			  slot(slot),
-			  componentCount(componentCount),
+		VertexElement(const Uint32 vertexIndex, const Uint32 bufferIndex, const VertexElementType& type,
+			const Bool normalise = false, const Uint32 offset = AFTER_PREVIOUS)
+			: bufferIndex(bufferIndex),
+			  offset(offset),
 			  type(type),
-			  normalise(normalise),
-			  offset(offset) { }  
+			  vertexIndex(vertexIndex),
+			  normalise(normalise) { }
 	};
 }

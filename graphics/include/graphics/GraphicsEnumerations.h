@@ -1,5 +1,5 @@
 /**
- * @file core/UtilityMacrosInternal.h
+ * @file graphics/GraphicsEnumerations.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,13 +20,10 @@
 
 #pragma once
 
-// Internal functions
-
-#define DE_INTERNAL_CHAR16(literal) \
-	L ## literal
-
-#define DE_INTERNAL_STRING8(value) \
-	#value
-
-
 #include <core/Platform.h>
+
+#if DE_PLATFORM == DE_PLATFORM_WINDOWS
+	#include <platform/opengl/OpenGLGraphicsEnumerations.h>
+#else
+	#error The target platform is not supported.
+#endif

@@ -142,10 +142,10 @@ void PNGReader::handleWarning(png_struct* pngStructure, const Char8* message)
 	defaultLog << LogLevel::Warning << COMPONENT_TAG << " PNG warning: " << message << '.' << Log::Flush();
 }
 
-Void* PNGReader::allocateMemory(png_struct* pngStructure, Uint32 byteCount)
+Void* PNGReader::allocateMemory(png_struct* pngStructure, Uint32 size)
 {
 	static_cast<Void>(pngStructure);
-	return DE_ALLOCATE(byteCount);
+	return DE_ALLOCATE(size);
 }
 
 void PNGReader::deallocateMemory(png_struct* pngStructure, Void* pointer)
@@ -154,12 +154,12 @@ void PNGReader::deallocateMemory(png_struct* pngStructure, Void* pointer)
 	DE_DEALLOCATE(pointer);
 }
 
-void PNGReader::readData(png_struct* pngStructure, Byte* buffer, Uint32 byteCount)
+void PNGReader::readData(png_struct* pngStructure, Byte* buffer, Uint32 size)
 {
 	FileStream* fileStream = static_cast<FileStream*>(png_get_io_ptr(pngStructure));
 
 	if(fileStream->isAtEndOfFile())
 		png_error(pngStructure, "Reached the end of the file");
 
-	fileStream->read(buffer, byteCount);
+	fileStream->read(buffer, size);
 }

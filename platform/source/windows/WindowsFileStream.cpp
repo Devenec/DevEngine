@@ -114,13 +114,13 @@ public:
 		return position.QuadPart;
 	}
 
-	Uint32 read(Byte* buffer, const Uint32 byteCount) const
+	Uint32 read(Byte* buffer, const Uint32 size) const
 	{
 		DE_ASSERT(buffer != nullptr);
 		DE_ASSERT(isOpen());
 		DE_ASSERT((_openMode & OpenMode::Read) == OpenMode::Read);
-		unsigned long byteCountRead;
-		const Int32 result = ReadFile(_handle, buffer, byteCount, &byteCountRead, nullptr);
+		unsigned long bytesRead;
+		const Int32 result = ReadFile(_handle, buffer, size, &bytesRead, nullptr);
 
 		if(result == 0)
 		{
@@ -128,7 +128,7 @@ public:
 			DE_ERROR_WINDOWS(0x0);
 		}
 
-		return byteCountRead;
+		return bytesRead;
 	}
 
 	void seek(const Int64& position) const
@@ -164,13 +164,13 @@ public:
 		return size.QuadPart;
 	}
 
-	Uint32 write(const Byte* data, const Uint32 byteCount) const
+	Uint32 write(const Byte* data, const Uint32 size) const
 	{
 		DE_ASSERT(data != nullptr);
 		DE_ASSERT(isOpen());
 		DE_ASSERT((_openMode & OpenMode::Write) == OpenMode::Write);
-		unsigned long byteCountWritten;
-		const Int32 result = WriteFile(_handle, data, byteCount, &byteCountWritten, nullptr);
+		unsigned long bytesWritten;
+		const Int32 result = WriteFile(_handle, data, size, &bytesWritten, nullptr);
 
 		if(result == 0)
 		{
@@ -178,7 +178,7 @@ public:
 			DE_ERROR_WINDOWS(0x0);
 		}
 
-		return byteCountWritten;
+		return bytesWritten;
 	}
 
 	Impl& operator =(const Impl& impl) = delete;
@@ -281,9 +281,9 @@ Int64 FileStream::position() const
 	return _impl->position();
 }
 
-Uint32 FileStream::read(Byte* buffer, const Uint32 byteCount) const
+Uint32 FileStream::read(Byte* buffer, const Uint32 size) const
 {
-	return _impl->read(buffer, byteCount);
+	return _impl->read(buffer, size);
 }
 
 void FileStream::seek(const Int64& position) const
@@ -301,7 +301,7 @@ Int64 FileStream::size() const
 	return _impl->size();
 }
 
-Uint32 FileStream::write(const Byte* data, const Uint32 byteCount) const
+Uint32 FileStream::write(const Byte* data, const Uint32 size) const
 {
-	return _impl->write(data, byteCount);
+	return _impl->write(data, size);
 }

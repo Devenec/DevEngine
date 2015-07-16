@@ -27,7 +27,9 @@
 namespace Graphics
 {
 	struct VertexElement;
+
 	class GraphicsBuffer;
+	class IndexBuffer;
 
 	class VertexBufferState final : public GraphicsResource
 	{
@@ -40,11 +42,14 @@ namespace Graphics
 
 		void deapply() const;
 
-		void setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 slot, const Uint32 stride,
-			const Uint32 bufferOffset = 0u) const;
+		IndexBuffer* indexBuffer() const;
 
-		void setVertexLayout(const Core::InitialiserList<VertexElement>& vertexElements,
-			const Bool calculateOffsets) const;
+		void setIndexBuffer(IndexBuffer* buffer) const;
+
+		void setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 bufferIndex, const Uint32 stride,
+			const Uint32 offset = 0u) const;
+
+		void setVertexLayout(const Core::InitialiserList<VertexElement>& vertexElements) const;
 
 		VertexBufferState& operator =(const VertexBufferState& vertexBufferState) = delete;
 		VertexBufferState& operator =(VertexBufferState&& vertexBufferState) = delete;
@@ -57,7 +62,7 @@ namespace Graphics
 
 		Impl* _impl;
 
-		explicit VertexBufferState();
+		VertexBufferState();
 		~VertexBufferState();
 	};
 }

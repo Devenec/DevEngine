@@ -68,10 +68,12 @@
     <ClInclude Include="include\graphics\GraphicsBuffer.h" />
     <ClInclude Include="include\graphics\GraphicsContext.h" />
     <ClInclude Include="include\graphics\GraphicsDevice.h" />
+    <ClInclude Include="include\graphics\GraphicsEnumerations.h" />
     <ClInclude Include="include\graphics\GraphicsResource.h" />
     <ClInclude Include="include\graphics\Image.h" />
     <ClInclude Include="include\graphics\ImageFormat.h" />
     <ClInclude Include="include\graphics\ImageLoader.h" />
+    <ClInclude Include="include\graphics\IndexBuffer.h" />
     <ClInclude Include="include\graphics\PNGReader.h" />
     <ClInclude Include="include\graphics\Shader.h" />
     <ClInclude Include="include\graphics\VertexBufferState.h" />
@@ -84,6 +86,7 @@
     <None Include="include\graphics\inline\AccessMode.inl" />
     <None Include="include\graphics\inline\DisplayMode.inl" />
     <None Include="include\graphics\inline\Image.inl" />
+    <None Include="include\graphics\inline\IndexBuffer.inl" />
     <None Include="include\graphics\inline\PNGReader.inl" />
     <None Include="include\graphics\inline\Viewport.inl" />
   </ItemGroup>
@@ -92,6 +95,7 @@
     <ClCompile Include="source\DisplayMode.cpp" />
     <ClCompile Include="source\Image.cpp" />
     <ClCompile Include="source\ImageLoader.cpp" />
+    <ClCompile Include="source\IndexBuffer.cpp" />
     <ClCompile Include="source\PNGReader.cpp" />
     <ClCompile Include="source\Viewport.cpp" />
   </ItemGroup>

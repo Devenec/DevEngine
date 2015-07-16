@@ -28,11 +28,11 @@
 #include <core/debug/Assert.h>
 
 #if DE_BUILD == DE_BUILD_PRODUCTION || !defined(DE_CONFIG_TRACK_ALLOCATIONS)
-	#define DE_ALLOCATE(byteCount) \
-		Core::allocateMemory(byteCount)
+	#define DE_ALLOCATE(size) \
+		Core::allocateMemory(size)
 #else
-	#define DE_ALLOCATE(byteCount) \
-		Core::allocateMemory(byteCount, DE_FILE, DE_LINE, DE_FUNCTION)
+	#define DE_ALLOCATE(size) \
+		Core::allocateMemory(size, DE_FILE, DE_LINE, DE_FUNCTION)
 #endif
 
 #define DE_DEALLOCATE(pointer) \
@@ -42,34 +42,34 @@
 	if((pointer) != nullptr) { (pointer)->~T(); \
 		Core::deallocateMemory(pointer); }
 
-#define DE_DELETE_ARRAY(pointer, T, byteCount) \
-	if((pointer) != nullptr) { Core::destructArray<T>(pointer, byteCount); \
-		Core::deallocateMemory(pointer, byteCount); }
+#define DE_DELETE_ARRAY(pointer, T, size) \
+	if((pointer) != nullptr) { Core::destructArray<T>(pointer, size); \
+		Core::deallocateMemory(pointer, size); }
 
 #if DE_BUILD == DE_BUILD_PRODUCTION || !defined(DE_CONFIG_TRACK_ALLOCATIONS)
 	#define DE_NEW(T) \
 		new (Core::allocateMemory(sizeof(T))) T
 
-	#define DE_NEW_ARRAY(T, byteCount) \
-		Core::constructArray(static_cast<T*>(Core::allocateMemory(sizeof(T) * (byteCount))), byteCount)
+	#define DE_NEW_ARRAY(T, size) \
+		Core::constructArray(static_cast<T*>(Core::allocateMemory(sizeof(T) * (size))), size)
 #else
 	#define DE_NEW(T) \
 		new (Core::allocateMemory(sizeof(T), DE_FILE, DE_LINE, DE_FUNCTION)) T
 
-	#define DE_NEW_ARRAY(T, byteCount) \
-		Core::constructArray(static_cast<T*>(Core::allocateMemory(sizeof(T) * (byteCount), DE_FILE, DE_LINE, \
-			DE_FUNCTION)), byteCount)
+	#define DE_NEW_ARRAY(T, size) \
+		Core::constructArray(static_cast<T*>(Core::allocateMemory(sizeof(T) * (size), DE_FILE, DE_LINE, \
+			DE_FUNCTION)), size)
 #endif
 
 namespace Core
 {
-	Void* allocateMemory(const Uint32 byteCount);
+	Void* allocateMemory(const Uint32 size);
 
 #if DE_BUILD != DE_BUILD_PRODUCTION && defined(DE_CONFIG_TRACK_ALLOCATIONS)
-	Void* allocateMemory(const Uint32 byteCount, const Char8* file, const Uint32 line, const Char8* function);
+	Void* allocateMemory(const Uint32 size, const Char8* file, const Uint32 line, const Char8* function);
 #endif
 
-	void deallocateMemory(Void* pointer, const Uint32 byteCount = 0u);
+	void deallocateMemory(Void* pointer, const Uint32 size = 0u);
 
 	template<typename T>
 	T* constructArray(T* pointer, const Uint32 size);

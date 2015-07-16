@@ -22,11 +22,11 @@
 
 // Internal functions
 
-#define ___DE_STRING8(value) \
+#define DE_INTERNAL1_STRING8(value) \
 	#value
 
-#define __DE_STRING8(value) \
-	___DE_STRING8(value)
+#define DE_INTERNAL2_STRING8(value) \
+	DE_INTERNAL1_STRING8(value)
 
 
 // Compiler and compiler version detection
@@ -39,17 +39,17 @@
 		#error The compiler version is not supported. The minimum supported version is DE_COMPILER_VERSION_MIN_MSVC.
 	#endif
 #else
-	#error The compiler is unsupported.
+	#error The compiler is not supported.
 #endif
 
 
 // Compiler specific internal functions
 
 #if DE_COMPILER == DE_COMPILER_MSVC
-	#define _DE_COMPILER_WARN(msg) \
-		__pragma(message(__FILE__ "(" __DE_STRING8(__LINE__) ") : warning: " msg))
+	#define DE_INTERNAL_COMPILER_WARN(msg) \
+		__pragma(message(__FILE__ "(" DE_INTERNAL2_STRING8(__LINE__) ") : warning: " msg))
 
-	#define _DE_DEBUGGER_BREAK() \
+	#define DE_INTERNAL_DEBUGGER_BREAK() \
 		__asm int 3
 #endif
 
@@ -57,10 +57,10 @@
 // Compiler specific internal keywords and variables
 
 #if DE_COMPILER == DE_COMPILER_MSVC
-	#define _DE_CALL_STDCALL __stdcall
-	#define _DE_CONSTEXPR	 inline const
-	#define _DE_FUNCTION	 __FUNCTION__
-	#define _DE_NO_OPERATION __noop
+	#define DE_INTERNAL_CALL_STDCALL __stdcall
+	#define DE_INTERNAL_CONSTEXPR	 inline const
+	#define DE_INTERNAL_FUNCTION	 __FUNCTION__
+	#define DE_INTERNAL_NO_OPERATION __noop
 #endif
 
 
@@ -75,15 +75,17 @@
 
 // Build configuration detection
 
-#if defined(_DE_BUILD_DEBUG)
+#if defined(DE_BUILD_CONFIG_DEBUG)
 	#define DE_BUILD DE_BUILD_DEBUG
-#elif defined(_DE_BUILD_RELEASE)
+#elif defined(DE_BUILD_CONFIG_RELEASE)
 	#define DE_BUILD DE_BUILD_RELEASE
-#elif defined(_DE_BUILD_PRODUCTION)
+#elif defined(DE_BUILD_CONFIG_PRODUCTION)
 	#define DE_BUILD DE_BUILD_PRODUCTION
 #else
 	#define DE_BUILD DE_BUILD_DEBUG
-	_DE_COMPILER_WARN("Could not detect the build configuration correctly. DE_BUILD is set to DE_BUILD_DEBUG.");
+	
+	DE_INTERNAL_COMPILER_WARN("Could not detect the build configuration correctly." \
+		" DE_BUILD is set to DE_BUILD_DEBUG.");
 #endif
 
 
@@ -96,5 +98,5 @@
 #endif
 
 
-#undef __DE_STRING8
-#undef ___DE_STRING8
+#undef DE_INTERNAL2_STRING8
+#undef DE_INTERNAL1_STRING8

@@ -25,7 +25,7 @@
 #include <core/Types.h>
 
 #if DE_BUILD != DE_BUILD_PRODUCTION && defined(DE_CONFIG_TRACK_ALLOCATIONS)
-	#define _DE_TRACK_ALLOCATIONS
+	#define DE_INTERNAL_TRACK_ALLOCATIONS
 	#include <core/debug/AllocationTracker.h>
 
 	static Debug::AllocationTracker allocationTracker;
@@ -42,14 +42,14 @@ Int32 wmain(Int32 argumentCount, Char16** arguments)
 {
 	logManager.initialise();
 
-#if defined(_DE_TRACK_ALLOCATIONS)
+#if defined(DE_INTERNAL_TRACK_ALLOCATIONS)
 	allocationTracker.initialise();
 #endif
 
 	StartupParameters startupParameters = createStartupParameters(argumentCount, arguments);
 	devEngineMain(startupParameters);
 
-#if defined(_DE_TRACK_ALLOCATIONS)
+#if defined(DE_INTERNAL_TRACK_ALLOCATIONS)
 	allocationTracker.deinitialise();
 #endif
 

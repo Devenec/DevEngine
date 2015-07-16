@@ -29,6 +29,7 @@
 #include <graphics/GraphicsContext.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/Image.h>
+#include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
@@ -45,9 +46,13 @@ static const String8 VERTEX_SHADER_SOURCE
 	"#version 450\n"
 	"\n"
 	"layout(location = 0) in vec4 inPosition;\n"
+	"layout(location = 1) in vec3 inColour;\n"
+	"\n"
+	"out vec3 colour;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
+	"	colour = inColour;\n"
 	"	gl_Position = inPosition;\n"
 	"}\n"
 );
@@ -56,11 +61,12 @@ static const String8 FRAGMENT_SHADER_SOURCE
 (
 	"#version 450\n"
 	"\n"
+	"in vec3 colour;\n"
 	"out vec4 outColour;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
-	"	outColour = vec4(0.0, 1.0, 0.0, 1.0);\n"
+	"	outColour = vec4(colour, 1.0);\n"
 	"}\n"
 );
 
@@ -80,7 +86,6 @@ void devEngineMain(const StartupParameters& startupParameters)
 	GraphicsContext graphicsContext(window);
 	graphicsContext.makeCurrent();
 	GraphicsDevice graphicsDevice;
-	graphicsDevice.setViewport(Viewport(Rectangle(400, 300, 400u, 300u)));
 
 	Shader* vertexShader = graphicsDevice.createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
 	Shader* fragmentShader = graphicsDevice.createShader(ShaderType::Fragment, FRAGMENT_SHADER_SOURCE);
@@ -91,24 +96,50 @@ void devEngineMain(const StartupParameters& startupParameters)
 	graphicsDevice.destroyResource(fragmentShader);
 	graphicsDevice.destroyResource(vertexShader);
 
-	const Vector<Float32> VERTEX_DATA
+	Vector<Float32> VERTEX_DATA
 	{
 		 0.0f,	0.8f, 0.0f,
-		-0.8f, -0.8f, 0.0f,
-		 0.8f, -0.8f, 0.0f
+		 0.0f,
+
+		-0.8f,	0.0f, 0.0f,
+		 0.0f,
+
+		 0.8f,	0.0f, 0.0f,
+		 0.0f,
+
+		 0.0f, -0.8f, 0.0f,
+		 0.0f
+	};
+
+	Uint32 colour = 0x000003FF;
+	VERTEX_DATA[3] = *reinterpret_cast<Float32*>(&colour);
+	colour = 0x000FFC00;
+	VERTEX_DATA[7] = *reinterpret_cast<Float32*>(&colour);
+	colour = 0x3FF00000;
+	VERTEX_DATA[11] = *reinterpret_cast<Float32*>(&colour);
+	colour = 0x000FFFFF;
+	VERTEX_DATA[15] = *reinterpret_cast<Float32*>(&colour);
+
+	const Vector<Uint8> INDEX_DATA
+	{
+		 0u, 1u, 2u,
+		 3u, 2u, 1u,
 	};
 
 	GraphicsBuffer* vertexBuffer = graphicsDevice.createBuffer(sizeof(Float32) * VERTEX_DATA.size());
 	vertexBuffer->setData(reinterpret_cast<const Byte*>(VERTEX_DATA.data()), sizeof(Float32) * VERTEX_DATA.size());
+	IndexBuffer* indexBuffer = graphicsDevice.createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
+	indexBuffer->setData(reinterpret_cast<const Byte*>(INDEX_DATA.data()), sizeof(Uint8) * INDEX_DATA.size());
 	VertexBufferState* vertexBufferState = graphicsDevice.createVertexBufferState();
 
-	vertexBufferState->setVertexLayout(
-	{
-		{ 0u, 0u, 3u, VertexElementType::Float32, false }
-	},
-	true);
+	vertexBufferState->setVertexLayout
+	({
+		VertexElement(0u, 0u, VertexElementType::Float32Vector3),
+		VertexElement(1u, 0u, VertexElementType::Uint32_R10G10B10A2)
+	});
 
-	vertexBufferState->setVertexBuffer(vertexBuffer, 0u, 3u * sizeof(Float32));
+	vertexBufferState->setVertexBuffer(vertexBuffer, 0u, 4u * sizeof(Float32));
+	vertexBufferState->setIndexBuffer(indexBuffer);
 	graphicsDevice.setEffect(effect);
 	graphicsDevice.setVertexBufferState(vertexBufferState);
 
@@ -116,7 +147,20 @@ void devEngineMain(const StartupParameters& startupParameters)
 	{
 		windowManager.processMessages();
 		graphicsDevice.clear(Colour(0.8f, 0.0f, 1.0f));
-		graphicsDevice.draw(PrimitiveType::Triangle, 3u);
+
+		graphicsDevice.setViewport(Viewport(Rectangle(0, 0, 400u, 300u)));
+		graphicsDevice.draw(PrimitiveType::TriangleStrip, 4u);
+
+		graphicsDevice.setViewport(Viewport(Rectangle(400, 0, 400u, 300u)));
+		graphicsDevice.drawIndexed(PrimitiveType::Triangle, 3u, 3u);
+
+		graphicsDevice.setViewport(Viewport(Rectangle(0, 300, 400u, 300u)));
+		graphicsDevice.draw(PrimitiveType::Point, 4u);
+
+		graphicsDevice.setViewport(Viewport(Rectangle(400, 300, 400u, 300u)));
+		graphicsDevice.draw(PrimitiveType::Line, 4u);
+		graphicsDevice.draw(PrimitiveType::Line, 2u, 1u);
+
 		graphicsContext.swapBuffers();
 	}
 }

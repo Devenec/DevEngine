@@ -26,6 +26,7 @@
 #include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/GraphicsResource.h>
+#include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/Viewport.h>
@@ -63,17 +64,27 @@ public:
 		DE_CHECK_ERROR_OPENGL();
 	}
 
-	void draw(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset) const
+	void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount, const Uint32 vertexOffset) const
 	{
-		DE_ASSERT(_activeEffect != nullptr);
-		DE_ASSERT(_activeVertexBufferState != nullptr);
-		_activeEffect->apply();
-		_activeVertexBufferState->apply();
-		// TODO: optimise the primitive type processing
-		OpenGL::drawArrays(getPrimitiveType(primitiveType), indexOffset, indexCount);
+		initialiseDrawing();
+		OpenGL::drawArrays(static_cast<Uint32>(primitiveType), vertexOffset, vertexCount);
 		DE_CHECK_ERROR_OPENGL();
-		_activeVertexBufferState->deapply();
-		_activeEffect->deapply();
+		deinitialiseDrawing();
+	}
+
+	void drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset) const
+	{
+		initialiseDrawing();
+		IndexBuffer* indexBuffer = _activeVertexBufferState->indexBuffer();
+		DE_ASSERT(indexBuffer != nullptr);
+		const Uint32 indexTypeId = static_cast<Uint32>(indexBuffer->indexType());
+		const Uint32 byteOffset = indexOffset * ((indexTypeId & 0x03) + 1u);
+
+		OpenGL::drawElements(static_cast<Uint32>(primitiveType), indexCount, indexTypeId >> 2,
+			reinterpret_cast<Void*>(byteOffset));
+
+		DE_CHECK_ERROR_OPENGL();
+		deinitialiseDrawing();
 	}
 
 	void setEffect(Effect* effect)
@@ -108,35 +119,18 @@ private:
 	Effect* _activeEffect;
 	VertexBufferState* _activeVertexBufferState;
 
-	static Uint32 getPrimitiveType(const PrimitiveType& type)
+	void initialiseDrawing() const
 	{
-		switch(type)
-		{
-			case PrimitiveType::Line:
-				return GL_LINES;
+		DE_ASSERT(_activeEffect != nullptr);
+		DE_ASSERT(_activeVertexBufferState != nullptr);
+		_activeEffect->apply();
+		_activeVertexBufferState->apply();
+	}
 
-			case PrimitiveType::LineLoop:
-				return GL_LINE_LOOP;
-
-			case PrimitiveType::LineStrip:
-				return GL_LINE_STRIP;
-
-			case PrimitiveType::Point:
-				return GL_POINTS;
-
-			case PrimitiveType::Triangle:
-				return GL_TRIANGLES;
-
-			case PrimitiveType::TriangleFan:
-				return GL_TRIANGLE_FAN;
-
-			case PrimitiveType::TriangleStrip:
-				return GL_TRIANGLE_STRIP;
-
-			default:
-				DE_ASSERT(false);
-				return 0u;
-		}
+	void deinitialiseDrawing() const
+	{
+		_activeVertexBufferState->deapply();
+		_activeEffect->deapply();
 	}
 };
 
@@ -173,6 +167,15 @@ Effect* GraphicsDevice::createEffect()
 	return effect;
 }
 
+IndexBuffer* GraphicsDevice::createIndexBuffer(const Uint32 size, const IndexType& indexType,
+	const AccessMode& accessMode)
+{
+	IndexBuffer* indexBuffer = DE_NEW(IndexBuffer)(size, indexType, accessMode);
+	_resources.push_back(indexBuffer);
+
+	return indexBuffer;
+}
+
 Shader* GraphicsDevice::createShader(const ShaderType& type, const String8& source)
 {
 	Shader* shader = DE_NEW(Shader)(type, source);
@@ -195,9 +198,16 @@ void GraphicsDevice::destroyResource(GraphicsResource* resource)
 	DE_DELETE(resource, GraphicsResource);
 }
 
-void GraphicsDevice::draw(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset) const
+void GraphicsDevice::draw(const PrimitiveType& primitiveType, const Uint32 vertexCount,
+	const Uint32 vertexOffset) const
 {
-	_impl->draw(primitiveType, indexCount, indexOffset);
+	_impl->draw(primitiveType, vertexCount, vertexOffset);
+}
+
+void GraphicsDevice::drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount,
+	const Uint32 indexOffset) const
+{
+	_impl->drawIndexed(primitiveType, indexCount, indexOffset);
 }
 
 void GraphicsDevice::setEffect(Effect* effect) const

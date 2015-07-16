@@ -62,6 +62,7 @@
     <ClInclude Include="include\platform\GraphicsExtensionManager.h" />
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h" />
+    <ClInclude Include="include\platform\opengl\OpenGLGraphicsEnumerations.h" />
     <ClInclude Include="include\platform\opengl\OpenGLInterface.h" />
     <ClInclude Include="include\platform\opengl\OpenGLShader.h" />
     <ClInclude Include="include\platform\PlatformInternal.h" />

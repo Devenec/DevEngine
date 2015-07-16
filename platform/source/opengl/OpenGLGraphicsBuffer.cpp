@@ -51,6 +51,18 @@ GraphicsBuffer::Impl::~Impl()
 	DE_CHECK_ERROR_OPENGL();
 }
 
+void GraphicsBuffer::Impl::demapData() const
+{
+	const Uint32 result = OpenGL::unmapNamedBuffer(_bufferHandle);
+	DE_CHECK_ERROR_OPENGL();
+
+	if(result == 0u)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to demap the buffer data" << Log::Flush();
+		DE_ERROR(0x0);
+	}
+}
+
 Uint32 GraphicsBuffer::Impl::handle() const
 {
 	return _bufferHandle;
@@ -70,24 +82,12 @@ Byte* GraphicsBuffer::Impl::mapData(const Uint32 size, const Uint32 bufferOffset
 	return static_cast<Byte*>(pointer);
 }
 
-void GraphicsBuffer::Impl::setData(const Byte* data, const Uint32 dataSize, const Uint32 bufferOffset) const
+void GraphicsBuffer::Impl::setData(const Byte* data, const Uint32 size, const Uint32 bufferOffset) const
 {
 	DE_ASSERT(data != nullptr);
-	Byte* mappedData = mapData(dataSize, bufferOffset);
-	std::copy(data, data + dataSize, mappedData);
-	unmapData();
-}
-
-void GraphicsBuffer::Impl::unmapData() const
-{
-	const Uint32 result = OpenGL::unmapNamedBuffer(_bufferHandle);
-	DE_CHECK_ERROR_OPENGL();
-
-	if(!result)
-	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to unmap the buffer data" << Log::Flush();
-		DE_ERROR(0x0);
-	}
+	Byte* mappedData = mapData(size, bufferOffset);
+	std::copy(data, data + size, mappedData);
+	demapData();
 }
 
 // Private
@@ -120,12 +120,9 @@ void GraphicsBuffer::Impl::initialiseStorage(const Uint32 size) const
 
 // Public
 
-GraphicsBuffer::GraphicsBuffer(const Uint32 size, const AccessMode& accessMode)
-	: _impl(DE_NEW(Impl)(size, accessMode)) { }
-
-GraphicsBuffer::~GraphicsBuffer()
+void GraphicsBuffer::demapData() const
 {
-	DE_DELETE(_impl, Impl);
+	_impl->demapData();
 }
 
 Byte* GraphicsBuffer::mapData(const Uint32 size, const Uint32 bufferOffset) const
@@ -138,7 +135,12 @@ void GraphicsBuffer::setData(const Byte* data, const Uint32 dataSize, const Uint
 	_impl->setData(data, dataSize, bufferOffset);
 }
 
-void GraphicsBuffer::unmapData() const
+// Protected
+
+GraphicsBuffer::GraphicsBuffer(const Uint32 size, const AccessMode& accessMode)
+	: _impl(DE_NEW(Impl)(size, accessMode)) { }
+
+GraphicsBuffer::~GraphicsBuffer()
 {
-	_impl->unmapData();
+	DE_DELETE(_impl, Impl);
 }

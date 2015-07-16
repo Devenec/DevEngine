@@ -54,7 +54,6 @@ public:
 		DE_CHECK_ERROR_OPENGL();
 	}
 
-	// TODO: should store the previously applied program and restore it at deapply?
 	void apply() const
 	{
 		applyProgram(_programHandle);

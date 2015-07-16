@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsBuffer.h
+ * @file graphics/IndexBuffer.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,42 +20,36 @@
 
 #pragma once
 
-#include <core/Types.h>
-#include <graphics/GraphicsResource.h>
+#include <graphics/GraphicsBuffer.h>
+#include <graphics/GraphicsEnumerations.h>
 
 namespace Graphics
 {
 	enum class AccessMode;
 
-	class GraphicsBuffer : public GraphicsResource
+	class IndexBuffer final : public GraphicsBuffer
 	{
 	public:
 
-		GraphicsBuffer(const GraphicsBuffer& graphicsBuffer) = delete;
-		GraphicsBuffer(GraphicsBuffer&& graphicsBuffer) = delete;
+		IndexBuffer(const IndexBuffer& indexBuffer) = delete;
+		IndexBuffer(IndexBuffer&& indexBuffer) = delete;
 
-		void demapData() const;
+		inline IndexType indexType() const;
 
-		Byte* mapData(const Uint32 size, const Uint32 bufferOffset = 0u) const;
-
-		void setData(const Byte* data, const Uint32 size, const Uint32 bufferOffset = 0u) const;
-
-		GraphicsBuffer& operator =(const GraphicsBuffer& graphicsBuffer) = delete;
-		GraphicsBuffer& operator =(GraphicsBuffer&& graphicsBuffer) = delete;
-
-	protected:
-
-		GraphicsBuffer(const Uint32 size, const AccessMode& accessMode);
-
-		virtual ~GraphicsBuffer();
+		IndexBuffer& operator =(const IndexBuffer& indexBuffer) = delete;
+		IndexBuffer& operator =(IndexBuffer&& indexBuffer) = delete;
 
 	private:
 
 		friend class GraphicsDevice;
-		friend class VertexBufferState;
 
-		class Impl;
+		using Base = GraphicsBuffer;
 
-		Impl* _impl;
+		IndexType _indexType;
+
+		IndexBuffer(const Uint32 size, const IndexType& indexType, const AccessMode& accessMode);
+		~IndexBuffer() = default;
 	};
+
+#include "inline/IndexBuffer.inl"
 }

@@ -23,29 +23,21 @@
 #include <core/List.h>
 #include <core/String.h>
 #include <graphics/AccessMode.h>
+#include <graphics/GraphicsEnumerations.h>
 
 namespace Graphics
 {
+	enum class IndexType;
 	enum class ShaderType;
 
 	class Colour;
 	class Effect;
 	class GraphicsBuffer;
 	class GraphicsResource;
+	class IndexBuffer;
 	class Shader;
 	class VertexBufferState;
 	class Viewport;
-
-	enum class PrimitiveType
-	{
-		Line,
-		LineLoop,
-		LineStrip,
-		Point,
-		Triangle,
-		TriangleFan,
-		TriangleStrip
-	};
 
 	class GraphicsDevice final
 	{
@@ -65,13 +57,19 @@ namespace Graphics
 
 		Effect* createEffect();
 
+		IndexBuffer* createIndexBuffer(const Uint32 size, const IndexType& indexType,
+			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
+
 		Shader* createShader(const ShaderType& type, const Core::String8& source);
 
 		VertexBufferState* createVertexBufferState();
 
 		void destroyResource(GraphicsResource* resource);
 
-		void draw(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset = 0u) const;
+		void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount, const Uint32 vertexOffset = 0u) const;
+
+		void drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount,
+			const Uint32 indexOffset = 0u) const;
 
 		void setEffect(Effect* effect) const;
 

@@ -68,9 +68,9 @@ namespace Graphics
 
 		static void handleError(png_struct* pngReader, const Char8* message);
 		static void handleWarning(png_struct* pngReader, const Char8* message);
-		static Void* allocateMemory(png_struct* pngReader, Uint32 byteCount);
+		static Void* allocateMemory(png_struct* pngReader, Uint32 size);
 		static void deallocateMemory(png_struct* pngReader, Void* pointer);
-		static void readData(png_struct* pngReader, Byte* buffer, Uint32 byteCount);
+		static void readData(png_struct* pngReader, Byte* buffer, Uint32 size);
 	};
 
 #include "inline/PNGReader.inl"

@@ -24,16 +24,16 @@
 #include <core/Memory.h>
 
 #if DE_BUILD != DE_BUILD_PRODUCTION && defined(DE_CONFIG_TRACK_ALLOCATIONS)
-	#define _DE_TRACK_ALLOCATIONS
+	#define DE_INTERNAL_TRACK_ALLOCATIONS
 	#include <core/debug/AllocationTracker.h>
 #endif
 
 // Core
 
-Void* Core::allocateMemory(const Uint32 byteCount)
+Void* Core::allocateMemory(const Uint32 size)
 {
-	DE_ASSERT(byteCount > 0u);
-	Void* pointer = std::malloc(byteCount);
+	DE_ASSERT(size > 0u);
+	Void* pointer = std::malloc(size);
 
 	if(pointer == nullptr)
 	{
@@ -44,21 +44,21 @@ Void* Core::allocateMemory(const Uint32 byteCount)
 	return pointer;
 }
 
-#if defined(_DE_TRACK_ALLOCATIONS)
-Void* Core::allocateMemory(const Uint32 byteCount, const Char8* file, const Uint32 line, const Char8* function)
+#if defined(DE_INTERNAL_TRACK_ALLOCATIONS)
+Void* Core::allocateMemory(const Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
 {
-	Void* pointer = allocateMemory(byteCount);
-	Debug::AllocationTracker::instance().registerAllocation(pointer, byteCount, file, line, function);
+	Void* pointer = allocateMemory(size);
+	Debug::AllocationTracker::instance().registerAllocation(pointer, size, file, line, function);
 
 	return pointer;
 }
 #endif
 
-void Core::deallocateMemory(Void* pointer, const Uint32 byteCount)
+void Core::deallocateMemory(Void* pointer, const Uint32 size)
 {
-#if defined(_DE_TRACK_ALLOCATIONS)
+#if defined(DE_INTERNAL_TRACK_ALLOCATIONS)
 	if(pointer != nullptr)
-		Debug::AllocationTracker::instance().deregisterAllocation(pointer, byteCount);
+		Debug::AllocationTracker::instance().deregisterAllocation(pointer, size);
 #endif
 
 	std::free(pointer);
