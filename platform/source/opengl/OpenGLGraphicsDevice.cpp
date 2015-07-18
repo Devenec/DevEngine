@@ -31,7 +31,6 @@
 #include <graphics/VertexBufferState.h>
 #include <graphics/Viewport.h>
 #include <platform/opengl/OpenGL.h>
-#include <platform/opengl/OpenGLInterface.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -47,8 +46,7 @@ public:
 		: _activeEffect(nullptr),
 		  _activeVertexBufferState(nullptr)
 	{
-		OpenGL::initialise();
-		OpenGL::getIntegerv(GL_VIEWPORT, reinterpret_cast<Int32*>(&_viewport));
+		OpenGL::getIntegerv(OpenGL::VIEWPORT, reinterpret_cast<Int32*>(&_viewport));
 		DE_CHECK_ERROR_OPENGL();
 	}
 
@@ -60,7 +58,7 @@ public:
 	void clear(const Colour& colour) const
 	{
 		OpenGL::clearColor(colour.red, colour.green, colour.blue, colour.alpha);
-		OpenGL::clear(GL_COLOR_BUFFER_BIT);
+		OpenGL::clear(OpenGL::COLOR_BUFFER_BIT);
 		DE_CHECK_ERROR_OPENGL();
 	}
 

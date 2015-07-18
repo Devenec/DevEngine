@@ -27,6 +27,7 @@
 #include <graphics/GraphicsAdapterManager.h>
 #include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsContext.h>
+#include <graphics/GraphicsContextManager.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/Image.h>
 #include <graphics/IndexBuffer.h>
@@ -73,9 +74,11 @@ static const String8 FRAGMENT_SHADER_SOURCE
 void devEngineMain(const StartupParameters& startupParameters)
 {
 	static_cast<Void>(startupParameters);
+
 	ContentManager contentManager;
 	GraphicsAdapterManager graphicsAdapterManager;
 	WindowManager windowManager;
+	GraphicsContextManager graphicsContextManager;
 
 	Window* window = windowManager.createWindow();
 	Image* image = contentManager.load<Image>("assets/icon.png");
@@ -83,8 +86,8 @@ void devEngineMain(const StartupParameters& startupParameters)
 	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	window->show();
 
-	GraphicsContext graphicsContext(window);
-	graphicsContext.makeCurrent();
+	GraphicsContext* graphicsContext = graphicsContextManager.createGraphicsContext(window);
+	graphicsContext->makeCurrent();
 	GraphicsDevice graphicsDevice;
 
 	Shader* vertexShader = graphicsDevice.createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
@@ -161,6 +164,6 @@ void devEngineMain(const StartupParameters& startupParameters)
 		graphicsDevice.draw(PrimitiveType::Line, 4u);
 		graphicsDevice.draw(PrimitiveType::Line, 2u, 1u);
 
-		graphicsContext.swapBuffers();
+		graphicsContext->swapBuffers();
 	}
 }

@@ -38,9 +38,9 @@ namespace Graphics
 
 		~WindowManager();
 
-		Window* createWindow();
+		Window* createWindow() const;
 
-		void destroyWindow(Window* window);
+		void destroyWindow(Window* window) const;
 
 		void processMessages() const;
 

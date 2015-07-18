@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/inline/WGLGraphicsContextBase.inl
+ * @file graphics/GraphicsConfig.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,9 +18,36 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Public
+#pragma once
 
-HDC GraphicsContextBase::deviceContextHandle() const
+namespace Platform
 {
-	return _deviceContextHandle;
+	class GraphicsConfigChooser;
+}
+
+namespace Graphics
+{
+	class GraphicsConfig final
+	{
+	public:
+
+		GraphicsConfig();
+
+		GraphicsConfig(const GraphicsConfig& graphicsConfig);
+
+		GraphicsConfig(GraphicsConfig&& graphicsConfig);
+
+		~GraphicsConfig();
+
+		GraphicsConfig& operator =(GraphicsConfig graphicsConfig);
+
+	private:
+
+		friend class GraphicsContext;
+		friend class Platform::GraphicsConfigChooser;
+
+		class Impl;
+
+		Impl* _impl;
+	};
 }

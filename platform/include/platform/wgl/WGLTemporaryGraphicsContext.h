@@ -23,7 +23,7 @@
 #include <core/String.h>
 #include <core/Types.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
-#include <platform/windows/Windows.h>
+#include <platform/windows/WindowsGraphics.h>
 
 namespace Platform
 {
@@ -37,10 +37,6 @@ namespace Platform
 		TemporaryGraphicsContext(TemporaryGraphicsContext&& temporaryGraphicsContext) = delete;
 
 		~TemporaryGraphicsContext() = default;
-
-		void deinitialise();
-
-		void initialise();
 
 		TemporaryGraphicsContext& operator =(const TemporaryGraphicsContext& temporaryGraphicsContext) = delete;
 		TemporaryGraphicsContext& operator =(TemporaryGraphicsContext&& temporaryGraphicsContext) = delete;

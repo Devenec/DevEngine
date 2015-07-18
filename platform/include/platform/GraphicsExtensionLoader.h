@@ -1,5 +1,5 @@
 /**
- * @file platform/GraphicsExtensionManager.h
+ * @file platform/GraphicsExtensionLoader.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,34 +20,30 @@
 
 #pragma once
 
-#include <core/Types.h>
-
 namespace Platform
 {
 	class GraphicsContextBase;
 
-	class GraphicsExtensionManager final
+	class GraphicsExtensionLoader final
 	{
 	public:
 
-		GraphicsExtensionManager() = delete;
+		GraphicsExtensionLoader() = delete;
 
-		GraphicsExtensionManager(const GraphicsExtensionManager& graphicsExtensionManager) = delete;
-		GraphicsExtensionManager(GraphicsExtensionManager&& graphicsExtensionManager) = delete;
+		GraphicsExtensionLoader(const GraphicsExtensionLoader& graphicsExtensionLoader) = delete;
+		GraphicsExtensionLoader(GraphicsExtensionLoader&& graphicsExtensionLoader) = delete;
 
-		~GraphicsExtensionManager() = delete;
+		~GraphicsExtensionLoader() = delete;
 
-		GraphicsExtensionManager& operator =(const GraphicsExtensionManager& graphicsExtensionManager) = delete;
-		GraphicsExtensionManager& operator =(GraphicsExtensionManager&& graphicsExtensionManager) = delete;
-		
-		static Void* getExtensionFunction(const Char8* functionName);
+		GraphicsExtensionLoader& operator =(const GraphicsExtensionLoader& graphicsExtensionLoader) = delete;
+		GraphicsExtensionLoader& operator =(GraphicsExtensionLoader&& graphicsExtensionLoader) = delete;
 
-		static void initialiseContextExtensions(const GraphicsContextBase& graphicsContext);
+		static void loadContextExtensions(const GraphicsContextBase& graphicsContext);
+
+		static void loadInterfaceExtensions();
 
 	private:
 
 		class Impl;
-
-		Impl* _impl;
 	};
 }

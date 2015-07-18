@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/inline/WGLGraphicsContextBase.inl
+ * @file platform/wgl/inline/WGLGraphicsConfig.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,7 +20,12 @@
 
 // Public
 
-HDC GraphicsContextBase::deviceContextHandle() const
+Int32 GraphicsConfig::Impl::pixelFormatIndex() const
 {
-	return _deviceContextHandle;
+	return _pixelFormatIndex;
+}
+
+void GraphicsConfig::Impl::setPixelFormatIndex(const Int32 pixelFormatIndex)
+{
+	_pixelFormatIndex = pixelFormatIndex;
 }

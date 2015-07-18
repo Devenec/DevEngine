@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/GraphicsContextManager.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,36 +20,35 @@
 
 #pragma once
 
+#include <core/Singleton.h>
+
 namespace Graphics
 {
-	class GraphicsConfig;
+	class GraphicsContext;
 	class Window;
 
-	class GraphicsContext final
+	class GraphicsContextManager final : public Core::Singleton<GraphicsContextManager>
 	{
 	public:
 
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
+		GraphicsContextManager();
 
-		void makeCurrent() const;
+		GraphicsContextManager(const GraphicsContextManager& graphicsContextManager) = delete;
+		GraphicsContextManager(GraphicsContextManager&& graphicsContextManager) = delete;
 
-		void makeNonCurrent() const;
+		~GraphicsContextManager();
 
-		void swapBuffers() const;
+		GraphicsContext* createGraphicsContext(Window* window) const;
 
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
+		void destroyGraphicsContext(GraphicsContext* graphicsContext) const;
+
+		GraphicsContextManager& operator =(const GraphicsContextManager& graphicsContextManager) = delete;
+		GraphicsContextManager& operator =(GraphicsContextManager&& graphicsContextManager) = delete;
 
 	private:
-
-		friend class GraphicsContextManager;
 
 		class Impl;
 
 		Impl* _impl;
-
-		GraphicsContext(Window* window, const GraphicsConfig& graphicsConfig);
-		~GraphicsContext();
 	};
 }

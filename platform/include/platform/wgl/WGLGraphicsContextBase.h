@@ -22,7 +22,7 @@
 
 #include <core/Types.h>
 #include <core/debug/Assert.h>
-#include <platform/windows/Windows.h>
+#include <platform/windows/WindowsGraphics.h>
 
 namespace Platform
 {
@@ -39,10 +39,12 @@ namespace Platform
 
 		void makeNonCurrent() const;
 
-		inline void swapBuffers() const;
+		void swapBuffers() const;
 
 		GraphicsContextBase& operator =(const GraphicsContextBase& graphicsContext) = delete;
 		GraphicsContextBase& operator =(GraphicsContextBase&& graphicsContext) = delete;
+
+		static HDC getWindowDeviceContext(HWND windowHandle);
 
 	protected:
 
@@ -60,8 +62,6 @@ namespace Platform
 	private:
 
 		static const Char8* COMPONENT_TAG;
-
-		void initialiseDeviceContext(HWND windowHandle);
 	};
 
 #include "inline/WGLGraphicsContextBase.inl"

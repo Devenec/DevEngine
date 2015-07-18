@@ -27,7 +27,6 @@
 #include <graphics/VertexElement.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
-#include <platform/opengl/OpenGLInterface.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -228,7 +227,7 @@ private:
 		}
 
 		if(componentCount == 5u)
-			componentCount = GL_BGRA;
+			componentCount = OpenGL::BGRA;
 
 		return componentCount;
 	}

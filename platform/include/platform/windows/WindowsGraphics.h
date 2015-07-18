@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/OpenGLInterface.inl
+ * @file platform/windows/WindowsGraphics.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,23 +18,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Private
+#pragma once
 
-// Static
+struct HDC__;
+using HDC = HDC__*;
 
-template<typename T>
-T OpenGL::getFunction(const Char8* functionName)
-{
-	using namespace Core;
-	T function = reinterpret_cast<T>(GraphicsExtensionManager::getExtensionFunction(functionName));
+struct HGLRC__;
+using HGLRC = HGLRC__*;
 
-	if(function == nullptr)
-	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get function '" << functionName << "'." <<
-			Log::Flush();
+struct HWND__;
+using HWND = HWND__*;
 
-		DE_ERROR(0x0);
-	}
-
-	return function;
-}
+struct tagPIXELFORMATDESCRIPTOR;
+using PIXELFORMATDESCRIPTOR = tagPIXELFORMATDESCRIPTOR;

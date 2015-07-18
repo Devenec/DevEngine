@@ -29,13 +29,11 @@
 #include <graphics/GraphicsAdapterManager.h>
 #include <graphics/Window.h>
 #include <graphics/WindowManager.h>
-#include <platform/GraphicsExtensionManager.h>
 
 #define OEMRESOURCE
 #include <platform/windows/Windows.h> // Needs to be the first header to include Windows.h
 #undef OEMRESOURCE
 
-#include <platform/wgl/WGLTemporaryGraphicsContext.h>
 #include <platform/windows/WindowsWindow.h>
 
 using namespace Core;
@@ -52,7 +50,6 @@ public:
 	{
 		const WNDCLASSEX windowClassInfo = createWindowClassInfo();
 		registerWindowClass(windowClassInfo);
-		initialiseGraphicsExtensions();
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -79,8 +76,8 @@ public:
 		DE_ASSERT(window != nullptr);
 		WindowList::const_iterator iterator = std::find(_windows.begin(), _windows.end(), window);
 		DE_ASSERT(iterator != _windows.end());
-		destroyWindow(static_cast<HWND>(window->handle()));
 		_windows.erase(iterator);
+		destroyWindow(static_cast<HWND>(window->handle()));
 		DE_DELETE(window, Window);
 	}
 
@@ -109,7 +106,7 @@ private:
 
 	WindowList _windows;
 
-	void destroyWindowObjects()
+	void destroyWindowObjects() const
 	{
 		for(WindowList::const_iterator i = _windows.begin(), end = _windows.end(); i != end; ++i)
 		{
@@ -140,16 +137,6 @@ private:
 			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to register the window class." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
-	}
-
-	static void initialiseGraphicsExtensions()
-	{
-		HWND windowHandle = createWindow();
-		TemporaryGraphicsContext temporaryGraphicsContext(windowHandle);
-		temporaryGraphicsContext.initialise();
-		GraphicsExtensionManager::initialiseContextExtensions(temporaryGraphicsContext);
-		temporaryGraphicsContext.deinitialise();
-		destroyWindow(windowHandle);
 	}
 
 	static void deregisterWindowClass()
@@ -281,12 +268,12 @@ WindowManager::~WindowManager()
 	DE_DELETE(_impl, Impl);
 }
 
-Window* WindowManager::createWindow()
+Window* WindowManager::createWindow() const
 {
 	return _impl->createWindowObject();
 }
 
-void WindowManager::destroyWindow(Window* window)
+void WindowManager::destroyWindow(Window* window) const
 {
 	_impl->destroyWindowObject(window);
 }

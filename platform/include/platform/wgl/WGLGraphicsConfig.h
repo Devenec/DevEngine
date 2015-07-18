@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/inline/WGLGraphicsContextBase.inl
+ * @file platform/wgl/WGLGraphicsConfig.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,9 +18,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Public
+#include <core/Types.h>
+#include <graphics/GraphicsConfig.h>
 
-HDC GraphicsContextBase::deviceContextHandle() const
+namespace Graphics
 {
-	return _deviceContextHandle;
+	class GraphicsConfig::Impl final
+	{
+	public:
+
+		Impl();
+
+		Impl(const Impl& impl) = delete;
+		Impl(Impl&& impl) = delete;
+
+		~Impl() = default;
+
+		inline Int32 pixelFormatIndex() const;
+
+		inline void setPixelFormatIndex(const Int32 pixelFormatIndex);
+
+		Impl& operator =(const Impl& impl);
+
+		Impl& operator =(Impl&& impl) = delete;
+
+	private:
+
+		Int32 _pixelFormatIndex;
+	};
+
+#include "inline/WGLGraphicsConfig.inl"
 }

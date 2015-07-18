@@ -19,11 +19,35 @@
  */
 
 #include <platform/wgl/WGL.h>
+#include <platform/windows/Windows.h>
 
-WGLChoosePixelFormatARB wglChoosePixelFormatARB = nullptr;
-WGLCreateContextAttribsARB wglCreateContextAttribsARB = nullptr;
-WGLGetExtensionsStringARB wglGetExtensionsStringARB = nullptr;
-WGLGetPixelFormatAttribFVARB wglGetPixelFormatAttribfvARB = nullptr;
-WGLGetPixelFormatAttribIVARB wglGetPixelFormatAttribivARB = nullptr;
-WGLGetSwapIntervalEXT wglGetSwapIntervalEXT = nullptr;
-WGLSwapIntervalEXT wglSwapIntervalEXT = nullptr;
+using namespace Platform;
+
+// Public
+
+// Standard
+
+WGL::CreateContext WGL::createContext = wglCreateContext;
+WGL::DeleteContext WGL::deleteContext = wglDeleteContext;
+WGL::GetCurrentContext WGL::getCurrentContext = wglGetCurrentContext;
+WGL::GetProcAddress WGL::getProcAddress = wglGetProcAddress;
+WGL::MakeCurrent WGL::makeCurrent = wglMakeCurrent;
+
+// WGL_ARB_create_context
+
+WGL::CreateContextAttribsARB WGL::createContextAttribsARB = nullptr;
+
+// WGL_ARB_extensions_string
+
+WGL::GetExtensionsStringARB WGL::getExtensionsStringARB = nullptr;
+
+// WGL_ARB_pixel_format
+
+WGL::ChoosePixelFormatARB WGL::choosePixelFormatARB = nullptr;
+WGL::GetPixelFormatAttribFVARB WGL::getPixelFormatAttribfvARB = nullptr;
+WGL::GetPixelFormatAttribIVARB WGL::getPixelFormatAttribivARB = nullptr;
+
+// WGL_EXT_swap_control
+
+WGL::GetSwapIntervalEXT WGL::getSwapIntervalEXT = nullptr;
+WGL::SwapIntervalEXT WGL::swapIntervalEXT = nullptr;

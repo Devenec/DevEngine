@@ -26,7 +26,6 @@
 #include <graphics/GraphicsBuffer.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
-#include <platform/opengl/OpenGLInterface.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -103,10 +102,10 @@ void GraphicsBuffer::Impl::createBuffer()
 void GraphicsBuffer::Impl::initialiseFlags(const AccessMode& accessMode)
 {
 	if((accessMode & AccessMode::Read) == AccessMode::Read)
-		_flags |= GL_MAP_READ_BIT;
+		_flags |= OpenGL::MAP_READ_BIT;
 		
 	if((accessMode & AccessMode::Write) == AccessMode::Write)
-		_flags |= GL_MAP_WRITE_BIT;
+		_flags |= OpenGL::MAP_WRITE_BIT;
 }
 
 void GraphicsBuffer::Impl::initialiseStorage(const Uint32 size) const

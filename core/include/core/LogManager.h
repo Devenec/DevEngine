@@ -41,5 +41,9 @@ namespace Core
 
 		LogManager& operator =(const LogManager& logManager) = delete;
 		LogManager& operator =(LogManager&& logManager) = delete;
+
+	private:
+
+		class Impl;
 	};
 }

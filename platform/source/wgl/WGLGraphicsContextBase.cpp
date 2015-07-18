@@ -19,7 +19,9 @@
  */
 
 #include <core/Log.h>
+#include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
+#include <platform/windows/Windows.h>
 
 using namespace Core;
 using namespace Platform;
@@ -28,7 +30,7 @@ using namespace Platform;
 
 void GraphicsContextBase::makeCurrent() const
 {
-	const Int32 result = wglMakeCurrent(_deviceContextHandle, _graphicsContextHandle);
+	const Int32 result = WGL::makeCurrent(_deviceContextHandle, _graphicsContextHandle);
 
 	if(result == 0)
 	{
@@ -39,13 +41,36 @@ void GraphicsContextBase::makeCurrent() const
 
 void GraphicsContextBase::makeNonCurrent() const
 {
-	const Int32 result = wglMakeCurrent(_deviceContextHandle, nullptr);
+	const Int32 result = WGL::makeCurrent(_deviceContextHandle, nullptr);
 
 	if(result == 0)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to make the context non-current." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
+}
+
+void GraphicsContextBase::swapBuffers() const
+{
+	const Int32 result = SwapBuffers(_deviceContextHandle);
+	DE_ASSERT(result != 0);
+}
+
+// Static
+
+HDC GraphicsContextBase::getWindowDeviceContext(HWND windowHandle)
+{
+	HDC deviceContextHandle = GetDC(windowHandle);
+
+	if(deviceContextHandle == nullptr)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the device context of a window." <<
+			Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0);
+	}
+
+	return deviceContextHandle;
 }
 
 // Protected
@@ -55,7 +80,7 @@ GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
 	  _graphicsContextHandle(nullptr)
 {
 	DE_ASSERT(windowHandle != nullptr);
-	initialiseDeviceContext(windowHandle);
+	_deviceContextHandle = getWindowDeviceContext(windowHandle);
 }
 
 GraphicsContextBase::~GraphicsContextBase()
@@ -66,7 +91,7 @@ GraphicsContextBase::~GraphicsContextBase()
 
 void GraphicsContextBase::destroyContext()
 {
-	const Int32 result = wglDeleteContext(_graphicsContextHandle);
+	const Int32 result = WGL::deleteContext(_graphicsContextHandle);
 
 	if(result == 0)
 	{
@@ -92,16 +117,3 @@ void GraphicsContextBase::setPixelFormat(const Int32 pixelFormatIndex) const
 // Private
 
 const Char8* GraphicsContextBase::COMPONENT_TAG = "[Platform::GraphicsContextBase - WGL]";
-
-void GraphicsContextBase::initialiseDeviceContext(HWND windowHandle)
-{
-	_deviceContextHandle = GetDC(windowHandle);
-
-	if(_deviceContextHandle == nullptr)
-	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the device context of a window." <<
-			Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0);
-	}
-}

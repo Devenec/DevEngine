@@ -35,7 +35,7 @@ Log& Core::defaultLog = *reinterpret_cast<Log*>(defaultLogMemory.data());
 
 // Implementation
 
-class Impl final
+class LogManager::Impl final
 {
 public:
 

@@ -22,10 +22,11 @@
 #include <core/Memory.h>
 #include <core/Log.h>
 #include <core/debug/Assert.h>
+#include <graphics/GraphicsConfig.h>
 #include <graphics/GraphicsContext.h>
 #include <graphics/Window.h>
 #include <platform/wgl/WGL.h>
-#include <platform/wgl/WGLGraphicsConfigChooser.h>
+#include <platform/wgl/WGLGraphicsConfig.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/windows/Windows.h>
 
@@ -39,10 +40,10 @@ class GraphicsContext::Impl final : public GraphicsContextBase
 {
 public:
 
-	explicit Impl(HWND windowHandle)
+	explicit Impl(HWND windowHandle, const GraphicsConfig& graphicsConfig)
 		: Base(windowHandle)
 	{
-		initialisePixelFormat();
+		setPixelFormat(graphicsConfig._impl->pixelFormatIndex());
 		createContext();
 	}
 
@@ -61,15 +62,10 @@ private:
 	static const Char8* COMPONENT_TAG;
 	static const Array<Int32, 9u> CONTEXT_ATTRIBUTES;
 
-	void initialisePixelFormat() const
-	{
-		GraphicsConfigChooser configChooser(_deviceContextHandle);
-		setPixelFormat(configChooser.chooseConfig());
-	}
-
 	void createContext()
 	{
-		_graphicsContextHandle = wglCreateContextAttribsARB(_deviceContextHandle, nullptr, CONTEXT_ATTRIBUTES.data());
+		_graphicsContextHandle = WGL::createContextAttribsARB(_deviceContextHandle, nullptr,
+			CONTEXT_ATTRIBUTES.data());
 
 		if(_graphicsContextHandle == nullptr)
 		{
@@ -83,21 +79,21 @@ const Char8* GraphicsContext::Impl::COMPONENT_TAG = "[Platform::GraphicsContext 
 
 const Array<Int32, 9u> GraphicsContext::Impl::CONTEXT_ATTRIBUTES
 {{
-	WGL_CONTEXT_FLAGS_ARB,		   WGL_CONTEXT_DEBUG_BIT_ARB,
-	WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
-	WGL_CONTEXT_MINOR_VERSION_ARB, 5,
-	WGL_CONTEXT_PROFILE_MASK_ARB,  WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+	WGL::CONTEXT_FLAGS_ARB,			WGL::CONTEXT_DEBUG_BIT_ARB,
+	WGL::CONTEXT_MAJOR_VERSION_ARB, 4,
+	WGL::CONTEXT_MINOR_VERSION_ARB, 5,
+	WGL::CONTEXT_PROFILE_MASK_ARB,	WGL::CONTEXT_CORE_PROFILE_BIT_ARB,
 	0
 }};
 
 
 // Public
 
-GraphicsContext::GraphicsContext(Window* window)
+GraphicsContext::GraphicsContext(Window* window, const GraphicsConfig& graphicsConfig)
 	: _impl(nullptr)
 {
 	DE_ASSERT(window != nullptr);
-	_impl = DE_NEW(Impl)(static_cast<HWND>(window->handle()));
+	_impl = DE_NEW(Impl)(static_cast<HWND>(window->handle()), graphicsConfig);
 }
 
 GraphicsContext::~GraphicsContext()

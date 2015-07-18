@@ -23,7 +23,12 @@
 #include <core/Array.h>
 #include <core/Types.h>
 #include <core/Vector.h>
-#include <platform/windows/Windows.h>
+#include <platform/windows/WindowsGraphics.h>
+
+namespace Graphics
+{
+	class GraphicsConfig;
+}
 
 namespace Platform
 {
@@ -38,7 +43,7 @@ namespace Platform
 
 		~GraphicsConfigChooser() = default;
 
-		Int32 chooseConfig() const;
+		Graphics::GraphicsConfig chooseConfig() const;
 
 		GraphicsConfigChooser& operator =(const GraphicsConfigChooser& graphicsConfigChooser) = delete;
 		GraphicsConfigChooser& operator =(GraphicsConfigChooser&& graphicsConfigChooser) = delete;

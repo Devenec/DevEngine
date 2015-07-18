@@ -26,7 +26,6 @@
 #include <graphics/Effect.h>
 #include <graphics/Shader.h>
 #include <platform/opengl/OpenGL.h>
-#include <platform/opengl/OpenGLInterface.h>
 #include <platform/opengl/OpenGLShader.h>
 
 using namespace Core;
@@ -101,9 +100,9 @@ private:
 
 	void checkLinkingStatus() const
 	{
-		const Int32 linkingStatus = getParameter(GL_LINK_STATUS);
+		const Int32 linkingStatus = getParameter(OpenGL::LINK_STATUS);
 
-		if(linkingStatus == GL_FALSE)
+		if(linkingStatus == OpenGL::FALSE)
 		{
 			outputLinkerFailureLog();
 			DE_ERROR(0x0);
@@ -116,7 +115,7 @@ private:
 
 	void detachShaders() const
 	{
-		const Uint32 attachedShaderCount = getParameter(GL_ATTACHED_SHADERS);
+		const Uint32 attachedShaderCount = getParameter(OpenGL::ATTACHED_SHADERS);
 
 		if(attachedShaderCount > 0u)
 		{
@@ -145,7 +144,7 @@ private:
 	void outputLinkerFailureLog() const
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to link the program:\n\t";
-		const Uint32 logLength = getParameter(GL_INFO_LOG_LENGTH);
+		const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 		if(logLength > 1u)
 			defaultLog << getInfoLog(logLength).data();
@@ -157,7 +156,7 @@ private:
 
 	void outputLinkerSuccessLog() const
 	{
-		const Uint32 logLength = getParameter(GL_INFO_LOG_LENGTH);
+		const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 		if(logLength > 1u)
 		{

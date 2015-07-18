@@ -20,10 +20,14 @@
 
 #include <core/Error.h>
 #include <core/Log.h>
+#include <graphics/GraphicsConfig.h>
 #include <platform/wgl/WGL.h>
+#include <platform/wgl/WGLGraphicsConfig.h>
 #include <platform/wgl/WGLGraphicsConfigChooser.h>
+#include <platform/windows/Windows.h>
 
 using namespace Core;
+using namespace Graphics;
 using namespace Platform;
 
 // Public
@@ -31,12 +35,14 @@ using namespace Platform;
 GraphicsConfigChooser::GraphicsConfigChooser(HDC deviceContextHandle)
 	: _deviceContextHandle(deviceContextHandle) { }
 
-Int32 GraphicsConfigChooser::chooseConfig() const
+GraphicsConfig GraphicsConfigChooser::chooseConfig() const
 {
 	const Uint32 pixelFormatCount = getPixelFormatCount();
 	const PixelFormatIndexList pixelFormatIndices = getPixelFormatIndices(pixelFormatCount);
-	
-	return chooseBestPixelFormat(pixelFormatIndices);
+	GraphicsConfig config;
+	config._impl->setPixelFormatIndex(chooseBestPixelFormat(pixelFormatIndices));
+
+	return config;
 }
 
 // Private
@@ -45,29 +51,29 @@ const Char8* GraphicsConfigChooser::COMPONENT_TAG = "[Platform::GraphicsConfigCh
 
 const GraphicsConfigChooser::PixelFormatAttributeList GraphicsConfigChooser::PIXEL_FORMAT_ATTRIBUTE_IDS
 {{
-	WGL_ACCELERATION_ARB,
-	WGL_ALPHA_BITS_ARB,
-	WGL_BLUE_BITS_ARB,
-	WGL_DEPTH_BITS_ARB,
-	WGL_GREEN_BITS_ARB,
-	WGL_RED_BITS_ARB,
-	WGL_STENCIL_BITS_ARB
+	WGL::ACCELERATION_ARB,
+	WGL::ALPHA_BITS_ARB,
+	WGL::BLUE_BITS_ARB,
+	WGL::DEPTH_BITS_ARB,
+	WGL::GREEN_BITS_ARB,
+	WGL::RED_BITS_ARB,
+	WGL::STENCIL_BITS_ARB
 }};
 
 const GraphicsConfigChooser::PixelFormatRequiredAttributeList GraphicsConfigChooser::PIXEL_FORMAT_REQUIRED_ATTRIBUTES
 {{
-	WGL_DOUBLE_BUFFER_ARB,	1,
-	WGL_DRAW_TO_WINDOW_ARB, 1,
-	WGL_PIXEL_TYPE_ARB,		WGL_TYPE_RGBA_ARB,
-	WGL_SUPPORT_OPENGL_ARB, 1,
+	WGL::DOUBLE_BUFFER_ARB,	 1,
+	WGL::DRAW_TO_WINDOW_ARB, 1,
+	WGL::PIXEL_TYPE_ARB,	 WGL::TYPE_RGBA_ARB,
+	WGL::SUPPORT_OPENGL_ARB, 1,
 	0
 }};
 
 Uint32 GraphicsConfigChooser::getPixelFormatCount() const
 {
-	const Int32 attributeName = WGL_NUMBER_PIXEL_FORMATS_ARB;
+	const Int32 attributeName = WGL::NUMBER_PIXEL_FORMATS_ARB;
 	Int32 formatCount;
-	const Int32 result = wglGetPixelFormatAttribivARB(_deviceContextHandle, 0, 0, 1u, &attributeName, &formatCount);
+	const Int32 result = WGL::getPixelFormatAttribivARB(_deviceContextHandle, 0, 0, 1u, &attributeName, &formatCount);
 
 	if(result == 0)
 	{
@@ -84,7 +90,7 @@ GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelForma
 	PixelFormatIndexList formatIndices(formatCount);
 	Uint32 matchingFormatCount;
 
-	const Int32 result = wglChoosePixelFormatARB(_deviceContextHandle, PIXEL_FORMAT_REQUIRED_ATTRIBUTES.data(),
+	const Int32 result = WGL::choosePixelFormatARB(_deviceContextHandle, PIXEL_FORMAT_REQUIRED_ATTRIBUTES.data(),
 		nullptr, formatCount, formatIndices.data(), &matchingFormatCount);
 
 	if(result == 0)
@@ -131,7 +137,7 @@ GraphicsConfigChooser::PixelFormatAttributeList GraphicsConfigChooser::getPixelF
 {
 	PixelFormatAttributeList attributes;
 
-	const Int32 result = wglGetPixelFormatAttribivARB(_deviceContextHandle, formatIndex, 0, attributes.size(),
+	const Int32 result = WGL::getPixelFormatAttribivARB(_deviceContextHandle, formatIndex, 0, attributes.size(),
 		PIXEL_FORMAT_ATTRIBUTE_IDS.data(), attributes.data());
 
 	if(result == 0)
@@ -169,6 +175,6 @@ Bool GraphicsConfigChooser::isPixelFormatLess(const PixelFormatAttributeList& fo
 Bool GraphicsConfigChooser::isPixelFormatAccelerationLess(const PixelFormatAttributeList& formatAttributesA,
 	const PixelFormatAttributeList& formatAttributesB)
 {
-	return formatAttributesA[0] == WGL_NO_ACCELERATION_ARB || (formatAttributesA[0] == WGL_GENERIC_ACCELERATION_ARB &&
-		formatAttributesB[0] == WGL_FULL_ACCELERATION_ARB);
+	return formatAttributesA[0] == WGL::NO_ACCELERATION_ARB ||
+		(formatAttributesA[0] == WGL::GENERIC_ACCELERATION_ARB && formatAttributesB[0] == WGL::FULL_ACCELERATION_ARB);
 }

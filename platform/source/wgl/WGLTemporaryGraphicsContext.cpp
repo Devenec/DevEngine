@@ -21,7 +21,9 @@
 #include <core/Error.h>
 #include <core/Log.h>
 #include <platform/opengl/OpenGL.h>
+#include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>
+#include <platform/windows/Windows.h>
 
 using namespace Core;
 using namespace Platform;
@@ -29,14 +31,7 @@ using namespace Platform;
 // Public
 
 TemporaryGraphicsContext::TemporaryGraphicsContext(HWND windowHandle)
-	: Base(windowHandle) { }
-
-void TemporaryGraphicsContext::deinitialise()
-{
-	destroyContext();
-}
-
-void TemporaryGraphicsContext::initialise()
+	: Base(windowHandle)
 {
 	initialisePixelFormat();
 	createContext();
@@ -58,7 +53,7 @@ void TemporaryGraphicsContext::initialisePixelFormat() const
 
 void TemporaryGraphicsContext::createContext()
 {
-	_graphicsContextHandle = wglCreateContext(_deviceContextHandle);
+	_graphicsContextHandle = WGL::createContext(_deviceContextHandle);
 
 	if(_graphicsContextHandle == nullptr)
 	{
@@ -108,7 +103,7 @@ void TemporaryGraphicsContext::checkPixelFormat(const Int32 pixelFormatIndex) co
 
 void TemporaryGraphicsContext::checkOpenGLVersion()
 {
-	const String8 versionString(reinterpret_cast<const Char8*>(glGetString(GL_VERSION)));
+	const String8 versionString(reinterpret_cast<const Char8*>(OpenGL::getString(OpenGL::VERSION)));
 	const Uint32 majorVersion = getOpenGLMajorVersion(versionString);
 	const Uint32 minorVersion = getOpenGLMinorVersion(versionString);
 

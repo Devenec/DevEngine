@@ -8,9 +8,6 @@
     <Filter Include="Header Files\opengl">
       <UniqueIdentifier>{6132255c-fa73-4875-bfcb-a77dacecfdf2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\opengl\inline">
-      <UniqueIdentifier>{28349357-e0e5-4003-909b-0ba4b2b5a145}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\wgl">
       <UniqueIdentifier>{00b5cb3d-63d7-418c-8143-97d01ea7ce2c}</UniqueIdentifier>
     </Filter>
@@ -38,7 +35,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\platform\GraphicsExtensionManager.h">
+    <ClInclude Include="include\platform\GraphicsExtensionLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\PlatformInternal.h">
@@ -62,6 +59,9 @@
     <ClInclude Include="include\platform\wgl\WGL.h">
       <Filter>Header Files\wgl</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\wgl\WGLGraphicsConfig.h">
+      <Filter>Header Files\wgl</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\wgl\WGLGraphicsConfigChooser.h">
       <Filter>Header Files\wgl</Filter>
     </ClInclude>
@@ -74,6 +74,9 @@
     <ClInclude Include="include\platform\windows\Windows.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\windows\WindowsGraphics.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\windows\WindowsIcon.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
@@ -82,8 +85,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\platform\opengl\inline\OpenGLInterface.inl">
-      <Filter>Header Files\opengl\inline</Filter>
+    <None Include="include\platform\wgl\inline\WGLGraphicsConfig.inl">
+      <Filter>Header Files\wgl\inline</Filter>
     </None>
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl">
       <Filter>Header Files\wgl\inline</Filter>
@@ -96,6 +99,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\opengl\OpenGL.cpp">
+      <Filter>Source Files\opengl</Filter>
+    </ClCompile>
     <ClCompile Include="source\opengl\OpenGLEffect.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
@@ -103,9 +109,6 @@
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
     <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp">
-      <Filter>Source Files\opengl</Filter>
-    </ClCompile>
-    <ClCompile Include="source\opengl\OpenGLInterface.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
     <ClCompile Include="source\opengl\OpenGLShader.cpp">
@@ -117,6 +120,9 @@
     <ClCompile Include="source\wgl\WGL.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
+    <ClCompile Include="source\wgl\WGLGraphicsConfig.cpp">
+      <Filter>Source Files\wgl</Filter>
+    </ClCompile>
     <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
@@ -126,7 +132,7 @@
     <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
-    <ClCompile Include="source\wgl\WGLGraphicsExtensionManager.cpp">
+    <ClCompile Include="source\wgl\WGLGraphicsExtensionLoader.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp">
@@ -167,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="source\windows\WindowsWindowManager.cpp">
       <Filter>Source Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\wgl\WGLGraphicsContextManager.cpp">
+      <Filter>Source Files\wgl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

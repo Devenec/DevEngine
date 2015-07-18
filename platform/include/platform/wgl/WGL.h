@@ -43,115 +43,160 @@
 #pragma once
 
 #include <core/Types.h>
-#include <platform/windows/Windows.h>
+#include <platform/PlatformInternal.h>
+#include <platform/windows/WindowsGraphics.h>
 
-// WGL_ARB_create_context
+#define DE_CALL_WGL DE_INTERNAL_CALL_STDCALL
 
-#define WGL_CONTEXT_DEBUG_BIT_ARB			   0x0001
-#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB 0x0002
-#define WGL_CONTEXT_MAJOR_VERSION_ARB		   0x2091
-#define WGL_CONTEXT_MINOR_VERSION_ARB		   0x2092
-#define WGL_CONTEXT_LAYER_PLANE_ARB			   0x2093
-#define WGL_CONTEXT_FLAGS_ARB				   0x2094
-#define ERROR_INVALID_VERSION_ARB			   0x2095
+namespace Platform
+{
+	class WGL final
+	{
+	public:
 
-using WGLCreateContextAttribsARB = HGLRC (WINAPI *)(HDC deviceContextHandle, HGLRC shareGraphicsContextHandle,
-	const Int32* attributes);
+		// Standard
 
+		using Function = Int32 (DE_CALL_WGL*)();
 
-// WGL_ARB_create_context_profile
+		using CreateContext = HGLRC (DE_CALL_WGL*)(HDC hdc);
+		using DeleteContext = Int32 (DE_CALL_WGL*)(HGLRC hglrc);
+		using GetCurrentContext = HGLRC (DE_CALL_WGL*)();
+		using GetProcAddress = Function (DE_CALL_WGL*)(const Char8* lpszProc);
+		using MakeCurrent = Int32 (DE_CALL_WGL*)(HDC hdc, HGLRC hglrc);
 
-#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB		  0x0001
-#define WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB 0x0002
-#define ERROR_INVALID_PROFILE_ARB				  0x2096
-#define WGL_CONTEXT_PROFILE_MASK_ARB			  0x9126
+		// WGL_ARB_create_context
 
+		using CreateContextAttribsARB = HGLRC (DE_CALL_WGL*)(HDC hdc, HGLRC hShareContext, const Int32* attribList);
 
-// WGL_ARB_extensions_string
+		// WGL_ARB_extensions_string
 
-using WGLGetExtensionsStringARB = const Char8* (WINAPI *)(HDC deviceContextHandle);
+		using GetExtensionsStringARB = const Char8* (DE_CALL_WGL*)(HDC hdc);
 
+		// WGL_ARB_pixel_format
 
-// WGL_ARB_multisample
+		using ChoosePixelFormatARB = Int32 (DE_CALL_WGL*)(HDC hdc, const Int32* piAttribIList,
+			const Float32* pfAttribFList, Uint32 nMaxFormats, Int32* piFormats, Uint32* nNumFormats);
 
-#define WGL_SAMPLE_BUFFERS_ARB 0x2041
-#define WGL_SAMPLES_ARB		   0x2042
+		using GetPixelFormatAttribFVARB = Int32 (DE_CALL_WGL*)(HDC hdc, Int32 iPixelFormat, Int32 iLayerPlane,
+			Uint32 nAttributes, const Int32* piAttributes, Float32* piValues);
 
+		using GetPixelFormatAttribIVARB = Int32 (DE_CALL_WGL*)(HDC hdc, Int32 piValues, Int32 iLayerPlane,
+			Uint32 nAttributes, const Int32* piAttributes, Int32* attributeValues);
 
-// WGL_ARB_pixel_format
+		// WGL_EXT_swap_control
 
-#define WGL_NUMBER_PIXEL_FORMATS_ARB	0x2000
-#define WGL_DRAW_TO_WINDOW_ARB			0x2001
-#define WGL_DRAW_TO_BITMAP_ARB			0x2002
-#define WGL_ACCELERATION_ARB			0x2003
-#define WGL_NEED_PALETTE_ARB			0x2004
-#define WGL_NEED_SYSTEM_PALETTE_ARB		0x2005
-#define WGL_SWAP_LAYER_BUFFERS_ARB		0x2006
-#define WGL_SWAP_METHOD_ARB				0x2007
-#define WGL_NUMBER_OVERLAYS_ARB			0x2008
-#define WGL_NUMBER_UNDERLAYS_ARB		0x2009
-#define WGL_TRANSPARENT_ARB				0x200A
-#define WGL_SHARE_DEPTH_ARB				0x200C
-#define WGL_SHARE_STENCIL_ARB			0x200D
-#define WGL_SHARE_ACCUM_ARB				0x200E
-#define WGL_SUPPORT_GDI_ARB				0x200F
-#define WGL_SUPPORT_OPENGL_ARB			0x2010
-#define WGL_DOUBLE_BUFFER_ARB			0x2011
-#define WGL_STEREO_ARB					0x2012
-#define WGL_PIXEL_TYPE_ARB				0x2013
-#define WGL_COLOR_BITS_ARB				0x2014
-#define WGL_RED_BITS_ARB				0x2015
-#define WGL_RED_SHIFT_ARB				0x2016
-#define WGL_GREEN_BITS_ARB				0x2017
-#define WGL_GREEN_SHIFT_ARB				0x2018
-#define WGL_BLUE_BITS_ARB				0x2019
-#define WGL_BLUE_SHIFT_ARB				0x201A
-#define WGL_ALPHA_BITS_ARB				0x201B
-#define WGL_ALPHA_SHIFT_ARB				0x201C
-#define WGL_ACCUM_BITS_ARB				0x201D
-#define WGL_ACCUM_RED_BITS_ARB			0x201E
-#define WGL_ACCUM_GREEN_BITS_ARB		0x201F
-#define WGL_ACCUM_BLUE_BITS_ARB			0x2020
-#define WGL_ACCUM_ALPHA_BITS_ARB		0x2021
-#define WGL_DEPTH_BITS_ARB				0x2022
-#define WGL_STENCIL_BITS_ARB			0x2023
-#define WGL_AUX_BUFFERS_ARB				0x2024
-#define WGL_NO_ACCELERATION_ARB			0x2025
-#define WGL_GENERIC_ACCELERATION_ARB	0x2026
-#define WGL_FULL_ACCELERATION_ARB		0x2027
-#define WGL_SWAP_EXCHANGE_ARB			0x2028
-#define WGL_SWAP_COPY_ARB				0x2029
-#define WGL_SWAP_UNDEFINED_ARB			0x202A
-#define WGL_TYPE_RGBA_ARB				0x202B
-#define WGL_TYPE_COLORINDEX_ARB			0x202C
-#define WGL_TRANSPARENT_RED_VALUE_ARB	0x2037
-#define WGL_TRANSPARENT_GREEN_VALUE_ARB 0x2038
-#define WGL_TRANSPARENT_BLUE_VALUE_ARB	0x2039
-#define WGL_TRANSPARENT_ALPHA_VALUE_ARB 0x203A
-#define WGL_TRANSPARENT_INDEX_VALUE_ARB 0x203B
-
-using WGLChoosePixelFormatARB = Int32 (WINAPI *)(HDC deviceContextHandle, const Int32* attributes,
-	const Float32* floatAttributes, Uint32 maxPixelFormatCount, Int32* pixelFormats, Uint32* pixelFormatCount);
-
-using WGLGetPixelFormatAttribFVARB = Int32 (WINAPI *)(HDC deviceContextHandle, Int32 pixelFormatIndex,
-	Int32 planeIndex, Uint32 attributeCount, const Int32* attributeIds, Float32* attributeValues);
-
-using WGLGetPixelFormatAttribIVARB = Int32 (WINAPI *)(HDC deviceContextHandle, Int32 pixelFormatIndex,
-	Int32 planeIndex, Uint32 attributeCount, const Int32* attributeIds, Int32* attributeValues);
+		using GetSwapIntervalEXT = Int32 (DE_CALL_WGL*)();
+		using SwapIntervalEXT = Int32 (DE_CALL_WGL*)(Int32 interval);
 
 
-// WGL_EXT_swap_control
+		// Standard
 
-using WGLGetSwapIntervalEXT = Int32 (WINAPI *)(void);
-using WGLSwapIntervalEXT = Int32 (WINAPI *)(Int32 interval);
+		static CreateContext createContext;
+		static DeleteContext deleteContext;
+		static GetCurrentContext getCurrentContext;
+		static GetProcAddress getProcAddress;
+		static MakeCurrent makeCurrent;
+
+		// WGL_ARB_create_context
+
+		static const Int32 CONTEXT_DEBUG_BIT_ARB			  = 0x0001;
+		static const Int32 CONTEXT_FORWARD_COMPATIBLE_BIT_ARB = 0x0002;
+		static const Int32 CONTEXT_MAJOR_VERSION_ARB		  = 0x2091;
+		static const Int32 CONTEXT_MINOR_VERSION_ARB		  = 0x2092;
+		static const Int32 CONTEXT_LAYER_PLANE_ARB			  = 0x2093;
+		static const Int32 CONTEXT_FLAGS_ARB				  = 0x2094;
+		static const Int32 ERROR_INVALID_VERSION_ARB		  = 0x2095;
+
+		static CreateContextAttribsARB createContextAttribsARB;
+
+		// WGL_ARB_extensions_string
+
+		static GetExtensionsStringARB getExtensionsStringARB;
+
+		// WGL_ARB_create_context_profile
+
+		static const Int32 CONTEXT_CORE_PROFILE_BIT_ARB			 = 0x0001;
+		static const Int32 CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB = 0x0002;
+		static const Int32 ERROR_INVALID_PROFILE_ARB			 = 0x2096;
+		static const Int32 CONTEXT_PROFILE_MASK_ARB				 = 0x9126;
+
+		// WGL_ARB_multisample
+
+		static const Int32 SAMPLE_BUFFERS_ARB = 0x2041;
+		static const Int32 SAMPLES_ARB		  = 0x2042;
+
+		// WGL_ARB_pixel_format
+
+		static const Int32 NUMBER_PIXEL_FORMATS_ARB	   = 0x2000;
+		static const Int32 DRAW_TO_WINDOW_ARB		   = 0x2001;
+		static const Int32 DRAW_TO_BITMAP_ARB		   = 0x2002;
+		static const Int32 ACCELERATION_ARB			   = 0x2003;
+		static const Int32 NEED_PALETTE_ARB			   = 0x2004;
+		static const Int32 NEED_SYSTEM_PALETTE_ARB	   = 0x2005;
+		static const Int32 SWAP_LAYER_BUFFERS_ARB	   = 0x2006;
+		static const Int32 SWAP_METHOD_ARB			   = 0x2007;
+		static const Int32 NUMBER_OVERLAYS_ARB		   = 0x2008;
+		static const Int32 NUMBER_UNDERLAYS_ARB		   = 0x2009;
+		static const Int32 TRANSPARENT_ARB			   = 0x200A;
+		static const Int32 SHARE_DEPTH_ARB			   = 0x200C;
+		static const Int32 SHARE_STENCIL_ARB		   = 0x200D;
+		static const Int32 SHARE_ACCUM_ARB			   = 0x200E;
+		static const Int32 SUPPORT_GDI_ARB			   = 0x200F;
+		static const Int32 SUPPORT_OPENGL_ARB		   = 0x2010;
+		static const Int32 DOUBLE_BUFFER_ARB		   = 0x2011;
+		static const Int32 STEREO_ARB				   = 0x2012;
+		static const Int32 PIXEL_TYPE_ARB			   = 0x2013;
+		static const Int32 COLOR_BITS_ARB			   = 0x2014;
+		static const Int32 RED_BITS_ARB				   = 0x2015;
+		static const Int32 RED_SHIFT_ARB			   = 0x2016;
+		static const Int32 GREEN_BITS_ARB			   = 0x2017;
+		static const Int32 GREEN_SHIFT_ARB			   = 0x2018;
+		static const Int32 BLUE_BITS_ARB			   = 0x2019;
+		static const Int32 BLUE_SHIFT_ARB			   = 0x201A;
+		static const Int32 ALPHA_BITS_ARB			   = 0x201B;
+		static const Int32 ALPHA_SHIFT_ARB			   = 0x201C;
+		static const Int32 ACCUM_BITS_ARB			   = 0x201D;
+		static const Int32 ACCUM_RED_BITS_ARB		   = 0x201E;
+		static const Int32 ACCUM_GREEN_BITS_ARB		   = 0x201F;
+		static const Int32 ACCUM_BLUE_BITS_ARB		   = 0x2020;
+		static const Int32 ACCUM_ALPHA_BITS_ARB		   = 0x2021;
+		static const Int32 DEPTH_BITS_ARB			   = 0x2022;
+		static const Int32 STENCIL_BITS_ARB			   = 0x2023;
+		static const Int32 AUX_BUFFERS_ARB			   = 0x2024;
+		static const Int32 NO_ACCELERATION_ARB		   = 0x2025;
+		static const Int32 GENERIC_ACCELERATION_ARB	   = 0x2026;
+		static const Int32 FULL_ACCELERATION_ARB	   = 0x2027;
+		static const Int32 SWAP_EXCHANGE_ARB		   = 0x2028;
+		static const Int32 SWAP_COPY_ARB			   = 0x2029;
+		static const Int32 SWAP_UNDEFINED_ARB		   = 0x202A;
+		static const Int32 TYPE_RGBA_ARB			   = 0x202B;
+		static const Int32 TYPE_COLORINDEX_ARB		   = 0x202C;
+		static const Int32 TRANSPARENT_RED_VALUE_ARB   = 0x2037;
+		static const Int32 TRANSPARENT_GREEN_VALUE_ARB = 0x2038;
+		static const Int32 TRANSPARENT_BLUE_VALUE_ARB  = 0x2039;
+		static const Int32 TRANSPARENT_ALPHA_VALUE_ARB = 0x203A;
+		static const Int32 TRANSPARENT_INDEX_VALUE_ARB = 0x203B;
+
+		static ChoosePixelFormatARB choosePixelFormatARB;
+		static GetPixelFormatAttribFVARB getPixelFormatAttribfvARB;
+		static GetPixelFormatAttribIVARB getPixelFormatAttribivARB;
+
+		// WGL_EXT_swap_control
+
+		static GetSwapIntervalEXT getSwapIntervalEXT;
+		static SwapIntervalEXT swapIntervalEXT;
 
 
-// Function declarations
+		WGL() = delete;
 
-extern WGLChoosePixelFormatARB wglChoosePixelFormatARB;
-extern WGLCreateContextAttribsARB wglCreateContextAttribsARB;
-extern WGLGetExtensionsStringARB wglGetExtensionsStringARB;
-extern WGLGetPixelFormatAttribFVARB wglGetPixelFormatAttribfvARB;
-extern WGLGetPixelFormatAttribIVARB wglGetPixelFormatAttribivARB;
-extern WGLGetSwapIntervalEXT wglGetSwapIntervalEXT;
-extern WGLSwapIntervalEXT wglSwapIntervalEXT;
+		WGL(const WGL& wgl) = delete;
+		WGL(WGL&& wgl) = delete;
+
+		~WGL() = delete;
+
+		WGL& operator =(const WGL& wgl) = delete;
+		WGL& operator =(WGL&& wgl) = delete;
+	};
+}
+
+#undef DE_CALL_WGL

@@ -22,7 +22,6 @@
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <platform/opengl/OpenGL.h>
-#include <platform/opengl/OpenGLInterface.h>
 #include <platform/opengl/OpenGLShader.h>
 
 using namespace Core;
@@ -81,9 +80,9 @@ void Shader::Impl::compileShader(const String8& source) const
 
 void Shader::Impl::checkCompilationStatus() const
 {
-	const Int32 compilationStatus = getParameter(GL_COMPILE_STATUS);
+	const Int32 compilationStatus = getParameter(OpenGL::COMPILE_STATUS);
 
-	if(compilationStatus == GL_FALSE)
+	if(compilationStatus == OpenGL::FALSE)
 	{
 		outputCompilerFailureLog();
 		DE_ERROR(0x0);
@@ -106,7 +105,7 @@ Int32 Shader::Impl::getParameter(const Uint32 parameterName) const
 void Shader::Impl::outputCompilerFailureLog() const
 {
 	defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to compile the shader:\n\t";
-	const Uint32 logLength = getParameter(GL_INFO_LOG_LENGTH);
+	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 	if(logLength > 1u)
 		defaultLog << getInfoLog(logLength).data();
@@ -118,7 +117,7 @@ void Shader::Impl::outputCompilerFailureLog() const
 
 void Shader::Impl::outputCompilerSuccessLog() const
 {
-	const Uint32 logLength = getParameter(GL_INFO_LOG_LENGTH);
+	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 	if(logLength > 1u)
 	{
@@ -143,22 +142,22 @@ Uint32 Shader::Impl::getTypeId(const ShaderType& shaderType)
 	switch(shaderType)
 	{
 		case ShaderType::Compute:
-			return GL_COMPUTE_SHADER;
+			return OpenGL::COMPUTE_SHADER;
 
 		case ShaderType::Fragment:
-			return GL_FRAGMENT_SHADER;
+			return OpenGL::FRAGMENT_SHADER;
 
 		case ShaderType::Geometry:
-			return GL_GEOMETRY_SHADER;
+			return OpenGL::GEOMETRY_SHADER;
 
 		case ShaderType::TessellationControl:
-			return GL_TESS_CONTROL_SHADER;
+			return OpenGL::TESS_CONTROL_SHADER;
 
 		case ShaderType::TessellationEvaluation:
-			return GL_TESS_EVALUATION_SHADER;
+			return OpenGL::TESS_EVALUATION_SHADER;
 
 		case ShaderType::Vertex:
-			return GL_VERTEX_SHADER;
+			return OpenGL::VERTEX_SHADER;
 
 		default:
 			return 0u;
