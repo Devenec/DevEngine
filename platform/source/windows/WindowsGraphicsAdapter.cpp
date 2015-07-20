@@ -56,6 +56,11 @@ public:
 		return _supportedDisplayModes[_currentDisplayModeIndex];
 	}
 
+	String8 name() const
+	{
+		return toString8(_name);
+	}
+
 	void setDisplayMode(const DisplayMode& mode)
 	{
 		DisplayModeList::const_iterator iterator = std::find(_supportedDisplayModes.begin(),
@@ -119,6 +124,11 @@ const Char8* GraphicsAdapter::Impl::COMPONENT_TAG = "[Platform::GraphicsAdapter 
 const DisplayMode& GraphicsAdapter::currentDisplayMode() const
 {
 	return _impl->currentDisplayMode();
+}
+
+String8 GraphicsAdapter::name() const
+{
+	return _impl->name();
 }
 
 void GraphicsAdapter::setDisplayMode(const DisplayMode& mode) const

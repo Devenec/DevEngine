@@ -114,6 +114,9 @@
     <ClCompile Include="source\DisplayMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\GraphicsAdapterManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

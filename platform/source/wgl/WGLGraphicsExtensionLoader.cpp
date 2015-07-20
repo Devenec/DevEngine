@@ -45,11 +45,35 @@ public:
 	Impl& operator =(const Impl& impl) = delete;
 	Impl& operator =(Impl&& impl) = delete;
 
-	static void loadContextExtensions(const GraphicsContextBase& graphicsContext)
+	static String8 getContextExtensionsString(const GraphicsContextBase& graphicsContext)
+	{
+		if(WGL::getExtensionsStringARB == nullptr)
+			return String8();
+		else
+			return String8(WGL::getExtensionsStringARB(graphicsContext.deviceContextHandle()));
+	}
+
+	static Vector<String8> getInterfaceExtensionNames()
+	{
+		Int32 extensionCount = 0u;
+		OpenGL::getIntegerv(OpenGL::NUM_EXTENSIONS, &extensionCount);
+		DE_CHECK_ERROR_OPENGL();
+		Vector<String8> extensionNames;
+
+		for(Int32 i = 0; i < extensionCount; ++i)
+		{
+			const Char8* extensionName = reinterpret_cast<const Char8*>(OpenGL::getStringi(OpenGL::EXTENSIONS, i));
+			DE_CHECK_ERROR_OPENGL();
+			extensionNames.push_back(extensionName);
+		}
+
+		return extensionNames;
+	}
+
+	static void loadContextExtensions()
 	{
 		validateContextState();
 		loadWGLExtensions();
-		logSupportedWGLExtensions(graphicsContext);
 	}
 
 	static void loadInterfaceExtensions()
@@ -89,23 +113,6 @@ private:
 
 		WGL::getSwapIntervalEXT = getFunction<WGL::GetSwapIntervalEXT>("wglGetSwapIntervalEXT");
 		WGL::swapIntervalEXT = getFunction<WGL::SwapIntervalEXT>("wglSwapIntervalEXT");
-	}
-
-	static void logSupportedWGLExtensions(const GraphicsContextBase& graphicsContext)
-	{
-		defaultLog << LogLevel::Info << COMPONENT_TAG;
-
-		if(WGL::getExtensionsStringARB == nullptr)
-		{
-			defaultLog << " No WGL extensions are supported.";
-		}
-		else
-		{
-			defaultLog << " Supported WGL extensions: " <<
-				WGL::getExtensionsStringARB(graphicsContext.deviceContextHandle());
-		}
-
-		defaultLog << Log::Flush();
 	}
 
 	static void loadOpenGLStandards()
@@ -958,10 +965,12 @@ const Char8* GraphicsExtensionLoader::Impl::COMPONENT_TAG = "[Platform::Graphics
 
 void GraphicsExtensionLoader::loadContextExtensions(const GraphicsContextBase& graphicsContext)
 {
-	Impl::loadContextExtensions(graphicsContext);
+	Impl::loadContextExtensions();
+	logSupportedContextExtensions(Impl::getContextExtensionsString(graphicsContext));
 }
 
 void GraphicsExtensionLoader::loadInterfaceExtensions()
 {
 	Impl::loadInterfaceExtensions();
+	logSupportedInterfaceExtensions(Impl::getInterfaceExtensionNames());
 }

@@ -22,12 +22,17 @@
 
 using namespace Core;
 
+// Some members are defined in platform/*/*Log.cpp
+
 // Public
 
 void Log::write(const LogLevel& logLevel, const String8& message) const
 {
 	if(logLevel >= _filterLevel)
-		writeToConsole(logLevel, message);
+	{
+		const String8 parsedMessage = parseMessage(message);
+		writeToConsole(logLevel, parsedMessage);
+	}
 }
 
 // Operators
@@ -57,4 +62,30 @@ Log::Log()
 
 // Static
 
-// Log::writeToConsole() is defined in platform/*/*Log.cpp
+String8 Log::parseMessage(String8 message)
+{
+	Uint32 currentPosition = 0u;
+	Uint32 lineBreakPosition;
+
+	while((lineBreakPosition = message.find('\n', currentPosition)) != String8::npos ||
+		message.length() > currentPosition + MAX_LINE_LENGTH)
+	{
+		if(lineBreakPosition == String8::npos)
+			lineBreakPosition = message.rfind(' ', currentPosition + MAX_LINE_LENGTH - 1u);
+
+		if(lineBreakPosition == String8::npos || lineBreakPosition > currentPosition + MAX_LINE_LENGTH)
+		{
+			lineBreakPosition = currentPosition + MAX_LINE_LENGTH;
+			currentPosition = 0u;
+		}
+		else
+		{
+			currentPosition = 1u;
+		}
+
+		message.replace(lineBreakPosition, currentPosition, LINE_BREAK);
+		currentPosition = lineBreakPosition + LINE_BREAK_LENGTH;
+	}
+
+	return message;
+}

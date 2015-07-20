@@ -68,6 +68,10 @@ namespace Core
 
 		friend class LogManager;
 
+		static const Char8* LINE_BREAK;
+		static const Uint32 LINE_BREAK_LENGTH;
+		static const Uint32 MAX_LINE_LENGTH;
+
 		StringStream8 _stream;
 		LogLevel _filterLevel;
 		LogLevel _streamLevel;
@@ -75,6 +79,7 @@ namespace Core
 		Log();
 
 		static void writeToConsole(const LogLevel& logLevel, const String8& message);
+		static String8 parseMessage(String8 message);
 	};
 
 #include "inline/Log.inl"

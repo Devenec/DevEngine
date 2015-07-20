@@ -59,6 +59,8 @@ void Core::deallocateMemory(Void* pointer, const Uint32 size)
 #if defined(DE_INTERNAL_TRACK_ALLOCATIONS)
 	if(pointer != nullptr)
 		Debug::AllocationTracker::instance().deregisterAllocation(pointer, size);
+#else
+	static_cast<Void>(size);
 #endif
 
 	std::free(pointer);

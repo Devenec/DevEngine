@@ -25,6 +25,8 @@
 
 using namespace Core;
 
+// External
+
 static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
 {
 	"DEBUG  ",
@@ -33,7 +35,12 @@ static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
 	"ERROR  "
 };
 
+
 // Private
+
+const Char8* Log::LINE_BREAK		= "\n          ";
+const Uint32 Log::LINE_BREAK_LENGTH = 11u;
+const Uint32 Log::MAX_LINE_LENGTH	= 120u;
 
 // Static
 

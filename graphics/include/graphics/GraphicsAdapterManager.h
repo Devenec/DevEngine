@@ -25,6 +25,7 @@
 
 namespace Graphics
 {
+	class DisplayMode;
 	class GraphicsAdapter;
 
 	using GraphicsAdapterList = Core::Vector<GraphicsAdapter*>;
@@ -50,5 +51,10 @@ namespace Graphics
 		class Impl;
 
 		Impl* _impl;
+
+		void logAdapters() const;
+
+		static void logAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter);
+		static void logAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator);
 	};
 }

@@ -154,7 +154,10 @@ private:
 // Public
 
 GraphicsAdapterManager::GraphicsAdapterManager()
-	: _impl(DE_NEW(Impl)()) { }
+	: _impl(DE_NEW(Impl)())
+{
+	logAdapters();
+}
 
 GraphicsAdapterManager::~GraphicsAdapterManager()
 {

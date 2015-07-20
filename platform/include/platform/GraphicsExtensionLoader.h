@@ -20,6 +20,10 @@
 
 #pragma once
 
+#include <core/String.h>
+#include <core/Types.h>
+#include <core/Vector.h>
+
 namespace Platform
 {
 	class GraphicsContextBase;
@@ -44,6 +48,15 @@ namespace Platform
 
 	private:
 
+		using ExtensionNameList = Core::Vector<Core::String8>;
+
+		static const Uint32 LOG_COLUMN_WIDTH;
+
 		class Impl;
+
+		static void logSupportedContextExtensions(const Core::String8& extensionsString);
+		static void logSupportedInterfaceExtensions(const ExtensionNameList& extensionNames);
+		static ExtensionNameList splitExtensionsString(const Core::String8& extensionsString);
+		static void logSupportedExtensions(const ExtensionNameList& extensionNames);
 	};
 }
