@@ -1,5 +1,5 @@
 /**
- * @file core/Error.cpp
+ * @file core/memory/AllocationPolicy.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -21,14 +21,36 @@
 #include <cstdlib>
 #include <core/Error.h>
 #include <core/Log.h>
+#include <core/memory/AllocationPolicy.h>
 
-// Core
+using namespace Core;
+using namespace Memory;
 
-void Core::invokeError(const Uint32 errorCode)
+// Public
+
+// Static
+
+Void* AllocationPolicy::allocate(const Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
 {
-	defaultLog << LogLevel::Error << "Error occurred with code " << StreamFormat::Hexadecimal << errorCode <<
-		StreamFormat::Decimal << '.' << Log::Flush();
+	DE_ASSERT(size > 0u);
+	Void* pointer = std::malloc(size);
 
-	DE_DEBUGGER_BREAK();
-	std::abort();
+	if(pointer == nullptr)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to allocate memory." << Log::Flush();
+		DE_ERROR(0x0);
+	}
+
+	Base::registerAllocation(pointer, size, file, line, function);
+	return pointer;
 }
+
+void AllocationPolicy::deallocate(Void* pointer, const Uint32 size)
+{
+	Base::deregisterAllocation(pointer, size);
+	std::free(pointer);
+}
+
+// Private
+
+const Char8* AllocationPolicy::COMPONENT_TAG = "[Memory::AllocationPolicy]";

@@ -19,44 +19,54 @@
  */
 
 #include <core/Application.h>
-#include <core/ConfigMacros.h>
+#include <core/Config.h>
+#include <core/ConfigInternal.h>
 #include <core/LogManager.h>
 #include <core/Platform.h>
 #include <core/Types.h>
 
-#if DE_BUILD != DE_BUILD_PRODUCTION && defined(DE_CONFIG_TRACK_ALLOCATIONS)
-	#define DE_INTERNAL_TRACK_ALLOCATIONS
-	#include <core/debug/AllocationTracker.h>
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 
-	static Debug::AllocationTracker allocationTracker;
+#include <core/debug/AllocationTracker.h>
+
+static Debug::AllocationTracker allocationTracker;
+
 #endif
 
 using namespace Core;
 
 static LogManager logManager;
 
+static void runDevEngineMain(const Int32 argumentCount, Char16** arguments);
 static StartupParameters createStartupParameters(const Int32 argumentCount, Char16** arguments);
 
 #if defined(DE_CONFIG_DEVENGINE_MAIN)
+
 Int32 wmain(Int32 argumentCount, Char16** arguments)
 {
 	logManager.initialise();
 
-#if defined(DE_INTERNAL_TRACK_ALLOCATIONS)
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 	allocationTracker.initialise();
 #endif
 
-	StartupParameters startupParameters = createStartupParameters(argumentCount, arguments);
-	devEngineMain(startupParameters);
+	runDevEngineMain(argumentCount, arguments);
 
-#if defined(DE_INTERNAL_TRACK_ALLOCATIONS)
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 	allocationTracker.deinitialise();
 #endif
 
 	logManager.deinitialise();
 	return 0;
 }
+
 #endif
+
+static void runDevEngineMain(const Int32 argumentCount, Char16** arguments)
+{
+	StartupParameters startupParameters = createStartupParameters(argumentCount, arguments);
+	devEngineMain(startupParameters);
+}
 
 static StartupParameters createStartupParameters(const Int32 argumentCount, Char16** arguments)
 {

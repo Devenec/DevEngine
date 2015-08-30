@@ -20,6 +20,13 @@
 
 #pragma once
 
+#include <core/ConfigInternal.h>
+
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
+
+#include <functional>
+#include <memory>
+#include <utility>
 #include <core/Map.h>
 #include <core/Singleton.h>
 #include <core/Types.h>
@@ -66,7 +73,9 @@ namespace Debug
 				  size(size) { }
 		};
 
-		using AllocationRecordMap = Core::Map<Void*, AllocationRecord>;
+		// TODO: use custom allocator that doesn't track allocations
+		using AllocationRecordMap = Core::Map<Void*, AllocationRecord, std::hash<Void*>, std::equal_to<Void*>,
+			std::allocator<std::pair<const Void*, AllocationRecord>>>;
 
 		AllocationRecordMap _allocationRecords;
 		Bool _isInitialised;
@@ -76,3 +85,5 @@ namespace Debug
 
 #include "inline/AllocationTracker.inl"
 }
+
+#endif

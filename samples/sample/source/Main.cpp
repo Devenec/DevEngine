@@ -42,7 +42,7 @@ using namespace Content;
 using namespace Core;
 using namespace Graphics;
 
-static const String8 VERTEX_SHADER_SOURCE
+static const Char8* VERTEX_SHADER_SOURCE
 (
 	"#version 450\n"
 	"\n"
@@ -58,7 +58,7 @@ static const String8 VERTEX_SHADER_SOURCE
 	"}\n"
 );
 
-static const String8 FRAGMENT_SHADER_SOURCE
+static const Char8* FRAGMENT_SHADER_SOURCE
 (
 	"#version 450\n"
 	"\n"

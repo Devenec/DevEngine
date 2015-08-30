@@ -18,9 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <utility>
-#include <core/Log.h>
 #include <core/debug/AllocationTracker.h>
+
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
+
+//#include <utility>
+#include <core/Log.h>
 #include <core/debug/Assert.h>
 
 using namespace Core;
@@ -33,27 +36,31 @@ AllocationTracker::AllocationTracker()
 
 void AllocationTracker::deregisterAllocation(Void* pointer, const Uint32 size)
 {
-	DE_ASSERT(_isInitialised);
-	AllocationRecordMap::const_iterator iterator = _allocationRecords.find(pointer);
-	DE_ASSERT(iterator != _allocationRecords.end());
-
-	if(iterator != _allocationRecords.end())
+	if(_isInitialised)
 	{
-		DE_ASSERT(size == 0u || size == iterator->second.size);
-		_allocationRecords.erase(iterator);
+		AllocationRecordMap::const_iterator iterator = _allocationRecords.find(pointer);
+		DE_ASSERT(iterator != _allocationRecords.end());
+
+		if(iterator != _allocationRecords.end())
+		{
+			DE_ASSERT(size == 0u || size == iterator->second.size);
+			_allocationRecords.erase(iterator);
+		}
 	}
 }
 
 void AllocationTracker::registerAllocation(Void* pointer, const Uint32 size, const Char8* file, const Uint32 line,
 	const Char8* function)
 {
-	DE_ASSERT(pointer != nullptr);
-	DE_ASSERT(_isInitialised);
+	if(_isInitialised)
+	{
+		DE_ASSERT(pointer != nullptr);
 
-	const std::pair<AllocationRecordMap::const_iterator, Bool> result = _allocationRecords.emplace(pointer,
-		AllocationRecord(size, file, line, function));
+		const std::pair<AllocationRecordMap::const_iterator, Bool> result = _allocationRecords.emplace(pointer,
+			AllocationRecord(size, file, line, function));
 
-	DE_ASSERT(result.second);
+		DE_ASSERT(result.second);
+	}
 }
 
 // Private
@@ -68,11 +75,26 @@ void AllocationTracker::checkForMemoryLeaks() const
 		for(AllocationRecordMap::const_iterator i = _allocationRecords.begin(), end = _allocationRecords.end();
 			i != end; ++i)
 		{
-			defaultLog << "0x" << std::hex << std::uppercase << i->first << std::nouppercase << std::dec << " (" <<
-				i->second.size << " bytes) at " << i->second.file << " on line " << i->second.line <<
-				" in function " << i->second.function << Log::Flush();
+			defaultLog << StreamFormat::Hexadecimal << i->first << StreamFormat::Decimal << " (" << i->second.size <<
+				" bytes) at ";
+			
+			if(i->second.file == nullptr)
+				defaultLog << "unknown file";
+			else
+				defaultLog << i->second.file;
+
+			defaultLog << " on line " << i->second.line;
+			
+			if(i->second.function == nullptr)
+				defaultLog << " in unknown function ";
+			else
+				defaultLog << " in function " << i->second.function;
+
+			defaultLog << Log::Flush();
 		}
 	}
 
 	DE_ASSERT(_allocationRecords.size() == 0u);
 }
+
+#endif

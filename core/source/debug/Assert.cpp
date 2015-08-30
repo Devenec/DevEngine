@@ -18,9 +18,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/debug/Assert.h>
+
+#if DE_BUILD != DE_BUILD_PRODUCTION
+
 #include <cstdlib>
 #include <core/Log.h>
-#include <core/debug/Assert.h>
 
 using namespace Core;
 
@@ -34,3 +37,5 @@ void Debug::failAssertion(const Char8* expression, const Char8* file, const Uint
 	DE_DEBUGGER_BREAK();
 	std::abort();
 }
+
+#endif

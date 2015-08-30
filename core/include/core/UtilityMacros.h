@@ -84,7 +84,7 @@
  * Expands to a string literal that indicates the name of the function in which
  * the macro appears.
  */
-#define DE_FUNCTION DE_INTERNAL_FUNCTION
+#define DE_FUNCTION __func__
 
 /**
  * Line number

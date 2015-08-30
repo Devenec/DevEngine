@@ -1,5 +1,5 @@
 /**
- * @file core/StringStream.h
+ * @file core/memory/AllocationPolicyBase.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,25 +20,29 @@
 
 #pragma once
 
-#include <sstream>
 #include <core/Types.h>
-#include <core/memory/STDAllocator.h>
 
-namespace Core
+namespace Memory
 {
-	/**
-	 * Character array output stream template
-	 */
-	template<typename T, typename Allocator = Memory::STDAllocator<T>>
-	using StringStreamTemplate = std::basic_ostringstream<T, std::char_traits<T>, Allocator>;
+	class AllocationPolicyBase
+	{
+	public:
 
-	/**
-	 * Character array output stream for the Char8 type
-	 */
-	using StringStream8 = StringStreamTemplate<Char8>;
+		AllocationPolicyBase() = delete;
 
-	/**
-	 * Character array output stream for the Char16 type
-	 */
-	using StringStream16 = StringStreamTemplate<Char16>;
+		AllocationPolicyBase(const AllocationPolicyBase& allocationPolicy) = delete;
+		AllocationPolicyBase(AllocationPolicyBase&& allocationPolicy) = delete;
+
+		~AllocationPolicyBase() = delete;
+
+		AllocationPolicyBase& operator =(const AllocationPolicyBase& allocationPolicy) = delete;
+		AllocationPolicyBase& operator =(AllocationPolicyBase&& allocationPolicy) = delete;
+
+	protected:
+
+		static void deregisterAllocation(Void* pointer, const Uint32 size = 0u);
+
+		static void registerAllocation(Void* pointer, const Uint32 size, const Char8* file = nullptr,
+			const Uint32 line = 0u, const Char8* function = nullptr);
+	};
 }

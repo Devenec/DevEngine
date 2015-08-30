@@ -1,5 +1,5 @@
 /**
- * @file core/Memory.cpp
+ * @file core/memory/AllocationPolicyBase.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,44 +18,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cstdlib>
-#include <core/Error.h>
-#include <core/Log.h>
-#include <core/Memory.h>
+#include <core/ConfigInternal.h>
+#include <core/memory/AllocationPolicyBase.h>
 
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 	#include <core/debug/AllocationTracker.h>
 #endif
 
-// Core
+using namespace Memory;
 
-Void* Core::allocateMemory(const Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
-{
-	DE_ASSERT(size > 0u);
-	Void* pointer = std::malloc(size);
+// Protected
 
-	if(pointer == nullptr)
-	{
-		defaultLog << LogLevel::Error << "[Core::allocateMemory] Failed to allocate memory." << Log::Flush();
-		DE_ERROR(0x0);
-	}
+// Static
 
-#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
-
-	Debug::AllocationTracker::instance().registerAllocation(pointer, size, file, line, function);
-
-#else
-
-	static_cast<Void>(file);
-	static_cast<Void>(line);
-	static_cast<Void>(function);
-
-#endif
-
-	return pointer;
-}
-
-void Core::deallocateMemory(Void* pointer, const Uint32 size)
+void AllocationPolicyBase::deregisterAllocation(Void* pointer, const Uint32 size)
 {
 
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
@@ -65,9 +41,29 @@ void Core::deallocateMemory(Void* pointer, const Uint32 size)
 
 #else
 
+	static_cast<Void>(pointer);
 	static_cast<Void>(size);
 
 #endif
 
-	std::free(pointer);
+}
+
+void AllocationPolicyBase::registerAllocation(Void* pointer, const Uint32 size, const Char8* file, const Uint32 line,
+	const Char8* function)
+{
+
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
+
+	Debug::AllocationTracker::instance().registerAllocation(pointer, size, file, line, function);
+
+#else
+
+	static_cast<Void>(pointer);
+	static_cast<Void>(size);
+	static_cast<Void>(file);
+	static_cast<Void>(line);
+	static_cast<Void>(function);
+
+#endif
+
 }

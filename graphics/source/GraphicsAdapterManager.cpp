@@ -52,7 +52,7 @@ void GraphicsAdapterManager::logAdapterDisplayModes(const GraphicsAdapter& graph
 {
 	const DisplayModeList& displayModes = graphicsAdapter.supportedDisplayModes();
 	const Uint32 displayModeCount = displayModes.size();
-	const Uint32 rowCount = static_cast<Uint32>(std::ceil(displayModeCount / 4.0f));
+	const Uint32 rowCount = static_cast<Uint32>(std::ceil(displayModeCount / 3.0f));
 
 	for(Uint32 i = 0u; i < rowCount; ++i)
 	{

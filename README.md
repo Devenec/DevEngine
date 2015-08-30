@@ -7,7 +7,7 @@ Version 0.0.1
 ### About
 
 DevEngine is written in C++. It is aimed to be a powerful cross-platform game
-development framework, which hopefully evolves into a complete game engine.
+development framework, which will hopefully evolve into a complete game engine.
 DevEngine uses OpenGL for rendering.
 
 Please note that DevEngine is heavily a work in progress, and many things will
@@ -35,14 +35,14 @@ for custom content types.
 
 ### Upcoming Features
 
-- Proper memory management and allocators
+- Proper memory management
 - OpenGL 3.x support
 - Multithreading support
 
 
 ### Supported Platforms
 
-- Windows (tested only on Windows 7)
+- Windows (tested only on Windows 7 and Windows 10)
 
 
 ### Third Party Source Code Included
@@ -54,7 +54,8 @@ for custom content types.
 
 ### Building
 
-Visual Studio 2013 and [Visual C++ Compiler November 2013 CTP] is required.
+Visual Studio 2013 and [Visual C++ Compiler November 2013 CTP], or newer is
+required.
 
 
 ### Copyright & License

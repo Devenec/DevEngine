@@ -24,16 +24,22 @@
 
 using namespace Core;
 
+// External
+
+using StringConverter = std::wstring_convert<std::codecvt_utf8_utf16<Char16>, Char16, Memory::STDAllocator<Char16>,
+	Memory::STDAllocator<Char8>>;
+
+
 // Core
 
 String8 Core::toString8(const String16& string)
 {
-	std::wstring_convert<std::codecvt_utf8_utf16<Char16>> converter;
+	StringConverter converter;
 	return converter.to_bytes(string);
 }
 
 String16 Core::toString16(const String8& string)
 {
-	std::wstring_convert<std::codecvt_utf8_utf16<Char16>> converter;
+	StringConverter converter;
 	return converter.from_bytes(string);
 }

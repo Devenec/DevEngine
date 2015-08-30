@@ -59,7 +59,6 @@
 #if DE_COMPILER == DE_COMPILER_MSVC
 	#define DE_INTERNAL_CALL_STDCALL __stdcall
 	#define DE_INTERNAL_CONSTEXPR	 inline const
-	#define DE_INTERNAL_FUNCTION	 __FUNCTION__
 	#define DE_INTERNAL_NO_OPERATION __noop
 #endif
 
@@ -96,7 +95,3 @@
 #else
 	#error The target platform is not supported.
 #endif
-
-
-#undef DE_INTERNAL2_STRING8
-#undef DE_INTERNAL1_STRING8

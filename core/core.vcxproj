@@ -14,18 +14,19 @@
     <ProjectGuid>{40DDAD30-3FEF-4AA9-B29B-0BE6E8B9A18B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Core</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -59,16 +60,21 @@
   <ItemGroup>
     <ClInclude Include="include\core\Application.h" />
     <ClInclude Include="include\core\Array.h" />
-    <ClInclude Include="include\core\ConfigMacros.h" />
+    <ClInclude Include="include\core\Config.h" />
+    <ClInclude Include="include\core\ConfigInternal.h" />
     <ClInclude Include="include\core\Error.h" />
     <ClInclude Include="include\core\FileStream.h" />
     <ClInclude Include="include\core\FileSystem.h" />
     <ClInclude Include="include\core\InitialiserList.h" />
     <ClInclude Include="include\core\List.h" />
     <ClInclude Include="include\core\Log.h" />
+    <ClInclude Include="include\core\LogBuffer.h" />
     <ClInclude Include="include\core\LogManager.h" />
     <ClInclude Include="include\core\Map.h" />
     <ClInclude Include="include\core\Memory.h" />
+    <ClInclude Include="include\core\memory\AllocationPolicy.h" />
+    <ClInclude Include="include\core\memory\AllocationPolicyBase.h" />
+    <ClInclude Include="include\core\memory\STDAllocator.h" />
     <ClInclude Include="include\core\Numeric.h" />
     <ClInclude Include="include\core\Platform.h" />
     <ClInclude Include="include\core\Rectangle.h" />
@@ -91,11 +97,15 @@
     <None Include="include\core\inline\Numeric.inl" />
     <None Include="include\core\inline\Rectangle.inl" />
     <None Include="include\core\inline\Singleton.inl" />
+    <None Include="include\core\memory\inline\STDAllocator.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Error.cpp" />
     <ClCompile Include="source\Log.cpp" />
+    <ClCompile Include="source\LogBuffer.cpp" />
     <ClCompile Include="source\Memory.cpp" />
+    <ClCompile Include="source\memory\AllocationPolicy.cpp" />
+    <ClCompile Include="source\memory\AllocationPolicyBase.cpp" />
     <ClCompile Include="source\Rectangle.cpp" />
     <ClCompile Include="source\String.cpp" />
     <ClCompile Include="source\Types.cpp" />

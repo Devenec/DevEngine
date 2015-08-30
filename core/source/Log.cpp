@@ -26,66 +26,207 @@ using namespace Core;
 
 // Public
 
-void Log::write(const LogLevel& logLevel, const String8& message) const
+void Log::write(const LogLevel& logLevel, const String8& message)
 {
 	if(logLevel >= _filterLevel)
 	{
-		const String8 parsedMessage = parseMessage(message);
-		writeToConsole(logLevel, parsedMessage);
+		appendStreamLevel(logLevel);
+		_streamBuffer.appendCharacters(message.c_str(), message.length());
+		_streamBuffer.flush();
 	}
 }
 
 // Operators
 
-Log& Log::operator <<(const Flush& flush)
+Log& Log::operator <<(const Bool boolean)
 {
-	static_cast<Void>(flush);
-	write(_streamLevel, _stream.str());
-	_stream.str(String8());
-	_streamLevel = LogLevel::Debug;
+	if(_streamLevel >= _filterLevel)
+	{
+		const Char8* characters = boolean ? "true" : "false";
+		_streamBuffer.appendCharacters(characters, LogBuffer::NON_POSITION);
+	}
 
 	return *this;
 }
 
-template<>
-Log& Log::operator <<(const String16& characters)
+Log& Log::operator <<(const Int32 integer)
 {
-	_stream << toString8(characters);
+	if(_streamLevel >= _filterLevel)
+	{
+		if((_streamFormat & StreamFormat::Hexadecimal) == StreamFormat::Hexadecimal ||
+			(_streamFormat & StreamFormat::Octal) == StreamFormat::Octal)
+		{
+			return operator <<(static_cast<Uint32>(integer));
+		}
+
+		Char8 buffer[12];
+		const Uint32 characterCount = toString("%d", buffer, sizeof(buffer), static_cast<Uint32>(integer));
+		_streamBuffer.appendCharacters(buffer, characterCount);
+	}
+
+	return *this;
+}
+
+Log& Log::operator <<(const Uint32 integer)
+{
+	if(_streamLevel >= _filterLevel)
+	{
+		Char8 format[5] = "";
+		formatUint32FormatString(format);
+		Char8 buffer[13];
+		const Uint32 characterCount = toString(format, buffer, sizeof(buffer), integer);
+		_streamBuffer.appendCharacters(buffer, characterCount);
+	}
+
+	return *this;
+}
+
+Log& Log::operator <<(const Int64 integer)
+{
+	if(_streamLevel >= _filterLevel)
+	{
+		if((_streamFormat & StreamFormat::Hexadecimal) == StreamFormat::Hexadecimal ||
+			(_streamFormat & StreamFormat::Octal) == StreamFormat::Octal)
+		{
+			return operator <<(static_cast<Uint64>(integer));
+		}
+
+		Char8 buffer[22];
+		const Uint32 characterCount = toString("%lld", buffer, sizeof(buffer), static_cast<Uint64>(integer));
+		_streamBuffer.appendCharacters(buffer, characterCount);
+	}
+
+	return *this;
+}
+
+Log& Log::operator <<(const Uint64 integer)
+{
+	if(_streamLevel >= _filterLevel)
+	{
+		Char8 format[7] = "";
+		formatUint64FormatString(format);
+		Char8 buffer[24];
+		const Uint32 characterCount = toString(format, buffer, sizeof(buffer), integer);
+		_streamBuffer.appendCharacters(buffer, characterCount);
+	}
+
+	return *this;
+}
+
+Log& Log::operator <<(const Float64 floatingPoint)
+{
+	if(_streamLevel >= _filterLevel)
+	{
+		Char8 buffer[31];
+		const Uint32 characterCount = toString("%f", buffer, sizeof(buffer), floatingPoint);
+		_streamBuffer.appendCharacters(buffer, characterCount);
+	}
+
+	return *this;
+}
+
+Log& Log::operator <<(const Char8 character)
+{
+	if(_streamLevel >= _filterLevel)
+		_streamBuffer.appendCharacter(character);
+
+	return *this;
+}
+
+Log& Log::operator <<(const Void* pointer)
+{
+	if(_streamLevel >= _filterLevel)
+	{
+		Char8 buffer[19];
+		const Uint32 characterCount = toString("0x%X", buffer, sizeof(buffer), reinterpret_cast<Uint64>(pointer));
+		_streamBuffer.appendCharacters(buffer, characterCount);
+	}
+
+	return *this;
+}
+
+Log& Log::operator <<(const Flush& flush)
+{
+	static_cast<Void>(flush);
+
+	if(_streamLevel >= _filterLevel)
+		_streamBuffer.flush();
+
 	return *this;
 }
 
 // Private
 
+const Array<const Char8*, 4u> Log::LOG_LEVEL_NAMES =
+{
+	"DEBUG",
+	"INFO ",
+	"WARN ",
+	"ERROR"
+};
+
+const Char8* Log::LOG_LEVEL_SEPARATOR = " | ";
+
 Log::Log()
-	: _filterLevel(LogLevel::Debug),
+	: _streamBuffer(writeToConsole),
+	  _filterLevel(LogLevel::Debug),
+	  _streamFormat(StreamFormat::Decimal),
 	  _streamLevel(LogLevel::Debug) { }
 
-// Static
-
-String8 Log::parseMessage(String8 message)
+void Log::appendStreamLevel(const LogLevel& level)
 {
-	Uint32 currentPosition = 0u;
-	Uint32 lineBreakPosition;
+	_streamBuffer.appendLineBreak();
+	const Char8* levelName = LOG_LEVEL_NAMES[static_cast<Int32>(level)];
+	_streamBuffer.appendCharacters(levelName, LogBuffer::NON_POSITION);
+	_streamBuffer.appendCharacters(LOG_LEVEL_SEPARATOR, LogBuffer::NON_POSITION);
+}
 
-	while((lineBreakPosition = message.find('\n', currentPosition)) != String8::npos ||
-		message.length() > currentPosition + MAX_LINE_LENGTH)
+void Log::formatUint32FormatString(Char8* format) const
+{
+	if((_streamFormat & StreamFormat::Decimal) == StreamFormat::Decimal)
 	{
-		if(lineBreakPosition == String8::npos)
-			lineBreakPosition = message.rfind(' ', currentPosition + MAX_LINE_LENGTH - 1u);
-
-		if(lineBreakPosition == String8::npos || lineBreakPosition > currentPosition + MAX_LINE_LENGTH)
-		{
-			lineBreakPosition = currentPosition + MAX_LINE_LENGTH;
-			currentPosition = 0u;
-		}
-		else
-		{
-			currentPosition = 1u;
-		}
-
-		message.replace(lineBreakPosition, currentPosition, LINE_BREAK);
-		currentPosition = lineBreakPosition + LINE_BREAK_LENGTH;
+		format[0] = '%';
+		format[1] = 'u';
 	}
+	else if((_streamFormat & StreamFormat::Hexadecimal) == StreamFormat::Hexadecimal)
+	{
+		format[0] = '0';
+		format[1] = 'x';
+		format[2] = '%';
+		format[3] = 'X';
+	}
+	else if((_streamFormat & StreamFormat::Octal) == StreamFormat::Octal)
+	{
+		format[0] = '0';
+		format[1] = '%';
+		format[2] = 'o';
+	}
+}
 
-	return message;
+void Log::formatUint64FormatString(Char8* format) const
+{
+	if((_streamFormat & StreamFormat::Decimal) == StreamFormat::Decimal)
+	{
+		format[0] = '%';
+		format[1] = 'l';
+		format[2] = 'l';
+		format[3] = 'u';
+	}
+	else if((_streamFormat & StreamFormat::Hexadecimal) == StreamFormat::Hexadecimal)
+	{
+		format[0] = '0';
+		format[1] = 'x';
+		format[2] = '%';
+		format[3] = 'l';
+		format[4] = 'l';
+		format[5] = 'X';
+	}
+	else if((_streamFormat & StreamFormat::Octal) == StreamFormat::Octal)
+	{
+		format[0] = '0';
+		format[1] = '%';
+		format[2] = 'l';
+		format[3] = 'l';
+		format[4] = 'o';
+	}
 }

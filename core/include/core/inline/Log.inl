@@ -32,23 +32,73 @@ void Log::setfilterLevel(const LogLevel& level)
 
 // Operators
 
-Log& Log::operator <<(const Char16* characters)
+Log& Log::operator <<(const Float32 floatingPoint)
 {
-	DE_ASSERT(characters != nullptr);
-	_stream << toString8(characters);
+	return operator <<(static_cast<Float64>(floatingPoint));
+}
+
+Log& Log::operator <<(const Char8* characters)
+{
+	_streamBuffer.appendCharacters(characters, LogBuffer::NON_POSITION);
+	return *this;
+}
+
+Log& Log::operator <<(const String8& string)
+{
+	_streamBuffer.appendCharacters(string.c_str(), string.length());
+	return *this;
+}
+
+Log& Log::operator <<(const LogLevel& streamLevel)
+{
+	_streamLevel = streamLevel;
+	appendStreamLevel(_streamLevel);
 
 	return *this;
 }
 
-Log& Log::operator <<(const LogLevel& logLevel)
+Log& Log::operator <<(const StreamFormat& streamFormat)
 {
-	_streamLevel = logLevel;
+	_streamFormat = streamFormat;
 	return *this;
 }
 
-template<typename T>
-Log& Log::operator <<(const T& value)
+// Private
+
+// Static
+
+template<typename... Parameters>
+Uint32 Log::toString(const Char8* format, Char8* buffer, const Uint32 bufferSize, Parameters... parameters)
 {
-	_stream << value;
-	return *this;
+	const Uint32 charactersWritten = std::snprintf(buffer, bufferSize, format, parameters...);
+
+	if(charactersWritten < bufferSize)
+		return charactersWritten;
+	else
+		return bufferSize;
+}
+
+
+// Core
+
+StreamFormat operator &(const StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
+{
+	return static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) & static_cast<Int32>(streamFormatB));
+}
+
+StreamFormat& operator &=(StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
+{
+	streamFormatA = streamFormatA & streamFormatB;
+	return streamFormatA;
+}
+
+StreamFormat operator |(const StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
+{
+	return static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) | static_cast<Int32>(streamFormatB));
+}
+
+StreamFormat& operator |=(StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
+{
+	streamFormatA = streamFormatA | streamFormatB;
+	return streamFormatA;
 }

@@ -1,5 +1,5 @@
 /**
- * @file core/ConfigMacros.h
+ * @file core/ConfigInternal.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,16 +20,9 @@
 
 #pragma once
 
-/**
- * If defined, a custom application entry point is used.
- *
- * For more information, see core/Application.h in which the entry point is
- * declared.
- */
-#define DE_CONFIG_DEVENGINE_MAIN
+#include <core/Platform.h>
+#include <core/Config.h>
 
-/**
- * If defined, Debug::AllocationTracker (see core/debug/AllocationTracker.h) is
- * used to track memory leaks in debug and release builds.
- */
-#define DE_CONFIG_TRACK_ALLOCATIONS
+#if DE_BUILD != DE_BUILD_PRODUCTION && defined(DE_CONFIG_TRACK_ALLOCATIONS)
+	#define DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS
+#endif

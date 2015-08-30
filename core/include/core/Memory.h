@@ -21,18 +21,18 @@
 #pragma once
 
 #include <new>
-#include <core/ConfigMacros.h>
+#include <core/Config.h>
 #include <core/Platform.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
 #include <core/debug/Assert.h>
 
-#if DE_BUILD == DE_BUILD_PRODUCTION || !defined(DE_CONFIG_TRACK_ALLOCATIONS)
-	#define DE_ALLOCATE(size) \
-		Core::allocateMemory(size)
-#else
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 	#define DE_ALLOCATE(size) \
 		Core::allocateMemory(size, DE_FILE, DE_LINE, DE_FUNCTION)
+#else
+	#define DE_ALLOCATE(size) \
+		Core::allocateMemory(size)
 #endif
 
 #define DE_DEALLOCATE(pointer) \
@@ -46,28 +46,25 @@
 	if((pointer) != nullptr) { Core::destructArray<T>(pointer, size); \
 		Core::deallocateMemory(pointer, size); }
 
-#if DE_BUILD == DE_BUILD_PRODUCTION || !defined(DE_CONFIG_TRACK_ALLOCATIONS)
-	#define DE_NEW(T) \
-		new (Core::allocateMemory(sizeof(T))) T
-
-	#define DE_NEW_ARRAY(T, size) \
-		Core::constructArray(static_cast<T*>(Core::allocateMemory(sizeof(T) * (size))), size)
-#else
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 	#define DE_NEW(T) \
 		new (Core::allocateMemory(sizeof(T), DE_FILE, DE_LINE, DE_FUNCTION)) T
 
 	#define DE_NEW_ARRAY(T, size) \
 		Core::constructArray(static_cast<T*>(Core::allocateMemory(sizeof(T) * (size), DE_FILE, DE_LINE, \
 			DE_FUNCTION)), size)
+#else
+	#define DE_NEW(T) \
+		new (Core::allocateMemory(sizeof(T))) T
+
+	#define DE_NEW_ARRAY(T, size) \
+		Core::constructArray(static_cast<T*>(Core::allocateMemory(sizeof(T) * (size))), size)
 #endif
 
 namespace Core
 {
-	Void* allocateMemory(const Uint32 size);
-
-#if DE_BUILD != DE_BUILD_PRODUCTION && defined(DE_CONFIG_TRACK_ALLOCATIONS)
-	Void* allocateMemory(const Uint32 size, const Char8* file, const Uint32 line, const Char8* function);
-#endif
+	Void* allocateMemory(const Uint32 size, const Char8* file = nullptr, const Uint32 line = 0u,
+		const Char8* function = nullptr);
 
 	void deallocateMemory(Void* pointer, const Uint32 size = 0u);
 

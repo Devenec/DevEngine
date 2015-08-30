@@ -21,12 +21,13 @@
 #pragma once
 
 #include <vector>
+#include <core/memory/STDAllocator.h>
 
 namespace Core
 {
 	/**
 	 * Dynamic-size array
 	 */
-	template<typename T>
-	using Vector = std::vector<T>;
+	template<typename T, typename Allocator = Memory::STDAllocator<T>>
+	using Vector = std::vector<T, Allocator>;
 }

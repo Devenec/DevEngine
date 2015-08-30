@@ -886,7 +886,7 @@ void OpenGL::reportError(const Uint32 errorCode, const Char8* file, const Uint32
 {
 	StringStream8 stringStream;
 	stringStream << "Error caught at " << file << " on line " << line << " in function " << function << '.';
-
+	
 	// TODO: check GL_MAX_DEBUG_MESSAGE_LENGTH
 	debugMessageInsert(DEBUG_SOURCE_APPLICATION, DEBUG_TYPE_ERROR, errorCode, DEBUG_SEVERITY_HIGH, -1,
 		stringStream.str().c_str());
@@ -903,8 +903,8 @@ void OpenGL::processDebugMessage(const Uint32 messageSource, const Uint32 messag
 	const Char8* messageSourceName = DEBUG_MESSAGE_SOURCE_NAMES[messageSource - DEBUG_SOURCE_API];
 
 	defaultLog << getDebugMessageLogLevel(messageSeverity) << COMPONENT_TAG << ' ' <<
-		getDebugMessageTypeName(messageType) << " message (0x" << std::hex << std::uppercase << messageId <<
-		std::nouppercase << std::dec << ") from " << messageSourceName << ": '" << message << '\'' << Log::Flush();
+		getDebugMessageTypeName(messageType) << " message (" << StreamFormat::Hexadecimal << messageId <<
+		StreamFormat::Decimal << ") from " << messageSourceName << ": '" << message << '\'' << Log::Flush();
 }
 
 LogLevel OpenGL::getDebugMessageLogLevel(const Uint32 messageSeverity)

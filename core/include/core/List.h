@@ -21,12 +21,13 @@
 #pragma once
 
 #include <list>
+#include <core/memory/STDAllocator.h>
 
 namespace Core
 {
 	/**
 	 * Doubly-linked list
 	 */
-	template<typename T>
-	using List = std::list<T>;
+	template<typename T, typename Allocator = Memory::STDAllocator<T>>
+	using List = std::list<T, Allocator>;
 }

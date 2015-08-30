@@ -14,12 +14,21 @@
     <Filter Include="Header Files\inline">
       <UniqueIdentifier>{5939b29e-d67b-4e2e-9efe-24b7a0083470}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\memory">
+      <UniqueIdentifier>{6b24983b-2524-4b20-97d4-914d09aa29cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\memory\inline">
+      <UniqueIdentifier>{4dbeb8c1-7ca1-4e88-99f2-9035f78ae4aa}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Source Files\debug">
       <UniqueIdentifier>{0fd53b2c-3230-417e-9aaf-b65aa60dfc90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\memory">
+      <UniqueIdentifier>{c90a8658-5814-4704-90ae-0903eeec1f42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -29,7 +38,10 @@
     <ClInclude Include="include\core\Array.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\core\ConfigMacros.h">
+    <ClInclude Include="include\core\Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\ConfigInternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\Error.h">
@@ -48,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\Log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\LogBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\core\LogManager.h">
@@ -98,6 +113,15 @@
     <ClInclude Include="include\core\debug\StackTrace.h">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\memory\AllocationPolicy.h">
+      <Filter>Header Files\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\memory\AllocationPolicyBase.h">
+      <Filter>Header Files\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\memory\STDAllocator.h">
+      <Filter>Header Files\memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\core\debug\inline\AllocationTracker.inl">
@@ -121,12 +145,18 @@
     <None Include="include\core\inline\Singleton.inl">
       <Filter>Header Files\inline</Filter>
     </None>
+    <None Include="include\core\memory\inline\STDAllocator.inl">
+      <Filter>Header Files\memory\inline</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\LogBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Memory.cpp">
@@ -146,6 +176,12 @@
     </ClCompile>
     <ClCompile Include="source\debug\Assert.cpp">
       <Filter>Source Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="source\memory\AllocationPolicy.cpp">
+      <Filter>Source Files\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="source\memory\AllocationPolicyBase.cpp">
+      <Filter>Source Files\memory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

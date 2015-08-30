@@ -14,18 +14,19 @@
     <ProjectGuid>{E71F9CEB-502A-4575-8E99-DC4D7DB6895D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Platform</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -101,7 +102,10 @@
     <ClCompile Include="source\windows\WindowsIcon.cpp" />
     <ClCompile Include="source\windows\WindowsLog.cpp" />
     <ClCompile Include="source\windows\WindowsLogManager.cpp" />
-    <ClCompile Include="source\windows\WindowsStackTrace.cpp" />
+    <ClCompile Include="source\windows\WindowsStackTrace.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4091;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4091;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="source\windows\WindowsWindow.cpp" />
     <ClCompile Include="source\windows\WindowsWindowManager.cpp" />
   </ItemGroup>

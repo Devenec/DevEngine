@@ -1,5 +1,5 @@
 /**
- * @file platform/windows/WindowsLog.cpp
+ * @file core/Config.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,17 +18,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cwchar>
-#include <core/Log.h>
-#include <core/UtilityMacros.h>
+#pragma once
 
-using namespace Core;
+#include <core/Types.h>
 
-// Private
+/**
+ * If defined, a custom application entry point is used.
+ *
+ * For more information, see core/Application.h in which the entry point is
+ * declared.
+ */
+#define DE_CONFIG_DEVENGINE_MAIN
 
-// Static
+/**
+ * If defined, Debug::AllocationTracker (see core/debug/AllocationTracker.h) is
+ * used to track memory leaks in debug and release builds.
+ */
+#define DE_CONFIG_TRACK_ALLOCATIONS
 
-void Log::writeToConsole(const String8& message)
+
+namespace Config
 {
-	std::wprintf(DE_CHAR16("%S"), message.c_str());
+	const Uint32 LOG_BUFFER_SIZE = 1024u;
+
+	const Uint32 LOG_LINE_MAX_WIDTH = 120u;
 }

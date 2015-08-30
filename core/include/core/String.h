@@ -22,14 +22,15 @@
 
 #include <string>
 #include <core/Types.h>
+#include <core/memory/STDAllocator.h>
 
 namespace Core
 {
 	/**
 	 * Character array template 
 	 */
-	template<typename T>
-	using StringTemplate = std::basic_string<T>;
+	template<typename T, typename Allocator = Memory::STDAllocator<T>>
+	using StringTemplate = std::basic_string<T, std::char_traits<T>, Allocator>;
 
 	/**
 	 * Character array for the Char8 type

@@ -62,7 +62,7 @@
       <UseFullPaths>false</UseFullPaths>
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <ErrorReporting>Prompt</ErrorReporting>
-      <DisableSpecificWarnings>4530;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>DE_BUILD_CONFIG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

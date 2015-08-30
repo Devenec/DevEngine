@@ -18,6 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cstdlib>
 #include <core/Error.h>
 #include <core/Log.h>
 #include <platform/opengl/OpenGL.h>
@@ -131,7 +132,7 @@ PIXELFORMATDESCRIPTOR TemporaryGraphicsContext::createPixelFormatDescriptor()
 Uint32 TemporaryGraphicsContext::getOpenGLMajorVersion(const String8& versionString)
 {
 	const Uint32 delimiterPosition = versionString.find('.');
-	return std::stoi(versionString.substr(0u, delimiterPosition));
+	return std::strtol(versionString.substr(0u, delimiterPosition).c_str(), nullptr, 10);
 }
 
 Uint32 TemporaryGraphicsContext::getOpenGLMinorVersion(const String8& versionString)
@@ -143,7 +144,8 @@ Uint32 TemporaryGraphicsContext::getOpenGLMinorVersion(const String8& versionStr
 	if(secondDelimiterPosition < versionEndPosition)
 		versionEndPosition = secondDelimiterPosition;
 
-	return std::stoi(versionString.substr(minorNumberPosition, versionEndPosition - minorNumberPosition));
+	return std::strtol(versionString.substr(minorNumberPosition, versionEndPosition - minorNumberPosition).c_str(),
+		nullptr, 10);
 }
 
 Bool TemporaryGraphicsContext::isOpenGLVersionSupported(const Uint32 majorVersion, const Uint32 minorVersion)

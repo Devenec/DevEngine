@@ -20,13 +20,17 @@
 
 #pragma once
 
+#include <functional>
 #include <unordered_map>
+#include <utility>
+#include <core/memory/STDAllocator.h>
 
 namespace Core
 {
 	/**
 	 * Unordered map for storing key-value pairs with unique keys
 	 */
-	template<typename Key, typename T>
-	using Map = std::unordered_map<Key, T>;
+	template<typename Key, typename T, typename Hash = std::hash<Key>, typename KeyEqual = std::equal_to<Key>,
+		typename Allocator = Memory::STDAllocator<std::pair<const Key, T>>>
+	using Map = std::unordered_map<Key, T, Hash, KeyEqual, Allocator>;
 }
