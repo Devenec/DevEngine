@@ -73,7 +73,6 @@ namespace Debug
 				  size(size) { }
 		};
 
-		// TODO: use custom allocator that doesn't track allocations
 		using AllocationRecordMap = Core::Map<Void*, AllocationRecord, std::hash<Void*>, std::equal_to<Void*>,
 			std::allocator<std::pair<const Void*, AllocationRecord>>>;
 

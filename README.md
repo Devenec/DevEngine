@@ -42,7 +42,7 @@ for custom content types.
 
 ### Supported Platforms
 
-- Windows (tested only on Windows 7 and Windows 10)
+- Windows (tested on Windows 7 and Windows 10)
 
 
 ### Third Party Source Code Included
@@ -54,8 +54,10 @@ for custom content types.
 
 ### Building
 
-Visual Studio 2013 and [Visual C++ Compiler November 2013 CTP], or newer is
-required.
+Visual Studio 2015 is required.
+
+libpng and zlib projects are excluded from "Build Solution" on Debug
+configuration, in order to prevent rebuilding them and to save some time.
 
 
 ### Copyright & License
@@ -70,4 +72,3 @@ described in LICENCE-3RD-PARTY.txt
 [libpng]: http://www.libpng.org/pub/png/libpng.html
 [OpenGL and WGL API]: https://www.opengl.org/registry/#headers
 [zlib]: http://www.zlib.net/
-[Visual C++ Compiler November 2013 CTP]: http://www.microsoft.com/en-us/download/details.aspx?id=41151

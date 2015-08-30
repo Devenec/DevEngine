@@ -39,7 +39,7 @@
 
 // Minimum supported compiler versions
 
-#define DE_COMPILER_VERSION_MIN_MSVC 1800
+#define DE_COMPILER_VERSION_MIN_MSVC 1900
 
 
 // Supported platforms

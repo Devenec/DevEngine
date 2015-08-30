@@ -58,7 +58,6 @@
 
 #if DE_COMPILER == DE_COMPILER_MSVC
 	#define DE_INTERNAL_CALL_STDCALL __stdcall
-	#define DE_INTERNAL_CONSTEXPR	 inline const
 	#define DE_INTERNAL_NO_OPERATION __noop
 #endif
 

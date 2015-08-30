@@ -62,15 +62,6 @@
 // Keywords and variables
 
 /**
- * Constant expression
- *
- * Expands to "constexpr" specifier with compilers that support it. Otherwise
- * expands to "inline const" specifier. Intended for use with functions, since
- * not all supported compilers support constant expression functions.
- */
-#define DE_CONSTEXPR DE_INTERNAL_CONSTEXPR
-
-/**
  * Filename
  *
  * Expands to a string literal that indicates the name of the file in which the

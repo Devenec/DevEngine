@@ -43,6 +43,8 @@ TemporaryGraphicsContext::TemporaryGraphicsContext(HWND windowHandle)
 // Private
 
 const Char8* TemporaryGraphicsContext::COMPONENT_TAG = "[Platform::TemporaryGraphicsContext - WGL]";
+const Int32 TemporaryGraphicsContext::MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 4;
+const Int32 TemporaryGraphicsContext::MIN_SUPPORTED_OPENGL_VERSION_MINOR = 5;
 
 void TemporaryGraphicsContext::initialisePixelFormat() const
 {

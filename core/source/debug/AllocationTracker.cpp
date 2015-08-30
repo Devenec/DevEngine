@@ -22,7 +22,7 @@
 
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 
-//#include <utility>
+#include <utility>
 #include <core/Log.h>
 #include <core/debug/Assert.h>
 

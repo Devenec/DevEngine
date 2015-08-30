@@ -133,6 +133,9 @@
     <None Include="include\core\inline\Log.inl">
       <Filter>Header Files\inline</Filter>
     </None>
+    <None Include="include\core\inline\LogBuffer.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
     <None Include="include\core\inline\Memory.inl">
       <Filter>Header Files\inline</Filter>
     </None>

@@ -93,6 +93,7 @@
     <None Include="include\core\debug\inline\AllocationTracker.inl" />
     <None Include="include\core\inline\FileStream.inl" />
     <None Include="include\core\inline\Log.inl" />
+    <None Include="include\core\inline\LogBuffer.inl" />
     <None Include="include\core\inline\Memory.inl" />
     <None Include="include\core\inline\Numeric.inl" />
     <None Include="include\core\inline\Rectangle.inl" />

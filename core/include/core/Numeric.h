@@ -49,17 +49,17 @@ namespace Core
 		 * Epsilon is the difference between 1.0 and the next largest value
 		 * representable by the floating point type T.
 		 */
-		static DE_CONSTEXPR T epsilon();
+		static constexpr T epsilon();
 
 		/**
 		 * Gets the maximum value representable by the numeric type T.
 		 */
-		static DE_CONSTEXPR T maximum();
+		static constexpr T maximum();
 
 		/**
 		 * Gets the minimum value representable by the numeric type T.
 		 */
-		static DE_CONSTEXPR T minimum();
+		static constexpr T minimum();
 	};
 
 #include "inline/Numeric.inl"

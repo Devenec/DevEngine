@@ -80,12 +80,6 @@ void LogBuffer::appendCharacters(const Char8* characters, Uint32 characterCount)
 	}
 }
 
-void LogBuffer::appendLineBreak()
-{
-	_lineBuffer.append(1u, '\n');
-	appendLineBuffer();
-}
-
 void LogBuffer::flush()
 {
 	if(_lineBuffer.length() > 0u)
@@ -95,12 +89,6 @@ void LogBuffer::flush()
 }
 
 // Private
-
-void LogBuffer::appendLineBreakAndIndent()
-{
-	appendLineBreak();
-	_lineBuffer.append("        ");
-}
 
 void LogBuffer::appendToLineBuffer(const Char8* characters, Uint32& characterOffset, Uint32 characterCount)
 {
@@ -149,11 +137,4 @@ void LogBuffer::flushMainBuffer()
 {
 	_flushFunction(_mainBuffer);
 	_mainBuffer.clear();
-}
-
-// Static
-
-Bool LogBuffer::isWhitespaceCharacter(const Char8 character)
-{
-	return character == '\n' || character == ' ';
 }

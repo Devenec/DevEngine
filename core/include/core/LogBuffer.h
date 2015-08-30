@@ -33,7 +33,7 @@ namespace Core
 
 		static const Uint32 NON_POSITION;
 
-		LogBuffer(FlushFunction flushFunction);
+		explicit LogBuffer(FlushFunction flushFunction);
 
 		LogBuffer(const LogBuffer& logBuffer) = delete;
 		LogBuffer(LogBuffer&& logBuffer) = delete;
@@ -44,7 +44,7 @@ namespace Core
 
 		void appendCharacters(const Char8* characters, Uint32 characterCount);
 
-		void appendLineBreak();
+		inline void appendLineBreak();
 
 		void flush();
 
@@ -57,12 +57,14 @@ namespace Core
 		String8 _mainBuffer;
 		FlushFunction _flushFunction;
 
-		void appendLineBreakAndIndent();
+		inline void appendLineBreakAndIndent();
 		void appendToLineBuffer(const Char8* characters, Uint32& characterOffset, Uint32 characterCount);
 		Uint32 findWhitespaceCharacter(Bool& hasExplicitLineBreak) const;
 		void appendLineBuffer();
 		void flushMainBuffer();
 
-		static Bool isWhitespaceCharacter(const Char8 character);
+		static inline Bool isWhitespaceCharacter(const Char8 character);
 	};
+
+#include "inline/LogBuffer.inl"
 }

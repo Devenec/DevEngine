@@ -1,5 +1,5 @@
 /**
- * @file core/Config.h
+ * @file core/inline/LogBuffer.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,28 +18,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Public
 
-#include <core/Types.h>
-
-/**
- * If defined, a custom application entry point is used.
- *
- * For more information, see core/Application.h in which the entry point is
- * declared.
- */
-#define DE_CONFIG_DEVENGINE_MAIN
-
-/**
- * If defined, Debug::AllocationTracker (see core/debug/AllocationTracker.h) is
- * used to track memory leaks in debug and release builds.
- */
-#define DE_CONFIG_TRACK_ALLOCATIONS
-
-
-namespace Config
+void LogBuffer::appendLineBreak()
 {
-	constexpr Uint32 LOG_BUFFER_SIZE = 1024u;
+	_lineBuffer.append(1u, '\n');
+	appendLineBuffer();
+}
 
-	constexpr Uint32 LOG_LINE_MAX_WIDTH = 120u;
+// Private
+
+void LogBuffer::appendLineBreakAndIndent()
+{
+	appendLineBreak();
+	_lineBuffer.append("        ");
+}
+
+// Static
+
+Bool LogBuffer::isWhitespaceCharacter(const Char8 character)
+{
+	return character == '\n' || character == ' ';
 }

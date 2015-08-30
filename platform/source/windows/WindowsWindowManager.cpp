@@ -96,13 +96,12 @@ private:
 
 	using WindowList = List<Window*>;
 
-	static constexpr Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
-	static constexpr Uint32 WINDOW_DEFAULT_WIDTH  = 800u;
-	static constexpr Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
-
 	static const Char8* COMPONENT_TAG;
 	static const Char16* WINDOW_CLASS_NAME;
+	static const Uint32 WINDOW_DEFAULT_HEIGHT;
 	static const Char16* WINDOW_DEFAULT_TITLE;
+	static const Uint32 WINDOW_DEFAULT_WIDTH;
+	static const Uint32 WINDOW_STYLE;
 
 	WindowList _windows;
 
@@ -255,7 +254,10 @@ private:
 
 const Char8* WindowManager::Impl::COMPONENT_TAG			= "[Platform::WindowManager - Windows]";
 const Char16* WindowManager::Impl::WINDOW_CLASS_NAME	= DE_CHAR16("devengine");
+const Uint32 WindowManager::Impl::WINDOW_DEFAULT_HEIGHT = 600u;
 const Char16* WindowManager::Impl::WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine");
+const Uint32 WindowManager::Impl::WINDOW_DEFAULT_WIDTH = 800u;
+const Uint32 WindowManager::Impl::WINDOW_STYLE = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
 
 // Public

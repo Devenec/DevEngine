@@ -45,10 +45,9 @@ namespace Platform
 
 		using Base = GraphicsContextBase;
 
-		static constexpr Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 4;
-		static constexpr Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 5;
-
 		static const Char8* COMPONENT_TAG;
+		static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR;
+		static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR;
 
 		void initialisePixelFormat() const;
 		void createContext();
