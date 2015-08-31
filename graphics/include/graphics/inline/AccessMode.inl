@@ -20,24 +20,26 @@
 
 // Graphics
 
-AccessMode operator &(const AccessMode& accessModeA, const AccessMode& accessModeB)
+AccessMode operator &(AccessMode accessModeA, const AccessMode& accessModeB)
 {
-	return static_cast<AccessMode>(static_cast<Int32>(accessModeA) & static_cast<Int32>(accessModeB));
+	accessModeA &= accessModeB;
+	return accessModeA;
 }
 
 AccessMode& operator &=(AccessMode& accessModeA, const AccessMode& accessModeB)
 {
-	accessModeA = accessModeA & accessModeB;
+	accessModeA = static_cast<AccessMode>(static_cast<Int32>(accessModeA) & static_cast<Int32>(accessModeB));
 	return accessModeA;
 }
 
-AccessMode operator |(const AccessMode& accessModeA, const AccessMode& accessModeB)
+AccessMode operator |(AccessMode accessModeA, const AccessMode& accessModeB)
 {
-	return static_cast<AccessMode>(static_cast<Int32>(accessModeA) | static_cast<Int32>(accessModeB));
+	accessModeA |= accessModeB;
+	return accessModeA;
 }
 
 AccessMode& operator |=(AccessMode& accessModeA, const AccessMode& accessModeB)
 {
-	accessModeA = accessModeA | accessModeB;
+	accessModeA = static_cast<AccessMode>(static_cast<Int32>(accessModeA) | static_cast<Int32>(accessModeB));
 	return accessModeA;
 }

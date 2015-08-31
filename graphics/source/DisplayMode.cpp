@@ -36,18 +36,19 @@ DisplayMode::DisplayMode(const Uint32 width, const Uint32 height, const Uint32 c
 	  _height(height),
 	  _width(width) { }
 
-// Operators
 
-Bool DisplayMode::operator <(const DisplayMode& displayMode) const
+// Graphics
+
+Bool Graphics::operator <(const DisplayMode& displayModeA, const DisplayMode& displayModeB)
 {
-	if(_width != displayMode._width)
-		return _width < displayMode._width;
-	else if(_height != displayMode._height)
-		return _height < displayMode._height;
-	else if(_colourDepth != displayMode._colourDepth)
-		return _colourDepth < displayMode._colourDepth;
-	else if(_frequency != displayMode._frequency)
-		return _frequency < displayMode._frequency;
+	if(displayModeA.width() != displayModeB.width())
+		return displayModeA.width() < displayModeB.width();
+	else if(displayModeA.height() != displayModeB.height())
+		return displayModeA.height() < displayModeB.height();
+	else if(displayModeA.colourDepth() != displayModeB.colourDepth())
+		return displayModeA.colourDepth() < displayModeB.colourDepth();
+	else if(displayModeA.frequency() != displayModeB.frequency())
+		return displayModeA.frequency() < displayModeB.frequency();
 	else
 		return false;
 }

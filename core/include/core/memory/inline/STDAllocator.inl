@@ -57,40 +57,41 @@ template<typename T, typename AllocationPolicy>
 template<typename U>
 void STDAllocator<T, AllocationPolicy>::destroy(U* pointer)
 {
-	static_cast<Void>(pointer); // TODO: find out why removing this invokes a warning
+	static_cast<Void>(pointer);
 	pointer->~U();
 }
 
-// Operators
 
-template<typename T, typename AllocationPolicy>
-template<typename U>
-Bool STDAllocator<T, AllocationPolicy>::operator ==(const STDAllocator<U, AllocationPolicy>& stdAllocator) const
+// Memory
+
+template<typename T, typename U, typename AllocationPolicy>
+Bool operator ==(const STDAllocator<T, AllocationPolicy>& stdAllocatorA,
+	const STDAllocator<U, AllocationPolicy>& stdAllocatorB)
 {
-	static_cast<Void>(stdAllocator);
+	static_cast<Void>(stdAllocatorA);
+	static_cast<Void>(stdAllocatorB);
+
 	return true;
 }
 
-template<typename T, typename AllocationPolicy>
-template<typename U, typename OtherAllocator>
-Bool STDAllocator<T, AllocationPolicy>::operator ==(const OtherAllocator& allocator) const
-{
-	static_cast<Void>(allocator);
-	return false;
-}
-
-template<typename T, typename AllocationPolicy>
-template<typename U>
-Bool STDAllocator<T, AllocationPolicy>::operator !=(const STDAllocator<U, AllocationPolicy>& stdAllocator) const
+template<typename T, typename U, typename AllocationPolicy, typename OtherAllocator>
+Bool operator ==(const STDAllocator<T, AllocationPolicy>& stdAllocator, const OtherAllocator& allocator)
 {
 	static_cast<Void>(stdAllocator);
-	return false;
+	static_cast<Void>(allocator);
+
+	return true;
 }
 
-template<typename T, typename AllocationPolicy>
-template<typename U, typename OtherAllocator>
-Bool STDAllocator<T, AllocationPolicy>::operator !=(const OtherAllocator& allocator) const
+template<typename T, typename U, typename AllocationPolicy>
+Bool operator !=(const STDAllocator<T, AllocationPolicy>& stdAllocatorA,
+	const STDAllocator<U, AllocationPolicy>& stdAllocatorB)
 {
-	static_cast<Void>(allocator);
-	return true;
+	return !operator ==(stdAllocatorA, stdAllocatorB);
+}
+
+template<typename T, typename U, typename AllocationPolicy, typename OtherAllocator>
+Bool operator !=(const STDAllocator<T, AllocationPolicy>& stdAllocator, const OtherAllocator& allocator)
+{
+	return !operator ==(stdAllocator, allocator);
 }

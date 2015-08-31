@@ -52,31 +52,33 @@ namespace Memory
 
 		~STDAllocator() = default;
 
-		T* allocate(const Uint32 objectCount);
+		inline T* allocate(const Uint32 objectCount);
 
 		template<typename U, typename... Parameters>
-		void construct(U* pointer, Parameters&&... parameters);
+		inline void construct(U* pointer, Parameters&&... parameters);
 
-		void deallocate(T* pointer, const Uint32 objectCount);
+		inline void deallocate(T* pointer, const Uint32 objectCount);
 
 		template<typename U>
-		void destroy(U* pointer);
+		inline void destroy(U* pointer);
 
 		STDAllocator& operator =(const STDAllocator& stdAllocator) = default;
 		STDAllocator& operator =(STDAllocator&& stdAllocator) = default;
-
-		template<typename U>
-		Bool operator ==(const STDAllocator<U, AllocationPolicy>& stdAllocator) const;
-
-		template<typename U, typename OtherAllocator>
-		Bool operator ==(const OtherAllocator& allocator) const;
-
-		template<typename U>
-		Bool operator !=(const STDAllocator<U, AllocationPolicy>& stdAllocator) const;
-
-		template<typename U, typename OtherAllocator>
-		Bool operator !=(const OtherAllocator& allocator) const;
 	};
+
+	template<typename T, typename U, typename AllocationPolicy>
+	inline Bool operator ==(const STDAllocator<T, AllocationPolicy>& stdAllocatorA,
+		const STDAllocator<U, AllocationPolicy>& stdAllocatorB);
+
+	template<typename T, typename U, typename AllocationPolicy, typename OtherAllocator>
+	inline Bool operator ==(const STDAllocator<T, AllocationPolicy>& stdAllocator, const OtherAllocator& allocator);
+
+	template<typename T, typename U, typename AllocationPolicy>
+	inline Bool operator !=(const STDAllocator<T, AllocationPolicy>& stdAllocatorA,
+		const STDAllocator<U, AllocationPolicy>& stdAllocatorB);
+
+	template<typename T, typename U, typename AllocationPolicy, typename OtherAllocator>
+	inline Bool operator !=(const STDAllocator<T, AllocationPolicy>& stdAllocator, const OtherAllocator& allocator);
 
 #include "inline/STDAllocator.inl"
 }

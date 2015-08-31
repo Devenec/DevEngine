@@ -30,11 +30,11 @@ namespace Graphics
 		Write = 2
 	};
 
-	inline AccessMode operator &(const AccessMode& accessModeA, const AccessMode& accessModeB);
+	inline AccessMode operator &(AccessMode accessModeA, const AccessMode& accessModeB);
 
 	inline AccessMode& operator &=(AccessMode& accessModeA, const AccessMode& accessModeB);
 
-	inline AccessMode operator |(const AccessMode& accessModeA, const AccessMode& accessModeB);
+	inline AccessMode operator |(AccessMode accessModeA, const AccessMode& accessModeB);
 
 	inline AccessMode& operator |=(AccessMode& accessModeA, const AccessMode& accessModeB);
 

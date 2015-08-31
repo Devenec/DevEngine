@@ -81,24 +81,26 @@ Uint32 Log::toString(const Char8* format, Char8* buffer, const Uint32 bufferSize
 
 // Core
 
-StreamFormat operator &(const StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
+StreamFormat operator &(StreamFormat streamFormatA, const StreamFormat& streamFormatB)
 {
-	return static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) & static_cast<Int32>(streamFormatB));
+	streamFormatA &= streamFormatB;
+	return streamFormatA;
 }
 
 StreamFormat& operator &=(StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
 {
-	streamFormatA = streamFormatA & streamFormatB;
+	streamFormatA = static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) & static_cast<Int32>(streamFormatB));
 	return streamFormatA;
 }
 
-StreamFormat operator |(const StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
+StreamFormat operator |(StreamFormat streamFormatA, const StreamFormat& streamFormatB)
 {
-	return static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) | static_cast<Int32>(streamFormatB));
+	streamFormatA |= streamFormatB;
+	return streamFormatA;
 }
 
 StreamFormat& operator |=(StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
 {
-	streamFormatA = streamFormatA | streamFormatB;
+	streamFormatA = static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) | static_cast<Int32>(streamFormatB));
 	return streamFormatA;
 }

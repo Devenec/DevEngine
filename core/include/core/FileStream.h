@@ -81,11 +81,11 @@ namespace Core
 		Impl* _impl;
 	};
 
-	inline OpenMode operator &(const OpenMode& openModeA, const OpenMode& openModeB);
+	inline OpenMode operator &(OpenMode openModeA, const OpenMode& openModeB);
 
 	inline OpenMode& operator &=(OpenMode& openModeA, const OpenMode& openModeB);
 
-	inline OpenMode operator |(const OpenMode& openModeA, const OpenMode& openModeB);
+	inline OpenMode operator |(OpenMode openModeA, const OpenMode& openModeB);
 
 	inline OpenMode& operator |=(OpenMode& openModeA, const OpenMode& openModeB);
 

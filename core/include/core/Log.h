@@ -43,7 +43,6 @@ namespace Core
 		Octal = 4
 	};
 
-	// TODO: support Char16 characters, c-strings and (std::)strings?
 	class Log final
 	{
 	public:
@@ -117,11 +116,11 @@ namespace Core
 			Parameters... parameters);
 	};
 
-	inline StreamFormat operator &(const StreamFormat& streamFormatA, const StreamFormat& streamFormatB);
+	inline StreamFormat operator &(StreamFormat streamFormatA, const StreamFormat& streamFormatB);
 
 	inline StreamFormat& operator &=(StreamFormat& streamFormatA, const StreamFormat& streamFormatB);
 
-	inline StreamFormat operator |(const StreamFormat& streamFormatA, const StreamFormat& streamFormatB);
+	inline StreamFormat operator |(StreamFormat streamFormatA, const StreamFormat& streamFormatB);
 
 	inline StreamFormat& operator |=(StreamFormat& streamFormatA, const StreamFormat& streamFormatB);
 

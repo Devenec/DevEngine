@@ -50,12 +50,6 @@ namespace Graphics
 
 		DisplayMode& operator =(DisplayMode&& displayMode) = default;
 
-		inline Bool operator ==(const DisplayMode& displayMode) const;
-
-		inline Bool operator !=(const DisplayMode& displayMode) const;
-
-		Bool operator <(const DisplayMode& displayMode) const;
-
 	private:
 
 		Uint32 _colourDepth;
@@ -63,6 +57,12 @@ namespace Graphics
 		Uint32 _height;
 		Uint32 _width;
 	};
+
+	inline Bool operator ==(const DisplayMode& displayModeA, const DisplayMode& displayModeB);
+
+	inline Bool operator !=(const DisplayMode& displayModeA, const DisplayMode& displayModeB);
+
+	Bool operator <(const DisplayMode& displayModeA, const DisplayMode& displayModeB);
 
 #include "inline/DisplayMode.inl"
 }

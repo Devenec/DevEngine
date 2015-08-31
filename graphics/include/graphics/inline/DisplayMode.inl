@@ -40,15 +40,18 @@ Uint32 DisplayMode::width() const
 	return _width;
 }
 
-// Operators
 
-Bool DisplayMode::operator ==(const DisplayMode& displayMode) const
+// Graphics
+
+Bool operator ==(const DisplayMode& displayModeA, const DisplayMode& displayModeB)
 {
-	return _width == displayMode._width && _height == displayMode._height &&
-		_colourDepth == displayMode._colourDepth && _frequency == displayMode._frequency;
+	return displayModeA.width() == displayModeB.width() &&
+		displayModeA.height() == displayModeB.height() &&
+		displayModeA.colourDepth() == displayModeB.colourDepth() &&
+		displayModeA.frequency() == displayModeB.frequency();
 }
 
-Bool DisplayMode::operator !=(const DisplayMode& displayMode) const
+Bool operator !=(const DisplayMode& displayModeA, const DisplayMode& displayModeB)
 {
-	return !(*this == displayMode);
+	return !operator ==(displayModeA, displayModeB);
 }

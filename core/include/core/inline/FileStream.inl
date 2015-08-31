@@ -20,24 +20,26 @@
 
 // Core
 
-OpenMode operator &(const OpenMode& openModeA, const OpenMode& openModeB)
+OpenMode operator &(OpenMode openModeA, const OpenMode& openModeB)
 {
-	return static_cast<OpenMode>(static_cast<Int32>(openModeA) & static_cast<Int32>(openModeB));
+	openModeA &= openModeB;
+	return openModeA;
 }
 
 OpenMode& operator &=(OpenMode& openModeA, const OpenMode& openModeB)
 {
-	openModeA = openModeA & openModeB;
+	openModeA = static_cast<OpenMode>(static_cast<Int32>(openModeA) & static_cast<Int32>(openModeB));
 	return openModeA;
 }
 
-OpenMode operator |(const OpenMode& openModeA, const OpenMode& openModeB)
+OpenMode operator |(OpenMode openModeA, const OpenMode& openModeB)
 {
-	return static_cast<OpenMode>(static_cast<Int32>(openModeA) | static_cast<Int32>(openModeB));
+	openModeA |= openModeB;
+	return openModeA;
 }
 
 OpenMode& operator |=(OpenMode& openModeA, const OpenMode& openModeB)
 {
-	openModeA = openModeA | openModeB;
+	openModeA = static_cast<OpenMode>(static_cast<Int32>(openModeA) | static_cast<Int32>(openModeB));
 	return openModeA;
 }
