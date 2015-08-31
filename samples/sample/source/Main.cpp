@@ -19,7 +19,7 @@
  */
 
 #include <content/ContentManager.h>
-#include <core/Application.h>
+#include <core/Main.h>
 #include <core/Types.h>
 #include <core/Vector.h>
 #include <graphics/Colour.h>

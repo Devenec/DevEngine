@@ -1,5 +1,5 @@
 /**
- * @file platform/windows/WindowsApplication.cpp
+ * @file platform/windows/WindowsMain.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -19,23 +19,11 @@
  */
 
 #include <core/Application.h>
+#include <core/Main.h>
 #include <core/Config.h>
-#include <core/ConfigInternal.h>
-#include <core/LogManager.h>
-#include <core/Platform.h>
 #include <core/Types.h>
 
-#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
-
-#include <core/debug/AllocationTracker.h>
-
-static Debug::AllocationTracker allocationTracker;
-
-#endif
-
 using namespace Core;
-
-static LogManager logManager;
 
 static void runDevEngineMain(const Int32 argumentCount, Char16** arguments);
 static StartupParameters createStartupParameters(const Int32 argumentCount, Char16** arguments);
@@ -44,19 +32,11 @@ static StartupParameters createStartupParameters(const Int32 argumentCount, Char
 
 Int32 wmain(Int32 argumentCount, Char16** arguments)
 {
-	logManager.initialise();
-
-#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
-	allocationTracker.initialise();
-#endif
-
+	Application application;
+	application.initialise();
 	runDevEngineMain(argumentCount, arguments);
+	application.deinitialise();
 
-#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
-	allocationTracker.deinitialise();
-#endif
-
-	logManager.deinitialise();
 	return 0;
 }
 

@@ -70,6 +70,7 @@
     <ClInclude Include="include\core\Log.h" />
     <ClInclude Include="include\core\LogBuffer.h" />
     <ClInclude Include="include\core\LogManager.h" />
+    <ClInclude Include="include\core\Main.h" />
     <ClInclude Include="include\core\Map.h" />
     <ClInclude Include="include\core\Memory.h" />
     <ClInclude Include="include\core\memory\AllocationPolicy.h" />
@@ -101,6 +102,7 @@
     <None Include="include\core\memory\inline\STDAllocator.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Application.cpp" />
     <ClCompile Include="source\Error.cpp" />
     <ClCompile Include="source\Log.cpp" />
     <ClCompile Include="source\LogBuffer.cpp" />

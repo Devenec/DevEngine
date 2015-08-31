@@ -147,9 +147,6 @@
     <ClCompile Include="source\windows\Windows.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
-    <ClCompile Include="source\windows\WindowsApplication.cpp">
-      <Filter>Source Files\windows</Filter>
-    </ClCompile>
     <ClCompile Include="source\windows\WindowsFileStream.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
@@ -169,6 +166,9 @@
       <Filter>Source Files\windows</Filter>
     </ClCompile>
     <ClCompile Include="source\windows\WindowsLogManager.cpp">
+      <Filter>Source Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\windows\WindowsMain.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
     <ClCompile Include="source\windows\WindowsStackTrace.cpp">

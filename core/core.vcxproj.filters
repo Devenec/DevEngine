@@ -68,6 +68,9 @@
     <ClInclude Include="include\core\LogManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -153,6 +156,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

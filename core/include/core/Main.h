@@ -1,5 +1,5 @@
 /**
- * @file core/Config.h
+ * @file core/Main.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,25 +20,18 @@
 
 #pragma once
 
-#include <core/Types.h>
+#include <core/String.h>
+#include <core/Vector.h>
 
-/**
- * If defined, a custom application entry point is used.
- *
- * For more information, see core/Main.h in which the entry point is declared.
- */
-#define DE_CONFIG_DEVENGINE_MAIN
-
-/**
- * If defined, Debug::AllocationTracker (see core/debug/AllocationTracker.h) is
- * used to track memory leaks in debug and release builds.
- */
-#define DE_CONFIG_TRACK_ALLOCATIONS
-
-
-namespace Config
+namespace Core
 {
-	constexpr Uint32 LOG_BUFFER_SIZE = 1024u;
-
-	constexpr Uint32 LOG_LINE_MAX_WIDTH = 120u;
+	using StartupParameters = Vector<String8>;
 }
+
+/**
+ * Custom application entry point
+ *
+ * @params startupParameters
+ *   Command line parameters
+ */
+extern void devEngineMain(const Core::StartupParameters& startupParameters);

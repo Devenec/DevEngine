@@ -20,18 +20,40 @@
 
 #pragma once
 
-#include <core/String.h>
-#include <core/Vector.h>
+#include <core/ConfigInternal.h>
+#include <core/LogManager.h>
+#include <core/Singleton.h>
+
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
+	#include <core/debug/AllocationTracker.h>
+#endif
 
 namespace Core
 {
-	using StartupParameters = Vector<String8>;
-}
+	class Application final
+	{
+	public:
 
-/**
- * Custom application entry point
- *
- * @params startupParameters
- *   Command line parameters
- */
-extern void devEngineMain(const Core::StartupParameters& startupParameters);
+		Application() = default;
+
+		Application(const Application& application) = delete;
+		Application(Application&& application) = delete;
+
+		~Application() = default;
+
+		void deinitialise();
+
+		void initialise();
+
+		Application& operator =(const Application& application) = delete;
+		Application& operator =(Application&& application) = delete;
+
+	private:
+
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
+		Debug::AllocationTracker _allocationTracker;
+#endif
+
+		LogManager _logManager;
+	};
+}
