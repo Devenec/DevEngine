@@ -42,7 +42,6 @@
 
 #pragma once
 
-#include <core/Array.h>
 #include <core/Platform.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
@@ -3388,20 +3387,5 @@ namespace Platform
 		static void checkForErrors(const Char8* file, const Uint32 line, const Char8* function);
 
 		static void initialise();
-
-	private:
-
-		static const Char8* COMPONENT_TAG;
-		static const Core::Array<Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES;
-		static const Core::Array<Char8*, 9u> DEBUG_MESSAGE_TYPE_NAMES;
-
-		static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function);
-
-		static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
-			const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
-			const Void* userData);
-
-		static Core::LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
-		static const Char8* getDebugMessageTypeName(const Uint32 messageType);
 	};
 }

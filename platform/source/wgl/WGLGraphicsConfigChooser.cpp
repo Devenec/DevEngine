@@ -30,6 +30,28 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+using PixelFormatRequiredAttributeList = Array<Int32, 9u>;
+
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsConfigChooser - WGL]";
+
+static const PixelFormatRequiredAttributeList PIXEL_FORMAT_REQUIRED_ATTRIBUTES
+{{
+	WGL::DOUBLE_BUFFER_ARB,	 1,
+	WGL::DRAW_TO_WINDOW_ARB, 1,
+	WGL::PIXEL_TYPE_ARB,	 WGL::TYPE_RGBA_ARB,
+	WGL::SUPPORT_OPENGL_ARB, 1,
+	0
+}};
+
+static Bool isPixelFormatAccelerationLess(const PixelFormatAttributeList& formatAttributesA,
+	const PixelFormatAttributeList& formatAttributesB);
+
+static Bool isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
+	const PixelFormatAttributeList& formatAttributesB);
+
+
 // Public
 
 GraphicsConfigChooser::GraphicsConfigChooser(HDC deviceContextHandle)
@@ -47,9 +69,7 @@ GraphicsConfig GraphicsConfigChooser::chooseConfig() const
 
 // Private
 
-const Char8* GraphicsConfigChooser::COMPONENT_TAG = "[Platform::GraphicsConfigChooser - WGL]";
-
-const GraphicsConfigChooser::PixelFormatAttributeList GraphicsConfigChooser::PIXEL_FORMAT_ATTRIBUTE_IDS
+const PixelFormatAttributeList GraphicsConfigChooser::PIXEL_FORMAT_ATTRIBUTE_IDS
 {{
 	WGL::ACCELERATION_ARB,
 	WGL::ALPHA_BITS_ARB,
@@ -58,15 +78,6 @@ const GraphicsConfigChooser::PixelFormatAttributeList GraphicsConfigChooser::PIX
 	WGL::GREEN_BITS_ARB,
 	WGL::RED_BITS_ARB,
 	WGL::STENCIL_BITS_ARB
-}};
-
-const GraphicsConfigChooser::PixelFormatRequiredAttributeList GraphicsConfigChooser::PIXEL_FORMAT_REQUIRED_ATTRIBUTES
-{{
-	WGL::DOUBLE_BUFFER_ARB,	 1,
-	WGL::DRAW_TO_WINDOW_ARB, 1,
-	WGL::PIXEL_TYPE_ARB,	 WGL::TYPE_RGBA_ARB,
-	WGL::SUPPORT_OPENGL_ARB, 1,
-	0
 }};
 
 Uint32 GraphicsConfigChooser::getPixelFormatCount() const
@@ -84,8 +95,8 @@ Uint32 GraphicsConfigChooser::getPixelFormatCount() const
 	return formatCount;
 }
 
-GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelFormatIndices(
-	const Uint32 formatCount) const
+GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelFormatIndices(const Uint32 formatCount)
+	const
 {
 	PixelFormatIndexList formatIndices(formatCount);
 	Uint32 matchingFormatCount;
@@ -132,8 +143,7 @@ Int32 GraphicsConfigChooser::chooseBestPixelFormat(const PixelFormatIndexList& f
 	return bestFormatIndex;
 }
 
-GraphicsConfigChooser::PixelFormatAttributeList GraphicsConfigChooser::getPixelFormatAttributes(
-	const Int32 formatIndex) const
+PixelFormatAttributeList GraphicsConfigChooser::getPixelFormatAttributes(const Int32 formatIndex) const
 {
 	PixelFormatAttributeList attributes;
 
@@ -151,9 +161,17 @@ GraphicsConfigChooser::PixelFormatAttributeList GraphicsConfigChooser::getPixelF
 	return attributes;
 }
 
-// Static
 
-Bool GraphicsConfigChooser::isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
+// External
+
+Bool isPixelFormatAccelerationLess(const PixelFormatAttributeList& formatAttributesA,
+	const PixelFormatAttributeList& formatAttributesB)
+{
+	return formatAttributesA[0] == WGL::NO_ACCELERATION_ARB ||
+		(formatAttributesA[0] == WGL::GENERIC_ACCELERATION_ARB && formatAttributesB[0] == WGL::FULL_ACCELERATION_ARB);
+}
+
+Bool isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
 	const PixelFormatAttributeList& formatAttributesB)
 {
 	if(formatAttributesA[0] != formatAttributesB[0])
@@ -170,11 +188,4 @@ Bool GraphicsConfigChooser::isPixelFormatLess(const PixelFormatAttributeList& fo
 			formatAttributesA[5] < formatAttributesB[5] ||
 			formatAttributesA[6] < formatAttributesB[6];
 	}
-}
-
-Bool GraphicsConfigChooser::isPixelFormatAccelerationLess(const PixelFormatAttributeList& formatAttributesA,
-	const PixelFormatAttributeList& formatAttributesB)
-{
-	return formatAttributesA[0] == WGL::NO_ACCELERATION_ARB ||
-		(formatAttributesA[0] == WGL::GENERIC_ACCELERATION_ARB && formatAttributesB[0] == WGL::FULL_ACCELERATION_ARB);
 }

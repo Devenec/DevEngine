@@ -30,6 +30,17 @@
 using namespace Core;
 using namespace Graphics;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Graphics::PNGReader]";
+
+static Void* allocateMemory(png_struct* pngStructure, Uint32 size);
+static void deallocateMemory(png_struct* pngStructure, Void* pointer);
+static void handleError(png_struct* pngStructure, const Char8* message);
+static void handleWarning(png_struct* pngStructure, const Char8* message);
+static void readData(png_struct* pngStructure, Byte* buffer, Uint32 size);
+
+
 // Public
 
 PNGReader::PNGReader()
@@ -87,8 +98,6 @@ Vector<Byte> PNGReader::readImage(FileStream& fileStream)
 
 // Private
 
-const Char8* PNGReader::COMPONENT_TAG = "[Graphics::PNGReader]";
-
 void PNGReader::initialiseStructure()
 {
 	_pngStructure = png_create_read_struct_2(PNG_LIBPNG_VER_STRING, nullptr, handleError, handleWarning, nullptr,
@@ -127,34 +136,35 @@ void PNGReader::validateSignature(FileStream& fileStream)
 	png_set_sig_bytes(_pngStructure, 8);
 }
 
-// Static
 
-void PNGReader::handleError(png_struct* pngStructure, const Char8* message)
+// External
+
+static Void* allocateMemory(png_struct* pngStructure, Uint32 size)
+{
+	static_cast<Void>(pngStructure);
+	return DE_ALLOCATE(size);
+}
+
+static void deallocateMemory(png_struct* pngStructure, Void* pointer)
+{
+	static_cast<Void>(pngStructure);
+	DE_DEALLOCATE(pointer);
+}
+
+static void handleError(png_struct* pngStructure, const Char8* message)
 {
 	static_cast<Void>(pngStructure);
 	defaultLog << LogLevel::Error << COMPONENT_TAG << " PNG error: " << message << '.' << Log::Flush();
 	DE_ERROR(0x0);
 }
 
-void PNGReader::handleWarning(png_struct* pngStructure, const Char8* message)
+static void handleWarning(png_struct* pngStructure, const Char8* message)
 {
 	static_cast<Void>(pngStructure);
 	defaultLog << LogLevel::Warning << COMPONENT_TAG << " PNG warning: " << message << '.' << Log::Flush();
 }
 
-Void* PNGReader::allocateMemory(png_struct* pngStructure, Uint32 size)
-{
-	static_cast<Void>(pngStructure);
-	return DE_ALLOCATE(size);
-}
-
-void PNGReader::deallocateMemory(png_struct* pngStructure, Void* pointer)
-{
-	static_cast<Void>(pngStructure);
-	DE_DEALLOCATE(pointer);
-}
-
-void PNGReader::readData(png_struct* pngStructure, Byte* buffer, Uint32 size)
+static void readData(png_struct* pngStructure, Byte* buffer, Uint32 size)
 {
 	FileStream* fileStream = static_cast<FileStream*>(png_get_io_ptr(pngStructure));
 

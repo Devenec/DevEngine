@@ -18,6 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Array.h>
 #include <core/Error.h>
 #include <core/Log.h>
 #include <core/Memory.h>
@@ -28,6 +29,23 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::Shader - OpenGL]";
+
+static const Array<const Char8*, 6u> SHADER_TYPE_NAMES
+{{
+	"compute",
+	"fragment",
+	"geometry",
+	"tessellation control",
+	"tessellation evaluation"
+	"vertex"
+}};
+
+static Uint32 getShaderTypeId(const ShaderType& shaderType);
+
+
 // Implementation
 
 // Public
@@ -35,8 +53,7 @@ using namespace Platform;
 Shader::Impl::Impl(const ShaderType& type, const String8& source)
 	: _shaderHandle(0u)
 {
-	const Uint32 typeId = getTypeId(type);
-	createShader(typeId);
+	createShader(type);
 	compileShader(source);
 	checkCompilationStatus();
 }
@@ -54,17 +71,16 @@ Uint32 Shader::Impl::handle() const
 
 // Private
 
-const Char8* Shader::Impl::COMPONENT_TAG = "[Platform::Shader - OpenGL]";
-
-void Shader::Impl::createShader(const Uint32 typeId)
+void Shader::Impl::createShader(const ShaderType& type)
 {
-	_shaderHandle = OpenGL::createShader(typeId);
+	_shaderHandle = OpenGL::createShader(getShaderTypeId(type));
 	DE_CHECK_ERROR_OPENGL();
 
 	if(_shaderHandle == 0u)
 	{
-		// TODO: add shader type to the error message?
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the shader." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the shader (" <<
+			SHADER_TYPE_NAMES[static_cast<Int32>(type)] << ")." << Log::Flush();
+
 		DE_ERROR(0x0);
 	}
 }
@@ -104,7 +120,7 @@ Int32 Shader::Impl::getParameter(const Uint32 parameterName) const
 
 void Shader::Impl::outputCompilerFailureLog() const
 {
-	defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to compile the shader:\n\t";
+	defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to compile the shader: ";
 	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 	if(logLength > 1u)
@@ -121,7 +137,7 @@ void Shader::Impl::outputCompilerSuccessLog() const
 
 	if(logLength > 1u)
 	{
-		defaultLog << LogLevel::Warning << COMPONENT_TAG << " The shader compiled with warning(s):\n\t" <<
+		defaultLog << LogLevel::Warning << COMPONENT_TAG << " The shader compiled with warning(s): " <<
 			getInfoLog(logLength).data() << Log::Flush();
 	}
 }
@@ -135,9 +151,23 @@ Vector<Char8> Shader::Impl::getInfoLog(const Uint32 logLength) const
 	return logBuffer;
 }
 
-// Static
 
-Uint32 Shader::Impl::getTypeId(const ShaderType& shaderType)
+// Graphics::Shader
+
+// Private
+
+Shader::Shader(const ShaderType& type, const String8& source)
+	: _impl(DE_NEW(Impl)(type, source)) { }
+
+Shader::~Shader()
+{
+	DE_DELETE(_impl, Impl);
+}
+
+
+// External
+
+static Uint32 getShaderTypeId(const ShaderType& shaderType)
 {
 	switch(shaderType)
 	{
@@ -162,17 +192,4 @@ Uint32 Shader::Impl::getTypeId(const ShaderType& shaderType)
 		default:
 			return 0u;
 	}
-}
-
-
-// Graphics::Shader
-
-// Private
-
-Shader::Shader(const ShaderType& type, const String8& source)
-	: _impl(DE_NEW(Impl)(type, source)) { }
-
-Shader::~Shader()
-{
-	DE_DELETE(_impl, Impl);
 }

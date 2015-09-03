@@ -29,6 +29,23 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::Icon - Windows]";
+
+static BITMAPV5HEADER createBitmapHeader(const Image* image);
+static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer);
+static ICONINFO createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
+static HBITMAP createMaskBitmap(const Image* image);
+static void destroyBitmap(HBITMAP bitmapHandle);
+static HDC getDeviceContext();
+static Uint32 getImageBitDepth(const ImageFormat& imageFormat);
+static void releaseDeviceContext(HDC deviceContextHandle);
+static void setBitmapData(const Image* image, Byte* dataBuffer);
+static void setColourBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha);
+static void setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha);
+
+
 // Public
 
 Icon::Icon()
@@ -70,8 +87,6 @@ Icon::~Icon()
 
 // Private
 
-const Char8* Icon::COMPONENT_TAG = "[Platform::Icon - Windows]";
-
 void Icon::createIcon(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 {
 	ICONINFO iconInfo = createIconInfo(colourBitmapHandle, maskBitmapHandle);
@@ -84,19 +99,20 @@ void Icon::createIcon(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 	}
 }
 
-// Static
 
-BITMAPV5HEADER Icon::createBitmapHeader(const Image* image)
+// External
+
+static BITMAPV5HEADER createBitmapHeader(const Image* image)
 {
 	BITMAPV5HEADER bitmapHeader = BITMAPV5HEADER();
 	bitmapHeader.bV5AlphaMask = 0xFF000000;
-	bitmapHeader.bV5BitCount = static_cast<Uint16>(getBitDepth(image->format()));
-	bitmapHeader.bV5BlueMask  = 0x000000FF;
+	bitmapHeader.bV5BitCount = static_cast<Uint16>(getImageBitDepth(image->format()));
+	bitmapHeader.bV5BlueMask = 0x000000FF;
 	bitmapHeader.bV5CSType = LCS_WINDOWS_COLOR_SPACE;
 	bitmapHeader.bV5GreenMask = 0x0000FF00;
 	bitmapHeader.bV5Height = -static_cast<Int32>(image->height());
 	bitmapHeader.bV5Planes = 1u;
-	bitmapHeader.bV5RedMask	  = 0x00FF0000;
+	bitmapHeader.bV5RedMask = 0x00FF0000;
 	bitmapHeader.bV5Size = sizeof(BITMAPV5HEADER);
 	bitmapHeader.bV5Width = image->width();
 
@@ -108,7 +124,7 @@ BITMAPV5HEADER Icon::createBitmapHeader(const Image* image)
 	return bitmapHeader;
 }
 
-HBITMAP Icon::createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer)
+static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer)
 {
 	HDC deviceContextHandle = getDeviceContext();
 
@@ -125,29 +141,17 @@ HBITMAP Icon::createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& data
 	return bitmapHandle;
 }
 
-void Icon::setBitmapData(const Image* image, Byte* dataBuffer)
+static ICONINFO createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 {
-	const ImageFormat imageFormat = image->format();
+	ICONINFO iconInfo = ICONINFO();
+	iconInfo.fIcon = TRUE;
+	iconInfo.hbmColor = colourBitmapHandle;
+	iconInfo.hbmMask = maskBitmapHandle;
 
-	switch(imageFormat)
-	{
-		case ImageFormat::R8:
-		case ImageFormat::RA8:
-			setGreyBitmapData(image, dataBuffer, imageFormat == ImageFormat::RA8);
-			break;
-
-		case ImageFormat::RGB8:
-		case ImageFormat::RGBA8:
-			setColourBitmapData(image, dataBuffer, imageFormat == ImageFormat:: RGBA8);
-			break;
-
-		default:
-			DE_ASSERT(false);
-			break;
-	}
+	return iconInfo;
 }
 
-HBITMAP Icon::createMaskBitmap(const Image* image)
+static HBITMAP createMaskBitmap(const Image* image)
 {
 	HBITMAP bitmapHandle = CreateBitmap(image->width(), image->height(), 1u, 1u, nullptr);
 
@@ -160,7 +164,7 @@ HBITMAP Icon::createMaskBitmap(const Image* image)
 	return bitmapHandle;
 }
 
-void Icon::destroyBitmap(HBITMAP bitmapHandle)
+static void destroyBitmap(HBITMAP bitmapHandle)
 {
 	const Int32 result = DeleteObject(bitmapHandle);
 
@@ -171,17 +175,20 @@ void Icon::destroyBitmap(HBITMAP bitmapHandle)
 	}
 }
 
-ICONINFO Icon::createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
+static HDC getDeviceContext()
 {
-	ICONINFO iconInfo = ICONINFO();
-	iconInfo.fIcon = TRUE;
-	iconInfo.hbmColor = colourBitmapHandle;
-	iconInfo.hbmMask = maskBitmapHandle;
+	HDC deviceContextHandle = GetDC(nullptr);
 
-	return iconInfo;
+	if(deviceContextHandle == nullptr)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get a device context." << Log::Flush();
+		DE_ERROR_WINDOWS(0x0);
+	}
+
+	return deviceContextHandle;
 }
 
-Uint32 Icon::getBitDepth(const ImageFormat& imageFormat)
+static Uint32 getImageBitDepth(const ImageFormat& imageFormat)
 {
 	switch(imageFormat)
 	{
@@ -199,20 +206,7 @@ Uint32 Icon::getBitDepth(const ImageFormat& imageFormat)
 	}
 }
 
-HDC Icon::getDeviceContext()
-{
-	HDC deviceContextHandle = GetDC(nullptr);
-
-	if(deviceContextHandle == nullptr)
-	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get a device context." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0);
-	}
-
-	return deviceContextHandle;
-}
-
-void Icon::releaseDeviceContext(HDC deviceContextHandle)
+static void releaseDeviceContext(HDC deviceContextHandle)
 {
 	const Int32 result = ReleaseDC(nullptr, deviceContextHandle);
 
@@ -223,7 +217,46 @@ void Icon::releaseDeviceContext(HDC deviceContextHandle)
 	}
 }
 
-void Icon::setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha)
+static void setBitmapData(const Image* image, Byte* dataBuffer)
+{
+	const ImageFormat imageFormat = image->format();
+
+	switch(imageFormat)
+	{
+		case ImageFormat::R8:
+		case ImageFormat::RA8:
+			setGreyBitmapData(image, dataBuffer, imageFormat == ImageFormat::RA8);
+			break;
+
+		case ImageFormat::RGB8:
+		case ImageFormat::RGBA8:
+			setColourBitmapData(image, dataBuffer, imageFormat == ImageFormat::RGBA8);
+			break;
+
+		default:
+			DE_ASSERT(false);
+			break;
+	}
+}
+
+static void setColourBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha)
+{
+	const Uint32 pixelCount = image->width() * image->height();
+	const Uint32 componentCount = hasAlpha ? 4u : 3u;
+	const Vector<Byte>& imageData = image->data();
+
+	for(Uint32 i = 0u; i < pixelCount; ++i)
+	{
+		dataBuffer[componentCount * i] = imageData[componentCount * i + 2u];
+		dataBuffer[componentCount * i + 1u] = imageData[componentCount * i + 1u];
+		dataBuffer[componentCount * i + 2u] = imageData[componentCount * i];
+
+		if(hasAlpha)
+			dataBuffer[componentCount * i + 3u] = imageData[componentCount * i + 3u];
+	}
+}
+
+static void setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha)
 {
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 sourceComponentCount = hasAlpha ? 2u : 1u;
@@ -233,28 +266,11 @@ void Icon::setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool ha
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{
 		const Byte greyComponent = imageData[sourceComponentCount * i];
-		dataBuffer[destinationComponentCount * i]	   = greyComponent;
+		dataBuffer[destinationComponentCount * i] = greyComponent;
 		dataBuffer[destinationComponentCount * i + 1u] = greyComponent;
 		dataBuffer[destinationComponentCount * i + 2u] = greyComponent;
 
 		if(hasAlpha)
 			dataBuffer[destinationComponentCount * i + 3u] = imageData[sourceComponentCount * i + 1u];
-	}
-}
-
-void Icon::setColourBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha)
-{
-	const Uint32 pixelCount = image->width() * image->height();
-	const Uint32 componentCount = hasAlpha ? 4u : 3u;
-	const Vector<Byte>& imageData = image->data();
-
-	for(Uint32 i = 0u; i < pixelCount; ++i)
-	{
-		dataBuffer[componentCount * i]		= imageData[componentCount * i + 2u];
-		dataBuffer[componentCount * i + 1u] = imageData[componentCount * i + 1u];
-		dataBuffer[componentCount * i + 2u] = imageData[componentCount * i];
-
-		if(hasAlpha)
-			dataBuffer[componentCount * i + 3u] = imageData[componentCount * i + 3u];
 	}
 }

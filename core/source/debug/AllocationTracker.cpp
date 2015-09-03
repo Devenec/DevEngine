@@ -70,31 +70,38 @@ void AllocationTracker::checkForMemoryLeaks() const
 	if(_allocationRecords.size() > 0u)
 	{
 		defaultLog << LogLevel::Warning << "[Debug::AllocationTracker] " << _allocationRecords.size() <<
-			" memory leak(s) detected:" << Log::Flush();
+			" memory leak(s) detected:\n\n";
 
 		for(AllocationRecordMap::const_iterator i = _allocationRecords.begin(), end = _allocationRecords.end();
 			i != end; ++i)
 		{
-			defaultLog << StreamFormat::Hexadecimal << i->first << StreamFormat::Decimal << " (" << i->second.size <<
-				" bytes) at ";
-			
-			if(i->second.file == nullptr)
-				defaultLog << "unknown file";
-			else
-				defaultLog << i->second.file;
-
-			defaultLog << " on line " << i->second.line;
-			
-			if(i->second.function == nullptr)
-				defaultLog << " in unknown function ";
-			else
-				defaultLog << " in function " << i->second.function;
-
-			defaultLog << Log::Flush();
+			logAllocationRecord(i->first, i->second);
 		}
+
+		defaultLog << Log::Flush();
 	}
 
 	DE_ASSERT(_allocationRecords.size() == 0u);
+}
+
+void AllocationTracker::logAllocationRecord(const Void* address, const AllocationRecord& allocationRecord) const
+{
+	defaultLog << StreamFormat::Hexadecimal << address << StreamFormat::Decimal << " (" << allocationRecord.size <<
+		" bytes) at ";
+
+	if(allocationRecord.file == nullptr)
+		defaultLog << "unknown file";
+	else
+		defaultLog << allocationRecord.file;
+
+	defaultLog << " on line " << allocationRecord.line;
+
+	if(allocationRecord.function == nullptr)
+		defaultLog << " in unknown function";
+	else
+		defaultLog << " in function " << allocationRecord.function;
+
+	defaultLog << ".\n";
 }
 
 #endif

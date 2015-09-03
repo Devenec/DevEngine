@@ -24,11 +24,9 @@
 
 using namespace Core;
 
-// Private
+// Core
 
-// Static
-
-void Log::writeToConsole(const String8& message)
+void Core::writeToConsole(const String8& message)
 {
 	std::wprintf(DE_CHAR16("%S"), message.c_str());
 }

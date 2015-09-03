@@ -33,7 +33,7 @@ void ContentManager::setContentRootDirectory(const Core::String8& directoryPath)
 template<typename T>
 T* ContentManager::load(const Core::String8& filepath)
 {
-	const Core::String8 contentFilepath = _contentRootDirectory + filepath;
+	const Core::String8 contentFilepath(_contentRootDirectory + filepath);
 	ContentMap::iterator iterator = _loadedContent.find(contentFilepath);
 
 	if(iterator == _loadedContent.end())

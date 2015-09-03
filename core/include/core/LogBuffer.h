@@ -62,8 +62,6 @@ namespace Core
 		Uint32 findWhitespaceCharacter(Bool& hasExplicitLineBreak) const;
 		void appendLineBuffer();
 		void flushMainBuffer();
-
-		static inline Bool isWhitespaceCharacter(const Char8 character);
 	};
 
 #include "inline/LogBuffer.inl"

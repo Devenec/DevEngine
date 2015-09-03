@@ -71,8 +71,6 @@ namespace Graphics
 
 	private:
 
-		static const Char8* COMPONENT_TAG;
-
 		Core::Rectangle _rectangle;
 		Platform::Icon _icon;
 		HWND _windowHandle;

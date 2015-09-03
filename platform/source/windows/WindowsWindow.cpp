@@ -27,6 +27,11 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::Window - Windows]";
+
+
 // Implementation
 
 // Public
@@ -106,8 +111,6 @@ Bool Window::Impl::shouldHideCursor(const Bool isCursorInClientArea) const
 }
 
 // Private
-
-const Char8* Window::Impl::COMPONENT_TAG = "[Platform::Window - Windows]";
 
 Core::Rectangle Window::Impl::getRectangle() const
 {

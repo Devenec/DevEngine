@@ -47,7 +47,5 @@ namespace Memory
 	private:
 
 		using Base = AllocationPolicyBase;
-
-		static const Char8* COMPONENT_TAG;
 	};
 }

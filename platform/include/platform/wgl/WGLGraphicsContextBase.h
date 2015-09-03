@@ -58,10 +58,6 @@ namespace Platform
 		void destroyContext();
 
 		void setPixelFormat(const Int32 pixelFormatIndex) const;
-
-	private:
-
-		static const Char8* COMPONENT_TAG;
 	};
 
 #include "inline/WGLGraphicsContextBase.inl"

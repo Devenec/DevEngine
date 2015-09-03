@@ -18,11 +18,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Array.h>
 #include <core/Log.h>
 
 using namespace Core;
 
-// Some members are defined in platform/*/*Log.cpp
+// Some functions are defined in platform/*/*Log.cpp
+
+// External
+
+static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
+{
+	"DEBUG",
+	"INFO ",
+	"WARN ",
+	"ERROR"
+};
+
+static const Char8* LOG_LEVEL_SEPARATOR = " | ";
+
 
 // Public
 
@@ -156,16 +170,6 @@ Log& Log::operator <<(const Flush& flush)
 }
 
 // Private
-
-const Array<const Char8*, 4u> Log::LOG_LEVEL_NAMES =
-{
-	"DEBUG",
-	"INFO ",
-	"WARN ",
-	"ERROR"
-};
-
-const Char8* Log::LOG_LEVEL_SEPARATOR = " | ";
 
 Log::Log()
 	: _streamBuffer(writeToConsole),

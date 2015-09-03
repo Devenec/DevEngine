@@ -28,6 +28,8 @@ namespace Platform
 {
 	class GraphicsContextBase;
 
+	using ExtensionNameList = Core::Vector<Core::String8>;
+
 	class GraphicsExtensionLoader final
 	{
 	public:
@@ -48,15 +50,7 @@ namespace Platform
 
 	private:
 
-		using ExtensionNameList = Core::Vector<Core::String8>;
-
-		static const Uint32 LOG_COLUMN_WIDTH;
-
-		class Impl;
-
 		static void logSupportedContextExtensions(const Core::String8& extensionsString);
 		static void logSupportedInterfaceExtensions(const ExtensionNameList& extensionNames);
-		static ExtensionNameList splitExtensionsString(const Core::String8& extensionsString);
-		static void logSupportedExtensions(const ExtensionNameList& extensionNames);
 	};
 }

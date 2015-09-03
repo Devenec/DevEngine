@@ -21,17 +21,22 @@
 #include <algorithm>
 #include <cmath>
 #include <core/Log.h>
-#include <core/Vector.h>
 #include <platform/GraphicsExtensionLoader.h>
 
 using namespace Core;
 using namespace Platform;
 
+// External
+
+static const Uint32 LOG_COLUMN_WIDTH = 50u;
+
+static void logSupportedExtensions(const ExtensionNameList& extensionNames);
+static ExtensionNameList splitExtensionsString(const String8& extensionsString);
+
+
 // Some members are defined in platform/*/*GraphicsExtensionLoader.cpp
 
 // Private
-
-const Uint32 GraphicsExtensionLoader::LOG_COLUMN_WIDTH = 50u;
 
 // Static
 
@@ -70,23 +75,10 @@ void GraphicsExtensionLoader::logSupportedInterfaceExtensions(const ExtensionNam
 	defaultLog << '\n' << Log::Flush();
 }
 
-GraphicsExtensionLoader::ExtensionNameList GraphicsExtensionLoader::splitExtensionsString(
-	const String8& extensionsString)
-{
-	Uint32 currentPosition = 0u;
-	Uint32 spacePosition;
-	Vector<String8> extensionNames;
 
-	while((spacePosition = extensionsString.find(' ', currentPosition)) != String8::npos)
-	{
-		extensionNames.push_back(extensionsString.substr(currentPosition, spacePosition - currentPosition));
-		currentPosition = spacePosition + 1u;
-	}
+// External
 
-	return extensionNames;
-}
-
-void GraphicsExtensionLoader::logSupportedExtensions(const ExtensionNameList& extensionNames)
+static void logSupportedExtensions(const ExtensionNameList& extensionNames)
 {
 	const Uint32 extensionCount = extensionNames.size();
 	const Uint32 rowCount = static_cast<Uint32>(std::ceil(extensionCount / 2.0f));
@@ -104,3 +96,19 @@ void GraphicsExtensionLoader::logSupportedExtensions(const ExtensionNameList& ex
 		}
 	}
 }
+
+static ExtensionNameList splitExtensionsString(const String8& extensionsString)
+{
+	Uint32 currentPosition = 0u;
+	Uint32 spacePosition;
+	Vector<String8> extensionNames;
+
+	while((spacePosition = extensionsString.find(' ', currentPosition)) != String8::npos)
+	{
+		extensionNames.push_back(extensionsString.substr(currentPosition, spacePosition - currentPosition));
+		currentPosition = spacePosition + 1u;
+	}
+
+	return extensionNames;
+}
+	

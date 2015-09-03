@@ -39,6 +39,12 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+static void loadContextExtensions(Window* window);
+static void loadInterfaceExtensions(GraphicsContext* graphicsContext);
+
+
 // Implementation
 
 class GraphicsContextManager::Impl final
@@ -101,25 +107,11 @@ private:
 	GraphicsContextList _graphicsContexts;
 	GraphicsConfig _graphicsConfig;
 
-	static void loadContextExtensions(Window* window)
-	{
-		TemporaryGraphicsContext temporaryGraphicsContext(static_cast<HWND>(window->handle()));
-		GraphicsExtensionLoader::loadContextExtensions(temporaryGraphicsContext);
-	}
-
 	void initialiseGraphicsConfig(Window* window)
 	{
 		HDC deviceContextHandle = GraphicsContextBase::getWindowDeviceContext(static_cast<HWND>(window->handle()));
 		GraphicsConfigChooser graphicsConfigChooser(deviceContextHandle);
 		_graphicsConfig = graphicsConfigChooser.chooseConfig();
-	}
-
-	static void loadInterfaceExtensions(GraphicsContext* graphicsContext)
-	{
-		graphicsContext->makeCurrent();
-		GraphicsExtensionLoader::loadInterfaceExtensions();
-		OpenGL::initialise();
-		graphicsContext->makeNonCurrent();
 	}
 };
 
@@ -142,4 +134,21 @@ GraphicsContext* GraphicsContextManager::createGraphicsContext(Window* window) c
 void GraphicsContextManager::destroyGraphicsContext(GraphicsContext* context) const
 {
 	_impl->destroyGraphicsContext(context);
+}
+
+
+// External
+
+static void loadContextExtensions(Window* window)
+{
+	TemporaryGraphicsContext temporaryGraphicsContext(static_cast<HWND>(window->handle()));
+	GraphicsExtensionLoader::loadContextExtensions(temporaryGraphicsContext);
+}
+
+static void loadInterfaceExtensions(GraphicsContext* graphicsContext)
+{
+	graphicsContext->makeCurrent();
+	GraphicsExtensionLoader::loadInterfaceExtensions();
+	OpenGL::initialise();
+	graphicsContext->makeNonCurrent();
 }

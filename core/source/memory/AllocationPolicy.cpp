@@ -26,6 +26,11 @@
 using namespace Core;
 using namespace Memory;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Memory::AllocationPolicy]";
+
+
 // Public
 
 // Static
@@ -50,7 +55,3 @@ void AllocationPolicy::deallocate(Void* pointer, const Uint32 size)
 	Base::deregisterAllocation(pointer, size);
 	std::free(pointer);
 }
-
-// Private
-
-const Char8* AllocationPolicy::COMPONENT_TAG = "[Memory::AllocationPolicy]";

@@ -40,6 +40,23 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::WindowManager - Windows]";
+static const Char16* WINDOW_CLASS_NAME = DE_CHAR16("devengine");
+static const Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
+static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine");
+static const Uint32 WINDOW_DEFAULT_WIDTH = 800u;
+static const Uint32 WINDOW_STYLE = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
+
+static HWND createWindow();
+static RECT createWindowRectangle();
+static void deregisterWindowClass();
+static void destroyWindow(HWND windowHandle);
+static HCURSOR loadCursor();
+static void registerWindowClass(const WNDCLASSEX& windowClassInfo);
+
+
 // Implementation
 
 class WindowManager::Impl final
@@ -63,7 +80,7 @@ public:
 
 	Window* createWindowObject()
 	{
-		HWND windowHandle = createWindow();
+		HWND windowHandle = ::createWindow();
 		Window* window = DE_NEW(Window)(windowHandle);
 		setWindowUserDataPointer(windowHandle, window->_impl);
 		_windows.push_back(window);
@@ -77,7 +94,7 @@ public:
 		WindowList::const_iterator iterator = std::find(_windows.begin(), _windows.end(), window);
 		DE_ASSERT(iterator != _windows.end());
 		_windows.erase(iterator);
-		destroyWindow(static_cast<HWND>(window->handle()));
+		::destroyWindow(static_cast<HWND>(window->handle()));
 		DE_DELETE(window, Window);
 	}
 
@@ -96,20 +113,13 @@ private:
 
 	using WindowList = List<Window*>;
 
-	static const Char8* COMPONENT_TAG;
-	static const Char16* WINDOW_CLASS_NAME;
-	static const Uint32 WINDOW_DEFAULT_HEIGHT;
-	static const Char16* WINDOW_DEFAULT_TITLE;
-	static const Uint32 WINDOW_DEFAULT_WIDTH;
-	static const Uint32 WINDOW_STYLE;
-
 	WindowList _windows;
 
 	void destroyWindowObjects() const
 	{
 		for(WindowList::const_iterator i = _windows.begin(), end = _windows.end(); i != end; ++i)
 		{
-			destroyWindow(static_cast<HWND>((*i)->handle()));
+			::destroyWindow(static_cast<HWND>((*i)->handle()));
 			DE_DELETE(*i, Window);
 		}
 	}
@@ -127,49 +137,6 @@ private:
 		return windowClassInfo;
 	}
 
-	static void registerWindowClass(const WNDCLASSEX& windowClassInfo)
-	{
-		const Uint32 result = RegisterClassExW(&windowClassInfo);
-
-		if(result == 0u)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to register the window class." << Log::Flush();
-			DE_ERROR_WINDOWS(0x0);
-		}
-	}
-
-	static void deregisterWindowClass()
-	{
-		const Int32 result = UnregisterClassW(WINDOW_CLASS_NAME, GetModuleHandleW(nullptr));
-		
-		if(result == 0u)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to deregister the window class." <<
-				Log::Flush();
-
-			DE_ERROR_WINDOWS(0x0);
-		}
-	}
-
-	static HWND createWindow()
-	{
-		const RECT windowRectangle = createWindowRectangle();
-		const Int32 windowWidth = windowRectangle.right - windowRectangle.left;
-		const Int32 windowHeight = windowRectangle.bottom - windowRectangle.top;
-		
-		HWND windowHandle = CreateWindowExW(0u, WINDOW_CLASS_NAME, WINDOW_DEFAULT_TITLE, WINDOW_STYLE,
-			windowRectangle.left, windowRectangle.top, windowWidth, windowHeight, nullptr, nullptr,
-			GetModuleHandleW(nullptr), nullptr);
-
-		if(windowHandle == nullptr)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a window." << Log::Flush();
-			DE_ERROR_WINDOWS(0x0);
-		}
-
-		return windowHandle;
-	}
-
 	static void setWindowUserDataPointer(HWND windowHandle, Window::Impl* windowImpl)
 	{
 		SetLastError(0u);
@@ -182,51 +149,6 @@ private:
 
 			DE_ERROR_WINDOWS(0x0);
 		}
-	}
-
-	static void destroyWindow(HWND windowHandle)
-	{
-		const Int32 result = DestroyWindow(windowHandle);
-
-		if(result == 0)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy a window." << Log::Flush();
-			DE_ERROR_WINDOWS(0x0);
-		}
-	}
-
-	static HCURSOR loadCursor()
-	{
-		HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
-
-		if(cursorHandle == nullptr)
-			return nullptr;
-		else
-			return static_cast<HCURSOR>(cursorHandle);
-	}
-
-	static RECT createWindowRectangle()
-	{
-		const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
-		const DisplayMode& currentDisplayMode = graphicsAdapterManager.graphicsAdapters()[0]->currentDisplayMode();
-
-		RECT rectangle;
-		rectangle.left = currentDisplayMode.width() / 2 - WINDOW_DEFAULT_WIDTH / 2;
-		rectangle.top = currentDisplayMode.height() / 2 - WINDOW_DEFAULT_HEIGHT / 2;
-		rectangle.right = rectangle.left + WINDOW_DEFAULT_WIDTH;
-		rectangle.bottom = rectangle.top + WINDOW_DEFAULT_HEIGHT;
-
-		const Int32 result = AdjustWindowRectEx(&rectangle, WINDOW_STYLE, 0, 0u);
-
-		if(result == 0)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a rectangle for a window." <<
-				Log::Flush();
-
-			DE_ERROR_WINDOWS(0x0);
-		}
-
-		return rectangle;
 	}
 
 	static LRESULT CALLBACK processMessage(HWND windowHandle, const Uint32 message, const WPARAM wParam,
@@ -247,17 +169,10 @@ private:
 			default:
 				return DefWindowProcW(windowHandle, message, wParam, lParam);
 		}
-		
+
 		return 0;
 	}
 };
-
-const Char8* WindowManager::Impl::COMPONENT_TAG			= "[Platform::WindowManager - Windows]";
-const Char16* WindowManager::Impl::WINDOW_CLASS_NAME	= DE_CHAR16("devengine");
-const Uint32 WindowManager::Impl::WINDOW_DEFAULT_HEIGHT = 600u;
-const Char16* WindowManager::Impl::WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine");
-const Uint32 WindowManager::Impl::WINDOW_DEFAULT_WIDTH = 800u;
-const Uint32 WindowManager::Impl::WINDOW_STYLE = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
 
 // Public
@@ -283,4 +198,95 @@ void WindowManager::destroyWindow(Window* window) const
 void WindowManager::processMessages() const
 {
 	Impl::processMessages();
+}
+
+
+// External
+
+static HWND createWindow()
+{
+	const RECT windowRectangle = createWindowRectangle();
+	const Int32 windowWidth = windowRectangle.right - windowRectangle.left;
+	const Int32 windowHeight = windowRectangle.bottom - windowRectangle.top;
+
+	HWND windowHandle = CreateWindowExW(0u, WINDOW_CLASS_NAME, WINDOW_DEFAULT_TITLE, WINDOW_STYLE,
+		windowRectangle.left, windowRectangle.top, windowWidth, windowHeight, nullptr, nullptr,
+		GetModuleHandleW(nullptr), nullptr);
+
+	if(windowHandle == nullptr)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a window." << Log::Flush();
+		DE_ERROR_WINDOWS(0x0);
+	}
+
+	return windowHandle;
+}
+
+static RECT createWindowRectangle()
+{
+	const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
+	const DisplayMode& currentDisplayMode = graphicsAdapterManager.graphicsAdapters()[0]->currentDisplayMode();
+
+	RECT rectangle;
+	rectangle.left = currentDisplayMode.width() / 2 - WINDOW_DEFAULT_WIDTH / 2;
+	rectangle.top = currentDisplayMode.height() / 2 - WINDOW_DEFAULT_HEIGHT / 2;
+	rectangle.right = rectangle.left + WINDOW_DEFAULT_WIDTH;
+	rectangle.bottom = rectangle.top + WINDOW_DEFAULT_HEIGHT;
+
+	const Int32 result = AdjustWindowRectEx(&rectangle, WINDOW_STYLE, 0, 0u);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a rectangle for a window." <<
+			Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0);
+	}
+
+	return rectangle;
+}
+
+static void deregisterWindowClass()
+{
+	const Int32 result = UnregisterClassW(WINDOW_CLASS_NAME, GetModuleHandleW(nullptr));
+
+	if(result == 0u)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to deregister the window class." <<
+			Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0);
+	}
+}
+
+static void destroyWindow(HWND windowHandle)
+{
+	const Int32 result = DestroyWindow(windowHandle);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy a window." << Log::Flush();
+		DE_ERROR_WINDOWS(0x0);
+	}
+}
+
+static HCURSOR loadCursor()
+{
+	HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
+
+	if(cursorHandle == nullptr)
+		return nullptr;
+	else
+		return static_cast<HCURSOR>(cursorHandle);
+}
+
+static void registerWindowClass(const WNDCLASSEX& windowClassInfo)
+{
+	const Uint32 result = RegisterClassExW(&windowClassInfo);
+
+	if(result == 0u)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to register the window class." << Log::Flush();
+		DE_ERROR_WINDOWS(0x0);
+	}
 }

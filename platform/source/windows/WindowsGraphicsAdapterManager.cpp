@@ -30,6 +30,17 @@
 using namespace Core;
 using namespace Graphics;
 
+// External
+
+static DISPLAY_DEVICEW createAdapterInfo();
+static DEVMODEW createDisplayModeInfo();
+static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo);
+static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes);
+
+static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
+	const DisplayModeList& modes);
+
+
 // Implementation
 
 class GraphicsAdapterManager::Impl final
@@ -89,65 +100,6 @@ private:
 
 		return result != 0;
 	}
-
-	static DISPLAY_DEVICEW createAdapterInfo()
-	{
-		DISPLAY_DEVICEW adapterInfo;
-		adapterInfo.cb = sizeof(DISPLAY_DEVICEW);
-
-		return adapterInfo;
-	}
-
-	static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes)
-	{
-		DisplayMode displayMode(1u, 0u, 0u, 0u);
-		DEVMODEW displayModeInfo = createDisplayModeInfo();
-
-		for(Uint32 i = 0u; displayMode.width() != 0u; ++i)
-		{
-			displayMode = getAdapterDisplayMode(adapterName, i, displayModeInfo);
-
-			if(displayMode.width() != 0u && std::find(modes.begin(), modes.end(), displayMode) == modes.end())
-				modes.push_back(displayMode);
-		}
-
-		modes.shrink_to_fit();
-		std::sort(modes.begin(), modes.end());
-
-		return getCurrentAdapterDisplayModeIndex(adapterName, displayModeInfo, modes);
-	}
-
-	static DEVMODEW createDisplayModeInfo()
-	{
-		DEVMODEW displayModeInfo = DEVMODEW();
-		displayModeInfo.dmSize = sizeof(DEVMODEW);
-
-		return displayModeInfo;
-	}
-
-	static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo)
-	{
-		const Int32 result = EnumDisplaySettingsW(adapterName, modeIndex, &modeInfo);
-
-		if(result == 0)
-		{
-			return DisplayMode();
-		}
-		else
-		{
-			return DisplayMode(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight, modeInfo.dmBitsPerPel,
-				modeInfo.dmDisplayFrequency);
-		}
-	}
-
-	static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
-		const DisplayModeList& modes)
-	{
-		const DisplayMode displayMode = getAdapterDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);
-		DisplayModeList::const_iterator iterator = std::find(modes.begin(), modes.end(), displayMode);
-
-		return iterator - modes.begin();
-	}
 };
 
 
@@ -167,4 +119,66 @@ GraphicsAdapterManager::~GraphicsAdapterManager()
 const GraphicsAdapterList& GraphicsAdapterManager::graphicsAdapters() const
 {
 	return _impl->graphicsAdapters();
+}
+
+
+// External
+
+static DISPLAY_DEVICEW createAdapterInfo()
+{
+	DISPLAY_DEVICEW adapterInfo;
+	adapterInfo.cb = sizeof(DISPLAY_DEVICEW);
+
+	return adapterInfo;
+}
+
+static DEVMODEW createDisplayModeInfo()
+{
+	DEVMODEW displayModeInfo = DEVMODEW();
+	displayModeInfo.dmSize = sizeof(DEVMODEW);
+
+	return displayModeInfo;
+}
+
+static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo)
+{
+	const Int32 result = EnumDisplaySettingsW(adapterName, modeIndex, &modeInfo);
+
+	if(result == 0)
+	{
+		return DisplayMode();
+	}
+	else
+	{
+		return DisplayMode(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight, modeInfo.dmBitsPerPel,
+			modeInfo.dmDisplayFrequency);
+	}
+}
+
+static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes)
+{
+	DisplayMode displayMode(1u, 0u, 0u, 0u);
+	DEVMODEW displayModeInfo = createDisplayModeInfo();
+
+	for(Uint32 i = 0u; displayMode.width() != 0u; ++i)
+	{
+		displayMode = getAdapterDisplayMode(adapterName, i, displayModeInfo);
+
+		if(displayMode.width() != 0u && std::find(modes.begin(), modes.end(), displayMode) == modes.end())
+			modes.push_back(displayMode);
+	}
+
+	modes.shrink_to_fit();
+	std::sort(modes.begin(), modes.end());
+
+	return getCurrentAdapterDisplayModeIndex(adapterName, displayModeInfo, modes);
+}
+
+static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
+	const DisplayModeList& modes)
+{
+	const DisplayMode displayMode = getAdapterDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);
+	DisplayModeList::const_iterator iterator = std::find(modes.begin(), modes.end(), displayMode);
+
+	return iterator - modes.begin();
 }

@@ -54,23 +54,9 @@ namespace Platform
 
 	private:
 
-		static const Char8* COMPONENT_TAG;
-
 		HICON _iconHandle;
 
 		void createIcon(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
-
-		static BITMAPV5HEADER createBitmapHeader(const Graphics::Image* image);
-		static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer);
-		static void setBitmapData(const Graphics::Image* image, Byte* dataBuffer);
-		static HBITMAP createMaskBitmap(const Graphics::Image* image);
-		static void destroyBitmap(HBITMAP bitmapHandle);
-		static ICONINFO createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
-		static Uint32 getBitDepth(const Graphics::ImageFormat& imageFormat);
-		static HDC getDeviceContext();
-		static void releaseDeviceContext(HDC deviceContextHandle);
-		static void setGreyBitmapData(const Graphics::Image* image, Byte* dataBuffer, const Bool hasAlpha);
-		static void setColourBitmapData(const Graphics::Image* image, Byte* dataBuffer, const Bool hasAlpha);
 	};
 
 #include "inline/WindowsIcon.inl"

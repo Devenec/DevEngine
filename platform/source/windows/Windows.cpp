@@ -28,21 +28,25 @@ using namespace Core;
 
 void Platform::failWindowsAssertion(const Char8* file, const Uint32 line, const Char8* function)
 {
-	const Uint32 errorCode = GetLastError();
-
-	defaultLog << LogLevel::Error << "Windows assertion failed with error code " << errorCode << ", at " << file <<
-		" on line " << line << " in function " << function << '.' << Log::Flush();
+	defaultLog << LogLevel::Error << "Windows assertion failed with error code " << getWindowsErrorCode() << ", at " <<
+		file << " on line " << line << " in function " << function << '.' << Log::Flush();
 
 	DE_DEBUGGER_BREAK();
 	std::abort();
 }
 
+Uint32 Platform::getWindowsErrorCode()
+{
+	const Uint32 errorCode = GetLastError();
+	SetLastError(0u);
+
+	return errorCode;
+}
+
 void Platform::invokeWindowsError(const Uint32 errorCode)
 {
-	const Uint32 windowsErrorCode = GetLastError();
-
 	defaultLog << LogLevel::Error << "Windows error occurred with code " << StreamFormat::Hexadecimal << errorCode <<
-		StreamFormat::Decimal << '-' << windowsErrorCode << '.' << Log::Flush();
+		StreamFormat::Decimal << '-' << getWindowsErrorCode() << '.' << Log::Flush();
 
 	DE_DEBUGGER_BREAK();
 	std::abort();

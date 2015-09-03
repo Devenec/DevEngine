@@ -33,10 +33,3 @@ void LogBuffer::appendLineBreakAndIndent()
 	appendLineBreak();
 	_lineBuffer.append("        ");
 }
-
-// Static
-
-Bool LogBuffer::isWhitespaceCharacter(const Char8 character)
-{
-	return character == '\n' || character == ' ';
-}

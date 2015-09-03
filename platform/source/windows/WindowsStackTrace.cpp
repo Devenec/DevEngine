@@ -30,6 +30,13 @@
 using namespace Core;
 using namespace Debug;
 
+// External
+
+static constexpr Uint32 MAX_FUNCTION_NAME_LENGTH = 256u;
+
+static const Char8* COMPONENT_TAG = "[Platform::StackTrace - Windows]";
+
+
 // Implementation
 
 class StackTrace::Impl final
@@ -82,10 +89,6 @@ public:
 
 private:
 
-	static constexpr Uint32 MAX_FUNCTION_NAME_LENGTH = 256u;
-
-	static const Char8* COMPONENT_TAG;
-
 	Array<Byte, sizeof(SYMBOL_INFOW) + (MAX_FUNCTION_NAME_LENGTH - 1u) * sizeof(Char16)> _symbolInfoMemory;
 	IMAGEHLP_LINEW64 _sourceInfo;
 	Vector<Void*> _symbolAddresses;
@@ -137,8 +140,6 @@ private:
 		}
 	}
 };
-
-const Char8* StackTrace::Impl::COMPONENT_TAG = "[Platform::StackTrace - Windows]";
 
 
 // Public

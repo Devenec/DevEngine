@@ -28,6 +28,12 @@
 using namespace Core;
 using namespace Graphics;
 
+// External
+
+static void logAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator);
+static void logAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter);
+
+
 // Some members are defined in platform/*/*GraphicsAdapterManager.cpp
 
 // Private
@@ -46,24 +52,10 @@ void GraphicsAdapterManager::logAdapters() const
 	defaultLog << '\n' << Log::Flush();
 }
 
-// Static
 
-void GraphicsAdapterManager::logAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter)
-{
-	const DisplayModeList& displayModes = graphicsAdapter.supportedDisplayModes();
-	const Uint32 displayModeCount = displayModes.size();
-	const Uint32 rowCount = static_cast<Uint32>(std::ceil(displayModeCount / 3.0f));
+// External
 
-	for(Uint32 i = 0u; i < rowCount; ++i)
-	{
-		defaultLog << '\n';
-
-		for(Uint32 j = i; j <= i + 3u * rowCount && j < displayModeCount; j += rowCount)
-			logAdapterDisplayMode(displayModes[j], j != i);
-	}
-}
-
-void GraphicsAdapterManager::logAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator)
+static void logAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator)
 {
 	if(insertSeparator)
 		defaultLog << "    ";
@@ -87,4 +79,19 @@ void GraphicsAdapterManager::logAdapterDisplayMode(const DisplayMode& displayMod
 		defaultLog << ' ';
 
 	defaultLog << displayMode.frequency() << "Hz";
+}
+
+static void logAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter)
+{
+	const DisplayModeList& displayModes = graphicsAdapter.supportedDisplayModes();
+	const Uint32 displayModeCount = displayModes.size();
+	const Uint32 rowCount = static_cast<Uint32>(std::ceil(displayModeCount / 3.0f));
+
+	for(Uint32 i = 0u; i < rowCount; ++i)
+	{
+		defaultLog << '\n';
+
+		for(Uint32 j = i; j <= i + 3u * rowCount && j < displayModeCount; j += rowCount)
+			logAdapterDisplayMode(displayModes[j], j != i);
+	}
 }

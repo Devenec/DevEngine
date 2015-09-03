@@ -26,6 +26,11 @@
 
 using namespace Core;
 
+// External
+
+static Bool isWhitespaceCharacter(const Char8 character);
+
+
 // Public
 
 const Uint32 LogBuffer::NON_POSITION = Numeric<Uint32>::maximum();
@@ -137,4 +142,12 @@ void LogBuffer::flushMainBuffer()
 {
 	_flushFunction(_mainBuffer);
 	_mainBuffer.clear();
+}
+
+
+// External
+
+static Bool isWhitespaceCharacter(const Char8 character)
+{
+	return character == '\n' || character == ' ';
 }

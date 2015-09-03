@@ -32,6 +32,8 @@ namespace Graphics
 
 namespace Platform
 {
+	using PixelFormatAttributeList = Core::Array<Int32, 7u>;
+
 	class GraphicsConfigChooser final
 	{
 	public:
@@ -49,14 +51,10 @@ namespace Platform
 		GraphicsConfigChooser& operator =(GraphicsConfigChooser&& graphicsConfigChooser) = delete;
 
 	private:
-
-		using PixelFormatAttributeList = Core::Array<Int32, 7u>;
+		
 		using PixelFormatIndexList = Core::Vector<Int32>;
-		using PixelFormatRequiredAttributeList = Core::Array<Int32, 9u>;
 
-		static const Char8* COMPONENT_TAG;
 		static const PixelFormatAttributeList PIXEL_FORMAT_ATTRIBUTE_IDS;
-		static const PixelFormatRequiredAttributeList PIXEL_FORMAT_REQUIRED_ATTRIBUTES;
 
 		HDC _deviceContextHandle;
 
@@ -64,11 +62,5 @@ namespace Platform
 		PixelFormatIndexList getPixelFormatIndices(const Uint32 formatCount) const;
 		Int32 chooseBestPixelFormat(const PixelFormatIndexList& formatIndices) const;
 		PixelFormatAttributeList getPixelFormatAttributes(const Int32 formatIndex) const;
-		
-		static Bool isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
-			const PixelFormatAttributeList& formatAttributesB);
-
-		static Bool isPixelFormatAccelerationLess(const PixelFormatAttributeList& formatAttributesA,
-			const PixelFormatAttributeList& formatAttributesB);
 	};
 }

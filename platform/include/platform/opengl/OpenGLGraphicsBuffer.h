@@ -51,8 +51,6 @@ namespace Graphics
 
 	private:
 
-		static const Char8* COMPONENT_TAG;
-
 		Uint32 _bufferHandle;
 		Uint32 _flags;
 

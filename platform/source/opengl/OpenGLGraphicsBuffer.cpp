@@ -31,6 +31,11 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsBuffer - OpenGL]";
+
+
 // Implementation
 
 // Public
@@ -90,8 +95,6 @@ void GraphicsBuffer::Impl::setData(const Byte* data, const Uint32 size, const Ui
 }
 
 // Private
-
-const Char8* GraphicsBuffer::Impl::COMPONENT_TAG = "[Platform::GraphicsBuffer - OpenGL]";
 
 void GraphicsBuffer::Impl::createBuffer()
 {

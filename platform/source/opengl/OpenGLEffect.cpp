@@ -32,6 +32,13 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::Effect - OpenGL]";
+
+static void applyProgram(const Uint32 programHandle);
+
+
 // Implementation
 
 class Effect::Impl
@@ -82,8 +89,6 @@ public:
 	Impl& operator =(Impl&& impl) = delete;
 
 private:
-
-	static const Char8* COMPONENT_TAG;
 
 	Uint32 _programHandle;
 
@@ -143,7 +148,7 @@ private:
 
 	void outputLinkerFailureLog() const
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to link the program:\n\t";
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to link the program: ";
 		const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 		if(logLength > 1u)
@@ -160,7 +165,7 @@ private:
 
 		if(logLength > 1u)
 		{
-			defaultLog << LogLevel::Warning << COMPONENT_TAG << " The program linked with warning(s):\n\t" <<
+			defaultLog << LogLevel::Warning << COMPONENT_TAG << " The program linked with warning(s): " <<
 				getInfoLog(logLength).data() << Log::Flush();
 		}
 	}
@@ -173,15 +178,7 @@ private:
 
 		return logBuffer;
 	}
-
-	static void applyProgram(const Uint32 programHandle)
-	{
-		OpenGL::useProgram(programHandle);
-		DE_CHECK_ERROR_OPENGL();
-	}
 };
-
-const Char8* Effect::Impl::COMPONENT_TAG = "[Platform::Effect - OpenGL]";
 
 
 // Private
@@ -212,4 +209,13 @@ void Effect::deapply() const
 void Effect::link() const
 {
 	_impl->link();
+}
+
+
+// External
+
+static void applyProgram(const Uint32 programHandle)
+{
+	OpenGL::useProgram(programHandle);
+	DE_CHECK_ERROR_OPENGL();
 }

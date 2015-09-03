@@ -30,6 +30,13 @@
 using namespace Core;
 using namespace Graphics;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsAdapter - Windows]";
+
+static DEVMODEW createDisplayModeInfo(const DisplayMode& mode);
+
+
 // Implementation
 
 class GraphicsAdapter::Impl final
@@ -82,8 +89,6 @@ public:
 
 private:
 
-	static const Char8* COMPONENT_TAG;
-
 	String16 _name;
 	DisplayModeList _supportedDisplayModes;
 	Uint32 _currentDisplayModeIndex;
@@ -101,22 +106,7 @@ private:
 			DE_ERROR(0x0);
 		}
 	}
-
-	static DEVMODEW createDisplayModeInfo(const DisplayMode& mode)
-	{
-		DEVMODEW displayModeInfo = DEVMODEW();
-		displayModeInfo.dmBitsPerPel = mode.colourDepth();
-		displayModeInfo.dmDisplayFrequency = mode.frequency();
-		displayModeInfo.dmFields = DM_BITSPERPEL | DM_DISPLAYFREQUENCY | DM_PELSHEIGHT | DM_PELSWIDTH;
-		displayModeInfo.dmPelsHeight = mode.height();
-		displayModeInfo.dmPelsWidth = mode.width();
-		displayModeInfo.dmSize = sizeof(DEVMODEW);
-
-		return displayModeInfo;
-	}
 };
-
-const Char8* GraphicsAdapter::Impl::COMPONENT_TAG = "[Platform::GraphicsAdapter - Windows]";
 
 
 // Public
@@ -150,4 +140,20 @@ GraphicsAdapter::GraphicsAdapter(const String8& name, const DisplayModeList& sup
 GraphicsAdapter::~GraphicsAdapter()
 {
 	DE_DELETE(_impl, Impl);
+}
+
+
+// External
+
+static DEVMODEW createDisplayModeInfo(const DisplayMode& mode)
+{
+	DEVMODEW displayModeInfo = DEVMODEW();
+	displayModeInfo.dmBitsPerPel = mode.colourDepth();
+	displayModeInfo.dmDisplayFrequency = mode.frequency();
+	displayModeInfo.dmFields = DM_BITSPERPEL | DM_DISPLAYFREQUENCY | DM_PELSHEIGHT | DM_PELSWIDTH;
+	displayModeInfo.dmPelsHeight = mode.height();
+	displayModeInfo.dmPelsWidth = mode.width();
+	displayModeInfo.dmSize = sizeof(DEVMODEW);
+
+	return displayModeInfo;
 }

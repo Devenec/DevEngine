@@ -18,6 +18,7 @@
  * along with this program. If not, see <http:  //www.gnu.org/licenses/>.
  */
 
+#include <core/Array.h>
 #include <core/Log.h>
 #include <core/StringStream.h>
 #include <core/debug/Assert.h>
@@ -123,6 +124,40 @@ extern "C"
 	void DE_CALL_OPENGL glTexSubImage2D(Enum target, Int32 level, Int32 xoffset, Int32 yoffset, Sizei width,
 		Sizei height, Enum format, Enum type, const Void* pixels);
 }
+
+static const Char8* COMPONENT_TAG = "[Platform::OpenGL]";
+
+static const Array<Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES
+{{
+	"OpenGL",
+	"window system",
+	"shader compiler",
+	"third party",
+	"application",
+	"other source"
+}};
+
+static const Array<Char8*, 9u> DEBUG_MESSAGE_TYPE_NAMES
+{{
+	"Deprecated behaviour",
+	"Error",
+	"Group pop",
+	"Group push"
+	"Marker",
+	"Other",
+	"Performance",
+	"Portability",
+	"Undefined behaviour"
+}};
+
+static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
+static const Char8* getDebugMessageTypeName(const Uint32 messageType);
+
+static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
+	const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
+	const Void* userData);
+
+static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function);
 
 
 // Public
@@ -853,72 +888,21 @@ void OpenGL::initialise()
 	debugMessageCallback(processDebugMessage, nullptr);
 }
 
-// Private
 
-const Char8* OpenGL::COMPONENT_TAG = "[Platform::OpenGL]";
+// External
 
-const Array<Char8*, 6u> OpenGL::DEBUG_MESSAGE_SOURCE_NAMES
-{{
-	"OpenGL",
-	"window system",
-	"shader compiler",
-	"third party",
-	"application",
-	"other source"
-}};
-
-const Array<Char8*, 9u> OpenGL::DEBUG_MESSAGE_TYPE_NAMES
-{{
-	"Deprecated behaviour",
-	"Error",
-	"Group pop",
-	"Group push"
-	"Marker",
-	"Other",
-	"Performance",
-	"Portability",
-	"Undefined behaviour"
-}};
-
-// Static
-
-void OpenGL::reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
-{
-	StringStream8 stringStream;
-	stringStream << "Error caught at " << file << " on line " << line << " in function " << function << '.';
-	
-	// TODO: check GL_MAX_DEBUG_MESSAGE_LENGTH
-	debugMessageInsert(DEBUG_SOURCE_APPLICATION, DEBUG_TYPE_ERROR, errorCode, DEBUG_SEVERITY_HIGH, -1,
-		stringStream.str().c_str());
-
-	//DE_CHECK_ERROR_OPENGL(); // TODO: causes a stack overflow if debugMessageInsert generates an error
-}
-
-void OpenGL::processDebugMessage(const Uint32 messageSource, const Uint32 messageType, const Uint32 messageId,
-	const Uint32 messageSeverity, const Int32 messageLength, const Char8* message, const Void* userData)
-{
-	static_cast<Void>(messageLength);
-	static_cast<Void>(userData);
-	
-	const Char8* messageSourceName = DEBUG_MESSAGE_SOURCE_NAMES[messageSource - DEBUG_SOURCE_API];
-
-	defaultLog << getDebugMessageLogLevel(messageSeverity) << COMPONENT_TAG << ' ' <<
-		getDebugMessageTypeName(messageType) << " message (" << StreamFormat::Hexadecimal << messageId <<
-		StreamFormat::Decimal << ") from " << messageSourceName << ": '" << message << '\'' << Log::Flush();
-}
-
-LogLevel OpenGL::getDebugMessageLogLevel(const Uint32 messageSeverity)
+static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity)
 {
 	switch(messageSeverity)
 	{
-		case DEBUG_SEVERITY_HIGH:
+		case OpenGL::DEBUG_SEVERITY_HIGH:
 			return LogLevel::Error;
 
-		case DEBUG_SEVERITY_MEDIUM:
-		case DEBUG_SEVERITY_LOW:
+		case OpenGL::DEBUG_SEVERITY_MEDIUM:
+		case OpenGL::DEBUG_SEVERITY_LOW:
 			return LogLevel::Warning;
 
-		case DEBUG_SEVERITY_NOTIFICATION:
+		case OpenGL::DEBUG_SEVERITY_NOTIFICATION:
 			return LogLevel::Info;
 
 		default:
@@ -927,39 +911,65 @@ LogLevel OpenGL::getDebugMessageLogLevel(const Uint32 messageSeverity)
 	}
 }
 
-const Char8* OpenGL::getDebugMessageTypeName(const Uint32 messageType)
+static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 {
 	switch(messageType)
 	{
-		case DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+		case OpenGL::DEBUG_TYPE_DEPRECATED_BEHAVIOR:
 			return DEBUG_MESSAGE_TYPE_NAMES[0];
 
-		case DEBUG_TYPE_ERROR:
+		case OpenGL::DEBUG_TYPE_ERROR:
 			return DEBUG_MESSAGE_TYPE_NAMES[1];
 
-		case DEBUG_TYPE_MARKER:
+		case OpenGL::DEBUG_TYPE_MARKER:
 			return DEBUG_MESSAGE_TYPE_NAMES[4];
 
-		case DEBUG_TYPE_OTHER:
+		case OpenGL::DEBUG_TYPE_OTHER:
 			return DEBUG_MESSAGE_TYPE_NAMES[5];
 
-		case DEBUG_TYPE_PERFORMANCE:
+		case OpenGL::DEBUG_TYPE_PERFORMANCE:
 			return DEBUG_MESSAGE_TYPE_NAMES[6];
 
-		case DEBUG_TYPE_POP_GROUP:
+		case OpenGL::DEBUG_TYPE_POP_GROUP:
 			return DEBUG_MESSAGE_TYPE_NAMES[2];
 
-		case DEBUG_TYPE_PORTABILITY:
+		case OpenGL::DEBUG_TYPE_PORTABILITY:
 			return DEBUG_MESSAGE_TYPE_NAMES[7];
 
-		case DEBUG_TYPE_PUSH_GROUP:
+		case OpenGL::DEBUG_TYPE_PUSH_GROUP:
 			return DEBUG_MESSAGE_TYPE_NAMES[3];
 
-		case DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+		case OpenGL::DEBUG_TYPE_UNDEFINED_BEHAVIOR:
 			return DEBUG_MESSAGE_TYPE_NAMES[8];
 
 		default:
 			DE_ASSERT(false);
 			return DEBUG_MESSAGE_TYPE_NAMES[0];
 	}
+}
+
+static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
+	const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
+	const Void* userData)
+{
+	static_cast<Void>(messageLength);
+	static_cast<Void>(userData);
+
+	const Char8* messageSourceName = DEBUG_MESSAGE_SOURCE_NAMES[messageSource - OpenGL::DEBUG_SOURCE_API];
+
+	defaultLog << getDebugMessageLogLevel(messageSeverity) << COMPONENT_TAG << ' ' <<
+		getDebugMessageTypeName(messageType) << " message (" << StreamFormat::Hexadecimal << messageId <<
+		StreamFormat::Decimal << ") from " << messageSourceName << ": '" << message << '\'' << Log::Flush();
+}
+
+static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
+{
+	StringStream8 stringStream;
+	stringStream << "Error caught at " << file << " on line " << line << " in function " << function << '.';
+
+	// TODO: check GL_MAX_DEBUG_MESSAGE_LENGTH
+	OpenGL::debugMessageInsert(OpenGL::DEBUG_SOURCE_APPLICATION, OpenGL::DEBUG_TYPE_ERROR, errorCode,
+		OpenGL::DEBUG_SEVERITY_HIGH, -1, stringStream.str().c_str());
+
+	//DE_CHECK_ERROR_OPENGL(); // TODO: causes a stack overflow if debugMessageInsert generates an error
 }

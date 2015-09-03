@@ -26,6 +26,11 @@
 using namespace Core;
 using namespace Platform;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsContextBase - WGL]";
+
+
 // Public
 
 void GraphicsContextBase::makeCurrent() const
@@ -113,7 +118,3 @@ void GraphicsContextBase::setPixelFormat(const Int32 pixelFormatIndex) const
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
-
-// Private
-
-const Char8* GraphicsContextBase::COMPONENT_TAG = "[Platform::GraphicsContextBase - WGL]";

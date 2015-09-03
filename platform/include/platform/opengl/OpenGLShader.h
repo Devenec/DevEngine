@@ -44,18 +44,14 @@ namespace Graphics
 
 	private:
 
-		static const Char8* COMPONENT_TAG;
-
 		Uint32 _shaderHandle;
 
-		void createShader(const Uint32 typeId);
+		void createShader(const ShaderType& type);
 		void compileShader(const Core::String8& source) const;
 		void checkCompilationStatus() const;
 		Int32 getParameter(const Uint32 parameterName) const;
 		void outputCompilerFailureLog() const;
 		void outputCompilerSuccessLog() const;
 		Core::Vector<Char8> getInfoLog(const Uint32 logLength) const;
-
-		static Uint32 getTypeId(const ShaderType& shaderType);
 	};
 }

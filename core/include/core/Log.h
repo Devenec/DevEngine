@@ -21,7 +21,6 @@
 #pragma once
 
 #include <cstdio>
-#include <core/Array.h>
 #include <core/LogBuffer.h>
 #include <core/String.h>
 #include <core/Types.h>
@@ -95,9 +94,6 @@ namespace Core
 
 		friend class LogManager;
 
-		static const Array<const Char8*, 4u> LOG_LEVEL_NAMES;
-		static const Char8* LOG_LEVEL_SEPARATOR;
-
 		LogBuffer _streamBuffer;
 		LogLevel _filterLevel;
 		StreamFormat _streamFormat;
@@ -108,13 +104,12 @@ namespace Core
 		void appendStreamLevel(const LogLevel& level);
 		void formatUint32FormatString(Char8* format) const;
 		void formatUint64FormatString(Char8* format) const;
-
-		static void writeToConsole(const String8& message);
-
-		template<typename... Parameters>
-		static inline Uint32 toString(const Char8* format, Char8* buffer, const Uint32 bufferSize,
-			Parameters... parameters);
 	};
+
+	void writeToConsole(const String8& message);
+
+	template<typename... Parameters>
+	Uint32 toString(const Char8* format, Char8* buffer, const Uint32 bufferSize, Parameters... parameters);
 
 	inline StreamFormat operator &(StreamFormat streamFormatA, const StreamFormat& streamFormatB);
 

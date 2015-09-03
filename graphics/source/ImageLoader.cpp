@@ -26,6 +26,7 @@
 #include <graphics/ImageLoader.h>
 #include <graphics/PNGReader.h>
 
+using namespace Content;
 using namespace Core;
 using namespace Graphics;
 
@@ -45,11 +46,8 @@ Image* ImageLoader::load(FileStream& fileStream)
 
 // External
 
-namespace Content
+template<>
+ContentLoader<Image>* ContentLoader<Image>::createLoader()
 {
-	template<>
-	ContentLoader<Image>* ContentLoader<Image>::createLoader()
-	{
-		return DE_NEW(ImageLoader)();
-	}
+	return DE_NEW(ImageLoader)();
 }

@@ -23,11 +23,12 @@
 #include <core/String.h>
 
 using namespace Core;
+using namespace Memory;
 
 // External
 
-using StringConverter = std::wstring_convert<std::codecvt_utf8_utf16<Char16>, Char16, Memory::STDAllocator<Char16>,
-	Memory::STDAllocator<Char8>>;
+using StringConverter = std::wstring_convert<std::codecvt_utf8_utf16<Char16>, Char16, STDAllocator<Char16>,
+	STDAllocator<Char8>>;
 
 
 // Core

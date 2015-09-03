@@ -34,6 +34,20 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsContext - WGL]";
+
+static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
+{{
+	WGL::CONTEXT_FLAGS_ARB,			WGL::CONTEXT_DEBUG_BIT_ARB,
+	WGL::CONTEXT_MAJOR_VERSION_ARB, 4,
+	WGL::CONTEXT_MINOR_VERSION_ARB, 5,
+	WGL::CONTEXT_PROFILE_MASK_ARB,	WGL::CONTEXT_CORE_PROFILE_BIT_ARB,
+	0
+}};
+
+
 // Implementation
 
 class GraphicsContext::Impl final : public GraphicsContextBase
@@ -59,9 +73,6 @@ private:
 
 	using Base = GraphicsContextBase;
 
-	static const Char8* COMPONENT_TAG;
-	static const Array<Int32, 9u> CONTEXT_ATTRIBUTES;
-
 	void createContext()
 	{
 		_graphicsContextHandle = WGL::createContextAttribsARB(_deviceContextHandle, nullptr,
@@ -74,17 +85,6 @@ private:
 		}
 	}
 };
-
-const Char8* GraphicsContext::Impl::COMPONENT_TAG = "[Platform::GraphicsContext - WGL]";
-
-const Array<Int32, 9u> GraphicsContext::Impl::CONTEXT_ATTRIBUTES
-{{
-	WGL::CONTEXT_FLAGS_ARB,			WGL::CONTEXT_DEBUG_BIT_ARB,
-	WGL::CONTEXT_MAJOR_VERSION_ARB, 4,
-	WGL::CONTEXT_MINOR_VERSION_ARB, 5,
-	WGL::CONTEXT_PROFILE_MASK_ARB,	WGL::CONTEXT_CORE_PROFILE_BIT_ARB,
-	0
-}};
 
 
 // Public

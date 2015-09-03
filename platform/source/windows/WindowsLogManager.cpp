@@ -28,33 +28,14 @@ using namespace Core;
 
 static Array<Byte, sizeof(Log)> defaultLogMemory;
 
+// External
+
+static void initialiseConsole();
+
+
 // Core
 
 Log& Core::defaultLog = *reinterpret_cast<Log*>(defaultLogMemory.data());
-
-
-// Implementation
-
-class LogManager::Impl final
-{
-public:
-
-	Impl() = delete;
-
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
-
-	~Impl() = delete;
-
-	static void initialiseConsole()
-	{
-		const Int32 result = SetConsoleOutputCP(CP_UTF8);
-		DE_ASSERT_WINDOWS(result != 0);
-	}
-
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
-};
 
 
 // Public
@@ -66,6 +47,15 @@ void LogManager::deinitialise() const
 
 void LogManager::initialise() const
 {
-	Impl::initialiseConsole();
+	initialiseConsole();
 	new (defaultLogMemory.data()) Log();
+}
+
+
+// External
+
+static void initialiseConsole()
+{
+	const Int32 result = SetConsoleOutputCP(CP_UTF8);
+	DE_ASSERT_WINDOWS(result != 0);
 }

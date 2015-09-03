@@ -50,9 +50,6 @@
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsEnumerations.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="include\platform\opengl\OpenGLInterface.h">
-      <Filter>Header Files\opengl</Filter>
-    </ClInclude>
     <ClInclude Include="include\platform\opengl\OpenGLShader.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>

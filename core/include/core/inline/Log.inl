@@ -63,12 +63,11 @@ Log& Log::operator <<(const StreamFormat& streamFormat)
 	return *this;
 }
 
-// Private
 
-// Static
+// Core
 
 template<typename... Parameters>
-Uint32 Log::toString(const Char8* format, Char8* buffer, const Uint32 bufferSize, Parameters... parameters)
+Uint32 toString(const Char8* format, Char8* buffer, const Uint32 bufferSize, Parameters... parameters)
 {
 	const Uint32 charactersWritten = std::snprintf(buffer, bufferSize, format, parameters...);
 
@@ -77,9 +76,6 @@ Uint32 Log::toString(const Char8* format, Char8* buffer, const Uint32 bufferSize
 	else
 		return bufferSize;
 }
-
-
-// Core
 
 StreamFormat operator &(StreamFormat streamFormatA, const StreamFormat& streamFormatB)
 {

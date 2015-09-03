@@ -23,11 +23,9 @@
 #include <core/debug/Assert.h>
 #include <graphics/Colour.h>
 #include <graphics/Effect.h>
-#include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/GraphicsResource.h>
 #include <graphics/IndexBuffer.h>
-#include <graphics/Shader.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/Viewport.h>
 #include <platform/opengl/OpenGL.h>
@@ -149,53 +147,6 @@ void GraphicsDevice::clear(const Colour& colour) const
 	_impl->clear(colour);
 }
 
-GraphicsBuffer* GraphicsDevice::createBuffer(const Uint32 size, const AccessMode& accessMode)
-{
-	GraphicsBuffer* buffer = DE_NEW(GraphicsBuffer)(size, accessMode);
-	_resources.push_back(buffer);
-
-	return buffer;
-}
-
-Effect* GraphicsDevice::createEffect()
-{
-	Effect* effect = DE_NEW(Effect)();
-	_resources.push_back(effect);
-
-	return effect;
-}
-
-IndexBuffer* GraphicsDevice::createIndexBuffer(const Uint32 size, const IndexType& indexType,
-	const AccessMode& accessMode)
-{
-	IndexBuffer* indexBuffer = DE_NEW(IndexBuffer)(size, indexType, accessMode);
-	_resources.push_back(indexBuffer);
-
-	return indexBuffer;
-}
-
-Shader* GraphicsDevice::createShader(const ShaderType& type, const String8& source)
-{
-	Shader* shader = DE_NEW(Shader)(type, source);
-	_resources.push_back(shader);
-
-	return shader;
-}
-
-VertexBufferState* GraphicsDevice::createVertexBufferState()
-{
-	VertexBufferState* vertexBufferState = DE_NEW(VertexBufferState)();
-	_resources.push_back(vertexBufferState);
-
-	return vertexBufferState;
-}
-
-void GraphicsDevice::destroyResource(GraphicsResource* resource)
-{
-	_resources.remove(resource);
-	DE_DELETE(resource, GraphicsResource);
-}
-
 void GraphicsDevice::draw(const PrimitiveType& primitiveType, const Uint32 vertexCount,
 	const Uint32 vertexOffset) const
 {
@@ -226,12 +177,4 @@ void GraphicsDevice::setViewport(const Viewport& viewport) const
 const Viewport& GraphicsDevice::viewport() const
 {
 	return _impl->viewport();
-}
-
-// Private
-
-void GraphicsDevice::destroyResources() const
-{
-	for(GraphicsResourceList::const_reverse_iterator i = _resources.rbegin(), end = _resources.rend(); i != end; ++i)
-		DE_DELETE(*i, GraphicsResource);
 }

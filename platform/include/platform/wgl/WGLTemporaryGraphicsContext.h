@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include <core/String.h>
 #include <core/Types.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/windows/WindowsGraphics.h>
@@ -45,19 +44,9 @@ namespace Platform
 
 		using Base = GraphicsContextBase;
 
-		static const Char8* COMPONENT_TAG;
-		static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR;
-		static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR;
-
 		void initialisePixelFormat() const;
 		void createContext();
 		Int32 choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const;
 		void checkPixelFormat(const Int32 pixelFormatIndex) const;
-
-		static void checkOpenGLVersion();
-		static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();
-		static Uint32 getOpenGLMajorVersion(const Core::String8& versionString);
-		static Uint32 getOpenGLMinorVersion(const Core::String8& versionString);
-		static Bool isOpenGLVersionSupported(const Uint32 majorVersion, const Uint32 minorVersion);
 	};
 }

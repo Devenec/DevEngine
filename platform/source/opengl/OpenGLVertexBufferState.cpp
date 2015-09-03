@@ -19,7 +19,6 @@
  */
 
 #include <core/Memory.h>
-#include <core/Types.h>
 #include <core/debug/Assert.h>
 #include <graphics/GraphicsBuffer.h>
 #include <graphics/IndexBuffer.h>
@@ -31,6 +30,13 @@
 using namespace Core;
 using namespace Graphics;
 using namespace Platform;
+
+// External
+
+static void applyVertexArray(const Uint32 vertexArrayHandle);
+static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise);
+static Uint32 getVertexElementSize(const VertexElement& element);
+
 
 // Implementation
 
@@ -137,100 +143,6 @@ private:
 		OpenGL::vertexArrayAttribBinding(_vertexArrayHandle, element.vertexIndex, element.bufferIndex);
 		DE_CHECK_ERROR_OPENGL();
 	}
-
-	static void applyVertexArray(const Uint32 vertexArrayHandle)
-	{
-		OpenGL::bindVertexArray(vertexArrayHandle);
-		DE_CHECK_ERROR_OPENGL();
-	}
-
-	static Uint32 getVertexElementSize(const VertexElement& element)
-	{
-		switch(element.type)
-		{
-			case VertexElementType::Float16:
-			case VertexElementType::Int8Vector2:
-			case VertexElementType::Int16:
-			case VertexElementType::Uint8Vector2:
-			case VertexElementType::Uint16:
-				 return 2u;
-
-			case VertexElementType::Float16Vector2:
-			case VertexElementType::Float32:
-			case VertexElementType::Int8Vector4:
-			case VertexElementType::Int16Vector2:
-			case VertexElementType::Int32:
-			case VertexElementType::Int32_B10G10R10A2:
-			case VertexElementType::Int32_R10G10B10A2:
-			case VertexElementType::Uint8Vector4:
-			case VertexElementType::Uint16Vector2:
-			case VertexElementType::Uint32:
-			case VertexElementType::Uint32_B10G10R10A2:
-			case VertexElementType::Uint32_R10G10B10A2:
-			case VertexElementType::Uint32_R11G11B10_Float:
-				 return 4u;
-
-			case VertexElementType::Float16Vector3:
-			case VertexElementType::Int16Vector3:
-			case VertexElementType::Uint16Vector3:
-				 return 6u;
-
-			case VertexElementType::Float16Vector4:
-			case VertexElementType::Float32Vector2:
-			case VertexElementType::Float64:
-			case VertexElementType::Int16Vector4:
-			case VertexElementType::Int32Vector2:
-			case VertexElementType::Uint16Vector4:
-			case VertexElementType::Uint32Vector2:
-				 return 8u;
-
-			case VertexElementType::Float32Vector3:
-			case VertexElementType::Int32Vector3:
-			case VertexElementType::Uint32Vector3:
-				 return 12u;
-
-			case VertexElementType::Float32Vector4:
-			case VertexElementType::Float64Vector2:
-			case VertexElementType::Int32Vector4:
-			case VertexElementType::Uint32Vector4:
-				 return 16u;
-
-			case VertexElementType::Float64Vector3:
-				 return 24u;
-
-			case VertexElementType::Float64Vector4:
-				 return 32u;
-
-			case VertexElementType::Int8:
-			case VertexElementType::Uint8:
-				 return 1u;
-
-			case VertexElementType::Int8Vector3:
-			case VertexElementType::Uint8Vector3:
-				 return 3u;
-
-			default:
-				DE_ASSERT(false);
-				return 0u;
-		}
-	}
-
-	static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise)
-	{
-		normalise = element.normalise;
-		Uint32 componentCount = static_cast<Int32>(element.type) & 0x07;
-
-		if(componentCount > 4u)
-		{
-			--componentCount;
-			normalise = true;
-		}
-
-		if(componentCount == 5u)
-			componentCount = OpenGL::BGRA;
-
-		return componentCount;
-	}
 };
 
 
@@ -275,4 +187,101 @@ VertexBufferState::VertexBufferState()
 VertexBufferState::~VertexBufferState()
 {
 	DE_DELETE(_impl, Impl);
+}
+
+
+// External
+
+static void applyVertexArray(const Uint32 vertexArrayHandle)
+{
+	OpenGL::bindVertexArray(vertexArrayHandle);
+	DE_CHECK_ERROR_OPENGL();
+}
+
+static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise)
+{
+	normalise = element.normalise;
+	Uint32 componentCount = static_cast<Int32>(element.type) & 0x07;
+
+	if(componentCount > 4u)
+	{
+		--componentCount;
+		normalise = true;
+	}
+
+	if(componentCount == 5u)
+		componentCount = OpenGL::BGRA;
+
+	return componentCount;
+}
+
+static Uint32 getVertexElementSize(const VertexElement& element)
+{
+	switch(element.type)
+	{
+		case VertexElementType::Float16:
+		case VertexElementType::Int8Vector2:
+		case VertexElementType::Int16:
+		case VertexElementType::Uint8Vector2:
+		case VertexElementType::Uint16:
+			return 2u;
+
+		case VertexElementType::Float16Vector2:
+		case VertexElementType::Float32:
+		case VertexElementType::Int8Vector4:
+		case VertexElementType::Int16Vector2:
+		case VertexElementType::Int32:
+		case VertexElementType::Int32_B10G10R10A2:
+		case VertexElementType::Int32_R10G10B10A2:
+		case VertexElementType::Uint8Vector4:
+		case VertexElementType::Uint16Vector2:
+		case VertexElementType::Uint32:
+		case VertexElementType::Uint32_B10G10R10A2:
+		case VertexElementType::Uint32_R10G10B10A2:
+		case VertexElementType::Uint32_R11G11B10_Float:
+			return 4u;
+
+		case VertexElementType::Float16Vector3:
+		case VertexElementType::Int16Vector3:
+		case VertexElementType::Uint16Vector3:
+			return 6u;
+
+		case VertexElementType::Float16Vector4:
+		case VertexElementType::Float32Vector2:
+		case VertexElementType::Float64:
+		case VertexElementType::Int16Vector4:
+		case VertexElementType::Int32Vector2:
+		case VertexElementType::Uint16Vector4:
+		case VertexElementType::Uint32Vector2:
+			return 8u;
+
+		case VertexElementType::Float32Vector3:
+		case VertexElementType::Int32Vector3:
+		case VertexElementType::Uint32Vector3:
+			return 12u;
+
+		case VertexElementType::Float32Vector4:
+		case VertexElementType::Float64Vector2:
+		case VertexElementType::Int32Vector4:
+		case VertexElementType::Uint32Vector4:
+			return 16u;
+
+		case VertexElementType::Float64Vector3:
+			return 24u;
+
+		case VertexElementType::Float64Vector4:
+			return 32u;
+
+		case VertexElementType::Int8:
+		case VertexElementType::Uint8:
+			return 1u;
+
+		case VertexElementType::Int8Vector3:
+		case VertexElementType::Uint8Vector3:
+			return 3u;
+
+		default:
+			DE_ASSERT(false);
+			return 0u;
+	}
 }

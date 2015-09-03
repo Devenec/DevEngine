@@ -26,6 +26,15 @@
 
 using namespace Core;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::FileStream - Windows]";
+
+static LARGE_INTEGER createLargeInteger(const Int64& value = 0);
+static Uint32 getAccessMode(const OpenMode& openMode);
+static Uint32 getCreationMode(const OpenMode& openMode);
+
+
 // Implementation
 
 class FileStream::Impl final
@@ -186,8 +195,6 @@ public:
 
 private:
 
-	static const Char8* COMPONENT_TAG;
-
 	HANDLE _handle;
 	OpenMode _openMode;
 
@@ -201,43 +208,7 @@ private:
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
-
-	static Uint32 getAccessMode(const OpenMode& openMode)
-	{
-		Uint32 mode = 0u;
-
-		if((openMode & OpenMode::Read) == OpenMode::Read)
-			mode |= GENERIC_READ;
-
-		if((openMode & OpenMode::Write) == OpenMode::Write)
-			mode |= GENERIC_WRITE;
-
-		return mode;
-	}
-
-	static Uint32 getCreationMode(const OpenMode& openMode)
-	{
-		Uint32 mode = 0u;
-
-		if((openMode & OpenMode::Read) == OpenMode::Read)
-			mode = OPEN_EXISTING;
-
-		if((openMode & OpenMode::Write) == OpenMode::Write)
-			mode = OPEN_ALWAYS;
-
-		return mode;
-	}
-
-	static LARGE_INTEGER createLargeInteger(const Int64& value = 0)
-	{
-		LARGE_INTEGER integer;
-		integer.QuadPart = value;
-
-		return integer;
-	}
 };
-
-const Char8* FileStream::Impl::COMPONENT_TAG = "[Platform::FileStream - Windows]";
 
 
 // Public
@@ -304,4 +275,41 @@ Int64 FileStream::size() const
 Uint32 FileStream::write(const Byte* data, const Uint32 size) const
 {
 	return _impl->write(data, size);
+}
+
+
+// External
+
+static LARGE_INTEGER createLargeInteger(const Int64& value)
+{
+	LARGE_INTEGER integer;
+	integer.QuadPart = value;
+
+	return integer;
+}
+
+static Uint32 getAccessMode(const OpenMode& openMode)
+{
+	Uint32 mode = 0u;
+
+	if((openMode & OpenMode::Read) == OpenMode::Read)
+		mode |= GENERIC_READ;
+
+	if((openMode & OpenMode::Write) == OpenMode::Write)
+		mode |= GENERIC_WRITE;
+
+	return mode;
+}
+
+static Uint32 getCreationMode(const OpenMode& openMode)
+{
+	Uint32 mode = 0u;
+
+	if((openMode & OpenMode::Read) == OpenMode::Read)
+		mode = OPEN_EXISTING;
+
+	if((openMode & OpenMode::Write) == OpenMode::Write)
+		mode = OPEN_ALWAYS;
+
+	return mode;
 }

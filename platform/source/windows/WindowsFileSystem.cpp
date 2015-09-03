@@ -23,8 +23,12 @@
 #include <platform/windows/Windows.h>
 
 using namespace Core;
+using namespace Platform;
 
-static const Char8* FILESYSTEM_COMPONENT_TAG = "[Platform::FileSystem - Windows]";
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::FileSystem - Windows]";
+
 
 // Public
 
@@ -32,19 +36,15 @@ static const Char8* FILESYSTEM_COMPONENT_TAG = "[Platform::FileSystem - Windows]
 
 Bool FileSystem::fileExists(const String8& filepath)
 {
-	const String16 filepath16 = toString16(filepath);
-	const Uint32 fileAttributes = GetFileAttributesW(filepath16.c_str());
+	const Uint32 fileAttributes = GetFileAttributesW(toString16(filepath).c_str());
 
 	if(fileAttributes == INVALID_FILE_ATTRIBUTES)
 	{
-		if(GetLastError() == ERROR_FILE_NOT_FOUND)
-		{
-			SetLastError(0u);
+		if(getWindowsErrorCode() == ERROR_FILE_NOT_FOUND)
 			return false;
-		}
 
-		defaultLog << LogLevel::Error << FILESYSTEM_COMPONENT_TAG << " Failed to get the attributes of file '" <<
-			filepath << "'." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the attributes of file '" << filepath <<
+			"'." << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}

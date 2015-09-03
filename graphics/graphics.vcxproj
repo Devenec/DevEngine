@@ -97,6 +97,7 @@
     <ClCompile Include="source\Colour.cpp" />
     <ClCompile Include="source\DisplayMode.cpp" />
     <ClCompile Include="source\GraphicsAdapterManager.cpp" />
+    <ClCompile Include="source\GraphicsDevice.cpp" />
     <ClCompile Include="source\Image.cpp" />
     <ClCompile Include="source\ImageLoader.cpp" />
     <ClCompile Include="source\IndexBuffer.cpp" />
