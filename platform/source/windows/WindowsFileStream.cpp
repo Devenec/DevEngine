@@ -114,7 +114,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the position of the file pointer." <<
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the file pointer position." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x0);
@@ -166,7 +166,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the size of the file." << Log::Flush();
+			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the file size." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 

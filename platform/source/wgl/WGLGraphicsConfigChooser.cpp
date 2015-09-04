@@ -61,9 +61,13 @@ GraphicsConfig GraphicsConfigChooser::chooseConfig() const
 {
 	const Uint32 pixelFormatCount = getPixelFormatCount();
 	const PixelFormatIndexList pixelFormatIndices = getPixelFormatIndices(pixelFormatCount);
-	GraphicsConfig config;
-	config._impl->setPixelFormatIndex(chooseBestPixelFormat(pixelFormatIndices));
+	PixelFormatAttributeList pixelFormatAttributes;
+	const Int32 pixelFormatIndex = chooseBestPixelFormat(pixelFormatIndices, pixelFormatAttributes);
+	
+	GraphicsConfig config(pixelFormatAttributes[5], pixelFormatAttributes[4], pixelFormatAttributes[2],
+		pixelFormatAttributes[1], pixelFormatAttributes[3], pixelFormatAttributes[6]);
 
+	config._impl->setPixelFormatIndex(pixelFormatIndex);
 	return config;
 }
 
@@ -88,7 +92,9 @@ Uint32 GraphicsConfigChooser::getPixelFormatCount() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the config count." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the number of configurations." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -124,19 +130,20 @@ GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelForma
 	return formatIndices;
 }
 
-Int32 GraphicsConfigChooser::chooseBestPixelFormat(const PixelFormatIndexList& formatIndices) const
+Int32 GraphicsConfigChooser::chooseBestPixelFormat(const PixelFormatIndexList& formatIndices,
+	PixelFormatAttributeList& formatAttributes) const
 {
 	Int32 bestFormatIndex = formatIndices.front();
-	PixelFormatAttributeList bestFormatAttributes = getPixelFormatAttributes(bestFormatIndex);
+	formatAttributes = getPixelFormatAttributes(bestFormatIndex);
 
 	for(PixelFormatIndexList::const_iterator i = formatIndices.begin() + 1u, end = formatIndices.end(); i != end; ++i)
 	{
 		const PixelFormatAttributeList compareFormatAttributes = getPixelFormatAttributes(*i);
 
-		if(isPixelFormatLess(bestFormatAttributes, compareFormatAttributes))
+		if(isPixelFormatLess(formatAttributes, compareFormatAttributes))
 		{
 			bestFormatIndex = *i;
-			bestFormatAttributes = compareFormatAttributes;
+			formatAttributes = compareFormatAttributes;
 		}
 	}
 

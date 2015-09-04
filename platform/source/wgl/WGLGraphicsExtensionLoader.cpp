@@ -946,7 +946,7 @@ static T getFunction(const Char8* name)
 
 	if(function == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the function '" << name << "'." <<
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the function " << name << '.' <<
 			Log::Flush();
 
 		DE_ERROR(0x0);

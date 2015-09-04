@@ -46,16 +46,38 @@ GraphicsConfig::Impl& GraphicsConfig::Impl::operator =(const Impl& impl)
 // Public
 
 GraphicsConfig::GraphicsConfig()
-	: _impl(DE_NEW(Impl)()) { }
+	: GraphicsConfig(0u, 0u, 0u, 0u, 0u, 0u) { }
+
+GraphicsConfig::GraphicsConfig(const Uint32 redDepth, const Uint32 greenDepth, const Uint32 blueDepth,
+	const Uint32 alphaDepth, const Uint32 depthBufferDepth, const Uint32 stencilBufferDepth)
+	: _impl(DE_NEW(Impl)()),
+	  _alphaDepth(static_cast<Uint8>(alphaDepth)),
+	  _blueDepth(static_cast<Uint8>(blueDepth)),
+	  _depthDepth(static_cast<Uint8>(depthBufferDepth)),
+	  _greenDepth(static_cast<Uint8>(greenDepth)),
+	  _redDepth(static_cast<Uint8>(redDepth)),
+	  _stencilDepth(static_cast<Uint8>(stencilBufferDepth)) { }
 
 GraphicsConfig::GraphicsConfig(const GraphicsConfig& graphicsConfig)
-	: _impl(DE_NEW(Impl)())
+	: _impl(DE_NEW(Impl)()),
+	  _alphaDepth(graphicsConfig._alphaDepth),
+	  _blueDepth(graphicsConfig._blueDepth),
+	  _depthDepth(graphicsConfig._depthDepth),
+	  _greenDepth(graphicsConfig._greenDepth),
+	  _redDepth(graphicsConfig._redDepth),
+	  _stencilDepth(graphicsConfig._stencilDepth)
 {
 	*_impl = *graphicsConfig._impl;
 }
 
 GraphicsConfig::GraphicsConfig(GraphicsConfig&& graphicsConfig)
-	: _impl(graphicsConfig._impl)
+	: _impl(graphicsConfig._impl),
+	  _alphaDepth(graphicsConfig._alphaDepth),
+	  _blueDepth(graphicsConfig._blueDepth),
+	  _depthDepth(graphicsConfig._depthDepth),
+	  _greenDepth(graphicsConfig._greenDepth),
+	  _redDepth(graphicsConfig._redDepth),
+	  _stencilDepth(graphicsConfig._stencilDepth)
 {
 	graphicsConfig._impl = nullptr;
 }
@@ -70,5 +92,12 @@ GraphicsConfig::~GraphicsConfig()
 GraphicsConfig& GraphicsConfig::operator =(GraphicsConfig graphicsConfig)
 {
 	std::swap(_impl, graphicsConfig._impl);
+	_alphaDepth = graphicsConfig._alphaDepth;
+	_blueDepth = graphicsConfig._blueDepth;
+	_depthDepth = graphicsConfig._depthDepth;
+	_greenDepth = graphicsConfig._greenDepth;
+	_redDepth = graphicsConfig._redDepth;
+	_stencilDepth = graphicsConfig._stencilDepth;
+
 	return *this;
 }

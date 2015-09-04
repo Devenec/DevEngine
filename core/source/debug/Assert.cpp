@@ -31,8 +31,8 @@ using namespace Core;
 
 void Debug::failAssertion(const Char8* expression, const Char8* file, const Uint32 line, const Char8* function)
 {
-	defaultLog << LogLevel::Error << "Assertion failed with expression '" << expression << "', at " << file <<
-		" on line " << line << " in function " << function << '.' << Log::Flush();
+	defaultLog << LogLevel::Error << "Assertion failed at " << file << ", on line " << line << ", in function " <<
+		function << ", with expression '" << expression << "'." << Log::Flush();
 
 	DE_DEBUGGER_BREAK();
 	std::abort();

@@ -24,6 +24,7 @@
 
 namespace Graphics
 {
+	class GraphicsConfig;
 	class GraphicsContext;
 	class Window;
 
@@ -51,4 +52,6 @@ namespace Graphics
 
 		Impl* _impl;
 	};
+
+	void logGraphicsContextConfiguration(const GraphicsConfig& config);
 }

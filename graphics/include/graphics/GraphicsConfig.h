@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <core/Types.h>
+
 namespace Platform
 {
 	class GraphicsConfigChooser;
@@ -33,11 +35,26 @@ namespace Graphics
 
 		GraphicsConfig();
 
+		GraphicsConfig(const Uint32 redDepth, const Uint32 greenDepth, const Uint32 blueDepth, const Uint32 alphaDepth,
+			const Uint32 depthBufferDepth, const Uint32 stencilBufferDepth);
+
 		GraphicsConfig(const GraphicsConfig& graphicsConfig);
 
 		GraphicsConfig(GraphicsConfig&& graphicsConfig);
 
 		~GraphicsConfig();
+
+		inline Uint32 alphaDepth() const;
+
+		inline Uint32 blueDepth() const;
+
+		inline Uint32 depthBufferDepth() const;
+
+		inline Uint32 greenDepth() const;
+
+		inline Uint32 redDepth() const;
+
+		inline Uint32 stencilBufferDepth() const;
 
 		GraphicsConfig& operator =(GraphicsConfig graphicsConfig);
 
@@ -49,5 +66,13 @@ namespace Graphics
 		class Impl;
 
 		Impl* _impl;
+		Uint8 _alphaDepth;
+		Uint8 _blueDepth;
+		Uint8 _depthDepth;
+		Uint8 _greenDepth;
+		Uint8 _redDepth;
+		Uint8 _stencilDepth;
 	};
+
+#include "inline/GraphicsConfig.inl"
 }

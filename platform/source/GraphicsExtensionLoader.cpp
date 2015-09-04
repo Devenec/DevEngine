@@ -50,12 +50,12 @@ void GraphicsExtensionLoader::logSupportedContextExtensions(const String8& exten
 	}
 	else
 	{
-		defaultLog << "Supported graphics context extensions:\n";
+		defaultLog << "Supported graphics context extensions:\n\n";
 		const Vector<String8> extensionNames = splitExtensionsString(extensionsString);
 		logSupportedExtensions(extensionNames);
 	}
 
-	defaultLog << '\n' << Log::Flush();
+	defaultLog << Log::Flush();
 }
 
 void GraphicsExtensionLoader::logSupportedInterfaceExtensions(const ExtensionNameList& extensionNames)
@@ -68,11 +68,11 @@ void GraphicsExtensionLoader::logSupportedInterfaceExtensions(const ExtensionNam
 	}
 	else
 	{
-		defaultLog << "Supported graphics interface extensions:\n";
+		defaultLog << "Supported graphics interface extensions:\n\n";
 		logSupportedExtensions(extensionNames);
 	}
 
-	defaultLog << '\n' << Log::Flush();
+	defaultLog << Log::Flush();
 }
 
 
@@ -85,8 +85,6 @@ static void logSupportedExtensions(const ExtensionNameList& extensionNames)
 
 	for(Uint32 i = 0u; i < rowCount; ++i)
 	{
-		defaultLog << '\n';
-
 		for(Uint32 j = i; j <= i + 2u * rowCount && j < extensionCount; j += rowCount)
 		{
 			if(j != i)
@@ -94,6 +92,8 @@ static void logSupportedExtensions(const ExtensionNameList& extensionNames)
 
 			defaultLog << extensionNames[j];
 		}
+
+		defaultLog << '\n';
 	}
 }
 

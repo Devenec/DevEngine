@@ -129,7 +129,7 @@ void PNGReader::validateSignature(FileStream& fileStream)
 
 	if(result != 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " The PNG signature is invalid." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " The signature of the PNG file is invalid." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 

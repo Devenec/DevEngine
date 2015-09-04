@@ -60,7 +60,10 @@ namespace Platform
 
 		Uint32 getPixelFormatCount() const;
 		PixelFormatIndexList getPixelFormatIndices(const Uint32 formatCount) const;
-		Int32 chooseBestPixelFormat(const PixelFormatIndexList& formatIndices) const;
+		
+		Int32 chooseBestPixelFormat(const PixelFormatIndexList& formatIndices,
+			PixelFormatAttributeList& formatAttributes) const;
+
 		PixelFormatAttributeList getPixelFormatAttributes(const Int32 formatIndex) const;
 	};
 }

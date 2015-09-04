@@ -78,8 +78,8 @@ void Shader::Impl::createShader(const ShaderType& type)
 
 	if(_shaderHandle == 0u)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the shader (" <<
-			SHADER_TYPE_NAMES[static_cast<Int32>(type)] << ")." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the " <<
+			SHADER_TYPE_NAMES[static_cast<Int32>(type)] << " shader." << Log::Flush();
 
 		DE_ERROR(0x0);
 	}
@@ -124,7 +124,7 @@ void Shader::Impl::outputCompilerFailureLog() const
 	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 	if(logLength > 1u)
-		defaultLog << getInfoLog(logLength).data();
+		defaultLog << '\'' << getInfoLog(logLength).data() << "'.";
 	else
 		defaultLog << "No compiler log available.";
 
@@ -137,8 +137,8 @@ void Shader::Impl::outputCompilerSuccessLog() const
 
 	if(logLength > 1u)
 	{
-		defaultLog << LogLevel::Warning << COMPONENT_TAG << " The shader compiled with warning(s): " <<
-			getInfoLog(logLength).data() << Log::Flush();
+		defaultLog << LogLevel::Warning << COMPONENT_TAG << " The shader compiled with warning(s): '" <<
+			getInfoLog(logLength).data() << "'." << Log::Flush();
 	}
 }
 

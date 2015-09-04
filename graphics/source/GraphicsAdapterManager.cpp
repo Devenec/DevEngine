@@ -30,8 +30,8 @@ using namespace Graphics;
 
 // External
 
-static void logAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator);
-static void logAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter);
+static void logGraphicsAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator);
+static void logGraphicsAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter);
 
 
 // Some members are defined in platform/*/*GraphicsAdapterManager.cpp
@@ -40,22 +40,22 @@ static void logAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter);
 
 void GraphicsAdapterManager::logAdapters() const
 {
-	defaultLog << LogLevel::Info << "Active graphics adapters and supported display modes:";
+	defaultLog << LogLevel::Info << "Active graphics adapters and supported display modes:\n";
 	const GraphicsAdapterList& graphicsAdapters = this->graphicsAdapters();
 
 	for(GraphicsAdapterList::const_iterator i = graphicsAdapters.begin(), end = graphicsAdapters.end(); i != end; ++i)
 	{
-		defaultLog << "\n\n" << i - graphicsAdapters.begin() << ". " << (*i)->name();
-		logAdapterDisplayModes(**i);
+		defaultLog << '\n' << (*i)->name() << '\n';
+		logGraphicsAdapterDisplayModes(**i);
 	}
 
-	defaultLog << '\n' << Log::Flush();
+	defaultLog << Log::Flush();
 }
 
 
 // External
 
-static void logAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator)
+static void logGraphicsAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator)
 {
 	if(insertSeparator)
 		defaultLog << "    ";
@@ -81,7 +81,7 @@ static void logAdapterDisplayMode(const DisplayMode& displayMode, const Bool ins
 	defaultLog << displayMode.frequency() << "Hz";
 }
 
-static void logAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter)
+static void logGraphicsAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter)
 {
 	const DisplayModeList& displayModes = graphicsAdapter.supportedDisplayModes();
 	const Uint32 displayModeCount = displayModes.size();
@@ -89,9 +89,9 @@ static void logAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter)
 
 	for(Uint32 i = 0u; i < rowCount; ++i)
 	{
-		defaultLog << '\n';
-
 		for(Uint32 j = i; j <= i + 3u * rowCount && j < displayModeCount; j += rowCount)
-			logAdapterDisplayMode(displayModes[j], j != i);
+			logGraphicsAdapterDisplayMode(displayModes[j], j != i);
+
+		defaultLog << '\n';
 	}
 }

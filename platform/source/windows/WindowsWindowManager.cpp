@@ -237,7 +237,7 @@ static RECT createWindowRectangle()
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a rectangle for a window." <<
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a window rectangle." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);

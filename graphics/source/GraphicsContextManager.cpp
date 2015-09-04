@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/WGLGraphicsConfig.h
+ * @file graphics/GraphicsContextManager.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,33 +18,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Log.h>
 #include <graphics/GraphicsConfig.h>
+#include <graphics/GraphicsContextManager.h>
 
-namespace Graphics
+using namespace Core;
+using namespace Graphics;
+
+// Some members are defined in platform/*/*GraphicsContextManager.cpp
+
+// Graphics
+
+void Graphics::logGraphicsContextConfiguration(const GraphicsConfig& config)
 {
-	class GraphicsConfig::Impl final
-	{
-	public:
-
-		Impl();
-
-		Impl(const Impl& impl) = delete;
-		Impl(Impl&& impl) = delete;
-
-		~Impl() = default;
-
-		inline Int32 pixelFormatIndex() const;
-
-		inline void setPixelFormatIndex(const Int32 pixelFormatIndex);
-
-		Impl& operator =(const Impl& impl);
-
-		Impl& operator =(Impl&& impl) = delete;
-
-	private:
-
-		Int32 _pixelFormatIndex;
-	};
-
-#include "inline/WGLGraphicsConfig.inl"
+	defaultLog << LogLevel::Info << "Current graphics context configuration:\n\nColour buffer (RGBA): " <<
+		config.redDepth() << ' ' << config.greenDepth() << ' ' << config.blueDepth() << ' ' << config.alphaDepth() <<
+		" bits\nDepth buffer:         " << config.depthBufferDepth() << " bits\nStencil buffer:       " <<
+		config.stencilBufferDepth() << " bits\n" << Log::Flush();
 }

@@ -18,43 +18,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/Array.h>
-#include <core/Log.h>
 #include <core/LogManager.h>
 #include <core/Types.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
 
-static Array<Byte, sizeof(Log)> defaultLogMemory;
+// Private
 
-// External
-
-static void initialiseConsole();
-
-
-// Core
-
-Log& Core::defaultLog = *reinterpret_cast<Log*>(defaultLogMemory.data());
-
-
-// Public
-
-void LogManager::deinitialise() const
-{
-	defaultLog.~Log();
-}
-
-void LogManager::initialise() const
-{
-	initialiseConsole();
-	new (defaultLogMemory.data()) Log();
-}
-
-
-// External
-
-static void initialiseConsole()
+void LogManager::initialisePlatform() const
 {
 	const Int32 result = SetConsoleOutputCP(CP_UTF8);
 	DE_ASSERT_WINDOWS(result != 0);

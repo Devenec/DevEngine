@@ -91,7 +91,6 @@
     <ClInclude Include="include\core\debug\StackTrace.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="include\core\debug\inline\AllocationTracker.inl" />
     <None Include="include\core\inline\FileStream.inl" />
     <None Include="include\core\inline\Log.inl" />
     <None Include="include\core\inline\LogBuffer.inl" />
@@ -106,6 +105,7 @@
     <ClCompile Include="source\Error.cpp" />
     <ClCompile Include="source\Log.cpp" />
     <ClCompile Include="source\LogBuffer.cpp" />
+    <ClCompile Include="source\LogManager.cpp" />
     <ClCompile Include="source\Memory.cpp" />
     <ClCompile Include="source\memory\AllocationPolicy.cpp" />
     <ClCompile Include="source\memory\AllocationPolicyBase.cpp" />

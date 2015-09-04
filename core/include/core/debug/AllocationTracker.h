@@ -44,11 +44,11 @@ namespace Debug
 
 		~AllocationTracker() = default;
 
-		inline void deinitialise();
+		void deinitialise();
 
 		void deregisterAllocation(Void* pointer, const Uint32 size);
 
-		inline void initialise();
+		void initialise();
 
 		void registerAllocation(Void* pointer, const Uint32 size, const Char8* file, const Uint32 line,
 			const Char8* function);
@@ -82,8 +82,6 @@ namespace Debug
 		void checkForMemoryLeaks() const;
 		void logAllocationRecord(const Void* address, const AllocationRecord& allocationRecord) const;
 	};
-
-#include "inline/AllocationTracker.inl"
 }
 
 #endif

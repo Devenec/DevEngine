@@ -29,10 +29,22 @@
 using namespace Core;
 using namespace Debug;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Debug::AllocationTracker]";
+
+
 // Public
 
 AllocationTracker::AllocationTracker()
 	: _isInitialised(false) { }
+
+void AllocationTracker::deinitialise()
+{
+	_isInitialised = false;
+	checkForMemoryLeaks();
+	defaultLog << LogLevel::Debug << "AllocationTracker deinitialised." << Log::Flush();
+}
 
 void AllocationTracker::deregisterAllocation(Void* pointer, const Uint32 size)
 {
@@ -47,6 +59,12 @@ void AllocationTracker::deregisterAllocation(Void* pointer, const Uint32 size)
 			_allocationRecords.erase(iterator);
 		}
 	}
+}
+
+void AllocationTracker::initialise()
+{
+	_isInitialised = true;
+	defaultLog << LogLevel::Debug << "AllocationTracker initialised." << Log::Flush();
 }
 
 void AllocationTracker::registerAllocation(Void* pointer, const Uint32 size, const Char8* file, const Uint32 line,
@@ -69,7 +87,7 @@ void AllocationTracker::checkForMemoryLeaks() const
 {
 	if(_allocationRecords.size() > 0u)
 	{
-		defaultLog << LogLevel::Warning << "[Debug::AllocationTracker] " << _allocationRecords.size() <<
+		defaultLog << LogLevel::Warning << COMPONENT_TAG << ' ' << _allocationRecords.size() <<
 			" memory leak(s) detected:\n\n";
 
 		for(AllocationRecordMap::const_iterator i = _allocationRecords.begin(), end = _allocationRecords.end();
@@ -94,12 +112,12 @@ void AllocationTracker::logAllocationRecord(const Void* address, const Allocatio
 	else
 		defaultLog << allocationRecord.file;
 
-	defaultLog << " on line " << allocationRecord.line;
+	defaultLog << ", on line " << allocationRecord.line;
 
 	if(allocationRecord.function == nullptr)
-		defaultLog << " in unknown function";
+		defaultLog << ", in unknown function";
 	else
-		defaultLog << " in function " << allocationRecord.function;
+		defaultLog << ", in function " << allocationRecord.function;
 
 	defaultLog << ".\n";
 }

@@ -77,9 +77,7 @@ void Window::Impl::setRectangle(const Core::Rectangle& rectangle, const Bool isF
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the rectangle of the window." <<
-			Log::Flush();
-
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the window rectangle." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -94,7 +92,7 @@ void Window::Impl::setTitle(const String8& title) const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the title of the window." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the window title." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -119,9 +117,7 @@ Core::Rectangle Window::Impl::getRectangle() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the rectangle of the window." <<
-			Log::Flush();
-
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the window rectangle." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -143,7 +139,7 @@ void Window::Impl::setFullscreenStyle(const Bool isFullscreen) const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the style of the window." << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the window style." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -165,7 +161,7 @@ RECT Window::Impl::getMonitorRectangle() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the info of the window's monitor." <<
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get info about the monitor of the window." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);

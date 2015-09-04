@@ -152,7 +152,7 @@ private:
 		const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 		if(logLength > 1u)
-			defaultLog << getInfoLog(logLength).data();
+			defaultLog << '\'' << getInfoLog(logLength).data() << "'.";
 		else
 			defaultLog << "No linker log available.";
 
@@ -165,8 +165,8 @@ private:
 
 		if(logLength > 1u)
 		{
-			defaultLog << LogLevel::Warning << COMPONENT_TAG << " The program linked with warning(s): " <<
-				getInfoLog(logLength).data() << Log::Flush();
+			defaultLog << LogLevel::Warning << COMPONENT_TAG << " The program linked with warning(s): '" <<
+				getInfoLog(logLength).data() << "'." << Log::Flush();
 		}
 	}
 

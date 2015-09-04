@@ -94,6 +94,9 @@
     <None Include="include\graphics\inline\DisplayMode.inl">
       <Filter>Header Files\inline</Filter>
     </None>
+    <None Include="include\graphics\inline\GraphicsConfig.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
     <None Include="include\graphics\inline\Image.inl">
       <Filter>Header Files\inline</Filter>
     </None>
@@ -115,6 +118,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\GraphicsAdapterManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\GraphicsContextManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\GraphicsDevice.cpp">

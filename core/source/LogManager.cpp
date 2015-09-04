@@ -1,5 +1,5 @@
 /**
- * @file core/debug/inline/AllocationTracker.inl
+ * @file core/LogManager.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,15 +18,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <new>
+#include <core/Array.h>
+#include <core/Log.h>
+#include <core/LogManager.h>
+#include <core/Types.h>
+
+using namespace Core;
+
+// External
+
+static Array<Byte, sizeof(Log)> defaultLogMemory;
+
+
+// Core
+
+Log& Core::defaultLog = *reinterpret_cast<Log*>(defaultLogMemory.data());
+
+
+// Some members are defined in platform/*/*LogManager.cpp
+
 // Public
 
-void AllocationTracker::deinitialise()
+void LogManager::deinitialise() const
 {
-	_isInitialised = false;
-	checkForMemoryLeaks();
+	defaultLog.~Log();
+	defaultLog << LogLevel::Debug << "LogManager deinitialised." << Log::Flush();
 }
 
-void AllocationTracker::initialise()
+void LogManager::initialise() const
 {
-	_isInitialised = true;
+	initialisePlatform();
+	new (defaultLogMemory.data()) Log();
+	defaultLog << LogLevel::Debug << "LogManager initialised." << Log::Flush();
 }

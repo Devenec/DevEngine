@@ -965,7 +965,7 @@ static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const
 static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
 {
 	StringStream8 stringStream;
-	stringStream << "Error caught at " << file << " on line " << line << " in function " << function << '.';
+	stringStream << "Error caught at " << file << ", on line " << line << ", in function " << function << '.';
 
 	// TODO: check GL_MAX_DEBUG_MESSAGE_LENGTH
 	OpenGL::debugMessageInsert(OpenGL::DEBUG_SOURCE_APPLICATION, OpenGL::DEBUG_TYPE_ERROR, errorCode,

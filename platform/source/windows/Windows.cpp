@@ -28,8 +28,8 @@ using namespace Core;
 
 void Platform::failWindowsAssertion(const Char8* file, const Uint32 line, const Char8* function)
 {
-	defaultLog << LogLevel::Error << "Windows assertion failed with error code " << getWindowsErrorCode() << ", at " <<
-		file << " on line " << line << " in function " << function << '.' << Log::Flush();
+	defaultLog << LogLevel::Error << "Windows assertion failed at " << file << ", on line " << line <<
+		", in function " << function << ", with error code " << getWindowsErrorCode() << '.' << Log::Flush();
 
 	DE_DEBUGGER_BREAK();
 	std::abort();

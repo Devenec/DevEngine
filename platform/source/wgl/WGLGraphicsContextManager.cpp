@@ -73,13 +73,16 @@ public:
 
 	GraphicsContext* createGraphicsContext(Window* window)
 	{
-		if(_graphicsContexts.size() == 0)
+		if(_graphicsContexts.size() == 0u)
 			initialiseGraphicsConfig(window);
 
 		GraphicsContext* graphicsContext = DE_NEW(GraphicsContext)(window, _graphicsConfig);
 
 		if(_graphicsContexts.size() == 0u)
+		{
 			loadInterfaceExtensions(graphicsContext);
+			logGraphicsContextConfiguration(_graphicsConfig);
+		}
 
 		_graphicsContexts.push_back(graphicsContext);
 		return graphicsContext;

@@ -62,7 +62,7 @@ void GraphicsBuffer::Impl::demapData() const
 
 	if(result == 0u)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to demap the buffer data" << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to demap the buffer data." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 }
@@ -79,7 +79,7 @@ Byte* GraphicsBuffer::Impl::mapData(const Uint32 size, const Uint32 bufferOffset
 
 	if(pointer == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to map the buffer data" << Log::Flush();
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to map the buffer data." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 

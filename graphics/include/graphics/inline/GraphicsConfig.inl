@@ -1,5 +1,5 @@
 /**
- * @file core/LogManager.h
+ * @file graphics/inline/GraphicsConfig.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,32 +18,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Public
 
-#include <core/Singleton.h>
-
-namespace Core
+Uint32 GraphicsConfig::alphaDepth() const
 {
-	class LogManager final : public Singleton<LogManager>
-	{
-	public:
+	return _alphaDepth;
+}
 
-		LogManager() = default;
+Uint32 GraphicsConfig::blueDepth() const
+{
+	return _blueDepth;
+}
 
-		LogManager(const LogManager& logManager) = delete;
-		LogManager(LogManager&& logManager) = delete;
+Uint32 GraphicsConfig::depthBufferDepth() const
+{
+	return _depthDepth;
+}
 
-		~LogManager() = default;
+Uint32 GraphicsConfig::greenDepth() const
+{
+	return _greenDepth;
+}
 
-		void deinitialise() const;
+Uint32 GraphicsConfig::redDepth() const
+{
+	return _redDepth;
+}
 
-		void initialise() const;
-
-		LogManager& operator =(const LogManager& logManager) = delete;
-		LogManager& operator =(LogManager&& logManager) = delete;
-
-	private:
-
-		void initialisePlatform() const;
-	};
+Uint32 GraphicsConfig::stencilBufferDepth() const
+{
+	return _stencilDepth;
 }
