@@ -64,13 +64,13 @@ namespace Core
 
 		Log& operator <<(const Bool boolean);
 
-		Log& operator <<(const Int32 interger);
+		Log& operator <<(const Int32 integer);
 
-		Log& operator <<(const Uint32 interger);
+		inline Log& operator <<(const Uint32 integer);
 
-		Log& operator <<(const Int64 interger);
+		Log& operator <<(const Int64 integer);
 
-		Log& operator <<(const Uint64 interger);
+		inline Log& operator <<(const Uint64 integer);
 
 		inline Log& operator <<(const Float32 floatingPoint);
 
@@ -86,7 +86,7 @@ namespace Core
 
 		Log& operator <<(const Flush& flush);
 
-		inline Log& operator <<(const LogLevel& streamLevel);
+		Log& operator <<(const LogLevel& streamLevel);
 
 		inline Log& operator <<(const StreamFormat& streamFormat);
 
@@ -102,8 +102,10 @@ namespace Core
 		Log();
 
 		void appendStreamLevel(const LogLevel& level);
-		void formatUint32FormatString(Char8* format) const;
-		void formatUint64FormatString(Char8* format) const;
+		void appendUint32(const Uint32 integer);
+		void appendUint64(const Uint64 integer);
+		void formatUint32FormatCharacters(Char8* format) const;
+		void formatUint64FormatCharacters(Char8* format) const;
 	};
 
 	void writeToConsole(const String8& message);

@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <core/FileStream.h>
 #include <core/String.h>
 #include <core/Types.h>
 
@@ -55,6 +56,7 @@ namespace Core
 
 		String8 _lineBuffer;
 		String8 _mainBuffer;
+		FileStream _fileStream;
 		FlushFunction _flushFunction;
 
 		inline void appendLineBreakAndIndent();

@@ -36,7 +36,8 @@ static Bool isWhitespaceCharacter(const Char8 character);
 const Uint32 LogBuffer::NON_POSITION = Numeric<Uint32>::maximum();
 
 LogBuffer::LogBuffer(FlushFunction flushFunction)
-	: _flushFunction(flushFunction)
+	: _fileStream("log", OpenMode::Write),
+	  _flushFunction(flushFunction)
 {
 	_lineBuffer.reserve(Config::LOG_LINE_MAX_WIDTH + 1u);
 	_mainBuffer.reserve(Config::LOG_BUFFER_SIZE);
@@ -121,6 +122,7 @@ void LogBuffer::appendLineBuffer()
 void LogBuffer::flushMainBuffer()
 {
 	_flushFunction(_mainBuffer);
+	_fileStream.write(reinterpret_cast<const Byte*>(_mainBuffer.c_str()), _mainBuffer.length());
 	_mainBuffer.clear();
 }
 

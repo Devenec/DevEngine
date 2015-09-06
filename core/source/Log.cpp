@@ -70,26 +70,14 @@ Log& Log::operator <<(const Int32 integer)
 		if((_streamFormat & StreamFormat::Hexadecimal) == StreamFormat::Hexadecimal ||
 			(_streamFormat & StreamFormat::Octal) == StreamFormat::Octal)
 		{
-			return operator <<(static_cast<Uint32>(integer));
+			appendUint32(integer);
 		}
-
-		Char8 buffer[12];
-		const Uint32 characterCount = toString("%d", buffer, sizeof(buffer), static_cast<Uint32>(integer));
-		_streamBuffer.appendCharacters(buffer, characterCount);
-	}
-
-	return *this;
-}
-
-Log& Log::operator <<(const Uint32 integer)
-{
-	if(_streamLevel >= _filterLevel)
-	{
-		Char8 format[5] = "";
-		formatUint32FormatString(format);
-		Char8 buffer[13];
-		const Uint32 characterCount = toString(format, buffer, sizeof(buffer), integer);
-		_streamBuffer.appendCharacters(buffer, characterCount);
+		else
+		{
+			Char8 buffer[12];
+			const Uint32 characterCount = toString("%d", buffer, sizeof(buffer), static_cast<Uint32>(integer));
+			_streamBuffer.appendCharacters(buffer, characterCount);
+		}
 	}
 
 	return *this;
@@ -102,26 +90,14 @@ Log& Log::operator <<(const Int64 integer)
 		if((_streamFormat & StreamFormat::Hexadecimal) == StreamFormat::Hexadecimal ||
 			(_streamFormat & StreamFormat::Octal) == StreamFormat::Octal)
 		{
-			return operator <<(static_cast<Uint64>(integer));
+			appendUint64(integer);
 		}
-
-		Char8 buffer[22];
-		const Uint32 characterCount = toString("%lld", buffer, sizeof(buffer), static_cast<Uint64>(integer));
-		_streamBuffer.appendCharacters(buffer, characterCount);
-	}
-
-	return *this;
-}
-
-Log& Log::operator <<(const Uint64 integer)
-{
-	if(_streamLevel >= _filterLevel)
-	{
-		Char8 format[7] = "";
-		formatUint64FormatString(format);
-		Char8 buffer[24];
-		const Uint32 characterCount = toString(format, buffer, sizeof(buffer), integer);
-		_streamBuffer.appendCharacters(buffer, characterCount);
+		else
+		{
+			Char8 buffer[22];
+			const Uint32 characterCount = toString("%lld", buffer, sizeof(buffer), static_cast<Uint64>(integer));
+			_streamBuffer.appendCharacters(buffer, characterCount);
+		}
 	}
 
 	return *this;
@@ -162,9 +138,17 @@ Log& Log::operator <<(const Void* pointer)
 Log& Log::operator <<(const Flush& flush)
 {
 	static_cast<Void>(flush);
+	_streamBuffer.flush();
 
-	if(_streamLevel >= _filterLevel)
-		_streamBuffer.flush();
+	return *this;
+}
+
+Log& Log::operator <<(const LogLevel& streamLevel)
+{
+	_streamLevel = streamLevel;
+	
+	if(streamLevel >= _filterLevel)
+		appendStreamLevel(_streamLevel);
 
 	return *this;
 }
@@ -185,7 +169,25 @@ void Log::appendStreamLevel(const LogLevel& level)
 	_streamBuffer.appendCharacters(LOG_LEVEL_SEPARATOR, LogBuffer::NON_POSITION);
 }
 
-void Log::formatUint32FormatString(Char8* format) const
+void Log::appendUint32(const Uint32 integer)
+{
+	Char8 format[5] = "";
+	formatUint32FormatCharacters(format);
+	Char8 buffer[13];
+	const Uint32 characterCount = toString(format, buffer, sizeof(buffer), integer);
+	_streamBuffer.appendCharacters(buffer, characterCount);
+}
+
+void Log::appendUint64(const Uint64 integer)
+{
+	Char8 format[7] = "";
+	formatUint64FormatCharacters(format);
+	Char8 buffer[24];
+	const Uint32 characterCount = toString(format, buffer, sizeof(buffer), integer);
+	_streamBuffer.appendCharacters(buffer, characterCount);
+}
+
+void Log::formatUint32FormatCharacters(Char8* format) const
 {
 	if((_streamFormat & StreamFormat::Decimal) == StreamFormat::Decimal)
 	{
@@ -207,7 +209,7 @@ void Log::formatUint32FormatString(Char8* format) const
 	}
 }
 
-void Log::formatUint64FormatString(Char8* format) const
+void Log::formatUint64FormatCharacters(Char8* format) const
 {
 	if((_streamFormat & StreamFormat::Decimal) == StreamFormat::Decimal)
 	{

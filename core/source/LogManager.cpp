@@ -42,8 +42,8 @@ Log& Core::defaultLog = *reinterpret_cast<Log*>(defaultLogMemory.data());
 
 void LogManager::deinitialise() const
 {
+	defaultLog << LogLevel::Debug << "LogManager deinitialising..." << Log::Flush();
 	defaultLog.~Log();
-	defaultLog << LogLevel::Debug << "LogManager deinitialised." << Log::Flush();
 }
 
 void LogManager::initialise() const

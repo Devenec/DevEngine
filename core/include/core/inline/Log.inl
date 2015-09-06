@@ -32,6 +32,22 @@ void Log::setfilterLevel(const LogLevel& level)
 
 // Operators
 
+Log& Log::operator <<(const Uint32 integer)
+{
+	if(_streamLevel >= _filterLevel)
+		appendUint32(integer);
+
+	return *this;
+}
+
+Log& Log::operator <<(const Uint64 integer)
+{
+	if(_streamLevel >= _filterLevel)
+		appendUint64(integer);
+
+	return *this;
+}
+
 Log& Log::operator <<(const Float32 floatingPoint)
 {
 	return operator <<(static_cast<Float64>(floatingPoint));
@@ -39,27 +55,25 @@ Log& Log::operator <<(const Float32 floatingPoint)
 
 Log& Log::operator <<(const Char8* characters)
 {
-	_streamBuffer.appendCharacters(characters, LogBuffer::NON_POSITION);
+	if(_streamLevel >= _filterLevel)
+		_streamBuffer.appendCharacters(characters, LogBuffer::NON_POSITION);
+
 	return *this;
 }
 
 Log& Log::operator <<(const String8& string)
 {
-	_streamBuffer.appendCharacters(string.c_str(), string.length());
-	return *this;
-}
-
-Log& Log::operator <<(const LogLevel& streamLevel)
-{
-	_streamLevel = streamLevel;
-	appendStreamLevel(_streamLevel);
+	if(_streamLevel >= _filterLevel)
+		_streamBuffer.appendCharacters(string.c_str(), string.length());
 
 	return *this;
 }
 
 Log& Log::operator <<(const StreamFormat& streamFormat)
 {
-	_streamFormat = streamFormat;
+	if(_streamLevel >= _filterLevel)
+		_streamFormat = streamFormat;
+
 	return *this;
 }
 
