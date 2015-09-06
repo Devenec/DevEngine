@@ -59,7 +59,6 @@ namespace Core
 
 		inline void appendLineBreakAndIndent();
 		void appendToLineBuffer(const Char8* characters, Uint32& characterOffset, Uint32 characterCount);
-		Uint32 findWhitespaceCharacter(Bool& hasExplicitLineBreak) const;
 		void appendLineBuffer();
 		void flushMainBuffer();
 	};

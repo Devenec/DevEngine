@@ -18,6 +18,7 @@
  * along with this program. If not, see <http:  //www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <core/Array.h>
 #include <core/Log.h>
 #include <core/StringStream.h>
@@ -150,8 +151,12 @@ static const Array<Char8*, 9u> DEBUG_MESSAGE_TYPE_NAMES
 	"Undefined behaviour"
 }};
 
+static Uint32 maxDebugMessageLength = 0u;
+
 static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
 static const Char8* getDebugMessageTypeName(const Uint32 messageType);
+static void initialiseDebugMessaging();
+static void initialiseStateVariables();
 
 static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
 	const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
@@ -881,11 +886,8 @@ void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* f
 
 void OpenGL::initialise()
 {
-	enable(DEBUG_OUTPUT_SYNCHRONOUS);
-	DE_CHECK_ERROR_OPENGL();
-	debugMessageControl(DONT_CARE, DONT_CARE, DONT_CARE, 0, nullptr, TRUE);
-	DE_CHECK_ERROR_OPENGL();
-	debugMessageCallback(processDebugMessage, nullptr);
+	initialiseStateVariables();
+	initialiseDebugMessaging();
 }
 
 
@@ -948,6 +950,20 @@ static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 	}
 }
 
+static void initialiseDebugMessaging()
+{
+	OpenGL::enable(OpenGL::DEBUG_OUTPUT_SYNCHRONOUS);
+	DE_CHECK_ERROR_OPENGL();
+	OpenGL::debugMessageControl(OpenGL::DONT_CARE, OpenGL::DONT_CARE, OpenGL::DONT_CARE, 0, nullptr, OpenGL::TRUE);
+	DE_CHECK_ERROR_OPENGL();
+	OpenGL::debugMessageCallback(processDebugMessage, nullptr);
+}
+
+static void initialiseStateVariables()
+{
+	OpenGL::getIntegerv(OpenGL::MAX_DEBUG_MESSAGE_LENGTH, reinterpret_cast<Int32*>(&maxDebugMessageLength));
+}
+
 static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
 	const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
 	const Void* userData)
@@ -966,10 +982,15 @@ static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 
 {
 	StringStream8 stringStream;
 	stringStream << "Error caught at " << file << ", on line " << line << ", in function " << function << '.';
+	const String8 message = stringStream.str();
 
-	// TODO: check GL_MAX_DEBUG_MESSAGE_LENGTH
-	OpenGL::debugMessageInsert(OpenGL::DEBUG_SOURCE_APPLICATION, OpenGL::DEBUG_TYPE_ERROR, errorCode,
-		OpenGL::DEBUG_SEVERITY_HIGH, -1, stringStream.str().c_str());
+	for(Uint32 i = 0u, end = message.length(); i < end;)
+	{
+		const Uint32 messageLength = std::min(maxDebugMessageLength, message.length() - i);
 
-	//DE_CHECK_ERROR_OPENGL(); // TODO: causes a stack overflow if debugMessageInsert generates an error
+		OpenGL::debugMessageInsert(OpenGL::DEBUG_SOURCE_APPLICATION, OpenGL::DEBUG_TYPE_ERROR, errorCode,
+			OpenGL::DEBUG_SEVERITY_HIGH, messageLength, message.c_str() + i);
+
+		i += messageLength;
+	}
 }

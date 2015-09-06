@@ -148,13 +148,13 @@ private:
 
 	void outputLinkerFailureLog() const
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to link the program: ";
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to link the program:";
 		const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 		if(logLength > 1u)
-			defaultLog << '\'' << getInfoLog(logLength).data() << "'.";
+			defaultLog << '\n' << getInfoLog(logLength).data();
 		else
-			defaultLog << "No linker log available.";
+			defaultLog << " No linker log available.";
 
 		defaultLog << Log::Flush();
 	}
@@ -165,8 +165,8 @@ private:
 
 		if(logLength > 1u)
 		{
-			defaultLog << LogLevel::Warning << COMPONENT_TAG << " The program linked with warning(s): '" <<
-				getInfoLog(logLength).data() << "'." << Log::Flush();
+			defaultLog << LogLevel::Warning << COMPONENT_TAG << " The program linked with warning(s):\n" <<
+				getInfoLog(logLength).data() << Log::Flush();
 		}
 	}
 

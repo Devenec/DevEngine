@@ -31,7 +31,7 @@
 	#include <core/debug/Assert.h>
 
 	#define DE_ERROR(errorCode) \
-		Debug::failAssertion("Error code " DE_STRING8(errorCode), DE_FILE, DE_LINE, DE_FUNCTION)
+		Debug::failAssertion("error code " DE_STRING8(errorCode), DE_FILE, DE_LINE, DE_FUNCTION)
 #endif
 
 namespace Core

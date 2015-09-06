@@ -41,8 +41,8 @@ using namespace Platform;
 
 // External
 
+static void initialiseGraphicsInterface(GraphicsContext* graphicsContext);
 static void loadContextExtensions(Window* window);
-static void loadInterfaceExtensions(GraphicsContext* graphicsContext);
 
 
 // Implementation
@@ -80,7 +80,7 @@ public:
 
 		if(_graphicsContexts.size() == 0u)
 		{
-			loadInterfaceExtensions(graphicsContext);
+			initialiseGraphicsInterface(graphicsContext);
 			logGraphicsContextConfiguration(_graphicsConfig);
 		}
 
@@ -142,16 +142,16 @@ void GraphicsContextManager::destroyGraphicsContext(GraphicsContext* context) co
 
 // External
 
-static void loadContextExtensions(Window* window)
-{
-	TemporaryGraphicsContext temporaryGraphicsContext(static_cast<HWND>(window->handle()));
-	GraphicsExtensionLoader::loadContextExtensions(temporaryGraphicsContext);
-}
-
-static void loadInterfaceExtensions(GraphicsContext* graphicsContext)
+static void initialiseGraphicsInterface(GraphicsContext* graphicsContext)
 {
 	graphicsContext->makeCurrent();
 	GraphicsExtensionLoader::loadInterfaceExtensions();
 	OpenGL::initialise();
 	graphicsContext->makeNonCurrent();
+}
+
+static void loadContextExtensions(Window* window)
+{
+	TemporaryGraphicsContext temporaryGraphicsContext(static_cast<HWND>(window->handle()));
+	GraphicsExtensionLoader::loadContextExtensions(temporaryGraphicsContext);
 }

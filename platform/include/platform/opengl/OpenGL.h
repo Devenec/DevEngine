@@ -60,11 +60,6 @@
 		Platform::OpenGL::checkForErrors(DE_FILE, DE_LINE, DE_FUNCTION)
 #endif
 
-namespace Core
-{
-	enum class LogLevel;
-}
-
 namespace Platform
 {
 	class OpenGL final
@@ -3385,7 +3380,6 @@ namespace Platform
 		OpenGL& operator =(OpenGL&& openGl) = delete;
 
 		static void checkForErrors(const Char8* file, const Uint32 line, const Char8* function);
-
 		static void initialise();
 	};
 }

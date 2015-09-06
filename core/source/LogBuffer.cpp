@@ -73,13 +73,12 @@ void LogBuffer::appendCharacters(const Char8* characters, Uint32 characterCount)
 		}
 
 		appendToLineBuffer(characters, characterOffset, characterCount);
-		Bool hasExplicitLineBreak = false;
-		const Uint32 whitespacePosition = findWhitespaceCharacter(hasExplicitLineBreak);
+		const Uint32 lineBreakPosition = _lineBuffer.find('\n', 8u);
 
-		if(whitespacePosition != NON_POSITION && (hasExplicitLineBreak || _lineBuffer.length() == 120u))
+		if(lineBreakPosition != NON_POSITION)
 		{
-			characterOffset -= _lineBuffer.length() - whitespacePosition - 1u;
-			_lineBuffer.resize(whitespacePosition);
+			characterOffset -= _lineBuffer.length() - lineBreakPosition - 1u;
+			_lineBuffer.resize(lineBreakPosition);
 			appendLineBreakAndIndent();
 		}
 	}
@@ -101,25 +100,6 @@ void LogBuffer::appendToLineBuffer(const Char8* characters, Uint32& characterOff
 	characterCount = std::min(availableCapacity, characterCount - characterOffset);
 	_lineBuffer.append(characters + characterOffset, characterCount);
 	characterOffset += characterCount;
-}
-
-Uint32 LogBuffer::findWhitespaceCharacter(Bool& hasExplicitLineBreak) const
-{
-	Uint32 whitespacePosition = NON_POSITION;
-
-	for(Uint32 i = 8u, end = _lineBuffer.length(); i < end; ++i)
-	{
-		if(_lineBuffer[i] == '\n')
-		{
-			hasExplicitLineBreak = true;
-			return i;
-		}
-
-		if(_lineBuffer[i] == ' ')
-			whitespacePosition = i;
-	}
-
-	return whitespacePosition;
 }
 
 void LogBuffer::appendLineBuffer()

@@ -120,13 +120,13 @@ Int32 Shader::Impl::getParameter(const Uint32 parameterName) const
 
 void Shader::Impl::outputCompilerFailureLog() const
 {
-	defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to compile the shader: ";
+	defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to compile the shader:";
 	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 	if(logLength > 1u)
-		defaultLog << '\'' << getInfoLog(logLength).data() << "'.";
+		defaultLog << '\n' << getInfoLog(logLength).data();
 	else
-		defaultLog << "No compiler log available.";
+		defaultLog << " No compiler log available.";
 
 	defaultLog << Log::Flush();
 }
@@ -137,8 +137,8 @@ void Shader::Impl::outputCompilerSuccessLog() const
 
 	if(logLength > 1u)
 	{
-		defaultLog << LogLevel::Warning << COMPONENT_TAG << " The shader compiled with warning(s): '" <<
-			getInfoLog(logLength).data() << "'." << Log::Flush();
+		defaultLog << LogLevel::Warning << COMPONENT_TAG << " The shader compiled with warning(s):\n" <<
+			getInfoLog(logLength).data() << Log::Flush();
 	}
 }
 
