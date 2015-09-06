@@ -47,7 +47,7 @@ for custom content types.
 
 ### Third Party Source Code Included
 
-- [libpng] 1.6.17
+- [libpng] 1.6.18
 - [OpenGL and WGL API] header files
 - [zlib] 1.2.8
 
