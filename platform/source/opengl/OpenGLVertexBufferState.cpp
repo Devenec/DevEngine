@@ -130,21 +130,23 @@ private:
 		const Uint32 componentCount = getVertexElementComponentCount(element, normalise);
 		const Uint32 vertexElementType = static_cast<Uint32>(element.type) >> 3;
 
-		OpenGL::vertexArrayAttribFormat(_vertexArrayHandle, element.vertexIndex, componentCount, vertexElementType,
+		OpenGL::vertexArrayAttribFormat(_vertexArrayHandle, element.elementIndex, componentCount, vertexElementType,
 			normalise, offset);
 
 		DE_CHECK_ERROR_OPENGL();
-		OpenGL::enableVertexArrayAttrib(_vertexArrayHandle, element.vertexIndex);
+		OpenGL::enableVertexArrayAttrib(_vertexArrayHandle, element.elementIndex);
 		DE_CHECK_ERROR_OPENGL();
 	}
 
 	void setVertexElementBinding(const VertexElement& element) const
 	{
-		OpenGL::vertexArrayAttribBinding(_vertexArrayHandle, element.vertexIndex, element.bufferIndex);
+		OpenGL::vertexArrayAttribBinding(_vertexArrayHandle, element.elementIndex, element.bufferIndex);
 		DE_CHECK_ERROR_OPENGL();
 	}
 };
 
+
+// Graphics::VertexBufferState
 
 // Public
 

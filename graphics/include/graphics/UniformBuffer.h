@@ -1,5 +1,5 @@
 /**
- * @file graphics/VertexElement.h
+ * @file graphics/UniformBuffer.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -21,26 +21,31 @@
 #pragma once
 
 #include <core/Types.h>
-#include <graphics/GraphicsEnumerations.h>
+#include <graphics/GraphicsBuffer.h>
 
 namespace Graphics
 {
-	struct VertexElement final
+	class UniformBuffer final : public GraphicsBuffer
 	{
-		static const Uint32 AFTER_PREVIOUS = 0xFFFFFFFF;
+	public:
 
-		Uint32 bufferIndex;
-		Uint32 elementIndex;
-		Uint32 offset;
-		VertexElementType type;
-		Bool normalise;
+		UniformBuffer(const UniformBuffer& uniformBuffer) = delete;
+		UniformBuffer(UniformBuffer&& uniformBuffer) = delete;
 
-		VertexElement(const Uint32 elementIndex, const Uint32 bufferIndex, const VertexElementType& type,
-			const Bool normalise = false, const Uint32 offset = AFTER_PREVIOUS)
-			: bufferIndex(bufferIndex),
-			  elementIndex(elementIndex),
-			  offset(offset),
-			  type(type),
-			  normalise(normalise) { }
+		void bind(const Uint32 bindingIndex) const;
+
+		void debind(const Uint32 bindingIndex) const;
+
+		UniformBuffer& operator =(const UniformBuffer& uniformBuffer) = delete;
+		UniformBuffer& operator =(UniformBuffer&& uniformBuffer) = delete;
+
+	private:
+
+		friend class GraphicsDevice;
+
+		using Base = GraphicsBuffer;
+
+		UniformBuffer(const Uint32 size, const AccessMode& accessMode);
+		~UniformBuffer() = default;
 	};
 }

@@ -119,6 +119,8 @@ private:
 };
 
 
+// Graphics::GraphicsContextManager
+
 // Public
 
 GraphicsContextManager::GraphicsContextManager()

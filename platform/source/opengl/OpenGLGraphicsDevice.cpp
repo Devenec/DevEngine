@@ -131,6 +131,8 @@ private:
 };
 
 
+// Graphics::GraphicsDevice
+
 // Public
 
 GraphicsDevice::GraphicsDevice()

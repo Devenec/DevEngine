@@ -36,6 +36,7 @@ namespace Graphics
 	class GraphicsResource;
 	class IndexBuffer;
 	class Shader;
+	class UniformBuffer;
 	class VertexBufferState;
 	class Viewport;
 
@@ -61,6 +62,9 @@ namespace Graphics
 			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		Shader* createShader(const ShaderType& type, const Core::String8& source);
+
+		UniformBuffer* createUniformBuffer(const Uint32 size,
+			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		VertexBufferState* createVertexBufferState();
 

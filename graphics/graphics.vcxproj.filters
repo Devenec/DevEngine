@@ -71,6 +71,9 @@
     <ClInclude Include="include\graphics\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\UniformBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\VertexBufferState.h">
       <Filter>Header Files</Filter>
     </ClInclude>

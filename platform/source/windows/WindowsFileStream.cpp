@@ -86,8 +86,9 @@ public:
 
 	void open(const String8& filepath, const OpenMode& openMode)
 	{
+		DE_ASSERT((openMode & OpenMode::Read) == OpenMode::Read || (openMode & OpenMode::Write) == OpenMode::Write);
 		DE_ASSERT(!isOpen());
-		const String16 filepath16 = toString16(filepath).c_str();
+		const String16 filepath16 = toString16(filepath);
 		const Uint32 accessMode = getAccessMode(openMode);
 		const Uint32 creationMode = getCreationMode(openMode);
 
@@ -102,6 +103,7 @@ public:
 			DE_ERROR_WINDOWS(0x0);
 		}
 
+		SetLastError(0u);
 		_openMode = openMode;
 	}
 
@@ -211,6 +213,8 @@ private:
 };
 
 
+// Core::FileStream
+
 // Public
 
 FileStream::FileStream()
@@ -309,7 +313,12 @@ static Uint32 getCreationMode(const OpenMode& openMode)
 		mode = OPEN_EXISTING;
 
 	if((openMode & OpenMode::Write) == OpenMode::Write)
-		mode = OPEN_ALWAYS;
+	{
+		if((openMode & OpenMode::Truncate) == OpenMode::Truncate)
+			mode = CREATE_ALWAYS;
+		else
+			mode = OPEN_ALWAYS;
+	}
 
 	return mode;
 }

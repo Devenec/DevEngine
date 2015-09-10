@@ -109,6 +109,8 @@ private:
 };
 
 
+// Graphics::GraphicsAdapter
+
 // Public
 
 const DisplayMode& GraphicsAdapter::currentDisplayMode() const

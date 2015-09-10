@@ -128,7 +128,7 @@ extern "C"
 
 static const Char8* COMPONENT_TAG = "[Platform::OpenGL]";
 
-static const Array<Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES
+static const Array<const Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES
 {{
 	"OpenGL",
 	"window system",
@@ -138,12 +138,12 @@ static const Array<Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES
 	"other source"
 }};
 
-static const Array<Char8*, 9u> DEBUG_MESSAGE_TYPE_NAMES
+static const Array<const Char8*, 9u> DEBUG_MESSAGE_TYPE_NAMES
 {{
 	"Deprecated behaviour",
 	"Error",
 	"Group pop",
-	"Group push"
+	"Group push",
 	"Marker",
 	"Other",
 	"Performance",
@@ -954,7 +954,10 @@ static void initialiseDebugMessaging()
 {
 	OpenGL::enable(OpenGL::DEBUG_OUTPUT_SYNCHRONOUS);
 	DE_CHECK_ERROR_OPENGL();
-	OpenGL::debugMessageControl(OpenGL::DONT_CARE, OpenGL::DONT_CARE, OpenGL::DONT_CARE, 0, nullptr, OpenGL::TRUE);
+
+	OpenGL::debugMessageControl(OpenGL::DONT_CARE, OpenGL::DEBUG_TYPE_OTHER, OpenGL::DONT_CARE, 0, nullptr,
+		OpenGL::FALSE);
+
 	DE_CHECK_ERROR_OPENGL();
 	OpenGL::debugMessageCallback(processDebugMessage, nullptr);
 }

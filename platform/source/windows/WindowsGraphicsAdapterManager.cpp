@@ -103,6 +103,8 @@ private:
 };
 
 
+// Graphics::GraphicsAdapterManager
+
 // Public
 
 GraphicsAdapterManager::GraphicsAdapterManager()

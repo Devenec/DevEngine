@@ -87,6 +87,8 @@ private:
 };
 
 
+// Graphics::GraphicsContext
+
 // Public
 
 GraphicsContext::GraphicsContext(Window* window, const GraphicsConfig& graphicsConfig)

@@ -20,7 +20,6 @@
 
 #include <utility>
 #include <core/Memory.h>
-#include <graphics/GraphicsConfig.h>
 #include <platform/wgl/WGLGraphicsConfig.h>
 
 using namespace Graphics;

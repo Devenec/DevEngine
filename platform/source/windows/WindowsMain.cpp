@@ -25,6 +25,8 @@
 
 using namespace Core;
 
+// External
+
 static void runDevEngineMain(const Int32 argumentCount, Char16** arguments);
 static StartupParameters createStartupParameters(const Int32 argumentCount, Char16** arguments);
 

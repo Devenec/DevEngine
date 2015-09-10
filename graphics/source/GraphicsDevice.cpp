@@ -25,6 +25,7 @@
 #include <graphics/GraphicsResource.h>
 #include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
+#include <graphics/UniformBuffer.h>
 #include <graphics/VertexBufferState.h>
 
 using namespace Core;
@@ -65,6 +66,14 @@ Shader* GraphicsDevice::createShader(const ShaderType& type, const String8& sour
 	_resources.push_back(shader);
 
 	return shader;
+}
+
+UniformBuffer* GraphicsDevice::createUniformBuffer(const Uint32 size, const AccessMode& accessMode)
+{
+	UniformBuffer* uniformBuffer = DE_NEW(UniformBuffer)(size, accessMode);
+	_resources.push_back(uniformBuffer);
+
+	return uniformBuffer;
 }
 
 VertexBufferState* GraphicsDevice::createVertexBufferState()

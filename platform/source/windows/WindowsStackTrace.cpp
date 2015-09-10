@@ -142,6 +142,8 @@ private:
 };
 
 
+// Debug::StackTrace
+
 // Public
 
 StackTrace::StackTrace(const Uint32 maxEntryCount)

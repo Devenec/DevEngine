@@ -79,6 +79,7 @@
     <ClInclude Include="include\graphics\IndexBuffer.h" />
     <ClInclude Include="include\graphics\PNGReader.h" />
     <ClInclude Include="include\graphics\Shader.h" />
+    <ClInclude Include="include\graphics\UniformBuffer.h" />
     <ClInclude Include="include\graphics\VertexBufferState.h" />
     <ClInclude Include="include\graphics\VertexElement.h" />
     <ClInclude Include="include\graphics\Viewport.h" />

@@ -62,3 +62,13 @@ void Window::Impl::show() const
 {
 	ShowWindow(_windowHandle, SW_SHOW);
 }
+
+// Private
+
+Core::Rectangle Window::Impl::getFullscreenRectangle() const
+{
+	const RECT monitorRectangle = getMonitorRectangle();
+
+	return Core::Rectangle(monitorRectangle.left, monitorRectangle.top, monitorRectangle.right - monitorRectangle.left,
+		monitorRectangle.bottom - monitorRectangle.top);
+}

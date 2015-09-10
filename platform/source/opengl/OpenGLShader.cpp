@@ -64,11 +64,6 @@ Shader::Impl::~Impl()
 	DE_CHECK_ERROR_OPENGL();
 }
 
-Uint32 Shader::Impl::handle() const
-{
-	return _shaderHandle;
-}
-
 // Private
 
 void Shader::Impl::createShader(const ShaderType& type)

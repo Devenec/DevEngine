@@ -23,7 +23,6 @@
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <graphics/AccessMode.h>
-#include <graphics/GraphicsBuffer.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
 
@@ -35,6 +34,8 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG = "[Platform::GraphicsBuffer - OpenGL]";
 
+static void bindAsUniformBuffer(const Uint32 bindingIndex, const Uint32 bufferHandle);
+
 
 // Implementation
 
@@ -42,7 +43,8 @@ static const Char8* COMPONENT_TAG = "[Platform::GraphicsBuffer - OpenGL]";
 
 GraphicsBuffer::Impl::Impl(const Uint32 size, const AccessMode& accessMode)
 	: _bufferHandle(0u),
-	  _flags(0u)
+	  _flags(0u),
+	  _size(size)
 {
 	createBuffer();
 	initialiseFlags(accessMode);
@@ -52,6 +54,17 @@ GraphicsBuffer::Impl::Impl(const Uint32 size, const AccessMode& accessMode)
 GraphicsBuffer::Impl::~Impl()
 {
 	OpenGL::deleteBuffers(1, &_bufferHandle);
+	DE_CHECK_ERROR_OPENGL();
+}
+
+void GraphicsBuffer::Impl::bindAsUniformBuffer(const Uint32 bindingIndex) const
+{
+	::bindAsUniformBuffer(bindingIndex, _bufferHandle);
+}
+
+void GraphicsBuffer::Impl::bindAsUniformBuffer(const Uint32 bindingIndex, const Uint32 size, const Uint32 offset) const
+{
+	OpenGL::bindBufferRange(OpenGL::UNIFORM_BUFFER, bindingIndex, _bufferHandle, offset, size);
 	DE_CHECK_ERROR_OPENGL();
 }
 
@@ -65,11 +78,6 @@ void GraphicsBuffer::Impl::demapData() const
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to demap the buffer data." << Log::Flush();
 		DE_ERROR(0x0);
 	}
-}
-
-Uint32 GraphicsBuffer::Impl::handle() const
-{
-	return _bufferHandle;
 }
 
 Byte* GraphicsBuffer::Impl::mapData(const Uint32 size, const Uint32 bufferOffset) const
@@ -145,4 +153,21 @@ GraphicsBuffer::GraphicsBuffer(const Uint32 size, const AccessMode& accessMode)
 GraphicsBuffer::~GraphicsBuffer()
 {
 	DE_DELETE(_impl, Impl);
+}
+
+
+// Graphics
+
+void Graphics::debindAsUniformBuffer(const Uint32 bindingIndex)
+{
+	bindAsUniformBuffer(bindingIndex, 0u);
+}
+
+
+// External
+
+static void bindAsUniformBuffer(const Uint32 bindingIndex, const Uint32 bufferHandle)
+{
+	OpenGL::bindBufferBase(OpenGL::UNIFORM_BUFFER, bindingIndex, bufferHandle);
+	DE_CHECK_ERROR_OPENGL();
 }

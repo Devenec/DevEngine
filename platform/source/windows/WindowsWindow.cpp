@@ -144,14 +144,6 @@ void Window::Impl::setFullscreenStyle(const Bool isFullscreen) const
 	}
 }
 
-Core::Rectangle Window::Impl::getFullscreenRectangle() const
-{
-	const RECT monitorRectangle = getMonitorRectangle();
-		
-	return Core::Rectangle(monitorRectangle.left, monitorRectangle.top, monitorRectangle.right - monitorRectangle.left,
-		monitorRectangle.bottom - monitorRectangle.top);
-}
-
 RECT Window::Impl::getMonitorRectangle() const
 {
 	HMONITOR monitorHandle = MonitorFromWindow(_windowHandle, MONITOR_DEFAULTTONEAREST);

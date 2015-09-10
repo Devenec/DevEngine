@@ -120,16 +120,15 @@ private:
 
 	void detachShaders() const
 	{
-		const Uint32 attachedShaderCount = getParameter(OpenGL::ATTACHED_SHADERS);
+		const Uint32 shaderCount = getParameter(OpenGL::ATTACHED_SHADERS);
 
-		if(attachedShaderCount > 0u)
+		if(shaderCount > 0u)
 		{
-			Vector<Uint32> attachedShaderHandles(attachedShaderCount);
-			OpenGL::getAttachedShaders(_programHandle, attachedShaderCount, nullptr, attachedShaderHandles.data());
+			Vector<Uint32> shaderHandles(shaderCount);
+			OpenGL::getAttachedShaders(_programHandle, shaderCount, nullptr, shaderHandles.data());
 			DE_CHECK_ERROR_OPENGL();
 
-			for(Vector<Uint32>::const_iterator i = attachedShaderHandles.begin(), end = attachedShaderHandles.end();
-				i != end; ++i)
+			for(Vector<Uint32>::const_iterator i = shaderHandles.begin(), end = shaderHandles.end(); i != end; ++i)
 			{
 				OpenGL::detachShader(_programHandle, *i);
 				DE_CHECK_ERROR_OPENGL();
@@ -181,15 +180,9 @@ private:
 };
 
 
-// Private
+// Graphics::Effect
 
-Effect::Effect()
-	: _impl(DE_NEW(Impl)()) { }
-
-Effect::~Effect()
-{
-	DE_DELETE(_impl, Impl);
-}
+// Public
 
 void Effect::apply() const
 {
@@ -209,6 +202,16 @@ void Effect::deapply() const
 void Effect::link() const
 {
 	_impl->link();
+}
+
+// Private
+
+Effect::Effect()
+	: _impl(DE_NEW(Impl)()) { }
+
+Effect::~Effect()
+{
+	DE_DELETE(_impl, Impl);
 }
 
 

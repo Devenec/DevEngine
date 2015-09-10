@@ -27,8 +27,9 @@ namespace Core
 {
 	enum class OpenMode
 	{
-		Read  = 1,
-		Write = 2
+		Read	 = 1,
+		Write	 = 2,
+		Truncate = 4,
 	};
 
 	enum class SeekPosition

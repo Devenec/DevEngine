@@ -1,5 +1,5 @@
 /**
- * @file graphics/VertexElement.h
+ * @file platform/opengl/OpenGLUniformBuffer.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,29 +18,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <graphics/UniformBuffer.h>
+#include <platform/opengl/OpenGLGraphicsBuffer.h>
 
-#include <core/Types.h>
-#include <graphics/GraphicsEnumerations.h>
+using namespace Graphics;
 
-namespace Graphics
+// Public
+
+UniformBuffer::UniformBuffer(const Uint32 size, const AccessMode& accessMode)
+	: Base(size, accessMode) { }
+
+void UniformBuffer::bind(const Uint32 bindingIndex) const
 {
-	struct VertexElement final
-	{
-		static const Uint32 AFTER_PREVIOUS = 0xFFFFFFFF;
+	_impl->bindAsUniformBuffer(bindingIndex);
+}
 
-		Uint32 bufferIndex;
-		Uint32 elementIndex;
-		Uint32 offset;
-		VertexElementType type;
-		Bool normalise;
-
-		VertexElement(const Uint32 elementIndex, const Uint32 bufferIndex, const VertexElementType& type,
-			const Bool normalise = false, const Uint32 offset = AFTER_PREVIOUS)
-			: bufferIndex(bufferIndex),
-			  elementIndex(elementIndex),
-			  offset(offset),
-			  type(type),
-			  normalise(normalise) { }
-	};
+void UniformBuffer::debind(const Uint32 bindingIndex) const
+{
+	debindAsUniformBuffer(bindingIndex);
 }

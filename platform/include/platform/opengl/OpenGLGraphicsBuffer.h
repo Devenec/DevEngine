@@ -20,13 +20,10 @@
 
 #pragma once
 
-#include <core/Types.h>
 #include <graphics/GraphicsBuffer.h>
 
 namespace Graphics
 {
-	enum class AccessMode;
-
 	class GraphicsBuffer::Impl final
 	{
 	public:
@@ -38,13 +35,19 @@ namespace Graphics
 
 		~Impl();
 
+		void bindAsUniformBuffer(const Uint32 bindingIndex) const;
+
+		void bindAsUniformBuffer(const Uint32 bindingIndex, const Uint32 size, const Uint32 offset) const;
+
 		void demapData() const;
 
-		Uint32 handle() const;
+		inline Uint32 handle() const;
 
-		Byte* mapData(const Uint32 size, const Uint32 bufferOffset) const;
+		inline Byte* mapData() const;
 
-		void setData(const Byte* data, const Uint32 dataSize, const Uint32 bufferOffset) const;
+		Byte* mapData(const Uint32 size, const Uint32 offset) const;
+
+		void setData(const Byte* data, const Uint32 size, const Uint32 offset) const;
 
 		Impl& operator =(const Impl& impl) = delete;
 		Impl& operator =(Impl&& impl) = delete;
@@ -53,9 +56,14 @@ namespace Graphics
 
 		Uint32 _bufferHandle;
 		Uint32 _flags;
+		Uint32 _size;
 
 		void createBuffer();
 		void initialiseFlags(const AccessMode& accessMode);
 		void initialiseStorage(const Uint32 size) const;
 	};
+
+	void debindAsUniformBuffer(const Uint32 bindingIndex);
+
+#include "inline/OpenGLGraphicsBuffer.inl"
 }

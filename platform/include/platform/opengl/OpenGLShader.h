@@ -37,7 +37,7 @@ namespace Graphics
 
 		~Impl();
 
-		Uint32 handle() const;
+		inline Uint32 handle() const;
 
 		Impl& operator =(const Impl& impl) = delete;
 		Impl& operator =(Impl&& impl) = delete;
@@ -54,4 +54,6 @@ namespace Graphics
 		void outputCompilerSuccessLog() const;
 		Core::Vector<Char8> getInfoLog(const Uint32 logLength) const;
 	};
+
+#include "inline/OpenGLShader.inl"
 }

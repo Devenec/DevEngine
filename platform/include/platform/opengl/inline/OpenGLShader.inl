@@ -1,5 +1,5 @@
 /**
- * @file graphics/VertexElement.h
+ * @file platform/opengl/inline/OpenGLShader.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,29 +18,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Public
 
-#include <core/Types.h>
-#include <graphics/GraphicsEnumerations.h>
-
-namespace Graphics
+Uint32 Shader::Impl::handle() const
 {
-	struct VertexElement final
-	{
-		static const Uint32 AFTER_PREVIOUS = 0xFFFFFFFF;
-
-		Uint32 bufferIndex;
-		Uint32 elementIndex;
-		Uint32 offset;
-		VertexElementType type;
-		Bool normalise;
-
-		VertexElement(const Uint32 elementIndex, const Uint32 bufferIndex, const VertexElementType& type,
-			const Bool normalise = false, const Uint32 offset = AFTER_PREVIOUS)
-			: bufferIndex(bufferIndex),
-			  elementIndex(elementIndex),
-			  offset(offset),
-			  type(type),
-			  normalise(normalise) { }
-	};
+	return _shaderHandle;
 }

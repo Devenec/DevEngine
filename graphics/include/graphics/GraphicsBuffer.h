@@ -36,14 +36,18 @@ namespace Graphics
 
 		void demapData() const;
 
-		Byte* mapData(const Uint32 size, const Uint32 bufferOffset = 0u) const;
+		Byte* mapData(const Uint32 size, const Uint32 offset = 0u) const;
 
-		void setData(const Byte* data, const Uint32 size, const Uint32 bufferOffset = 0u) const;
+		void setData(const Byte* data, const Uint32 size, const Uint32 offset = 0u) const;
 
 		GraphicsBuffer& operator =(const GraphicsBuffer& graphicsBuffer) = delete;
 		GraphicsBuffer& operator =(GraphicsBuffer&& graphicsBuffer) = delete;
 
 	protected:
+
+		class Impl;
+
+		Impl* _impl;
 
 		GraphicsBuffer(const Uint32 size, const AccessMode& accessMode);
 
@@ -53,9 +57,5 @@ namespace Graphics
 
 		friend class GraphicsDevice;
 		friend class VertexBufferState;
-
-		class Impl;
-
-		Impl* _impl;
 	};
 }

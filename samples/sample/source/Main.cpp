@@ -18,6 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cmath>
 #include <content/ContentManager.h>
 #include <core/Main.h>
 #include <core/Types.h>
@@ -32,6 +33,7 @@
 #include <graphics/Image.h>
 #include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
+#include <graphics/UniformBuffer.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
 #include <graphics/Viewport.h>
@@ -49,12 +51,18 @@ static const Char8* VERTEX_SHADER_SOURCE
 	"layout(location = 0) in vec4 inPosition;\n"
 	"layout(location = 1) in vec3 inColour;\n"
 	"\n"
+	"layout(binding = 0) uniform Transforms\n"
+	"{\n"
+	"	mat4 projection;\n"
+	"	mat4 world;\n"
+	"} transforms;\n"
+	"\n"
 	"out vec3 colour;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
 	"	colour = inColour;\n"
-	"	gl_Position = inPosition;\n"
+	"	gl_Position = transforms.projection * transforms.world * inPosition;\n"
 	"}\n"
 );
 
@@ -101,16 +109,16 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	Vector<Float32> VERTEX_DATA
 	{
-		 0.0f,	0.8f, 0.0f,
+		 0.0f,	5.0f, 0.0f,
 		 0.0f,
 
-		-0.8f,	0.0f, 0.0f,
+		-5.0f,	0.0f, 0.0f,
 		 0.0f,
 
-		 0.8f,	0.0f, 0.0f,
+		 5.0f,	0.0f, 0.0f,
 		 0.0f,
 
-		 0.0f, -0.8f, 0.0f,
+		 0.0f, -5.0f, 0.0f,
 		 0.0f
 	};
 
@@ -146,24 +154,52 @@ void devEngineMain(const StartupParameters& startupParameters)
 	graphicsDevice.setEffect(effect);
 	graphicsDevice.setVertexBufferState(vertexBufferState);
 
+	const Float32 near = 0.1f;
+	const Float32 far = 100.0f;
+	const Float32 top = near * std::tan(0.5f *  1.047f);
+	const Float32 right = 800.0f / 600.0f * top;
+
+	const Vector<Float32> UNIFORM_DATA
+	{
+		near / right, 0.0f,		   0.0f,							  0.0f,
+		0.0f,		  near / top,  0.0f,							  0.0f,
+		0.0f,		  0.0f,		  -(far + near) / (far - near),		 -1.0f,
+		0.0f,		  0.0f,		  -2.0f * near * far / (far - near),  0.0f
+	};
+
+	UniformBuffer* uniformBuffer = graphicsDevice.createUniformBuffer(32u * sizeof(Float32), AccessMode::Write);
+	uniformBuffer->setData(reinterpret_cast<const Byte*>(UNIFORM_DATA.data()), sizeof(Float32) * UNIFORM_DATA.size());
+	uniformBuffer->bind(0u);
+
+	Vector<Float32> WORLD_TRANSFORM_DATA
+	{
+		 1.0f, 0.0f,  0.0f,	 0.0f,
+		 0.0f, 1.0f,  0.0f,	 0.0f,
+		 0.0f, 0.0f,  1.0f,	 0.0f,
+		 0.0f, 0.0f, -15.0f, 1.0f
+	};
+
+	float rotation = 0.0f;
+
 	while(!window->shouldClose())
 	{
 		windowManager.processMessages();
 		graphicsDevice.clear(Colour(0.8f, 0.0f, 1.0f));
 
-		graphicsDevice.setViewport(Viewport(Rectangle(0, 0, 400u, 300u)));
+		rotation += 0.01f;
+		const float cosRotation = std::cos(rotation);
+		const float sinRotation = std::sin(rotation);
+		WORLD_TRANSFORM_DATA[0] = cosRotation;
+		WORLD_TRANSFORM_DATA[2] = -sinRotation;
+		WORLD_TRANSFORM_DATA[8] = sinRotation;
+		WORLD_TRANSFORM_DATA[10] = cosRotation;
+
+		uniformBuffer->setData(reinterpret_cast<const Byte*>(WORLD_TRANSFORM_DATA.data()),
+			sizeof(Float32) * WORLD_TRANSFORM_DATA.size(), 16u * sizeof(Float32));
+
 		graphicsDevice.draw(PrimitiveType::TriangleStrip, 4u);
-
-		graphicsDevice.setViewport(Viewport(Rectangle(400, 0, 400u, 300u)));
-		graphicsDevice.drawIndexed(PrimitiveType::Triangle, 3u, 3u);
-
-		graphicsDevice.setViewport(Viewport(Rectangle(0, 300, 400u, 300u)));
-		graphicsDevice.draw(PrimitiveType::Point, 4u);
-
-		graphicsDevice.setViewport(Viewport(Rectangle(400, 300, 400u, 300u)));
-		graphicsDevice.draw(PrimitiveType::Line, 4u);
-		graphicsDevice.draw(PrimitiveType::Line, 2u, 1u);
-
 		graphicsContext->swapBuffers();
 	}
+
+	uniformBuffer->debind(0u);
 }

@@ -80,7 +80,7 @@ namespace Graphics
 
 		Core::Rectangle getRectangle() const;
 		void setFullscreenStyle(const Bool isFullscreen) const;
-		Core::Rectangle getFullscreenRectangle() const;
+		inline Core::Rectangle getFullscreenRectangle() const;
 		RECT getMonitorRectangle() const;
 	};
 

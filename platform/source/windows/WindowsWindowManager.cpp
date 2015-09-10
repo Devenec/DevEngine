@@ -175,6 +175,8 @@ private:
 };
 
 
+// Graphics::WindowManager
+
 // Public
 
 WindowManager::WindowManager()
