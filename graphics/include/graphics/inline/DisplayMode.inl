@@ -53,5 +53,5 @@ Bool operator ==(const DisplayMode& displayModeA, const DisplayMode& displayMode
 
 Bool operator !=(const DisplayMode& displayModeA, const DisplayMode& displayModeB)
 {
-	return !operator ==(displayModeA, displayModeB);
+	return !(displayModeA == displayModeB);
 }

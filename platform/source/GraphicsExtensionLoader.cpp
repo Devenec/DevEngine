@@ -19,12 +19,13 @@
  */
 
 #include <algorithm>
-#include <cmath>
 #include <core/Log.h>
+#include <core/maths/Utility.h>
 #include <platform/GraphicsExtensionLoader.h>
 
 using namespace Core;
 using namespace Platform;
+using namespace Maths;
 
 // External
 
@@ -81,7 +82,7 @@ void GraphicsExtensionLoader::logSupportedInterfaceExtensions(const ExtensionNam
 static void logSupportedExtensions(const ExtensionNameList& extensionNames)
 {
 	const Uint32 extensionCount = extensionNames.size();
-	const Uint32 rowCount = static_cast<Uint32>(std::ceil(extensionCount / 2.0f));
+	const Uint32 rowCount = static_cast<Uint32>(ceiling(extensionCount / 2.0f));
 
 	for(Uint32 i = 0u; i < rowCount; ++i)
 	{

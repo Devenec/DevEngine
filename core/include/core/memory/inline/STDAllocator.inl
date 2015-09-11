@@ -87,11 +87,11 @@ template<typename T, typename U, typename AllocationPolicy>
 Bool operator !=(const STDAllocator<T, AllocationPolicy>& stdAllocatorA,
 	const STDAllocator<U, AllocationPolicy>& stdAllocatorB)
 {
-	return !operator ==(stdAllocatorA, stdAllocatorB);
+	return !(stdAllocatorA == stdAllocatorB);
 }
 
 template<typename T, typename U, typename AllocationPolicy, typename OtherAllocator>
 Bool operator !=(const STDAllocator<T, AllocationPolicy>& stdAllocator, const OtherAllocator& allocator)
 {
-	return !operator ==(stdAllocator, allocator);
+	return !(stdAllocator == allocator);
 }

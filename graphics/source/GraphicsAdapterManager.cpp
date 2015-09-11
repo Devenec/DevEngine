@@ -18,15 +18,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cmath>
 #include <core/Log.h>
 #include <core/Types.h>
+#include <core/maths/Utility.h>
 #include <graphics/DisplayMode.h>
 #include <graphics/GraphicsAdapter.h>
 #include <graphics/GraphicsAdapterManager.h>
 
 using namespace Core;
 using namespace Graphics;
+using namespace Maths;
 
 // External
 
@@ -85,7 +86,7 @@ static void logGraphicsAdapterDisplayModes(const GraphicsAdapter& graphicsAdapte
 {
 	const DisplayModeList& displayModes = graphicsAdapter.supportedDisplayModes();
 	const Uint32 displayModeCount = displayModes.size();
-	const Uint32 rowCount = static_cast<Uint32>(std::ceil(displayModeCount / 3.0f));
+	const Uint32 rowCount = static_cast<Uint32>(ceiling(displayModeCount / 3.0f));
 
 	for(Uint32 i = 0u; i < rowCount; ++i)
 	{

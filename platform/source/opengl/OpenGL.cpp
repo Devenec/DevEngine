@@ -18,14 +18,15 @@
  * along with this program. If not, see <http:  //www.gnu.org/licenses/>.
  */
 
-#include <algorithm>
 #include <core/Array.h>
 #include <core/Log.h>
 #include <core/StringStream.h>
 #include <core/debug/Assert.h>
+#include <core/maths/Utility.h>
 #include <platform/opengl/OpenGL.h>
 
 using namespace Core;
+using namespace Maths;
 using namespace Platform;
 
 // External
@@ -989,7 +990,7 @@ static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 
 
 	for(Uint32 i = 0u, end = message.length(); i < end;)
 	{
-		const Uint32 messageLength = std::min(maxDebugMessageLength, message.length() - i);
+		const Uint32 messageLength = minimum(maxDebugMessageLength, message.length() - i);
 
 		OpenGL::debugMessageInsert(OpenGL::DEBUG_SOURCE_APPLICATION, OpenGL::DEBUG_TYPE_ERROR, errorCode,
 			OpenGL::DEBUG_SEVERITY_HIGH, messageLength, message.c_str() + i);

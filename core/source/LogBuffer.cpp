@@ -18,13 +18,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <algorithm>
 #include <cstring>
 #include <core/Config.h>
 #include <core/LogBuffer.h>
 #include <core/Numeric.h>
+#include <core/maths/Utility.h>
 
 using namespace Core;
+using namespace Maths;
 
 // External
 
@@ -98,7 +99,7 @@ void LogBuffer::flush()
 void LogBuffer::appendToLineBuffer(const Char8* characters, Uint32& characterOffset, Uint32 characterCount)
 {
 	const Uint32 availableCapacity = Config::LOG_LINE_MAX_WIDTH - _lineBuffer.length();
-	characterCount = std::min(availableCapacity, characterCount - characterOffset);
+	characterCount = minimum(availableCapacity, characterCount - characterOffset);
 	_lineBuffer.append(characters + characterOffset, characterCount);
 	characterOffset += characterCount;
 }

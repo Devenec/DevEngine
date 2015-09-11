@@ -11,6 +11,12 @@
     <Filter Include="Header Files\inline">
       <UniqueIdentifier>{5939b29e-d67b-4e2e-9efe-24b7a0083470}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\maths">
+      <UniqueIdentifier>{fb0cde87-e83c-4087-82fc-a9d3a52e1be7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\maths\inline">
+      <UniqueIdentifier>{e6123efb-2aee-43f1-9a49-8029b372306f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\memory">
       <UniqueIdentifier>{6b24983b-2524-4b20-97d4-914d09aa29cf}</UniqueIdentifier>
     </Filter>
@@ -26,6 +32,9 @@
     </Filter>
     <Filter Include="Source Files\memory">
       <UniqueIdentifier>{c90a8658-5814-4704-90ae-0903eeec1f42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\maths">
+      <UniqueIdentifier>{08a3479e-1b67-4549-b268-905c2693af5e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +122,18 @@
     <ClInclude Include="include\core\debug\StackTrace.h">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\maths\Utility.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\maths\Vector2.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\maths\Vector3.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\maths\Vector4.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\memory\AllocationPolicy.h">
       <Filter>Header Files\memory</Filter>
     </ClInclude>
@@ -144,6 +165,18 @@
     </None>
     <None Include="include\core\inline\Singleton.inl">
       <Filter>Header Files\inline</Filter>
+    </None>
+    <None Include="include\core\maths\inline\Utility.inl">
+      <Filter>Header Files\maths\inline</Filter>
+    </None>
+    <None Include="include\core\maths\inline\Vector2.inl">
+      <Filter>Header Files\maths\inline</Filter>
+    </None>
+    <None Include="include\core\maths\inline\Vector3.inl">
+      <Filter>Header Files\maths\inline</Filter>
+    </None>
+    <None Include="include\core\maths\inline\Vector4.inl">
+      <Filter>Header Files\maths\inline</Filter>
     </None>
     <None Include="include\core\memory\inline\STDAllocator.inl">
       <Filter>Header Files\memory\inline</Filter>
@@ -182,6 +215,15 @@
     </ClCompile>
     <ClCompile Include="source\debug\Assert.cpp">
       <Filter>Source Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="source\maths\Vector2.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="source\maths\Vector3.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="source\maths\Vector4.cpp">
+      <Filter>Source Files\maths</Filter>
     </ClCompile>
     <ClCompile Include="source\memory\AllocationPolicy.cpp">
       <Filter>Source Files\memory</Filter>

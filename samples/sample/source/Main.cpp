@@ -18,11 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cmath>
 #include <content/ContentManager.h>
 #include <core/Main.h>
 #include <core/Types.h>
 #include <core/Vector.h>
+#include <core/maths/Utility.h>
 #include <graphics/Colour.h>
 #include <graphics/Effect.h>
 #include <graphics/GraphicsAdapterManager.h>
@@ -43,6 +43,7 @@
 using namespace Content;
 using namespace Core;
 using namespace Graphics;
+using namespace Maths;
 
 static const Char8* VERTEX_SHADER_SOURCE
 (
@@ -156,7 +157,7 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	const Float32 near = 0.1f;
 	const Float32 far = 100.0f;
-	const Float32 top = near * std::tan(0.5f *  1.047f);
+	const Float32 top = near * tangent(0.5f *  1.047f);
 	const Float32 right = 800.0f / 600.0f * top;
 
 	const Vector<Float32> UNIFORM_DATA
@@ -187,8 +188,8 @@ void devEngineMain(const StartupParameters& startupParameters)
 		graphicsDevice.clear(Colour(0.8f, 0.0f, 1.0f));
 
 		rotation += 0.01f;
-		const float cosRotation = std::cos(rotation);
-		const float sinRotation = std::sin(rotation);
+		const float cosRotation = cosine(rotation);
+		const float sinRotation = sine(rotation);
 		WORLD_TRANSFORM_DATA[0] = cosRotation;
 		WORLD_TRANSFORM_DATA[2] = -sinRotation;
 		WORLD_TRANSFORM_DATA[8] = sinRotation;
