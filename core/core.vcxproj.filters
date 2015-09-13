@@ -122,6 +122,12 @@
     <ClInclude Include="include\core\debug\StackTrace.h">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\maths\Angle.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\maths\Matrix4.h">
+      <Filter>Header Files\maths</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\maths\Utility.h">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
@@ -165,6 +171,12 @@
     </None>
     <None Include="include\core\inline\Singleton.inl">
       <Filter>Header Files\inline</Filter>
+    </None>
+    <None Include="include\core\maths\inline\Angle.inl">
+      <Filter>Header Files\maths\inline</Filter>
+    </None>
+    <None Include="include\core\maths\inline\Matrix4.inl">
+      <Filter>Header Files\maths\inline</Filter>
     </None>
     <None Include="include\core\maths\inline\Utility.inl">
       <Filter>Header Files\maths\inline</Filter>
@@ -215,6 +227,12 @@
     </ClCompile>
     <ClCompile Include="source\debug\Assert.cpp">
       <Filter>Source Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="source\maths\Angle.cpp">
+      <Filter>Source Files\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="source\maths\Matrix4.cpp">
+      <Filter>Source Files\maths</Filter>
     </ClCompile>
     <ClCompile Include="source\maths\Vector2.cpp">
       <Filter>Source Files\maths</Filter>

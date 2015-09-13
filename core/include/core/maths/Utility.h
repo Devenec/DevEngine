@@ -1,5 +1,5 @@
 /**
- * @file maths/Utility.h
+ * @file core/maths/Utility.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -26,8 +26,7 @@
 
 namespace Maths
 {
-	// TODO: add safe floating point comparison
-	// TODO: add safe floating point zero comparison
+	// TODO: add safe comparisons between 1) Float32 and Float32, 2) Float32 and 0
 
 	const Float32 PI = 3.1415926535897932f;
 

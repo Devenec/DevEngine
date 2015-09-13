@@ -22,7 +22,10 @@
 #include <core/Main.h>
 #include <core/Types.h>
 #include <core/Vector.h>
+#include <core/maths/Angle.h>
+#include <core/maths/Matrix4.h>
 #include <core/maths/Utility.h>
+#include <core/maths/Vector3.h>
 #include <graphics/Colour.h>
 #include <graphics/Effect.h>
 #include <graphics/GraphicsAdapterManager.h>
@@ -157,47 +160,33 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	const Float32 near = 0.1f;
 	const Float32 far = 100.0f;
-	const Float32 top = near * tangent(0.5f *  1.047f);
+	const Float32 top = near * tangent(0.5f * 1.047f);
 	const Float32 right = 800.0f / 600.0f * top;
 
-	const Vector<Float32> UNIFORM_DATA
-	{
+	const Matrix4 projectionTransform
+	(
 		near / right, 0.0f,		   0.0f,							  0.0f,
 		0.0f,		  near / top,  0.0f,							  0.0f,
 		0.0f,		  0.0f,		  -(far + near) / (far - near),		 -1.0f,
 		0.0f,		  0.0f,		  -2.0f * near * far / (far - near),  0.0f
-	};
+	);
 
 	UniformBuffer* uniformBuffer = graphicsDevice.createUniformBuffer(32u * sizeof(Float32), AccessMode::Write);
-	uniformBuffer->setData(reinterpret_cast<const Byte*>(UNIFORM_DATA.data()), sizeof(Float32) * UNIFORM_DATA.size());
+	uniformBuffer->setData(reinterpret_cast<const Byte*>(projectionTransform.data()), sizeof(Matrix4));
 	uniformBuffer->bind(0u);
 
-	Vector<Float32> WORLD_TRANSFORM_DATA
-	{
-		 1.0f, 0.0f,  0.0f,	 0.0f,
-		 0.0f, 1.0f,  0.0f,	 0.0f,
-		 0.0f, 0.0f,  1.0f,	 0.0f,
-		 0.0f, 0.0f, -15.0f, 1.0f
-	};
-
-	float rotation = 0.0f;
+	Matrix4 worldTransform;
+	Angle rotation(0.0f);
+	Vector3 axis(0.0f, 1.0f, 1.0f);
+	axis.normalise();
 
 	while(!window->shouldClose())
 	{
 		windowManager.processMessages();
 		graphicsDevice.clear(Colour(0.8f, 0.0f, 1.0f));
-
 		rotation += 0.01f;
-		const float cosRotation = cosine(rotation);
-		const float sinRotation = sine(rotation);
-		WORLD_TRANSFORM_DATA[0] = cosRotation;
-		WORLD_TRANSFORM_DATA[2] = -sinRotation;
-		WORLD_TRANSFORM_DATA[8] = sinRotation;
-		WORLD_TRANSFORM_DATA[10] = cosRotation;
-
-		uniformBuffer->setData(reinterpret_cast<const Byte*>(WORLD_TRANSFORM_DATA.data()),
-			sizeof(Float32) * WORLD_TRANSFORM_DATA.size(), 16u * sizeof(Float32));
-
+		worldTransform = Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
+		uniformBuffer->setData(reinterpret_cast<const Byte*>(worldTransform.data()), sizeof(Matrix4), sizeof(Matrix4));
 		graphicsDevice.draw(PrimitiveType::TriangleStrip, 4u);
 		graphicsContext->swapBuffers();
 	}

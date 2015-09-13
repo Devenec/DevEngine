@@ -72,6 +72,8 @@
     <ClInclude Include="include\core\LogManager.h" />
     <ClInclude Include="include\core\Main.h" />
     <ClInclude Include="include\core\Map.h" />
+    <ClInclude Include="include\core\maths\Angle.h" />
+    <ClInclude Include="include\core\maths\Matrix4.h" />
     <ClInclude Include="include\core\maths\Utility.h" />
     <ClInclude Include="include\core\maths\Vector2.h" />
     <ClInclude Include="include\core\maths\Vector3.h" />
@@ -102,6 +104,8 @@
     <None Include="include\core\inline\Numeric.inl" />
     <None Include="include\core\inline\Rectangle.inl" />
     <None Include="include\core\inline\Singleton.inl" />
+    <None Include="include\core\maths\inline\Angle.inl" />
+    <None Include="include\core\maths\inline\Matrix4.inl" />
     <None Include="include\core\maths\inline\Utility.inl" />
     <None Include="include\core\maths\inline\Vector2.inl" />
     <None Include="include\core\maths\inline\Vector3.inl" />
@@ -114,6 +118,8 @@
     <ClCompile Include="source\Log.cpp" />
     <ClCompile Include="source\LogBuffer.cpp" />
     <ClCompile Include="source\LogManager.cpp" />
+    <ClCompile Include="source\maths\Angle.cpp" />
+    <ClCompile Include="source\maths\Matrix4.cpp" />
     <ClCompile Include="source\maths\Vector2.cpp" />
     <ClCompile Include="source\maths\Vector3.cpp" />
     <ClCompile Include="source\maths\Vector4.cpp" />

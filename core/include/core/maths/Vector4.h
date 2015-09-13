@@ -1,5 +1,5 @@
 /**
- * @file maths/Vector4.h
+ * @file core/maths/Vector4.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -55,9 +55,9 @@ namespace Maths
 
 		Vector4(const Float32 x, const Float32 y, const Float32 z, const Float32 w);
 
-		Vector4(const Vector2& vector, const Float32 z, const Float32 w);
+		Vector4(const Vector2& vector2, const Float32 z, const Float32 w);
 
-		Vector4(const Vector3& vector, const Float32 w);
+		Vector4(const Vector3& vector3, const Float32 w);
 
 		Vector4(const Vector4& vector) = default;
 
@@ -66,6 +66,8 @@ namespace Maths
 		~Vector4() = default;
 
 		inline Float32 length() const;
+
+		inline Vector4 normal() const;
 
 		inline void normalise();
 
@@ -103,11 +105,9 @@ namespace Maths
 
 		static inline Vector4 lerp(const Vector4& vectorA, const Vector4& vectorB, const Float32 weight);
 
-		static inline Vector4 maximum(const Vector4& vectorA, const Vector4& vectorB);
+		static Vector4 maximum(const Vector4& vectorA, const Vector4& vectorB);
 
-		static inline Vector4 minimum(const Vector4& vectorA, const Vector4& vectorB);
-
-		static inline Vector4 normal(Vector4 vector);
+		static Vector4 minimum(const Vector4& vectorA, const Vector4& vectorB);
 	};
 
 	inline Vector4 operator +(Vector4 vectorA, const Vector4& vectorB);

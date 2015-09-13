@@ -1,5 +1,5 @@
 /**
- * @file core/maths/Vector2.cpp
+ * @file core/maths/Angle.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,19 +18,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/maths/Vector2.h>
+#include <core/maths/Angle.h>
 
 using namespace Maths;
 
 // Public
 
-const Vector2 Vector2::UNIT_X = Vector2(1.0f, 0.0f);
-const Vector2 Vector2::UNIT_Y = Vector2(0.0f, 1.0f);
-const Vector2 Vector2::ZERO	  = Vector2(0.0f, 0.0f);
-
-Vector2::Vector2(const Float32 value)
-	: Vector2(value, value) { }
-
-Vector2::Vector2(const Float32 x, const Float32 y)
-	: x(x),
-	  y(y) { }
+Angle::Angle(const Float32 size)
+	: _size(size) { }

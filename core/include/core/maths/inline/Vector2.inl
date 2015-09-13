@@ -1,5 +1,5 @@
 /**
- * @file maths/inline/Vector2.inl
+ * @file core/maths/inline/Vector2.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -23,6 +23,14 @@
 Float32 Vector2::length() const
 {
 	return squareRoot(x * x + y * y);
+}
+
+Vector2 Vector2::normal() const
+{
+	Vector2 vector(*this);
+	vector.normalise();
+
+	return vector;
 }
 
 void Vector2::normalise()
@@ -148,12 +156,6 @@ Vector2 Vector2::minimum(const Vector2& vectorA, const Vector2& vectorB)
 		Maths::minimum(vectorA.x, vectorB.x),
 		Maths::minimum(vectorA.y, vectorB.y)
 	);
-}
-
-Vector2 Vector2::normal(Vector2 vector)
-{
-	vector.normalise();
-	return vector;
 }
 
 

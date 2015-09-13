@@ -1,5 +1,5 @@
 /**
- * @file maths/inline/Vector4.inl
+ * @file core/maths/inline/Vector4.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -23,6 +23,14 @@
 Float32 Vector4::length() const
 {
 	return squareRoot(x * x + y * y + z * z + w * w);
+}
+
+Vector4 Vector4::normal() const
+{
+	Vector4 vector(*this);
+	vector.normalise();
+
+	return vector;
 }
 
 void Vector4::normalise()
@@ -69,34 +77,6 @@ Float32 Vector4::dot(const Vector4& vectorA, const Vector4& vectorB)
 Vector4 Vector4::lerp(const Vector4& vectorA, const Vector4& vectorB, const Float32 weight)
 {
 	return weight * (vectorB - vectorA) + vectorA;
-}
-
-Vector4 Vector4::maximum(const Vector4& vectorA, const Vector4& vectorB)
-{
-	return Vector4
-	(
-		Maths::maximum(vectorA.x, vectorB.x),
-		Maths::maximum(vectorA.y, vectorB.y),
-		Maths::maximum(vectorA.z, vectorB.z),
-		Maths::maximum(vectorA.w, vectorB.w)
-	);
-}
-
-Vector4 Vector4::minimum(const Vector4& vectorA, const Vector4& vectorB)
-{
-	return Vector4
-	(
-		Maths::minimum(vectorA.x, vectorB.x),
-		Maths::minimum(vectorA.y, vectorB.y),
-		Maths::minimum(vectorA.z, vectorB.z),
-		Maths::minimum(vectorA.w, vectorB.w)
-	);
-}
-
-Vector4 Vector4::normal(Vector4 vector)
-{
-	vector.normalise();
-	return vector;
 }
 
 

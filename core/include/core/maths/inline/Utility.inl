@@ -1,5 +1,5 @@
 /**
- * @file maths/inline/Utility.inl
+ * @file core/maths/inline/Utility.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa

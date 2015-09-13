@@ -1,5 +1,5 @@
 /**
- * @file maths/Vector2.h
+ * @file core/maths/Vector2.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -54,6 +54,8 @@ namespace Maths
 
 		inline Float32 length() const;
 
+		inline Vector2 normal() const;
+
 		inline void normalise();
 
 		Vector2& operator =(const Vector2& vector) = default;
@@ -91,8 +93,6 @@ namespace Maths
 		static inline Vector2 maximum(const Vector2& vectorA, const Vector2& vectorB);
 
 		static inline Vector2 minimum(const Vector2& vectorA, const Vector2& vectorB);
-
-		static inline Vector2 normal(Vector2 vector);
 	};
 
 	inline Vector2 operator +(Vector2 vectorA, const Vector2& vectorB);

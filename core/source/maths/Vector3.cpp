@@ -1,5 +1,5 @@
 /**
- * @file maths/Vector3.cpp
+ * @file core/maths/Vector3.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -43,8 +43,8 @@ Vector3::Vector3(const Float32 x, const Float32 y, const Float32 z)
 	  y(y),
 	  z(z) { }
 
-Vector3::Vector3(const Vector2& vector, const Float32 z)
-	: Vector3(vector.x, vector.y, z) { }
+Vector3::Vector3(const Vector2& vector2, const Float32 z)
+	: Vector3(vector2.x, vector2.y, z) { }
 
 // Operators
 
@@ -131,5 +131,25 @@ Vector3 Vector3::cross(const Vector3& vectorA, const Vector3& vectorB)
 		vectorA.y * vectorB.z - vectorA.z * vectorB.y,
 		vectorA.z * vectorB.x - vectorA.x * vectorB.z,
 		vectorA.x * vectorB.y - vectorA.y * vectorB.x
+	);
+}
+
+Vector3 Vector3::maximum(const Vector3& vectorA, const Vector3& vectorB)
+{
+	return Vector3
+	(
+		Maths::maximum(vectorA.x, vectorB.x),
+		Maths::maximum(vectorA.y, vectorB.y),
+		Maths::maximum(vectorA.z, vectorB.z)
+	);
+}
+
+Vector3 Vector3::minimum(const Vector3& vectorA, const Vector3& vectorB)
+{
+	return Vector3
+	(
+		Maths::minimum(vectorA.x, vectorB.x),
+		Maths::minimum(vectorA.y, vectorB.y),
+		Maths::minimum(vectorA.z, vectorB.z)
 	);
 }

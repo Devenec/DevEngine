@@ -1,5 +1,5 @@
 /**
- * @file maths/Vector3.h
+ * @file core/maths/Vector3.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -63,7 +63,7 @@ namespace Maths
 
 		Vector3(const Float32 x, const Float32 y, const Float32 z);
 
-		Vector3(const Vector2& vector, const Float32 z);
+		Vector3(const Vector2& vector2, const Float32 z);
 
 		Vector3(const Vector3& vector) = default;
 
@@ -72,6 +72,8 @@ namespace Maths
 		~Vector3() = default;
 
 		inline Float32 length() const;
+
+		inline Vector3 normal() const;
 
 		inline void normalise();
 
@@ -111,11 +113,9 @@ namespace Maths
 
 		static inline Vector3 lerp(const Vector3& vectorA, const Vector3& vectorB, const Float32 weight);
 
-		static inline Vector3 maximum(const Vector3& vectorA, const Vector3& vectorB);
+		static Vector3 maximum(const Vector3& vectorA, const Vector3& vectorB);
 
-		static inline Vector3 minimum(const Vector3& vectorA, const Vector3& vectorB);
-
-		static inline Vector3 normal(Vector3 vector);
+		static Vector3 minimum(const Vector3& vectorA, const Vector3& vectorB);
 	};
 
 	inline Vector3 operator +(Vector3 vectorA, const Vector3& vectorB);

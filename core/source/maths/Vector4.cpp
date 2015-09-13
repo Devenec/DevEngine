@@ -1,5 +1,5 @@
 /**
- * @file maths/Vector4.cpp
+ * @file core/maths/Vector4.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -39,11 +39,11 @@ Vector4::Vector4(const Float32 x, const Float32 y, const Float32 z, const Float3
 	  z(z),
 	  w(w) { }
 
-Vector4::Vector4(const Vector2& vector, const Float32 z, const Float32 w)
-	: Vector4(vector.x, vector.y, z, w) { }
+Vector4::Vector4(const Vector2& vector2, const Float32 z, const Float32 w)
+	: Vector4(vector2.x, vector2.y, z, w) { }
 
-Vector4::Vector4(const Vector3& vector, const Float32 w)
-	: Vector4(vector.x, vector.y, vector.z, w) { }
+Vector4::Vector4(const Vector3& vector3, const Float32 w)
+	: Vector4(vector3.x, vector3.y, vector3.z, w) { }
 
 // Operators
 
@@ -127,4 +127,28 @@ Vector4& Vector4::operator /=(const Float32 scalar)
 	w /= scalar;
 
 	return *this;
+}
+
+// Static
+
+Vector4 Vector4::maximum(const Vector4& vectorA, const Vector4& vectorB)
+{
+	return Vector4
+	(
+		Maths::maximum(vectorA.x, vectorB.x),
+		Maths::maximum(vectorA.y, vectorB.y),
+		Maths::maximum(vectorA.z, vectorB.z),
+		Maths::maximum(vectorA.w, vectorB.w)
+	);
+}
+
+Vector4 Vector4::minimum(const Vector4& vectorA, const Vector4& vectorB)
+{
+	return Vector4
+	(
+		Maths::minimum(vectorA.x, vectorB.x),
+		Maths::minimum(vectorA.y, vectorB.y),
+		Maths::minimum(vectorA.z, vectorB.z),
+		Maths::minimum(vectorA.w, vectorB.w)
+	);
 }

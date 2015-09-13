@@ -1,5 +1,5 @@
 /**
- * @file maths/inline/Vector3.inl
+ * @file core/maths/inline/Vector3.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -23,6 +23,14 @@
 Float32 Vector3::length() const
 {
 	return squareRoot(x * x + y * y + z * z);
+}
+
+Vector3 Vector3::normal() const
+{
+	Vector3 vector(*this);
+	vector.normalise();
+
+	return vector;
 }
 
 void Vector3::normalise()
@@ -69,32 +77,6 @@ Float32 Vector3::dot(const Vector3& vectorA, const Vector3& vectorB)
 Vector3 Vector3::lerp(const Vector3& vectorA, const Vector3& vectorB, const Float32 weight)
 {
 	return weight * (vectorB - vectorA) + vectorA;
-}
-
-Vector3 Vector3::maximum(const Vector3& vectorA, const Vector3& vectorB)
-{
-	return Vector3
-	(
-		Maths::maximum(vectorA.x, vectorB.x),
-		Maths::maximum(vectorA.y, vectorB.y),
-		Maths::maximum(vectorA.z, vectorB.z)
-	);
-}
-
-Vector3 Vector3::minimum(const Vector3& vectorA, const Vector3& vectorB)
-{
-	return Vector3
-	(
-		Maths::minimum(vectorA.x, vectorB.x),
-		Maths::minimum(vectorA.y, vectorB.y),
-		Maths::minimum(vectorA.z, vectorB.z)
-	);
-}
-
-Vector3 Vector3::normal(Vector3 vector)
-{
-	vector.normalise();
-	return vector;
 }
 
 
