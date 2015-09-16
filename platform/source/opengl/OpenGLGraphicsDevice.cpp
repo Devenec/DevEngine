@@ -120,12 +120,12 @@ private:
 		DE_ASSERT(_activeEffect != nullptr);
 		DE_ASSERT(_activeVertexBufferState != nullptr);
 		_activeEffect->apply();
-		_activeVertexBufferState->apply();
+		_activeVertexBufferState->bind();
 	}
 
 	void deinitialiseDrawing() const
 	{
-		_activeVertexBufferState->deapply();
+		_activeVertexBufferState->debind();
 		_activeEffect->deapply();
 	}
 };

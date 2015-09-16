@@ -74,7 +74,7 @@ ImageFormat PNGReader::imageFormat() const
 
 		default:
 			DE_ASSERT(false);
-			return ImageFormat();
+			return ImageFormat::R8;
 	}
 }
 

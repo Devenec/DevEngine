@@ -22,6 +22,7 @@
 #include <core/Error.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/debug/Assert.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLShader.h>
 
@@ -167,7 +168,7 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType)
 	switch(shaderType)
 	{
 		case ShaderType::Compute:
-			return OpenGL::COMPUTE_SHADER;
+			return OpenGL::COMPUTE_SHADER; // TODO: OpenGL 4.3
 
 		case ShaderType::Fragment:
 			return OpenGL::FRAGMENT_SHADER;
@@ -176,7 +177,7 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType)
 			return OpenGL::GEOMETRY_SHADER;
 
 		case ShaderType::TessellationControl:
-			return OpenGL::TESS_CONTROL_SHADER;
+			return OpenGL::TESS_CONTROL_SHADER; // TODO: OpenGL 4.0
 
 		case ShaderType::TessellationEvaluation:
 			return OpenGL::TESS_EVALUATION_SHADER;
@@ -185,6 +186,7 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType)
 			return OpenGL::VERTEX_SHADER;
 
 		default:
+			DE_ASSERT(false);
 			return 0u;
 	}
 }

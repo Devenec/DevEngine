@@ -27,7 +27,6 @@
 
 namespace Graphics
 {
-	enum class IndexType;
 	enum class ShaderType;
 
 	class Colour;
@@ -36,7 +35,6 @@ namespace Graphics
 	class GraphicsResource;
 	class IndexBuffer;
 	class Shader;
-	class UniformBuffer;
 	class VertexBufferState;
 	class Viewport;
 
@@ -53,7 +51,7 @@ namespace Graphics
 
 		void clear(const Colour& colour) const;
 
-		GraphicsBuffer* createBuffer(const Uint32 size,
+		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size,
 			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		Effect* createEffect();
@@ -62,9 +60,6 @@ namespace Graphics
 			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		Shader* createShader(const ShaderType& type, const Core::String8& source);
-
-		UniformBuffer* createUniformBuffer(const Uint32 size,
-			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		VertexBufferState* createVertexBufferState();
 

@@ -25,6 +25,7 @@
 
 namespace Graphics
 {
+	// TODO: rename members
 	struct VertexElement final
 	{
 		static const Uint32 AFTER_PREVIOUS = 0xFFFFFFFF;

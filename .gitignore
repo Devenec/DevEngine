@@ -1,6 +1,7 @@
 # directories
 
 **/obj/
+build/.vs/
 build/Win32/
 
 

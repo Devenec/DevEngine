@@ -20,6 +20,11 @@
 
 // Public
 
+void GraphicsBuffer::Impl::bindIndexed(const Uint32 bindingIndex) const
+{
+	bindIndexed(bindingIndex, _size, 0u);
+}
+
 Uint32 GraphicsBuffer::Impl::handle() const
 {
 	return _bufferHandle;

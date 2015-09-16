@@ -33,7 +33,7 @@ namespace Graphics
 		Effect(const Effect& effect) = delete;
 		Effect(Effect&& effect) = delete;
 
-		void apply() const;
+		void apply() const; // TODO: rename
 
 		void attachShader(Shader* shader) const;
 

@@ -36,7 +36,6 @@
 #include <graphics/Image.h>
 #include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
-#include <graphics/UniformBuffer.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
 #include <graphics/Viewport.h>
@@ -141,8 +140,12 @@ void devEngineMain(const StartupParameters& startupParameters)
 		 3u, 2u, 1u,
 	};
 
-	GraphicsBuffer* vertexBuffer = graphicsDevice.createBuffer(sizeof(Float32) * VERTEX_DATA.size());
+	GraphicsBuffer* vertexBuffer = graphicsDevice.createBuffer(BufferBinding::Vertex,
+		sizeof(Float32) * VERTEX_DATA.size());
+
 	vertexBuffer->setData(reinterpret_cast<const Byte*>(VERTEX_DATA.data()), sizeof(Float32) * VERTEX_DATA.size());
+	// TODO: when creating index buffer, provide element count instead of byte
+	//   size and calculate the byte size in ctor?
 	IndexBuffer* indexBuffer = graphicsDevice.createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
 	indexBuffer->setData(reinterpret_cast<const Byte*>(INDEX_DATA.data()), sizeof(Uint8) * INDEX_DATA.size());
 	VertexBufferState* vertexBufferState = graphicsDevice.createVertexBufferState();
@@ -171,7 +174,9 @@ void devEngineMain(const StartupParameters& startupParameters)
 		0.0f,		  0.0f,		  -2.0f * near * far / (far - near),  0.0f
 	);
 
-	UniformBuffer* uniformBuffer = graphicsDevice.createUniformBuffer(32u * sizeof(Float32), AccessMode::Write);
+	GraphicsBuffer* uniformBuffer = graphicsDevice.createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32),
+		AccessMode::Write);
+
 	uniformBuffer->setData(reinterpret_cast<const Byte*>(projectionTransform.data()), sizeof(Matrix4));
 	uniformBuffer->bind(0u);
 

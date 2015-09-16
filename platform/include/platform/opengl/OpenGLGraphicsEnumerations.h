@@ -22,6 +22,13 @@
 
 namespace Graphics
 {
+	enum class BufferBinding
+	{
+		Index	= 0x8893,
+		Uniform = 0x8A11,
+		Vertex	= 0x8892
+	};
+
 	enum class IndexType
 	{
 		Uint8  = 0x5004,

@@ -123,9 +123,6 @@
     <ClCompile Include="source\opengl\OpenGLShader.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
-    <ClCompile Include="source\opengl\OpenGLUniformBuffer.cpp">
-      <Filter>Source Files\opengl</Filter>
-    </ClCompile>
     <ClCompile Include="source\opengl\OpenGLVertexBufferState.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>

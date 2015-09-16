@@ -25,22 +25,22 @@
 #endif
 
 #include <Windows.h>
-#include <core/Platform.h>
+#include <core/ConfigInternal.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
 
-#if DE_BUILD == DE_BUILD_PRODUCTION
-	#define DE_ASSERT_WINDOWS(expression) \
-		DE_NO_OPERATION
-
-	#define DE_ERROR_WINDOWS(errorCode) \
-		Platform::invokeWindowsError(errorCode)
-#else
+#if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 	#define DE_ASSERT_WINDOWS(expression) \
 		(expression) ? DE_NO_OPERATION : Platform::failWindowsAssertion(DE_FILE, DE_LINE, DE_FUNCTION)
 
 	#define DE_ERROR_WINDOWS(errorCode) \
 		Platform::failWindowsAssertion(DE_FILE, DE_LINE, DE_FUNCTION)
+#else
+	#define DE_ASSERT_WINDOWS(expression) \
+		DE_NO_OPERATION
+
+	#define DE_ERROR_WINDOWS(errorCode) \
+		Platform::invokeWindowsError(errorCode)
 #endif
 
 namespace Platform

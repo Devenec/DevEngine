@@ -84,7 +84,6 @@
     <ClCompile Include="source\opengl\OpenGL.cpp" />
     <ClCompile Include="source\opengl\OpenGLShader.cpp" />
     <ClCompile Include="source\opengl\OpenGLVertexBufferState.cpp" />
-    <ClCompile Include="source\opengl\OpenGLUniformBuffer.cpp" />
     <ClCompile Include="source\wgl\WGL.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsConfig.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp" />

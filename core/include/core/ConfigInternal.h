@@ -23,6 +23,10 @@
 #include <core/Platform.h>
 #include <core/Config.h>
 
-#if DE_BUILD != DE_BUILD_PRODUCTION && defined(DE_CONFIG_TRACK_ALLOCATIONS)
+#if DE_BUILD != DE_BUILD_PRODUCTION
+	#define DE_INTERNAL_BUILD_DEVELOPMENT
+#endif
+
+#if defined(DE_INTERNAL_BUILD_DEVELOPMENT) && defined(DE_CONFIG_TRACK_ALLOCATIONS)
 	#define DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS
 #endif

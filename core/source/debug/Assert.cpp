@@ -20,7 +20,7 @@
 
 #include <core/debug/Assert.h>
 
-#if DE_BUILD != DE_BUILD_PRODUCTION
+#if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 
 #include <cstdlib>
 #include <core/Log.h>

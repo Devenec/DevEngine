@@ -28,16 +28,22 @@ namespace Graphics
 	{
 	public:
 
-		Impl(const Uint32 size, const AccessMode& accessMode);
+		Impl(const Uint32 binding, const Uint32 size, const AccessMode& accessMode);
 
 		Impl(const Impl& impl) = delete;
 		Impl(Impl&& impl) = delete;
 
 		~Impl();
 
-		void bindAsUniformBuffer(const Uint32 bindingIndex) const;
+		void bind() const;
 
-		void bindAsUniformBuffer(const Uint32 bindingIndex, const Uint32 size, const Uint32 offset) const;
+		inline void bindIndexed(const Uint32 bindingIndex) const;
+
+		void bindIndexed(const Uint32 bindingIndex, const Uint32 size, const Uint32 offset) const;
+
+		void debind() const;
+
+		void debindIndexed(const Uint32 bindingIndex) const;
 
 		void demapData() const;
 
@@ -54,6 +60,7 @@ namespace Graphics
 
 	private:
 
+		Uint32 _binding;
 		Uint32 _bufferHandle;
 		Uint32 _flags;
 		Uint32 _size;
@@ -62,8 +69,6 @@ namespace Graphics
 		void initialiseFlags(const AccessMode& accessMode);
 		void initialiseStorage(const Uint32 size) const;
 	};
-
-	void debindAsUniformBuffer(const Uint32 bindingIndex);
 
 #include "inline/OpenGLGraphicsBuffer.inl"
 }

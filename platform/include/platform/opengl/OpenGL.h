@@ -42,9 +42,10 @@
 
 #pragma once
 
+#include <core/ConfigInternal.h>
 #include <core/Platform.h>
 #include <core/Types.h>
-#include <core/UtilityMacros.h>
+#include <core/UtilityMacros.h>	
 
 #if DE_COMPILER == DE_COMPILER_MSVC
 	#define DE_CALL_OPENGL DE_INTERNAL_CALL_STDCALL
@@ -52,12 +53,12 @@
 	#define DE_CALL_OPENGL
 #endif
 
-#if DE_BUILD == DE_BUILD_PRODUCTION
-	#define DE_CHECK_ERROR_OPENGL() \
-		DE_NO_OPERATION
-#else
+#if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 	#define DE_CHECK_ERROR_OPENGL() \
 		Platform::OpenGL::checkForErrors(DE_FILE, DE_LINE, DE_FUNCTION)
+#else
+	#define DE_CHECK_ERROR_OPENGL() \
+		DE_NO_OPERATION
 #endif
 
 namespace Platform

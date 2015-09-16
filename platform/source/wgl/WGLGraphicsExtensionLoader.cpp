@@ -36,7 +36,7 @@ static String8 getContextExtensionsString(const GraphicsContextBase& graphicsCon
 static ExtensionNameList getInterfaceExtensionNames();
 static void loadOpenGLStandards();
 static void loadWGLExtensions();
-static void validateContextState();
+static void checkContextState();
 
 template<typename T>
 static T getFunction(const Char8* name);
@@ -48,14 +48,14 @@ static T getFunction(const Char8* name);
 
 void GraphicsExtensionLoader::loadContextExtensions(const GraphicsContextBase& graphicsContext)
 {
-	validateContextState();
+	checkContextState();
 	loadWGLExtensions();
 	logSupportedContextExtensions(getContextExtensionsString(graphicsContext));
 }
 
 void GraphicsExtensionLoader::loadInterfaceExtensions()
 {
-	validateContextState();
+	checkContextState();
 	loadOpenGLStandards();
 	logSupportedInterfaceExtensions(getInterfaceExtensionNames());
 }
@@ -930,7 +930,7 @@ static void loadWGLExtensions()
 	WGL::swapIntervalEXT = getFunction<WGL::SwapIntervalEXT>("wglSwapIntervalEXT");
 }
 
-static void validateContextState()
+static void checkContextState()
 {
 	if(WGL::getCurrentContext() == nullptr)
 	{
