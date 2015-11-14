@@ -36,9 +36,13 @@ namespace Graphics
 		GraphicsBuffer(const GraphicsBuffer& graphicsBuffer) = delete;
 		GraphicsBuffer(GraphicsBuffer&& graphicsBuffer) = delete;
 
-		void bind(const Uint32 bindingIndex) const;
+		void bind() const;
 
-		void debind(const Uint32 bindingIndex) const;
+		void bindIndexed(const Uint32 bindingIndex) const;
+
+		void debind() const;
+
+		void debindIndexed(const Uint32 bindingIndex) const;
 
 		void demapData() const;
 

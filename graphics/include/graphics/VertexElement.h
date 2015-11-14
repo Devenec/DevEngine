@@ -25,21 +25,18 @@
 
 namespace Graphics
 {
-	// TODO: rename members
 	struct VertexElement final
 	{
 		static const Uint32 AFTER_PREVIOUS = 0xFFFFFFFF;
 
-		Uint32 bufferIndex;
-		Uint32 elementIndex;
+		Uint32 index;
 		Uint32 offset;
 		VertexElementType type;
 		Bool normalise;
 
-		VertexElement(const Uint32 elementIndex, const Uint32 bufferIndex, const VertexElementType& type,
-			const Bool normalise = false, const Uint32 offset = AFTER_PREVIOUS)
-			: bufferIndex(bufferIndex),
-			  elementIndex(elementIndex),
+		VertexElement(const Uint32 index, const VertexElementType& type, const Bool normalise = false,
+			const Uint32 offset = AFTER_PREVIOUS)
+			: index(index),
 			  offset(offset),
 			  type(type),
 			  normalise(normalise) { }

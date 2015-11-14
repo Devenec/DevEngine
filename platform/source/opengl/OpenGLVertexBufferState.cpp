@@ -92,8 +92,8 @@ public:
 	}
 
 	// TODO: rename and rename bufferIndex
-	void setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 bufferIndex, const Uint32 stride,
-		const Uint32 offset) const
+	void setVertexBuffer(const GraphicsBuffer* buffer, const InitialiserList<VertexElement>& vertexElements,
+		const Uint32 stride, const Uint32 offset) const
 	{
 		Uint32 bufferHandle = 0u;
 
@@ -101,28 +101,11 @@ public:
 			bufferHandle = buffer->_impl->handle();
 
 		bind();
-		_openGL->bindVertexBuffer(bufferIndex, bufferHandle, offset, stride); // TODO: OpenGL 4.3
-		DE_CHECK_ERROR_OPENGL(_openGL);
+		buffer->bind();
+		setVertexLayout(vertexElements, stride, offset);
+		buffer->debind();
 		debind();
-		// TODO: restore old binding?
-	}
-
-	void setVertexLayout(const InitialiserList<VertexElement>& vertexElements) const
-	{
-		Uint32 offset = 0u;
-
-		for(InitialiserList<VertexElement>::const_iterator i = vertexElements.begin(), end = vertexElements.end();
-		i != end; ++i)
-		{
-			if(i->offset != VertexElement::AFTER_PREVIOUS)
-				offset = i->offset;
-
-			bind();
-			setVertexElementFormat(*i, offset);
-			setVertexElementBinding(*i);
-			offset += ::getVertexElementSize(*i);
-			debind();
-		}
+		// TODO: restore old bindings?
 	}
 
 	Impl& operator =(const Impl& impl) = delete;
@@ -140,22 +123,31 @@ private:
 		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
-	void setVertexElementFormat(const VertexElement& element, const Uint32 offset) const
+	void setVertexLayout(const InitialiserList<VertexElement>& vertexElements, const Uint32 stride,
+		const Uint32 bufferOffset) const
+	{
+		Uint32 elementOffset = bufferOffset;
+
+		for(InitialiserList<VertexElement>::const_iterator i = vertexElements.begin(), end = vertexElements.end();
+			i != end; ++i)
+		{
+			if(i->offset != VertexElement::AFTER_PREVIOUS)
+				elementOffset += i->offset;
+
+			setVertexElementFormat(*i, elementOffset, stride);
+			elementOffset += ::getVertexElementSize(*i);
+		}
+	}
+
+	void setVertexElementFormat(const VertexElement& element, const Uint32 elementOffset, const Uint32 stride) const
 	{
 		Bool normalise;
 		const Uint32 componentCount = ::getVertexElementComponentCount(element, normalise);
-		const Uint32 vertexElementType = static_cast<Uint32>(element.type) >> 3;
-
-		// TODO: OpenGL 4.3
-		_openGL->vertexAttribFormat(element.elementIndex, componentCount, vertexElementType, normalise, offset);
+		const Uint32 elementType = static_cast<Uint32>(element.type) >> 3;
+		_openGL->enableVertexAttribArray(element.index);
 		DE_CHECK_ERROR_OPENGL(_openGL);
-		_openGL->enableVertexAttribArray(element.elementIndex);
-		DE_CHECK_ERROR_OPENGL(_openGL);
-	}
-
-	void setVertexElementBinding(const VertexElement& element) const
-	{
-		_openGL->vertexAttribBinding(element.elementIndex, element.bufferIndex); // TODO: OpenGL 4.3
+		const Void* bufferOffset = reinterpret_cast<Void*>(elementOffset);
+		_openGL->vertexAttribPointer(element.index, componentCount, elementType, normalise, stride, bufferOffset);
 		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 };
@@ -185,15 +177,10 @@ void VertexBufferState::setIndexBuffer(IndexBuffer* indexBuffer) const
 	return _impl->setIndexBuffer(indexBuffer);
 }
 
-void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 bufferIndex, const Uint32 stride,
-	const Uint32 offset) const
+void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer,
+	const InitialiserList<VertexElement>& vertexElements, const Uint32 stride, const Uint32 offset) const
 {
-	_impl->setVertexBuffer(buffer, bufferIndex, stride, offset);
-}
-
-void VertexBufferState::setVertexLayout(const InitialiserList<VertexElement>& vertexElements) const
-{
-	_impl->setVertexLayout(vertexElements);
+	_impl->setVertexBuffer(buffer, vertexElements, stride, offset);
 }
 
 // Private

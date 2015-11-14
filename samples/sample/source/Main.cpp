@@ -146,13 +146,11 @@ void devEngineMain(const StartupParameters& startupParameters)
 	indexBuffer->setData(reinterpret_cast<const Byte*>(INDEX_DATA.data()), sizeof(Uint8) * INDEX_DATA.size());
 	VertexBufferState* vertexBufferState = graphicsDevice->createVertexBufferState();
 
-	vertexBufferState->setVertexLayout
-	({
-		VertexElement(0u, 0u, VertexElementType::Float32Vector3),
-		VertexElement(1u, 0u, VertexElementType::Uint32_R10G10B10A2)
-	});
+	vertexBufferState->setVertexBuffer(vertexBuffer, {
+		VertexElement(0u, VertexElementType::Float32Vector3),
+		VertexElement(1u, VertexElementType::Uint32_R10G10B10A2)
+	}, 4u * sizeof(Float32));
 
-	vertexBufferState->setVertexBuffer(vertexBuffer, 0u, 4u * sizeof(Float32));
 	vertexBufferState->setIndexBuffer(indexBuffer);
 	graphicsDevice->setEffect(effect);
 	graphicsDevice->setVertexBufferState(vertexBufferState);
@@ -174,7 +172,7 @@ void devEngineMain(const StartupParameters& startupParameters)
 		AccessMode::Write);
 
 	uniformBuffer->setData(reinterpret_cast<const Byte*>(projectionTransform.data()), sizeof(Matrix4));
-	uniformBuffer->bind(0u);
+	uniformBuffer->bindIndexed(0u);
 
 	Matrix4 worldTransform;
 	Angle rotation(0.0f);
@@ -192,5 +190,5 @@ void devEngineMain(const StartupParameters& startupParameters)
 		graphicsDevice->swapBuffers();
 	}
 
-	uniformBuffer->debind(0u);
+	uniformBuffer->debindIndexed(0u);
 }

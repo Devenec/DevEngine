@@ -57,9 +57,9 @@ GraphicsBuffer::Impl::~Impl()
 	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
-void GraphicsBuffer::Impl::bindIndexed(const Uint32 bindingIndex, const Uint32 size, const Uint32 offset) const
+void GraphicsBuffer::Impl::bindIndexed(const Uint32 bindingIndex) const
 {
-	_openGL->bindBufferRange(_binding, bindingIndex, _bufferHandle, offset, size);
+	_openGL->bindBufferBase(_binding, bindingIndex, _bufferHandle);
 	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
@@ -104,7 +104,7 @@ Byte* GraphicsBuffer::Impl::mapData(const Uint32 size, const Uint32 bufferOffset
 
 void GraphicsBuffer::Impl::setData(const Byte* data, const Uint32 size, const Uint32 bufferOffset) const
 {
-	// TODO: bind and debind the buffer here?
+	// TODO: bind and debind the buffer here, instead of in mapData and demapData?
 	DE_ASSERT(data != nullptr);
 	Byte* mappedData = mapData(size, bufferOffset);
 	std::copy(data, data + size, mappedData);
@@ -138,7 +138,8 @@ void GraphicsBuffer::Impl::createBuffer()
 void GraphicsBuffer::Impl::initialiseStorage() const
 {
 	bind();
-	_openGL->bufferStorage(_binding, _size, nullptr, _flags); // TODO: OpenGL 4.4
+	// TODO: allow updating 'usage', use _flags partially (mainly for *_DRAW and *_READ)?
+	_openGL->bufferData(_binding, _size, nullptr, OpenGL::STATIC_DRAW);
 	DE_CHECK_ERROR_OPENGL(_openGL);
 	debind();
 	// TODO: restore old binding?
@@ -149,12 +150,22 @@ void GraphicsBuffer::Impl::initialiseStorage() const
 
 // Public
 
-void GraphicsBuffer::bind(const Uint32 bindingIndex) const
+void GraphicsBuffer::bind() const
+{
+	_impl->bind();
+}
+
+void GraphicsBuffer::bindIndexed(const Uint32 bindingIndex) const
 {
 	_impl->bindIndexed(bindingIndex);
 }
 
-void GraphicsBuffer::debind(const Uint32 bindingIndex) const
+void GraphicsBuffer::debind() const
+{
+	_impl->debind();
+}
+
+void GraphicsBuffer::debindIndexed(const Uint32 bindingIndex) const
 {
 	_impl->debindIndexed(bindingIndex);
 }

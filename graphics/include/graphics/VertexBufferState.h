@@ -48,10 +48,9 @@ namespace Graphics
 
 		void setIndexBuffer(IndexBuffer* buffer) const;
 
-		void setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 bufferIndex, const Uint32 stride,
-			const Uint32 offset = 0u) const;
-
-		void setVertexLayout(const Core::InitialiserList<VertexElement>& vertexElements) const;
+		// TODO: change InitialiserList to Vector?
+		void setVertexBuffer(const GraphicsBuffer* buffer, const Core::InitialiserList<VertexElement>& vertexElements,
+			const Uint32 stride, const Uint32 offset = 0u) const;
 
 		VertexBufferState& operator =(const VertexBufferState& vertexBufferState) = delete;
 		VertexBufferState& operator =(VertexBufferState&& vertexBufferState) = delete;

@@ -32,8 +32,8 @@ using namespace Platform;
 // External
 
 static const Char8* COMPONENT_TAG = "[Platform::TemporaryGraphicsContext - WGL]";
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 4;
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 4;
+static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 3;
+static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 3;
 
 static void checkOpenGLVersion();
 static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();

@@ -42,9 +42,7 @@ namespace Graphics
 
 		inline void bind() const;
 
-		inline void bindIndexed(const Uint32 bindingIndex) const;
-
-		void bindIndexed(const Uint32 bindingIndex, const Uint32 size, const Uint32 offset) const;
+		void bindIndexed(const Uint32 bindingIndex) const;
 
 		inline void debind() const;
 
