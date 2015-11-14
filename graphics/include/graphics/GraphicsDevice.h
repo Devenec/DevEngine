@@ -32,6 +32,7 @@ namespace Graphics
 	class Colour;
 	class Effect;
 	class GraphicsBuffer;
+	class GraphicsContext;
 	class GraphicsResource;
 	class IndexBuffer;
 	class Shader;
@@ -42,12 +43,8 @@ namespace Graphics
 	{
 	public:
 
-		GraphicsDevice();
-
 		GraphicsDevice(const GraphicsDevice& graphicsDevice) = delete;
 		GraphicsDevice(GraphicsDevice&& graphicsDevice) = delete;
-
-		~GraphicsDevice();
 
 		void clear(const Colour& colour) const;
 
@@ -76,6 +73,8 @@ namespace Graphics
 
 		void setViewport(const Viewport& viewport) const;
 
+		void swapBuffers() const;
+
 		const Viewport& viewport() const;
 
 		GraphicsDevice& operator =(const GraphicsDevice& graphicsDevice) = delete;
@@ -83,12 +82,17 @@ namespace Graphics
 
 	private:
 
+		friend class GraphicsDeviceManager;
+
 		class Impl;
 
 		using GraphicsResourceList = Core::List<GraphicsResource*>;
 
 		GraphicsResourceList _resources;
 		Impl* _impl;
+
+		GraphicsDevice(GraphicsContext* graphicsContext);
+		~GraphicsDevice();
 
 		void destroyResources() const;
 	};

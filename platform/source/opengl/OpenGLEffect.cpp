@@ -36,19 +36,24 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG = "[Platform::Effect - OpenGL]";
 
-static void applyProgram(const Uint32 programHandle);
-
 
 // Implementation
 
-class Effect::Impl
+class Effect::Impl final
 {
 public:
 
-	Impl()
-		: _programHandle(0u)
+	Impl(OpenGL* openGL)
+		: _openGL(openGL),
+		  _programHandle(0u)
 	{
-		createProgram();
+		_programHandle = _openGL->createProgram();
+
+		if(_programHandle == 0u)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the program." << Log::Flush();
+			DE_ERROR(0x0);
+		}
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -56,33 +61,33 @@ public:
 
 	~Impl()
 	{
-		OpenGL::deleteProgram(_programHandle);
-		DE_CHECK_ERROR_OPENGL();
-	}
-
-	void apply() const
-	{
-		applyProgram(_programHandle);
-	}
-
-	void deapply() const
-	{
-		applyProgram(0u);
+		_openGL->deleteProgram(_programHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
 	void attachShader(Shader* shader) const
 	{
 		const Uint32 shaderHandle = shader->_impl->handle();
-		OpenGL::attachShader(_programHandle, shaderHandle);
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->attachShader(_programHandle, shaderHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
+	}
+
+	void disuse() const
+	{
+		use(0u);
 	}
 
 	void link() const
 	{
-		OpenGL::linkProgram(_programHandle);
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->linkProgram(_programHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 		checkLinkingStatus();
 		detachShaders();
+	}
+
+	void use() const
+	{
+		use(_programHandle);
 	}
 
 	Impl& operator =(const Impl& impl) = delete;
@@ -90,17 +95,13 @@ public:
 
 private:
 
+	Platform::OpenGL* _openGL;
 	Uint32 _programHandle;
 
-	void createProgram()
+	void use(const Uint32 programHandle) const
 	{
-		_programHandle = OpenGL::createProgram();
-
-		if(_programHandle == 0u)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the program." << Log::Flush();
-			DE_ERROR(0x0);
-		}
+		_openGL->useProgram(programHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
 	void checkLinkingStatus() const
@@ -125,13 +126,13 @@ private:
 		if(shaderCount > 0u)
 		{
 			Vector<Uint32> shaderHandles(shaderCount);
-			OpenGL::getAttachedShaders(_programHandle, shaderCount, nullptr, shaderHandles.data());
-			DE_CHECK_ERROR_OPENGL();
+			_openGL->getAttachedShaders(_programHandle, shaderCount, nullptr, shaderHandles.data());
+			DE_CHECK_ERROR_OPENGL(_openGL);
 
 			for(Vector<Uint32>::const_iterator i = shaderHandles.begin(), end = shaderHandles.end(); i != end; ++i)
 			{
-				OpenGL::detachShader(_programHandle, *i);
-				DE_CHECK_ERROR_OPENGL();
+				_openGL->detachShader(_programHandle, *i);
+				DE_CHECK_ERROR_OPENGL(_openGL);
 			}
 		}
 	}
@@ -139,15 +140,15 @@ private:
 	Int32 getParameter(const Uint32 parameterName) const
 	{
 		Int32 parameter = 0;
-		OpenGL::getProgramiv(_programHandle, parameterName, &parameter);
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->getProgramiv(_programHandle, parameterName, &parameter);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 
 		return parameter;
 	}
 
 	void outputLinkerFailureLog() const
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to link the program:";
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to link the program:";
 		const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 		if(logLength > 1u)
@@ -164,7 +165,7 @@ private:
 
 		if(logLength > 1u)
 		{
-			defaultLog << LogLevel::Warning << COMPONENT_TAG << " The program linked with warning(s):\n" <<
+			defaultLog << LogLevel::Warning << ::COMPONENT_TAG << " The program linked with warning(s):\n" <<
 				getInfoLog(logLength).data() << Log::Flush();
 		}
 	}
@@ -172,8 +173,8 @@ private:
 	Vector<Char8> getInfoLog(const Uint32 logLength) const
 	{
 		Vector<Char8> logBuffer(logLength);
-		OpenGL::getProgramInfoLog(_programHandle, logBuffer.size(), nullptr, logBuffer.data());
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->getProgramInfoLog(_programHandle, logBuffer.size(), nullptr, logBuffer.data());
+		DE_CHECK_ERROR_OPENGL(_openGL);
 
 		return logBuffer;
 	}
@@ -184,19 +185,14 @@ private:
 
 // Public
 
-void Effect::apply() const
-{
-	_impl->apply();
-}
-
 void Effect::attachShader(Shader* shader) const
 {
 	_impl->attachShader(shader);
 }
 
-void Effect::deapply() const
+void Effect::disuse() const
 {
-	_impl->deapply();
+	_impl->disuse();
 }
 
 void Effect::link() const
@@ -204,21 +200,17 @@ void Effect::link() const
 	_impl->link();
 }
 
+void Effect::use() const
+{
+	_impl->use();
+}
+
 // Private
 
-Effect::Effect()
-	: _impl(DE_NEW(Impl)()) { }
+Effect::Effect(GraphicsInterface graphicsInterface)
+	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface))) { }
 
 Effect::~Effect()
 {
 	DE_DELETE(_impl, Impl);
-}
-
-
-// External
-
-static void applyProgram(const Uint32 programHandle)
-{
-	OpenGL::useProgram(programHandle);
-	DE_CHECK_ERROR_OPENGL();
 }

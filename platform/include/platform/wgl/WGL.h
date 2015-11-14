@@ -50,6 +50,8 @@
 
 namespace Platform
 {
+	class GraphicsContextBase;
+
 	class WGL final
 	{
 	public:
@@ -186,7 +188,6 @@ namespace Platform
 		static GetSwapIntervalEXT getSwapIntervalEXT;
 		static SwapIntervalEXT swapIntervalEXT;
 
-
 		WGL() = delete;
 
 		WGL(const WGL& wgl) = delete;
@@ -196,6 +197,8 @@ namespace Platform
 
 		WGL& operator =(const WGL& wgl) = delete;
 		WGL& operator =(WGL&& wgl) = delete;
+
+		static void initialise(const GraphicsContextBase& graphicsContext);
 	};
 }
 

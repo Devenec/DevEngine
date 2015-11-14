@@ -29,6 +29,8 @@ namespace Graphics
 	{
 	public:
 
+		~GraphicsContext();
+
 		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
 		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
 
@@ -43,13 +45,12 @@ namespace Graphics
 
 	private:
 
-		friend class GraphicsContextManager;
+		friend class GraphicsDeviceManager;
 
 		class Impl;
 
 		Impl* _impl;
 
 		GraphicsContext(Window* window, const GraphicsConfig& graphicsConfig);
-		~GraphicsContext();
 	};
 }

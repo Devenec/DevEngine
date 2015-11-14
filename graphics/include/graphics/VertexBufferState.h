@@ -31,6 +31,8 @@ namespace Graphics
 	class GraphicsBuffer;
 	class IndexBuffer;
 
+	using GraphicsInterface = Void*;
+
 	class VertexBufferState final : public GraphicsResource
 	{
 	public:
@@ -62,7 +64,7 @@ namespace Graphics
 
 		Impl* _impl;
 
-		VertexBufferState();
+		VertexBufferState(GraphicsInterface graphicsInterface);
 		~VertexBufferState();
 	};
 }

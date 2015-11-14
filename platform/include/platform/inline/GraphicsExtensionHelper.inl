@@ -1,5 +1,5 @@
 /**
- * @file platform/windows/inline/WindowsWindow.inl
+ * @file platform/inline/GraphicsExtensionHelper.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,37 +20,10 @@
 
 // Public
 
-void Window::Impl::close()
-{
-	_isOpen = false;
-}
+// Static
 
-HWND Window::Impl::handle() const
+template<typename T>
+T GraphicsExtensionHelper::getFunction(const Char8* name)
 {
-	return _windowHandle;
-}
-
-void Window::Impl::hide() const
-{
-	ShowWindow(_windowHandle, SW_HIDE);
-}
-
-Bool Window::Impl::isFullscreen() const
-{
-	return _isFullscreen;
-}
-
-void Window::Impl::setCursorVisibility(const Bool isCursorVisible)
-{
-	_isCursorVisible = isCursorVisible;
-}
-
-Bool Window::Impl::shouldClose() const
-{
-	return !_isOpen;
-}
-
-void Window::Impl::show() const
-{
-	ShowWindow(_windowHandle, SW_SHOW);
+	return reinterpret_cast<T>(getFunctionPointer(name));
 }

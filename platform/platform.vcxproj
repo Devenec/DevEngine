@@ -60,7 +60,7 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\platform\GraphicsExtensionLoader.h" />
+    <ClInclude Include="include\platform\GraphicsExtensionHelper.h" />
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsEnumerations.h" />
@@ -77,7 +77,7 @@
     <ClInclude Include="include\platform\windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\GraphicsExtensionLoader.cpp" />
+    <ClCompile Include="source\GraphicsExtensionHelper.cpp" />
     <ClCompile Include="source\opengl\OpenGLEffect.cpp" />
     <ClCompile Include="source\opengl\OpenGLGraphicsBuffer.cpp" />
     <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp" />
@@ -89,8 +89,8 @@
     <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp" />
-    <ClCompile Include="source\wgl\WGLGraphicsContextManager.cpp" />
-    <ClCompile Include="source\wgl\WGLGraphicsExtensionLoader.cpp" />
+    <ClCompile Include="source\wgl\WGLGraphicsDeviceManager.cpp" />
+    <ClCompile Include="source\wgl\WGLGraphicsExtensionHelper.cpp" />
     <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp" />
     <ClCompile Include="source\windows\WindowsFileSystem.cpp" />
     <ClCompile Include="source\windows\Windows.cpp" />
@@ -109,6 +109,7 @@
     <ClCompile Include="source\windows\WindowsWindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\platform\inline\GraphicsExtensionHelper.inl" />
     <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl" />
     <None Include="include\platform\opengl\inline\OpenGLShader.inl" />
     <None Include="include\platform\wgl\inline\WGLGraphicsConfig.inl" />

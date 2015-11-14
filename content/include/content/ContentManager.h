@@ -22,9 +22,9 @@
 
 #include <content/ContentLoader.h>
 #include <core/FileStream.h>
-#include <core/String.h>
 #include <core/Map.h>
 #include <core/Memory.h>
+#include <core/String.h>
 
 namespace Content
 {

@@ -34,61 +34,50 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG = "[Platform::GraphicsBuffer - OpenGL]";
 
-static void bindBuffer(const Uint32 binding, const Uint32 bufferHandle);
-
 
 // Implementation
 
 // Public
 
-GraphicsBuffer::Impl::Impl(const Uint32 binding, const Uint32 size, const AccessMode& accessMode)
-	: _binding(binding),
+GraphicsBuffer::Impl::Impl(OpenGL* openGL, const Uint32 binding, const Uint32 size, const AccessMode& accessMode)
+	: _openGL(openGL),
+	  _binding(binding),
 	  _bufferHandle(0u),
 	  _flags(0u),
 	  _size(size)
 {
+	initialiseAccessMode(accessMode);
 	createBuffer();
-	initialiseFlags(accessMode);
-	initialiseStorage(size);
+	initialiseStorage();
 }
 
 GraphicsBuffer::Impl::~Impl()
 {
-	OpenGL::deleteBuffers(1, &_bufferHandle);
-	DE_CHECK_ERROR_OPENGL();
-}
-
-void GraphicsBuffer::Impl::bind() const
-{
-	::bindBuffer(_binding, _bufferHandle);
+	_openGL->deleteBuffers(1, &_bufferHandle);
+	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
 void GraphicsBuffer::Impl::bindIndexed(const Uint32 bindingIndex, const Uint32 size, const Uint32 offset) const
 {
-	OpenGL::bindBufferRange(_binding, bindingIndex, _bufferHandle, offset, size);
-	DE_CHECK_ERROR_OPENGL();
-}
-
-void GraphicsBuffer::Impl::debind() const
-{
-	::bindBuffer(_binding, 0u);
+	_openGL->bindBufferRange(_binding, bindingIndex, _bufferHandle, offset, size);
+	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
 void GraphicsBuffer::Impl::debindIndexed(const Uint32 bindingIndex) const
 {
-	OpenGL::bindBufferBase(_binding, bindingIndex, 0u);
-	DE_CHECK_ERROR_OPENGL();
+	_openGL->bindBufferBase(_binding, bindingIndex, 0u);
+	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
 void GraphicsBuffer::Impl::demapData() const
 {
 	bind();
-	const Uint32 result = OpenGL::unmapBuffer(_binding);
-	DE_CHECK_ERROR_OPENGL();
+	const Uint32 result = _openGL->unmapBuffer(_binding);
+	DE_CHECK_ERROR_OPENGL(_openGL);
 
 	if(result == 0u)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to demap the buffer data." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to demap the buffer data." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 
@@ -99,12 +88,12 @@ void GraphicsBuffer::Impl::demapData() const
 Byte* GraphicsBuffer::Impl::mapData(const Uint32 size, const Uint32 bufferOffset) const
 {
 	bind();
-	Void* pointer = OpenGL::mapBufferRange(_binding, bufferOffset, size, _flags);
-	DE_CHECK_ERROR_OPENGL();
+	Void* pointer = _openGL->mapBufferRange(_binding, bufferOffset, size, _flags);
+	DE_CHECK_ERROR_OPENGL(_openGL);
 
 	if(pointer == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to map the buffer data." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to map the buffer data." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 
@@ -125,13 +114,13 @@ void GraphicsBuffer::Impl::setData(const Byte* data, const Uint32 size, const Ui
 
 // Private
 
-void GraphicsBuffer::Impl::createBuffer()
+void GraphicsBuffer::Impl::bind(const Uint32 bufferHandle) const
 {
-	OpenGL::genBuffers(1, &_bufferHandle);
-	DE_CHECK_ERROR_OPENGL();
+	_openGL->bindBuffer(_binding, bufferHandle);
+	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
-void GraphicsBuffer::Impl::initialiseFlags(const AccessMode& accessMode)
+void GraphicsBuffer::Impl::initialiseAccessMode(const AccessMode& accessMode)
 {
 	if((accessMode & AccessMode::Read) == AccessMode::Read)
 		_flags |= OpenGL::MAP_READ_BIT;
@@ -140,11 +129,17 @@ void GraphicsBuffer::Impl::initialiseFlags(const AccessMode& accessMode)
 		_flags |= OpenGL::MAP_WRITE_BIT;
 }
 
-void GraphicsBuffer::Impl::initialiseStorage(const Uint32 size) const
+void GraphicsBuffer::Impl::createBuffer()
+{
+	_openGL->genBuffers(1, &_bufferHandle);
+	DE_CHECK_ERROR_OPENGL(_openGL);
+}
+
+void GraphicsBuffer::Impl::initialiseStorage() const
 {
 	bind();
-	OpenGL::bufferStorage(_binding, size, nullptr, _flags); // TODO: OpenGL 4.4
-	DE_CHECK_ERROR_OPENGL();
+	_openGL->bufferStorage(_binding, _size, nullptr, _flags); // TODO: OpenGL 4.4
+	DE_CHECK_ERROR_OPENGL(_openGL);
 	debind();
 	// TODO: restore old binding?
 }
@@ -181,19 +176,11 @@ void GraphicsBuffer::setData(const Byte* data, const Uint32 dataSize, const Uint
 
 // Protected
 
-GraphicsBuffer::GraphicsBuffer(const BufferBinding& binding, const Uint32 size, const AccessMode& accessMode)
-	: _impl(DE_NEW(Impl)(static_cast<Uint32>(binding), size, accessMode)) { }
+GraphicsBuffer::GraphicsBuffer(GraphicsInterface graphicsInterface, const Uint32 binding, const Uint32 size,
+	const AccessMode& accessMode)
+	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface), binding, size, accessMode)) { }
 
 GraphicsBuffer::~GraphicsBuffer()
 {
 	DE_DELETE(_impl, Impl);
-}
-
-
-// External
-
-static void bindBuffer(const Uint32 binding, const Uint32 bufferHandle)
-{
-	OpenGL::bindBuffer(binding, bufferHandle);
-	DE_CHECK_ERROR_OPENGL();
 }

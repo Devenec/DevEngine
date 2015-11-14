@@ -36,6 +36,8 @@ namespace Debug
 }
 
 #else
-	#define DE_ASSERT(expression) \
-		DE_NO_OPERATION
+
+#define DE_ASSERT(expression) \
+	DE_NO_OPERATION
+
 #endif

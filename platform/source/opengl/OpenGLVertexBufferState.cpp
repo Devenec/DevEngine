@@ -33,7 +33,6 @@ using namespace Platform;
 
 // External
 
-static void bindVertexArray(const Uint32 vertexArrayHandle);
 static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise);
 static Uint32 getVertexElementSize(const VertexElement& element);
 
@@ -44,14 +43,13 @@ class VertexBufferState::Impl final
 {
 public:
 
-	Impl()
+	Impl(OpenGL* openGL)
 		: _indexBuffer(nullptr),
-		  _vertexArrayHandle(0u)
+		_openGL(openGL),
+		_vertexArrayHandle(0u)
 	{
-		createVertexArray();
-		bind();
-		debind();
-		// TODO: restore old binding?
+		_openGL->genVertexArrays(1, &_vertexArrayHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -59,18 +57,18 @@ public:
 
 	~Impl()
 	{
-		OpenGL::deleteVertexArrays(1, &_vertexArrayHandle);
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->deleteVertexArrays(1, &_vertexArrayHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
 	void bind() const
 	{
-		bindVertexArray(_vertexArrayHandle);
+		bind(_vertexArrayHandle);
 	}
 
 	void debind() const
 	{
-		bindVertexArray(0u);
+		bind(0u);
 	}
 
 	IndexBuffer* indexBuffer() const
@@ -103,8 +101,8 @@ public:
 			bufferHandle = buffer->_impl->handle();
 
 		bind();
-		OpenGL::bindVertexBuffer(bufferIndex, bufferHandle, offset, stride); // TODO: OpenGL 4.3
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->bindVertexBuffer(bufferIndex, bufferHandle, offset, stride); // TODO: OpenGL 4.3
+		DE_CHECK_ERROR_OPENGL(_openGL);
 		debind();
 		// TODO: restore old binding?
 	}
@@ -114,7 +112,7 @@ public:
 		Uint32 offset = 0u;
 
 		for(InitialiserList<VertexElement>::const_iterator i = vertexElements.begin(), end = vertexElements.end();
-			i != end; ++i)
+		i != end; ++i)
 		{
 			if(i->offset != VertexElement::AFTER_PREVIOUS)
 				offset = i->offset;
@@ -122,7 +120,7 @@ public:
 			bind();
 			setVertexElementFormat(*i, offset);
 			setVertexElementBinding(*i);
-			offset += getVertexElementSize(*i);
+			offset += ::getVertexElementSize(*i);
 			debind();
 		}
 	}
@@ -133,31 +131,32 @@ public:
 private:
 
 	IndexBuffer* _indexBuffer;
+	Platform::OpenGL* _openGL;
 	Uint32 _vertexArrayHandle;
 
-	void createVertexArray()
+	void bind(const Uint32 vertexArrayHandle) const
 	{
-		OpenGL::genVertexArrays(1, &_vertexArrayHandle);
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->bindVertexArray(vertexArrayHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
 	void setVertexElementFormat(const VertexElement& element, const Uint32 offset) const
 	{
 		Bool normalise;
-		const Uint32 componentCount = getVertexElementComponentCount(element, normalise);
+		const Uint32 componentCount = ::getVertexElementComponentCount(element, normalise);
 		const Uint32 vertexElementType = static_cast<Uint32>(element.type) >> 3;
 
 		// TODO: OpenGL 4.3
-		OpenGL::vertexAttribFormat(element.elementIndex, componentCount, vertexElementType, normalise, offset);
-		DE_CHECK_ERROR_OPENGL();
-		OpenGL::enableVertexAttribArray(element.elementIndex);
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->vertexAttribFormat(element.elementIndex, componentCount, vertexElementType, normalise, offset);
+		DE_CHECK_ERROR_OPENGL(_openGL);
+		_openGL->enableVertexAttribArray(element.elementIndex);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
 	void setVertexElementBinding(const VertexElement& element) const
 	{
-		OpenGL::vertexAttribBinding(element.elementIndex, element.bufferIndex); // TODO: OpenGL 4.3
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->vertexAttribBinding(element.elementIndex, element.bufferIndex); // TODO: OpenGL 4.3
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 };
 
@@ -199,8 +198,8 @@ void VertexBufferState::setVertexLayout(const InitialiserList<VertexElement>& ve
 
 // Private
 
-VertexBufferState::VertexBufferState()
-	: _impl(DE_NEW(Impl)()) { }
+VertexBufferState::VertexBufferState(GraphicsInterface graphicsInterface)
+	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface))) { }
 
 VertexBufferState::~VertexBufferState()
 {
@@ -209,12 +208,6 @@ VertexBufferState::~VertexBufferState()
 
 
 // External
-
-static void bindVertexArray(const Uint32 vertexArrayHandle)
-{
-	OpenGL::bindVertexArray(vertexArrayHandle);
-	DE_CHECK_ERROR_OPENGL();
-}
 
 static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise)
 {

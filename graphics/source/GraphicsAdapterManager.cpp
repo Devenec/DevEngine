@@ -31,6 +31,8 @@ using namespace Maths;
 
 // External
 
+static const Uint32 LOG_COLUMN_COUNT = 3u;
+
 static void logGraphicsAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator);
 static void logGraphicsAdapterDisplayModes(const GraphicsAdapter& graphicsAdapter);
 
@@ -47,7 +49,7 @@ void GraphicsAdapterManager::logAdapters() const
 	for(GraphicsAdapterList::const_iterator i = graphicsAdapters.begin(), end = graphicsAdapters.end(); i != end; ++i)
 	{
 		defaultLog << '\n' << (*i)->name() << '\n';
-		logGraphicsAdapterDisplayModes(**i);
+		::logGraphicsAdapterDisplayModes(**i);
 	}
 
 	defaultLog << Log::Flush();
@@ -86,12 +88,12 @@ static void logGraphicsAdapterDisplayModes(const GraphicsAdapter& graphicsAdapte
 {
 	const DisplayModeList& displayModes = graphicsAdapter.supportedDisplayModes();
 	const Uint32 displayModeCount = displayModes.size();
-	const Uint32 rowCount = static_cast<Uint32>(ceiling(displayModeCount / 3.0f));
+	const Uint32 rowCount = static_cast<Uint32>(ceiling(static_cast<Float32>(displayModeCount) / ::LOG_COLUMN_COUNT));
 
 	for(Uint32 i = 0u; i < rowCount; ++i)
 	{
-		for(Uint32 j = i; j <= i + 3u * rowCount && j < displayModeCount; j += rowCount)
-			logGraphicsAdapterDisplayMode(displayModes[j], j != i);
+		for(Uint32 j = i; j <= i + ::LOG_COLUMN_COUNT * rowCount && j < displayModeCount; j += rowCount)
+			::logGraphicsAdapterDisplayMode(displayModes[j], j != i);
 
 		defaultLog << '\n';
 	}

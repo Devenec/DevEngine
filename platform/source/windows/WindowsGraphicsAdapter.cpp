@@ -74,7 +74,7 @@ public:
 			_supportedDisplayModes.end(), mode);
 
 		DE_ASSERT(iterator != _supportedDisplayModes.end());
-		DEVMODEW displayModeInfo = createDisplayModeInfo(mode);
+		DEVMODEW displayModeInfo = ::createDisplayModeInfo(mode);
 		changeDisplaySettings(&displayModeInfo, CDS_FULLSCREEN);
 		_currentDisplayModeIndex = iterator - _supportedDisplayModes.begin();
 	}
@@ -100,7 +100,7 @@ private:
 
 		if(result != DISP_CHANGE_SUCCESSFUL)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to change the display mode, with"
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to change the display mode, with"
 				"ChangeDisplaySettingsEx return code " << result << '.' << Log::Flush();
 
 			DE_ERROR(0x0);

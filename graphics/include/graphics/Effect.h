@@ -20,11 +20,14 @@
 
 #pragma once
 
+#include <core/Types.h>
 #include <graphics/GraphicsResource.h>
 
 namespace Graphics
 {
 	class Shader;
+
+	using GraphicsInterface = Void*;
 
 	class Effect final : public GraphicsResource
 	{
@@ -33,13 +36,13 @@ namespace Graphics
 		Effect(const Effect& effect) = delete;
 		Effect(Effect&& effect) = delete;
 
-		void apply() const; // TODO: rename
-
 		void attachShader(Shader* shader) const;
 
-		void deapply() const;
+		void disuse() const;
 
 		void link() const;
+
+		void use() const;
 
 		Effect& operator =(const Effect& effect) = delete;
 		Effect& operator =(Effect&& effect) = delete;
@@ -52,7 +55,7 @@ namespace Graphics
 
 		Impl* _impl;
 
-		Effect();
+		Effect(GraphicsInterface graphicsInterface);
 		~Effect();
 	};
 }

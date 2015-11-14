@@ -21,11 +21,10 @@
 #pragma once
 
 #include <graphics/GraphicsBuffer.h>
-#include <graphics/GraphicsEnumerations.h>
 
 namespace Graphics
 {
-	enum class AccessMode;
+	enum class IndexType;
 
 	class IndexBuffer final : public GraphicsBuffer
 	{
@@ -47,7 +46,9 @@ namespace Graphics
 
 		IndexType _indexType;
 
-		IndexBuffer(const Uint32 size, const IndexType& indexType, const AccessMode& accessMode);
+		IndexBuffer(GraphicsInterface graphicsInterface, const Uint32 size, const IndexType& indexType,
+			const AccessMode& accessMode);
+
 		~IndexBuffer() = default;
 	};
 

@@ -76,11 +76,11 @@ private:
 	void createContext()
 	{
 		_graphicsContextHandle = WGL::createContextAttribsARB(_deviceContextHandle, nullptr,
-			CONTEXT_ATTRIBUTES.data());
+			::CONTEXT_ATTRIBUTES.data());
 
 		if(_graphicsContextHandle == nullptr)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the context." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the context." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
@@ -90,13 +90,6 @@ private:
 // Graphics::GraphicsContext
 
 // Public
-
-GraphicsContext::GraphicsContext(Window* window, const GraphicsConfig& graphicsConfig)
-	: _impl(nullptr)
-{
-	DE_ASSERT(window != nullptr);
-	_impl = DE_NEW(Impl)(static_cast<HWND>(window->handle()), graphicsConfig);
-}
 
 GraphicsContext::~GraphicsContext()
 {
@@ -116,4 +109,13 @@ void GraphicsContext::makeNonCurrent() const
 void GraphicsContext::swapBuffers() const
 {
 	_impl->swapBuffers();
+}
+
+// Private
+
+GraphicsContext::GraphicsContext(Window* window, const GraphicsConfig& graphicsConfig)
+	: _impl(nullptr)
+{
+	DE_ASSERT(window != nullptr);
+	_impl = DE_NEW(Impl)(static_cast<HWND>(window->handle()), graphicsConfig);
 }

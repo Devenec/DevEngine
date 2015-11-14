@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContextManager.h
+ * @file graphics/GraphicsDeviceManager.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -25,26 +25,26 @@
 namespace Graphics
 {
 	class GraphicsConfig;
-	class GraphicsContext;
+	class GraphicsDevice;
 	class Window;
 
-	class GraphicsContextManager final : public Core::Singleton<GraphicsContextManager>
+	class GraphicsDeviceManager final : public Core::Singleton<GraphicsDeviceManager>
 	{
 	public:
 
-		GraphicsContextManager();
+		GraphicsDeviceManager();
 
-		GraphicsContextManager(const GraphicsContextManager& graphicsContextManager) = delete;
-		GraphicsContextManager(GraphicsContextManager&& graphicsContextManager) = delete;
+		GraphicsDeviceManager(const GraphicsDeviceManager& graphicsDeviceManager) = delete;
+		GraphicsDeviceManager(GraphicsDeviceManager&& graphicsDeviceManager) = delete;
 
-		~GraphicsContextManager();
+		~GraphicsDeviceManager();
 
-		GraphicsContext* createGraphicsContext(Window* window) const;
+		GraphicsDevice* createDevice(Window* window) const;
 
-		void destroyGraphicsContext(GraphicsContext* graphicsContext) const;
+		void destroyDevice(GraphicsDevice* device) const;
 
-		GraphicsContextManager& operator =(const GraphicsContextManager& graphicsContextManager) = delete;
-		GraphicsContextManager& operator =(GraphicsContextManager&& graphicsContextManager) = delete;
+		GraphicsDeviceManager& operator =(const GraphicsDeviceManager& graphicsDeviceManager) = delete;
+		GraphicsDeviceManager& operator =(GraphicsDeviceManager&& graphicsDeviceManager) = delete;
 
 	private:
 

@@ -27,8 +27,6 @@
 
 namespace Graphics
 {
-	class Image;
-
 	class Window::Impl final
 	{
 	public:
@@ -48,7 +46,7 @@ namespace Graphics
 
 		inline Bool isFullscreen() const;
 
-		inline Core::Rectangle rectangle() const;
+		Core::Rectangle rectangle() const;
 
 		inline void setCursorVisibility(const Bool isCursorVisible);
 
@@ -80,7 +78,7 @@ namespace Graphics
 
 		Core::Rectangle getRectangle() const;
 		void setFullscreenStyle(const Bool isFullscreen) const;
-		inline Core::Rectangle getFullscreenRectangle() const;
+		Core::Rectangle getFullscreenRectangle() const;
 		RECT getMonitorRectangle() const;
 	};
 

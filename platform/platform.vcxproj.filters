@@ -36,9 +36,12 @@
     <Filter Include="Source Files\windows">
       <UniqueIdentifier>{3b414000-a269-4c3b-b8b7-7192d2ea7f45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\inline">
+      <UniqueIdentifier>{2cac1e45-bf97-4c4f-9369-ca45428f3a5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\platform\GraphicsExtensionLoader.h">
+    <ClInclude Include="include\platform\GraphicsExtensionHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\PlatformInternal.h">
@@ -103,9 +106,12 @@
     <None Include="include\platform\windows\inline\WindowsWindow.inl">
       <Filter>Header Files\windows\inline</Filter>
     </None>
+    <None Include="include\platform\inline\GraphicsExtensionHelper.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\GraphicsExtensionLoader.cpp">
+    <ClCompile Include="source\GraphicsExtensionHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\opengl\OpenGL.cpp">
@@ -139,12 +145,6 @@
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp">
-      <Filter>Source Files\wgl</Filter>
-    </ClCompile>
-    <ClCompile Include="source\wgl\WGLGraphicsContextManager.cpp">
-      <Filter>Source Files\wgl</Filter>
-    </ClCompile>
-    <ClCompile Include="source\wgl\WGLGraphicsExtensionLoader.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp">
@@ -185,6 +185,12 @@
     </ClCompile>
     <ClCompile Include="source\windows\WindowsWindowManager.cpp">
       <Filter>Source Files\windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\wgl\WGLGraphicsExtensionHelper.cpp">
+      <Filter>Source Files\wgl</Filter>
+    </ClCompile>
+    <ClCompile Include="source\wgl\WGLGraphicsDeviceManager.cpp">
+      <Filter>Source Files\wgl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

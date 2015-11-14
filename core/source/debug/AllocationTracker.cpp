@@ -87,7 +87,7 @@ void AllocationTracker::checkForMemoryLeaks() const
 {
 	if(_allocationRecords.size() > 0u)
 	{
-		defaultLog << LogLevel::Warning << COMPONENT_TAG << ' ' << _allocationRecords.size() <<
+		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << ' ' << _allocationRecords.size() <<
 			" memory leak(s) detected:\n\n";
 
 		for(AllocationRecordMap::const_iterator i = _allocationRecords.begin(), end = _allocationRecords.end();

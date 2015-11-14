@@ -1,5 +1,5 @@
 /**
- * @file platform/windows/inline/WindowsWindow.inl
+ * @file platform/wgl/WGLGraphicsExtensionHelper.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,39 +18,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Public
+#include <platform/GraphicsExtensionHelper.h>
+#include <platform/wgl/WGL.h>
 
-void Window::Impl::close()
-{
-	_isOpen = false;
-}
+using namespace Platform;
 
-HWND Window::Impl::handle() const
-{
-	return _windowHandle;
-}
+// Private
 
-void Window::Impl::hide() const
-{
-	ShowWindow(_windowHandle, SW_HIDE);
-}
+// Static
 
-Bool Window::Impl::isFullscreen() const
+Void* GraphicsExtensionHelper::getFunctionPointer(const Char8* name)
 {
-	return _isFullscreen;
-}
-
-void Window::Impl::setCursorVisibility(const Bool isCursorVisible)
-{
-	_isCursorVisible = isCursorVisible;
-}
-
-Bool Window::Impl::shouldClose() const
-{
-	return !_isOpen;
-}
-
-void Window::Impl::show() const
-{
-	ShowWindow(_windowHandle, SW_SHOW);
+	return WGL::getProcAddress(name);
 }

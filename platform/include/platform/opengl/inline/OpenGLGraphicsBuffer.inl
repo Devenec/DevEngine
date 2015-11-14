@@ -20,9 +20,19 @@
 
 // Public
 
+void GraphicsBuffer::Impl::bind() const
+{
+	bind(_bufferHandle);
+}
+
 void GraphicsBuffer::Impl::bindIndexed(const Uint32 bindingIndex) const
 {
 	bindIndexed(bindingIndex, _size, 0u);
+}
+
+void GraphicsBuffer::Impl::debind() const
+{
+	bind(0u);
 }
 
 Uint32 GraphicsBuffer::Impl::handle() const
