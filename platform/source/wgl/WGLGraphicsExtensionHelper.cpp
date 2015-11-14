@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/OpenGLUniformBuffer.cpp
+ * @file platform/wgl/WGLGraphicsExtensionHelper.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,22 +18,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <graphics/UniformBuffer.h>
-#include <platform/opengl/OpenGLGraphicsBuffer.h>
+#include <platform/GraphicsExtensionHelper.h>
+#include <platform/wgl/WGL.h>
 
-using namespace Graphics;
+using namespace Platform;
 
-// Public
+// Private
 
-UniformBuffer::UniformBuffer(const Uint32 size, const AccessMode& accessMode)
-	: Base(size, accessMode) { }
+// Static
 
-void UniformBuffer::bind(const Uint32 bindingIndex) const
+Void* GraphicsExtensionHelper::getFunctionPointer(const Char8* name)
 {
-	_impl->bindAsUniformBuffer(bindingIndex);
-}
-
-void UniformBuffer::debind(const Uint32 bindingIndex) const
-{
-	debindAsUniformBuffer(bindingIndex);
+	return WGL::getProcAddress(name);
 }

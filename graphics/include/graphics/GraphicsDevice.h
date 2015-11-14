@@ -27,16 +27,15 @@
 
 namespace Graphics
 {
-	enum class IndexType;
 	enum class ShaderType;
 
 	class Colour;
 	class Effect;
 	class GraphicsBuffer;
+	class GraphicsContext;
 	class GraphicsResource;
 	class IndexBuffer;
 	class Shader;
-	class UniformBuffer;
 	class VertexBufferState;
 	class Viewport;
 
@@ -44,16 +43,12 @@ namespace Graphics
 	{
 	public:
 
-		GraphicsDevice();
-
 		GraphicsDevice(const GraphicsDevice& graphicsDevice) = delete;
 		GraphicsDevice(GraphicsDevice&& graphicsDevice) = delete;
 
-		~GraphicsDevice();
-
 		void clear(const Colour& colour) const;
 
-		GraphicsBuffer* createBuffer(const Uint32 size,
+		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size,
 			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		Effect* createEffect();
@@ -62,9 +57,6 @@ namespace Graphics
 			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		Shader* createShader(const ShaderType& type, const Core::String8& source);
-
-		UniformBuffer* createUniformBuffer(const Uint32 size,
-			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		VertexBufferState* createVertexBufferState();
 
@@ -81,6 +73,8 @@ namespace Graphics
 
 		void setViewport(const Viewport& viewport) const;
 
+		void swapBuffers() const;
+
 		const Viewport& viewport() const;
 
 		GraphicsDevice& operator =(const GraphicsDevice& graphicsDevice) = delete;
@@ -88,12 +82,17 @@ namespace Graphics
 
 	private:
 
+		friend class GraphicsDeviceManager;
+
 		class Impl;
 
 		using GraphicsResourceList = Core::List<GraphicsResource*>;
 
 		GraphicsResourceList _resources;
 		Impl* _impl;
+
+		GraphicsDevice(GraphicsContext* graphicsContext);
+		~GraphicsDevice();
 
 		void destroyResources() const;
 	};

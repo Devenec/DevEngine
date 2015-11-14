@@ -21,7 +21,6 @@
 #pragma once
 
 #include <core/Singleton.h>
-#include <core/Types.h>
 
 namespace Graphics
 {

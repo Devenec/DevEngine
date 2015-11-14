@@ -20,12 +20,9 @@
 
 #pragma once
 
-#include <core/Platform.h>
+#include <core/ConfigInternal.h>
 
-#if DE_BUILD == DE_BUILD_PRODUCTION
-	#define DE_ASSERT(expression) \
-		DE_NO_OPERATION
-#else
+#if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
@@ -37,5 +34,10 @@ namespace Debug
 {
 	void failAssertion(const Char8* expression, const Char8* file, const Uint32 line, const Char8* function);
 }
+
+#else
+
+#define DE_ASSERT(expression) \
+	DE_NO_OPERATION
 
 #endif

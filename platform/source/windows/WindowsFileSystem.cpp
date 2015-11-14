@@ -43,7 +43,7 @@ Bool FileSystem::fileExists(const String8& filepath)
 		if(getWindowsErrorCode() == ERROR_FILE_NOT_FOUND)
 			return false;
 
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the attributes of file '" << filepath <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the attributes of file '" << filepath <<
 			"'." << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);

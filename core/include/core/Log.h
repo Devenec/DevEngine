@@ -37,9 +37,9 @@ namespace Core
 
 	enum class StreamFormat
 	{
-		Decimal = 1,
+		Decimal		= 1,
 		Hexadecimal = 2,
-		Octal = 4
+		Octal		= 4
 	};
 
 	class Log final

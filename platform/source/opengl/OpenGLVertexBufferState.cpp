@@ -33,7 +33,6 @@ using namespace Platform;
 
 // External
 
-static void applyVertexArray(const Uint32 vertexArrayHandle);
 static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise);
 static Uint32 getVertexElementSize(const VertexElement& element);
 
@@ -44,12 +43,13 @@ class VertexBufferState::Impl final
 {
 public:
 
-	Impl()
+	Impl(OpenGL* openGL)
 		: _indexBuffer(nullptr),
-		  _vertexArrayHandle(0u)
+		_openGL(openGL),
+		_vertexArrayHandle(0u)
 	{
-		OpenGL::createVertexArrays(1, &_vertexArrayHandle);
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->genVertexArrays(1, &_vertexArrayHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -57,18 +57,18 @@ public:
 
 	~Impl()
 	{
-		OpenGL::deleteVertexArrays(1, &_vertexArrayHandle);
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->deleteVertexArrays(1, &_vertexArrayHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
-	void apply() const
+	void bind() const
 	{
-		applyVertexArray(_vertexArrayHandle);
+		bind(_vertexArrayHandle);
 	}
 
-	void deapply() const
+	void debind() const
 	{
-		applyVertexArray(0u);
+		bind(0u);
 	}
 
 	IndexBuffer* indexBuffer() const
@@ -78,42 +78,34 @@ public:
 
 	void setIndexBuffer(IndexBuffer* buffer)
 	{
+		// TODO: assert that buffer has BufferBinding::Index
+		bind();
+
+		if(buffer == nullptr)
+			_indexBuffer->_impl->debind(); // TODO: restore old binding?
+		else
+			buffer->_impl->bind();
+
+		debind();
+		// TODO: restore old binding?
 		_indexBuffer = buffer;
-		Uint32 bufferHandle = 0u;
-
-		if(buffer != nullptr)
-			bufferHandle = buffer->_impl->handle();
-
-		OpenGL::vertexArrayElementBuffer(_vertexArrayHandle, bufferHandle);
-		DE_CHECK_ERROR_OPENGL();
 	}
 
-	void setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 bufferIndex, const Uint32 stride,
-		const Uint32 offset) const
+	// TODO: rename and rename bufferIndex
+	void setVertexBuffer(const GraphicsBuffer* buffer, const InitialiserList<VertexElement>& vertexElements,
+		const Uint32 stride, const Uint32 offset) const
 	{
 		Uint32 bufferHandle = 0u;
 
 		if(buffer != nullptr)
 			bufferHandle = buffer->_impl->handle();
 
-		OpenGL::vertexArrayVertexBuffer(_vertexArrayHandle, bufferIndex, bufferHandle, offset, stride);
-		DE_CHECK_ERROR_OPENGL();
-	}
-
-	void setVertexLayout(const InitialiserList<VertexElement>& vertexElements) const
-	{
-		Uint32 offset = 0u;
-
-		for(InitialiserList<VertexElement>::const_iterator i = vertexElements.begin(), end = vertexElements.end();
-			i != end; ++i)
-		{
-			if(i->offset != VertexElement::AFTER_PREVIOUS)
-				offset = i->offset;
-
-			setVertexElementFormat(*i, offset);
-			setVertexElementBinding(*i);
-			offset += getVertexElementSize(*i);
-		}
+		bind();
+		buffer->bind();
+		setVertexLayout(vertexElements, stride, offset);
+		buffer->debind();
+		debind();
+		// TODO: restore old bindings?
 	}
 
 	Impl& operator =(const Impl& impl) = delete;
@@ -122,26 +114,41 @@ public:
 private:
 
 	IndexBuffer* _indexBuffer;
+	Platform::OpenGL* _openGL;
 	Uint32 _vertexArrayHandle;
 
-	void setVertexElementFormat(const VertexElement& element, const Uint32 offset) const
+	void bind(const Uint32 vertexArrayHandle) const
 	{
-		Bool normalise;
-		const Uint32 componentCount = getVertexElementComponentCount(element, normalise);
-		const Uint32 vertexElementType = static_cast<Uint32>(element.type) >> 3;
-
-		OpenGL::vertexArrayAttribFormat(_vertexArrayHandle, element.elementIndex, componentCount, vertexElementType,
-			normalise, offset);
-
-		DE_CHECK_ERROR_OPENGL();
-		OpenGL::enableVertexArrayAttrib(_vertexArrayHandle, element.elementIndex);
-		DE_CHECK_ERROR_OPENGL();
+		_openGL->bindVertexArray(vertexArrayHandle);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
-	void setVertexElementBinding(const VertexElement& element) const
+	void setVertexLayout(const InitialiserList<VertexElement>& vertexElements, const Uint32 stride,
+		const Uint32 bufferOffset) const
 	{
-		OpenGL::vertexArrayAttribBinding(_vertexArrayHandle, element.elementIndex, element.bufferIndex);
-		DE_CHECK_ERROR_OPENGL();
+		Uint32 elementOffset = bufferOffset;
+
+		for(InitialiserList<VertexElement>::const_iterator i = vertexElements.begin(), end = vertexElements.end();
+			i != end; ++i)
+		{
+			if(i->offset != VertexElement::AFTER_PREVIOUS)
+				elementOffset += i->offset;
+
+			setVertexElementFormat(*i, elementOffset, stride);
+			elementOffset += ::getVertexElementSize(*i);
+		}
+	}
+
+	void setVertexElementFormat(const VertexElement& element, const Uint32 elementOffset, const Uint32 stride) const
+	{
+		Bool normalise;
+		const Uint32 componentCount = ::getVertexElementComponentCount(element, normalise);
+		const Uint32 elementType = static_cast<Uint32>(element.type) >> 3;
+		_openGL->enableVertexAttribArray(element.index);
+		DE_CHECK_ERROR_OPENGL(_openGL);
+		const Void* bufferOffset = reinterpret_cast<Void*>(elementOffset);
+		_openGL->vertexAttribPointer(element.index, componentCount, elementType, normalise, stride, bufferOffset);
+		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 };
 
@@ -150,14 +157,14 @@ private:
 
 // Public
 
-void VertexBufferState::apply() const
+void VertexBufferState::bind() const
 {
-	_impl->apply();
+	_impl->bind();
 }
 
-void VertexBufferState::deapply() const
+void VertexBufferState::debind() const
 {
-	_impl->deapply();
+	_impl->debind();
 }
 
 IndexBuffer* VertexBufferState::indexBuffer() const
@@ -170,21 +177,16 @@ void VertexBufferState::setIndexBuffer(IndexBuffer* indexBuffer) const
 	return _impl->setIndexBuffer(indexBuffer);
 }
 
-void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 bufferIndex, const Uint32 stride,
-	const Uint32 offset) const
+void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer,
+	const InitialiserList<VertexElement>& vertexElements, const Uint32 stride, const Uint32 offset) const
 {
-	_impl->setVertexBuffer(buffer, bufferIndex, stride, offset);
-}
-
-void VertexBufferState::setVertexLayout(const InitialiserList<VertexElement>& vertexElements) const
-{
-	_impl->setVertexLayout(vertexElements);
+	_impl->setVertexBuffer(buffer, vertexElements, stride, offset);
 }
 
 // Private
 
-VertexBufferState::VertexBufferState()
-	: _impl(DE_NEW(Impl)()) { }
+VertexBufferState::VertexBufferState(GraphicsInterface graphicsInterface)
+	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface))) { }
 
 VertexBufferState::~VertexBufferState()
 {
@@ -193,12 +195,6 @@ VertexBufferState::~VertexBufferState()
 
 
 // External
-
-static void applyVertexArray(const Uint32 vertexArrayHandle)
-{
-	OpenGL::bindVertexArray(vertexArrayHandle);
-	DE_CHECK_ERROR_OPENGL();
-}
 
 static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise)
 {

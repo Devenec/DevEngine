@@ -31,6 +31,8 @@ namespace Graphics
 	class GraphicsBuffer;
 	class IndexBuffer;
 
+	using GraphicsInterface = Void*;
+
 	class VertexBufferState final : public GraphicsResource
 	{
 	public:
@@ -38,18 +40,17 @@ namespace Graphics
 		VertexBufferState(const VertexBufferState& vertexBufferState) = delete;
 		VertexBufferState(VertexBufferState&& vertexBufferState) = delete;
 
-		void apply() const;
+		void bind() const;
 
-		void deapply() const;
+		void debind() const;
 
 		IndexBuffer* indexBuffer() const;
 
 		void setIndexBuffer(IndexBuffer* buffer) const;
 
-		void setVertexBuffer(const GraphicsBuffer* buffer, const Uint32 bufferIndex, const Uint32 stride,
-			const Uint32 offset = 0u) const;
-
-		void setVertexLayout(const Core::InitialiserList<VertexElement>& vertexElements) const;
+		// TODO: change InitialiserList to Vector?
+		void setVertexBuffer(const GraphicsBuffer* buffer, const Core::InitialiserList<VertexElement>& vertexElements,
+			const Uint32 stride, const Uint32 offset = 0u) const;
 
 		VertexBufferState& operator =(const VertexBufferState& vertexBufferState) = delete;
 		VertexBufferState& operator =(VertexBufferState&& vertexBufferState) = delete;
@@ -62,7 +63,7 @@ namespace Graphics
 
 		Impl* _impl;
 
-		VertexBufferState();
+		VertexBufferState(GraphicsInterface graphicsInterface);
 		~VertexBufferState();
 	};
 }

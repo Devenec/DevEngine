@@ -20,7 +20,6 @@
 
 #include <core/Log.h>
 #include <core/Memory.h>
-#include <graphics/Image.h>
 #include <platform/windows/WindowsWindow.h>
 
 using namespace Core;
@@ -29,7 +28,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::Window - Windows]";
+static const Char8* COMPONENT_TAG = "[Graphics::Window - Windows]";
 
 
 // Implementation
@@ -43,6 +42,14 @@ Window::Impl::Impl(HWND windowHandle)
 	  _isOpen(true)
 {
 	_rectangle = getRectangle();
+}
+
+Core::Rectangle Window::Impl::rectangle() const
+{
+	if(_isFullscreen)
+		return getRectangle();
+	else
+		return _rectangle;
 }
 
 void Window::Impl::setFullscreen(const Bool isFullscreen)
@@ -77,7 +84,7 @@ void Window::Impl::setRectangle(const Core::Rectangle& rectangle, const Bool isF
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the window rectangle." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the window rectangle." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -92,7 +99,7 @@ void Window::Impl::setTitle(const String8& title) const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the window title." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the window title." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -117,7 +124,7 @@ Core::Rectangle Window::Impl::getRectangle() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the window rectangle." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the window rectangle." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -139,9 +146,17 @@ void Window::Impl::setFullscreenStyle(const Bool isFullscreen) const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the window style." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the window style." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
+}
+
+Core::Rectangle Window::Impl::getFullscreenRectangle() const
+{
+	const RECT monitorRectangle = getMonitorRectangle();
+
+	return Core::Rectangle(monitorRectangle.left, monitorRectangle.top, monitorRectangle.right - monitorRectangle.left,
+		monitorRectangle.bottom - monitorRectangle.top);
 }
 
 RECT Window::Impl::getMonitorRectangle() const
@@ -153,7 +168,7 @@ RECT Window::Impl::getMonitorRectangle() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get info about the monitor of the window." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get info about the monitor of the window." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);

@@ -19,70 +19,14 @@
  */
 
 #include <core/Memory.h>
-#include <graphics/Effect.h>
-#include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/GraphicsResource.h>
-#include <graphics/IndexBuffer.h>
-#include <graphics/Shader.h>
-#include <graphics/UniformBuffer.h>
-#include <graphics/VertexBufferState.h>
 
-using namespace Core;
 using namespace Graphics;
 
 // Some members are defined in platform/*/*GraphicsDevice.cpp
 
 // Public
-
-GraphicsBuffer* GraphicsDevice::createBuffer(const Uint32 size, const AccessMode& accessMode)
-{
-	GraphicsBuffer* buffer = DE_NEW(GraphicsBuffer)(size, accessMode);
-	_resources.push_back(buffer);
-
-	return buffer;
-}
-
-Effect* GraphicsDevice::createEffect()
-{
-	Effect* effect = DE_NEW(Effect)();
-	_resources.push_back(effect);
-
-	return effect;
-}
-
-IndexBuffer* GraphicsDevice::createIndexBuffer(const Uint32 size, const IndexType& indexType,
-	const AccessMode& accessMode)
-{
-	IndexBuffer* indexBuffer = DE_NEW(IndexBuffer)(size, indexType, accessMode);
-	_resources.push_back(indexBuffer);
-
-	return indexBuffer;
-}
-
-Shader* GraphicsDevice::createShader(const ShaderType& type, const String8& source)
-{
-	Shader* shader = DE_NEW(Shader)(type, source);
-	_resources.push_back(shader);
-
-	return shader;
-}
-
-UniformBuffer* GraphicsDevice::createUniformBuffer(const Uint32 size, const AccessMode& accessMode)
-{
-	UniformBuffer* uniformBuffer = DE_NEW(UniformBuffer)(size, accessMode);
-	_resources.push_back(uniformBuffer);
-
-	return uniformBuffer;
-}
-
-VertexBufferState* GraphicsDevice::createVertexBufferState()
-{
-	VertexBufferState* vertexBufferState = DE_NEW(VertexBufferState)();
-	_resources.push_back(vertexBufferState);
-
-	return vertexBufferState;
-}
 
 void GraphicsDevice::destroyResource(GraphicsResource* resource)
 {

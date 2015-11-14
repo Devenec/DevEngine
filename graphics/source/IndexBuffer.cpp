@@ -18,12 +18,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <graphics/GraphicsEnumerations.h>
 #include <graphics/IndexBuffer.h>
 
 using namespace Graphics;
 
 // Private
 
-IndexBuffer::IndexBuffer(const Uint32 size, const IndexType& indexType, const AccessMode& accessMode)
-	: Base(size, accessMode),
-	_indexType(indexType) { }
+IndexBuffer::IndexBuffer(GraphicsInterface graphicsInterface, const Uint32 size, const IndexType& indexType,
+	const AccessMode& accessMode)
+	: GraphicsBuffer(graphicsInterface, static_cast<Uint32>(BufferBinding::Index), size, accessMode),
+	  _indexType(indexType) { }

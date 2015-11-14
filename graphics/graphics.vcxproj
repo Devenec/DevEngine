@@ -69,7 +69,7 @@
     <ClInclude Include="include\graphics\GraphicsBuffer.h" />
     <ClInclude Include="include\graphics\GraphicsConfig.h" />
     <ClInclude Include="include\graphics\GraphicsContext.h" />
-    <ClInclude Include="include\graphics\GraphicsContextManager.h" />
+    <ClInclude Include="include\graphics\GraphicsDeviceManager.h" />
     <ClInclude Include="include\graphics\GraphicsDevice.h" />
     <ClInclude Include="include\graphics\GraphicsEnumerations.h" />
     <ClInclude Include="include\graphics\GraphicsResource.h" />
@@ -79,7 +79,6 @@
     <ClInclude Include="include\graphics\IndexBuffer.h" />
     <ClInclude Include="include\graphics\PNGReader.h" />
     <ClInclude Include="include\graphics\Shader.h" />
-    <ClInclude Include="include\graphics\UniformBuffer.h" />
     <ClInclude Include="include\graphics\VertexBufferState.h" />
     <ClInclude Include="include\graphics\VertexElement.h" />
     <ClInclude Include="include\graphics\Viewport.h" />
@@ -99,7 +98,7 @@
     <ClCompile Include="source\Colour.cpp" />
     <ClCompile Include="source\DisplayMode.cpp" />
     <ClCompile Include="source\GraphicsAdapterManager.cpp" />
-    <ClCompile Include="source\GraphicsContextManager.cpp" />
+    <ClCompile Include="source\GraphicsDeviceManager.cpp" />
     <ClCompile Include="source\GraphicsDevice.cpp" />
     <ClCompile Include="source\Image.cpp" />
     <ClCompile Include="source\ImageLoader.cpp" />

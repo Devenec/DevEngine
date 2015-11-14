@@ -30,13 +30,11 @@
 #include <graphics/Effect.h>
 #include <graphics/GraphicsAdapterManager.h>
 #include <graphics/GraphicsBuffer.h>
-#include <graphics/GraphicsContext.h>
-#include <graphics/GraphicsContextManager.h>
 #include <graphics/GraphicsDevice.h>
+#include <graphics/GraphicsDeviceManager.h>
 #include <graphics/Image.h>
 #include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
-#include <graphics/UniformBuffer.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
 #include <graphics/Viewport.h>
@@ -90,7 +88,7 @@ void devEngineMain(const StartupParameters& startupParameters)
 	ContentManager contentManager;
 	GraphicsAdapterManager graphicsAdapterManager;
 	WindowManager windowManager;
-	GraphicsContextManager graphicsContextManager;
+	GraphicsDeviceManager graphicsDeviceManager;
 
 	Window* window = windowManager.createWindow();
 	Image* image = contentManager.load<Image>("assets/icon.png");
@@ -98,18 +96,15 @@ void devEngineMain(const StartupParameters& startupParameters)
 	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	window->show();
 
-	GraphicsContext* graphicsContext = graphicsContextManager.createGraphicsContext(window);
-	graphicsContext->makeCurrent();
-	GraphicsDevice graphicsDevice;
-
-	Shader* vertexShader = graphicsDevice.createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
-	Shader* fragmentShader = graphicsDevice.createShader(ShaderType::Fragment, FRAGMENT_SHADER_SOURCE);
-	Effect* effect = graphicsDevice.createEffect();
+	GraphicsDevice* graphicsDevice = graphicsDeviceManager.createDevice(window);
+	Shader* vertexShader = graphicsDevice->createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
+	Shader* fragmentShader = graphicsDevice->createShader(ShaderType::Fragment, FRAGMENT_SHADER_SOURCE);
+	Effect* effect = graphicsDevice->createEffect();
 	effect->attachShader(vertexShader);
 	effect->attachShader(fragmentShader);
 	effect->link();
-	graphicsDevice.destroyResource(fragmentShader);
-	graphicsDevice.destroyResource(vertexShader);
+	graphicsDevice->destroyResource(fragmentShader);
+	graphicsDevice->destroyResource(vertexShader);
 
 	Vector<Float32> VERTEX_DATA
 	{
@@ -141,22 +136,24 @@ void devEngineMain(const StartupParameters& startupParameters)
 		 3u, 2u, 1u,
 	};
 
-	GraphicsBuffer* vertexBuffer = graphicsDevice.createBuffer(sizeof(Float32) * VERTEX_DATA.size());
+	GraphicsBuffer* vertexBuffer = graphicsDevice->createBuffer(BufferBinding::Vertex,
+		sizeof(Float32) * VERTEX_DATA.size());
+
 	vertexBuffer->setData(reinterpret_cast<const Byte*>(VERTEX_DATA.data()), sizeof(Float32) * VERTEX_DATA.size());
-	IndexBuffer* indexBuffer = graphicsDevice.createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
+	// TODO: when creating index buffer, provide element count instead of byte
+	//   size and calculate the byte size in ctor?
+	IndexBuffer* indexBuffer = graphicsDevice->createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
 	indexBuffer->setData(reinterpret_cast<const Byte*>(INDEX_DATA.data()), sizeof(Uint8) * INDEX_DATA.size());
-	VertexBufferState* vertexBufferState = graphicsDevice.createVertexBufferState();
+	VertexBufferState* vertexBufferState = graphicsDevice->createVertexBufferState();
 
-	vertexBufferState->setVertexLayout
-	({
-		VertexElement(0u, 0u, VertexElementType::Float32Vector3),
-		VertexElement(1u, 0u, VertexElementType::Uint32_R10G10B10A2)
-	});
+	vertexBufferState->setVertexBuffer(vertexBuffer, {
+		VertexElement(0u, VertexElementType::Float32Vector3),
+		VertexElement(1u, VertexElementType::Uint32_R10G10B10A2)
+	}, 4u * sizeof(Float32));
 
-	vertexBufferState->setVertexBuffer(vertexBuffer, 0u, 4u * sizeof(Float32));
 	vertexBufferState->setIndexBuffer(indexBuffer);
-	graphicsDevice.setEffect(effect);
-	graphicsDevice.setVertexBufferState(vertexBufferState);
+	graphicsDevice->setEffect(effect);
+	graphicsDevice->setVertexBufferState(vertexBufferState);
 
 	const Float32 near = 0.1f;
 	const Float32 far = 100.0f;
@@ -171,9 +168,11 @@ void devEngineMain(const StartupParameters& startupParameters)
 		0.0f,		  0.0f,		  -2.0f * near * far / (far - near),  0.0f
 	);
 
-	UniformBuffer* uniformBuffer = graphicsDevice.createUniformBuffer(32u * sizeof(Float32), AccessMode::Write);
+	GraphicsBuffer* uniformBuffer = graphicsDevice->createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32),
+		AccessMode::Write);
+
 	uniformBuffer->setData(reinterpret_cast<const Byte*>(projectionTransform.data()), sizeof(Matrix4));
-	uniformBuffer->bind(0u);
+	uniformBuffer->bindIndexed(0u);
 
 	Matrix4 worldTransform;
 	Angle rotation(0.0f);
@@ -183,13 +182,13 @@ void devEngineMain(const StartupParameters& startupParameters)
 	while(!window->shouldClose())
 	{
 		windowManager.processMessages();
-		graphicsDevice.clear(Colour(0.8f, 0.0f, 1.0f));
+		graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
 		rotation += 0.01f;
 		worldTransform = Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
 		uniformBuffer->setData(reinterpret_cast<const Byte*>(worldTransform.data()), sizeof(Matrix4), sizeof(Matrix4));
-		graphicsDevice.draw(PrimitiveType::TriangleStrip, 4u);
-		graphicsContext->swapBuffers();
+		graphicsDevice->draw(PrimitiveType::TriangleStrip, 4u);
+		graphicsDevice->swapBuffers();
 	}
 
-	uniformBuffer->debind(0u);
+	uniformBuffer->debindIndexed(0u);
 }

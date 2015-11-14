@@ -20,6 +20,16 @@
 
 // Public
 
+void GraphicsBuffer::Impl::bind() const
+{
+	bind(_bufferHandle);
+}
+
+void GraphicsBuffer::Impl::debind() const
+{
+	bind(0u);
+}
+
 Uint32 GraphicsBuffer::Impl::handle() const
 {
 	return _bufferHandle;

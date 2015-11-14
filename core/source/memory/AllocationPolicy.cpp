@@ -42,7 +42,7 @@ Void* AllocationPolicy::allocate(const Uint32 size, const Char8* file, const Uin
 
 	if(pointer == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to allocate memory." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to allocate memory." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 

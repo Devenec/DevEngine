@@ -50,7 +50,7 @@ public:
 	Impl()
 	{
 		Bool areAdaptersAvailable = true;
-		DISPLAY_DEVICEW adapterInfo = createAdapterInfo();
+		DISPLAY_DEVICEW adapterInfo = ::createAdapterInfo();
 
 		for(Uint32 i = 0u; areAdaptersAvailable; ++i)
 			areAdaptersAvailable = initialiseAdapter(i, adapterInfo);
@@ -87,7 +87,7 @@ private:
 		if(result != 0 && (adapterInfo.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) != 0u)
 		{
 			DisplayModeList displayModes;
-			const Uint32 currentDisplayModeIndex = getAdapterDisplayModes(adapterInfo.DeviceName, displayModes);
+			const Uint32 currentDisplayModeIndex = ::getAdapterDisplayModes(adapterInfo.DeviceName, displayModes);
 
 			GraphicsAdapter* graphicsAdapter = DE_NEW(GraphicsAdapter)(toString8(adapterInfo.DeviceName), displayModes,
 				currentDisplayModeIndex);
@@ -160,11 +160,11 @@ static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32
 static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes)
 {
 	DisplayMode displayMode(1u, 0u, 0u, 0u);
-	DEVMODEW displayModeInfo = createDisplayModeInfo();
+	DEVMODEW displayModeInfo = ::createDisplayModeInfo();
 
 	for(Uint32 i = 0u; displayMode.width() != 0u; ++i)
 	{
-		displayMode = getAdapterDisplayMode(adapterName, i, displayModeInfo);
+		displayMode = ::getAdapterDisplayMode(adapterName, i, displayModeInfo);
 
 		if(displayMode.width() != 0u && std::find(modes.begin(), modes.end(), displayMode) == modes.end())
 			modes.push_back(displayMode);
@@ -173,13 +173,13 @@ static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList&
 	modes.shrink_to_fit();
 	std::sort(modes.begin(), modes.end());
 
-	return getCurrentAdapterDisplayModeIndex(adapterName, displayModeInfo, modes);
+	return ::getCurrentAdapterDisplayModeIndex(adapterName, displayModeInfo, modes);
 }
 
 static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
 	const DisplayModeList& modes)
 {
-	const DisplayMode displayMode = getAdapterDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);
+	const DisplayMode displayMode = ::getAdapterDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);
 	DisplayModeList::const_iterator iterator = std::find(modes.begin(), modes.end(), displayMode);
 
 	return iterator - modes.begin();

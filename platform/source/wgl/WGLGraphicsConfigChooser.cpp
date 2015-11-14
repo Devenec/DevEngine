@@ -92,7 +92,7 @@ Uint32 GraphicsConfigChooser::getPixelFormatCount() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the number of configurations." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the number of configurations." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
@@ -107,12 +107,12 @@ GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelForma
 	PixelFormatIndexList formatIndices(formatCount);
 	Uint32 matchingFormatCount;
 
-	const Int32 result = WGL::choosePixelFormatARB(_deviceContextHandle, PIXEL_FORMAT_REQUIRED_ATTRIBUTES.data(),
+	const Int32 result = WGL::choosePixelFormatARB(_deviceContextHandle, ::PIXEL_FORMAT_REQUIRED_ATTRIBUTES.data(),
 		nullptr, formatCount, formatIndices.data(), &matchingFormatCount);
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the matching configurations." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the matching configurations." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
@@ -120,7 +120,7 @@ GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelForma
 
 	if(matchingFormatCount == 0u)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " No matching configurations were found." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " No matching configurations were found." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 
@@ -140,7 +140,7 @@ Int32 GraphicsConfigChooser::chooseBestPixelFormat(const PixelFormatIndexList& f
 	{
 		const PixelFormatAttributeList compareFormatAttributes = getPixelFormatAttributes(*i);
 
-		if(isPixelFormatLess(formatAttributes, compareFormatAttributes))
+		if(::isPixelFormatLess(formatAttributes, compareFormatAttributes))
 		{
 			bestFormatIndex = *i;
 			formatAttributes = compareFormatAttributes;
@@ -159,7 +159,7 @@ PixelFormatAttributeList GraphicsConfigChooser::getPixelFormatAttributes(const I
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the attributes of a configuration." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the attributes of a configuration." <<
 			Log::Flush();
 		
 		DE_ERROR_WINDOWS(0x0);
@@ -183,7 +183,7 @@ Bool isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
 {
 	if(formatAttributesA[0] != formatAttributesB[0])
 	{
-		return isPixelFormatAccelerationLess(formatAttributesA, formatAttributesB);
+		return ::isPixelFormatAccelerationLess(formatAttributesA, formatAttributesB);
 	}
 	else
 	{

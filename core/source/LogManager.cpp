@@ -33,7 +33,7 @@ static Array<Byte, sizeof(Log)> defaultLogMemory;
 
 // Core
 
-Log& Core::defaultLog = *reinterpret_cast<Log*>(defaultLogMemory.data());
+Log& Core::defaultLog = *reinterpret_cast<Log*>(::defaultLogMemory.data());
 
 
 // Some members are defined in platform/*/*LogManager.cpp
@@ -49,6 +49,6 @@ void LogManager::deinitialise() const
 void LogManager::initialise() const
 {
 	initialisePlatform();
-	new (defaultLogMemory.data()) Log();
+	new (::defaultLogMemory.data()) Log();
 	defaultLog << LogLevel::Debug << "LogManager initialised." << Log::Flush();
 }

@@ -64,7 +64,7 @@ public:
 
 			if(result == 0)
 			{
-				defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to close the file." << Log::Flush();
+				defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to close the file." << Log::Flush();
 				DE_ERROR_WINDOWS(0x0);
 			}
 
@@ -89,15 +89,15 @@ public:
 		DE_ASSERT((openMode & OpenMode::Read) == OpenMode::Read || (openMode & OpenMode::Write) == OpenMode::Write);
 		DE_ASSERT(!isOpen());
 		const String16 filepath16 = toString16(filepath);
-		const Uint32 accessMode = getAccessMode(openMode);
-		const Uint32 creationMode = getCreationMode(openMode);
+		const Uint32 accessMode = ::getAccessMode(openMode);
+		const Uint32 creationMode = ::getCreationMode(openMode);
 
 		_handle = CreateFileW(filepath16.c_str(), accessMode, FILE_SHARE_READ, nullptr, creationMode,
 			FILE_ATTRIBUTE_NORMAL, nullptr);
 
 		if(_handle == INVALID_HANDLE_VALUE)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x0);
@@ -110,13 +110,13 @@ public:
 	Int64 position() const
 	{
 		DE_ASSERT(isOpen());
-		const LARGE_INTEGER offset = createLargeInteger();
+		const LARGE_INTEGER offset = ::createLargeInteger();
 		LARGE_INTEGER position;
 		const Int32 result = SetFilePointerEx(_handle, offset, &position, FILE_CURRENT);
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the file pointer position." <<
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the file pointer position." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x0);
@@ -135,7 +135,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to read the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to read the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 
@@ -150,12 +150,12 @@ public:
 	void seek(const SeekPosition& position, const Int64& offset) const
 	{
 		DE_ASSERT(isOpen());
-		const LARGE_INTEGER seekOffset = createLargeInteger(offset);
+		const LARGE_INTEGER seekOffset = ::createLargeInteger(offset);
 		const Int32 result = SetFilePointerEx(_handle, seekOffset, nullptr, static_cast<Int32>(position));
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to seek the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to seek the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
@@ -168,7 +168,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the file size." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the file size." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 
@@ -185,7 +185,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to write to the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to write to the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 
@@ -206,7 +206,7 @@ private:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to flush the file buffer." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to flush the file buffer." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}

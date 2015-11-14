@@ -1,5 +1,5 @@
 /**
- * @file platform/GraphicsExtensionLoader.h
+ * @file platform/GraphicsExtensionHelper.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -26,31 +26,31 @@
 
 namespace Platform
 {
-	class GraphicsContextBase;
-
 	using ExtensionNameList = Core::Vector<Core::String8>;
 
-	class GraphicsExtensionLoader final
+	class GraphicsExtensionHelper
 	{
 	public:
 
-		GraphicsExtensionLoader() = delete;
+		GraphicsExtensionHelper() = delete;
 
-		GraphicsExtensionLoader(const GraphicsExtensionLoader& graphicsExtensionLoader) = delete;
-		GraphicsExtensionLoader(GraphicsExtensionLoader&& graphicsExtensionLoader) = delete;
+		GraphicsExtensionHelper(const GraphicsExtensionHelper& graphicsExtensionHelper) = delete;
+		GraphicsExtensionHelper(GraphicsExtensionHelper&& graphicsExtensionHelper) = delete;
 
-		~GraphicsExtensionLoader() = delete;
+		~GraphicsExtensionHelper() = delete;
 
-		GraphicsExtensionLoader& operator =(const GraphicsExtensionLoader& graphicsExtensionLoader) = delete;
-		GraphicsExtensionLoader& operator =(GraphicsExtensionLoader&& graphicsExtensionLoader) = delete;
+		GraphicsExtensionHelper& operator =(const GraphicsExtensionHelper& graphicsExtensionHelper) = delete;
+		GraphicsExtensionHelper& operator =(GraphicsExtensionHelper&& graphicsExtensionHelper) = delete;
 
-		static void loadContextExtensions(const GraphicsContextBase& graphicsContext);
+		static void logExtensions(const Char8* description, const ExtensionNameList& extensionNames);
 
-		static void loadInterfaceExtensions();
+		template<typename T>
+		static T getFunction(const Char8* name);
 
 	private:
 
-		static void logSupportedContextExtensions(const Core::String8& extensionsString);
-		static void logSupportedInterfaceExtensions(const ExtensionNameList& extensionNames);
+		static Void* getFunctionPointer(const Char8* name);
 	};
+
+#include "inline/GraphicsExtensionHelper.inl"
 }

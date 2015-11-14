@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContextManager.cpp
+ * @file graphics/GraphicsDeviceManager.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,18 +20,18 @@
 
 #include <core/Log.h>
 #include <graphics/GraphicsConfig.h>
-#include <graphics/GraphicsContextManager.h>
+#include <graphics/GraphicsDeviceManager.h>
 
 using namespace Core;
 using namespace Graphics;
 
-// Some members are defined in platform/*/*GraphicsContextManager.cpp
+// Some members are defined in platform/*/*GraphicsDeviceManager.cpp
 
 // Graphics
 
 void Graphics::logGraphicsContextConfiguration(const GraphicsConfig& config)
 {
-	defaultLog << LogLevel::Info << "Current graphics context configuration:\n\nColour buffer (RGBA): " <<
+	defaultLog << LogLevel::Info << "Created graphics context with configuration:\n\nColour buffer (RGBA): " <<
 		config.redDepth() << ' ' << config.greenDepth() << ' ' << config.blueDepth() << ' ' << config.alphaDepth() <<
 		" bits\nDepth buffer:         " << config.depthBufferDepth() << " bits\nStencil buffer:       " <<
 		config.stencilBufferDepth() << " bits\n" << Log::Flush();

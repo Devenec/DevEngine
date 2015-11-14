@@ -18,7 +18,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cstdlib>
 #include <core/Error.h>
 #include <core/Log.h>
 #include <core/String.h>
@@ -33,13 +32,11 @@ using namespace Platform;
 // External
 
 static const Char8* COMPONENT_TAG = "[Platform::TemporaryGraphicsContext - WGL]";
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 4;
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 5;
+static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 3;
+static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 3;
 
 static void checkOpenGLVersion();
 static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();
-static Uint32 getOpenGLMajorVersion(const String8& versionString);
-static Uint32 getOpenGLMinorVersion(const String8& versionString);
 static Bool isOpenGLVersionSupported(const Uint32 majorVersion, const Uint32 minorVersion);
 
 
@@ -51,14 +48,14 @@ TemporaryGraphicsContext::TemporaryGraphicsContext(HWND windowHandle)
 	initialisePixelFormat();
 	createContext();
 	makeCurrent();
-	checkOpenGLVersion();
+	::checkOpenGLVersion();
 }
 
 // Private
 
 void TemporaryGraphicsContext::initialisePixelFormat() const
 {
-	const PIXELFORMATDESCRIPTOR pixelFormatDescriptor = createPixelFormatDescriptor();
+	const PIXELFORMATDESCRIPTOR pixelFormatDescriptor = ::createPixelFormatDescriptor();
 	const Int32 pixelFormatIndex = choosePixelFormat(pixelFormatDescriptor);
 	checkPixelFormat(pixelFormatIndex);
 	setPixelFormat(pixelFormatIndex);
@@ -70,7 +67,7 @@ void TemporaryGraphicsContext::createContext()
 
 	if(_graphicsContextHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the context." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -81,7 +78,7 @@ Int32 TemporaryGraphicsContext::choosePixelFormat(const PIXELFORMATDESCRIPTOR& p
 
 	if(pixelFormatIndex == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to choose a pixel format." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to choose a pixel format." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -97,7 +94,7 @@ void TemporaryGraphicsContext::checkPixelFormat(const Int32 pixelFormatIndex) co
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the description of a pixel format." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the description of a pixel format." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
@@ -105,7 +102,7 @@ void TemporaryGraphicsContext::checkPixelFormat(const Int32 pixelFormatIndex) co
 
 	if((pixelFormatDescriptor.dwFlags & PFD_SUPPORT_OPENGL) == 0u)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " The device context does not support OpenGL." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " The device context does not support OpenGL." <<
 			Log::Flush();
 
 		DE_ERROR(0x0);
@@ -117,15 +114,15 @@ void TemporaryGraphicsContext::checkPixelFormat(const Int32 pixelFormatIndex) co
 
 static void checkOpenGLVersion()
 {
-	const String8 versionString(reinterpret_cast<const Char8*>(OpenGL::getString(OpenGL::VERSION)));
-	const Uint32 majorVersion = getOpenGLMajorVersion(versionString);
-	const Uint32 minorVersion = getOpenGLMinorVersion(versionString);
+	Uint32 majorVersion;
+	Uint32 minorVersion;
+	OpenGL::initialiseVersion(majorVersion, minorVersion);
 
-	if(!isOpenGLVersionSupported(majorVersion, minorVersion))
+	if(!::isOpenGLVersionSupported(majorVersion, minorVersion))
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " The OpenGL version " << majorVersion << '.' <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " The OpenGL version " << majorVersion << '.' <<
 			minorVersion << " is not supported. The minimum supported version is " <<
-			MIN_SUPPORTED_OPENGL_VERSION_MAJOR << '.' << MIN_SUPPORTED_OPENGL_VERSION_MINOR << '.' << Log::Flush();
+			::MIN_SUPPORTED_OPENGL_VERSION_MAJOR << '.' << ::MIN_SUPPORTED_OPENGL_VERSION_MINOR << '.' << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}
@@ -142,31 +139,12 @@ static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor()
 	return pixelFormatDescriptor;
 }
 
-static Uint32 getOpenGLMajorVersion(const String8& versionString)
-{
-	const Uint32 delimiterPosition = versionString.find('.');
-	return std::strtol(versionString.substr(0u, delimiterPosition).c_str(), nullptr, 10);
-}
-
-static Uint32 getOpenGLMinorVersion(const String8& versionString)
-{
-	const Uint32 minorNumberPosition = versionString.find('.') + 1u;
-	const Uint32 secondDelimiterPosition = versionString.find('.', minorNumberPosition);
-	Uint32 versionEndPosition = versionString.find(' ');
-
-	if(secondDelimiterPosition < versionEndPosition)
-		versionEndPosition = secondDelimiterPosition;
-
-	return std::strtol(versionString.substr(minorNumberPosition, versionEndPosition - minorNumberPosition).c_str(),
-		nullptr, 10);
-}
-
 static Bool isOpenGLVersionSupported(const Uint32 majorVersion, const Uint32 minorVersion)
 {
-	if(majorVersion < MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
+	if(majorVersion < ::MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
 		return false;
-	else if(majorVersion == MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
-		return minorVersion >= MIN_SUPPORTED_OPENGL_VERSION_MINOR;
+	else if(majorVersion == ::MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
+		return minorVersion >= ::MIN_SUPPORTED_OPENGL_VERSION_MINOR;
 	else
 		return true;
 }

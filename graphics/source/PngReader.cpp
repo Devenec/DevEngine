@@ -74,14 +74,14 @@ ImageFormat PNGReader::imageFormat() const
 
 		default:
 			DE_ASSERT(false);
-			return ImageFormat();
+			return ImageFormat::R8;
 	}
 }
 
 Vector<Byte> PNGReader::readImage(FileStream& fileStream)
 {
 	validateSignature(fileStream);
-	png_set_read_fn(_pngStructure, &fileStream, readData);
+	png_set_read_fn(_pngStructure, &fileStream, ::readData);
 	const Int32 transforms = PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_SCALE_16;
 	png_read_png(_pngStructure, _pngInfo, transforms, nullptr);
 	const Uint32 height = png_get_image_height(_pngStructure, _pngInfo);
@@ -100,12 +100,12 @@ Vector<Byte> PNGReader::readImage(FileStream& fileStream)
 
 void PNGReader::initialiseStructure()
 {
-	_pngStructure = png_create_read_struct_2(PNG_LIBPNG_VER_STRING, nullptr, handleError, handleWarning, nullptr,
-		allocateMemory, deallocateMemory);
+	_pngStructure = png_create_read_struct_2(PNG_LIBPNG_VER_STRING, nullptr, ::handleError, ::handleWarning, nullptr,
+		::allocateMemory, ::deallocateMemory);
 
 	if(_pngStructure == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to initialise the PNG structure." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to initialise the PNG structure." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 }
@@ -116,7 +116,7 @@ void PNGReader::initialiseInfo()
 
 	if(_pngInfo == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to initialise the PNG info." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to initialise the PNG info." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 }
@@ -129,7 +129,9 @@ void PNGReader::validateSignature(FileStream& fileStream)
 
 	if(result != 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " The signature of the PNG file is invalid." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " The signature of the PNG file is invalid." <<
+			Log::Flush();
+
 		DE_ERROR(0x0);
 	}
 
@@ -154,14 +156,14 @@ static void deallocateMemory(png_struct* pngStructure, Void* pointer)
 static void handleError(png_struct* pngStructure, const Char8* message)
 {
 	static_cast<Void>(pngStructure);
-	defaultLog << LogLevel::Error << COMPONENT_TAG << " PNG error: " << message << '.' << Log::Flush();
+	defaultLog << LogLevel::Error << ::COMPONENT_TAG << " PNG error: " << message << '.' << Log::Flush();
 	DE_ERROR(0x0);
 }
 
 static void handleWarning(png_struct* pngStructure, const Char8* message)
 {
 	static_cast<Void>(pngStructure);
-	defaultLog << LogLevel::Warning << COMPONENT_TAG << " PNG warning: " << message << '.' << Log::Flush();
+	defaultLog << LogLevel::Warning << ::COMPONENT_TAG << " PNG warning: " << message << '.' << Log::Flush();
 }
 
 static void readData(png_struct* pngStructure, Byte* buffer, Uint32 size)

@@ -34,7 +34,7 @@ using namespace Debug;
 
 static constexpr Uint32 MAX_FUNCTION_NAME_LENGTH = 256u;
 
-static const Char8* COMPONENT_TAG = "[Platform::StackTrace - Windows]";
+static const Char8* COMPONENT_TAG = "[Debug::StackTrace - Windows]";
 
 
 // Implementation
@@ -51,14 +51,14 @@ public:
 	{
 		if(maxEntryCount > Numeric<Uint16>::maximum())
 		{
-			defaultLog << LogLevel::Warning << COMPONENT_TAG <<
+			defaultLog << LogLevel::Warning << ::COMPONENT_TAG <<
 				" maxEntryCount is too large and is clamped to Core::Numeric<Uint16>::maximum()." << Log::Flush();
 
 			_maxEntryCount = Numeric<Uint16>::maximum();
 		}
 
 		_sourceInfo.SizeOfStruct = sizeof(IMAGEHLP_LINEW64);
-		_symbolInfo->MaxNameLen = MAX_FUNCTION_NAME_LENGTH;
+		_symbolInfo->MaxNameLen = ::MAX_FUNCTION_NAME_LENGTH;
 		_symbolInfo->SizeOfStruct = sizeof(SYMBOL_INFOW);
 	}
 
@@ -89,7 +89,7 @@ public:
 
 private:
 
-	Array<Byte, sizeof(SYMBOL_INFOW) + (MAX_FUNCTION_NAME_LENGTH - 1u) * sizeof(Char16)> _symbolInfoMemory;
+	Array<Byte, sizeof(SYMBOL_INFOW) + (::MAX_FUNCTION_NAME_LENGTH - 1u) * sizeof(Char16)> _symbolInfoMemory;
 	IMAGEHLP_LINEW64 _sourceInfo;
 	Vector<Void*> _symbolAddresses;
 	HANDLE _processHandle;

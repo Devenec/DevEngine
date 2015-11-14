@@ -50,7 +50,7 @@ void LogBuffer::appendCharacter(const Char8 character)
 	{
 		appendLineBreakAndIndent();
 
-		if(isWhitespaceCharacter(character))
+		if(::isWhitespaceCharacter(character))
 			return;
 	}
 
@@ -70,7 +70,7 @@ void LogBuffer::appendCharacters(const Char8* characters, Uint32 characterCount)
 		{
 			appendLineBreakAndIndent();
 
-			if(isWhitespaceCharacter(characters[characterOffset]))
+			if(::isWhitespaceCharacter(characters[characterOffset]))
 				++characterOffset;
 		}
 

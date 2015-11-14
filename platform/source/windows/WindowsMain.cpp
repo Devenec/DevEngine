@@ -36,7 +36,7 @@ Int32 wmain(Int32 argumentCount, Char16** arguments)
 {
 	Application application;
 	application.initialise();
-	runDevEngineMain(argumentCount, arguments);
+	::runDevEngineMain(argumentCount, arguments);
 	application.deinitialise();
 
 	return 0;
@@ -46,7 +46,7 @@ Int32 wmain(Int32 argumentCount, Char16** arguments)
 
 static void runDevEngineMain(const Int32 argumentCount, Char16** arguments)
 {
-	StartupParameters startupParameters = createStartupParameters(argumentCount, arguments);
+	StartupParameters startupParameters = ::createStartupParameters(argumentCount, arguments);
 	devEngineMain(startupParameters);
 }
 

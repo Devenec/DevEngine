@@ -20,18 +20,18 @@
 
 #pragma once
 
-#include <core/Platform.h>
+#include <core/ConfigInternal.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
 
-#if DE_BUILD == DE_BUILD_PRODUCTION
-	#define DE_ERROR(errorCode) \
-		Core::invokeError(errorCode)
-#else
+#if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 	#include <core/debug/Assert.h>
 
 	#define DE_ERROR(errorCode) \
 		Debug::failAssertion("error code " DE_STRING8(errorCode), DE_FILE, DE_LINE, DE_FUNCTION)
+#else
+	#define DE_ERROR(errorCode) \
+		Core::invokeError(errorCode)
 #endif
 
 namespace Core

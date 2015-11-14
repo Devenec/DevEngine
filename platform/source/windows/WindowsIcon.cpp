@@ -55,14 +55,14 @@ Icon::Icon(const Image* image)
 	: Icon()
 {
 	DE_ASSERT(image != nullptr);
-	BITMAPV5HEADER bitmapHeader = createBitmapHeader(image);
+	BITMAPV5HEADER bitmapHeader = ::createBitmapHeader(image);
 	Byte* bitmapDataBuffer;
-	HBITMAP colourBitmapHandle = createColourBitmap(bitmapHeader, bitmapDataBuffer);
-	setBitmapData(image, bitmapDataBuffer);
-	HBITMAP maskBitmapHandle = createMaskBitmap(image);
+	HBITMAP colourBitmapHandle = ::createColourBitmap(bitmapHeader, bitmapDataBuffer);
+	::setBitmapData(image, bitmapDataBuffer);
+	HBITMAP maskBitmapHandle = ::createMaskBitmap(image);
 	createIcon(colourBitmapHandle, maskBitmapHandle);
-	destroyBitmap(maskBitmapHandle);
-	destroyBitmap(colourBitmapHandle);
+	::destroyBitmap(maskBitmapHandle);
+	::destroyBitmap(colourBitmapHandle);
 }
 
 Icon::Icon(Icon&& icon)
@@ -79,7 +79,7 @@ Icon::~Icon()
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy the icon." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to destroy the icon." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
@@ -89,12 +89,12 @@ Icon::~Icon()
 
 void Icon::createIcon(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 {
-	ICONINFO iconInfo = createIconInfo(colourBitmapHandle, maskBitmapHandle);
+	ICONINFO iconInfo = ::createIconInfo(colourBitmapHandle, maskBitmapHandle);
 	_iconHandle = CreateIconIndirect(&iconInfo);
 
 	if(_iconHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the icon." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the icon." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -106,7 +106,7 @@ static BITMAPV5HEADER createBitmapHeader(const Image* image)
 {
 	BITMAPV5HEADER bitmapHeader = BITMAPV5HEADER();
 	bitmapHeader.bV5AlphaMask = 0xFF000000;
-	bitmapHeader.bV5BitCount = static_cast<Uint16>(getImageBitDepth(image->format()));
+	bitmapHeader.bV5BitCount = static_cast<Uint16>(::getImageBitDepth(image->format()));
 	bitmapHeader.bV5BlueMask = 0x000000FF;
 	bitmapHeader.bV5CSType = LCS_WINDOWS_COLOR_SPACE;
 	bitmapHeader.bV5GreenMask = 0x0000FF00;
@@ -126,18 +126,18 @@ static BITMAPV5HEADER createBitmapHeader(const Image* image)
 
 static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer)
 {
-	HDC deviceContextHandle = getDeviceContext();
+	HDC deviceContextHandle = ::getDeviceContext();
 
 	HBITMAP bitmapHandle = CreateDIBSection(deviceContextHandle, reinterpret_cast<const BITMAPINFO*>(&bitmapHeader),
 		DIB_RGB_COLORS, reinterpret_cast<Void**>(&dataBuffer), nullptr, 0u);
 
 	if(bitmapHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the colour bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the colour bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
-	releaseDeviceContext(deviceContextHandle);
+	::releaseDeviceContext(deviceContextHandle);
 	return bitmapHandle;
 }
 
@@ -157,7 +157,7 @@ static HBITMAP createMaskBitmap(const Image* image)
 
 	if(bitmapHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the mask bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the mask bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -170,7 +170,7 @@ static void destroyBitmap(HBITMAP bitmapHandle)
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy a bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to destroy a bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -181,7 +181,7 @@ static HDC getDeviceContext()
 
 	if(deviceContextHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get a device context." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get a device context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -212,7 +212,7 @@ static void releaseDeviceContext(HDC deviceContextHandle)
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to release the device context." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to release the device context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -225,12 +225,12 @@ static void setBitmapData(const Image* image, Byte* dataBuffer)
 	{
 		case ImageFormat::R8:
 		case ImageFormat::RA8:
-			setGreyBitmapData(image, dataBuffer, imageFormat == ImageFormat::RA8);
+			::setGreyBitmapData(image, dataBuffer, imageFormat == ImageFormat::RA8);
 			break;
 
 		case ImageFormat::RGB8:
 		case ImageFormat::RGBA8:
-			setColourBitmapData(image, dataBuffer, imageFormat == ImageFormat::RGBA8);
+			::setColourBitmapData(image, dataBuffer, imageFormat == ImageFormat::RGBA8);
 			break;
 
 		default:

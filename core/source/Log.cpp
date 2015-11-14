@@ -23,8 +23,6 @@
 
 using namespace Core;
 
-// Some functions are defined in platform/*/*Log.cpp
-
 // External
 
 static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
@@ -36,6 +34,11 @@ static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
 };
 
 static const Char8* LOG_LEVEL_SEPARATOR = " | ";
+
+
+// Core
+
+// Some functions are defined in platform/*/*Log.cpp
 
 
 // Public
@@ -164,9 +167,9 @@ Log::Log()
 void Log::appendStreamLevel(const LogLevel& level)
 {
 	_streamBuffer.appendLineBreak();
-	const Char8* levelName = LOG_LEVEL_NAMES[static_cast<Int32>(level)];
+	const Char8* levelName = ::LOG_LEVEL_NAMES[static_cast<Int32>(level)];
 	_streamBuffer.appendCharacters(levelName, LogBuffer::NON_POSITION);
-	_streamBuffer.appendCharacters(LOG_LEVEL_SEPARATOR, LogBuffer::NON_POSITION);
+	_streamBuffer.appendCharacters(::LOG_LEVEL_SEPARATOR, LogBuffer::NON_POSITION);
 }
 
 void Log::appendUint32(const Uint32 integer)

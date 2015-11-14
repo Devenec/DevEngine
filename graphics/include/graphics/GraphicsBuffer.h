@@ -27,12 +27,22 @@ namespace Graphics
 {
 	enum class AccessMode;
 
+	using GraphicsInterface = Void*;
+
 	class GraphicsBuffer : public GraphicsResource
 	{
 	public:
 
 		GraphicsBuffer(const GraphicsBuffer& graphicsBuffer) = delete;
 		GraphicsBuffer(GraphicsBuffer&& graphicsBuffer) = delete;
+
+		void bind() const;
+
+		void bindIndexed(const Uint32 bindingIndex) const;
+
+		void debind() const;
+
+		void debindIndexed(const Uint32 bindingIndex) const;
 
 		void demapData() const;
 
@@ -49,7 +59,8 @@ namespace Graphics
 
 		Impl* _impl;
 
-		GraphicsBuffer(const Uint32 size, const AccessMode& accessMode);
+		GraphicsBuffer(GraphicsInterface graphicsInterface, const Uint32 binding, const Uint32 size,
+			const AccessMode& accessMode);
 
 		virtual ~GraphicsBuffer();
 

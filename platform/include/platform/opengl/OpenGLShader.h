@@ -20,9 +20,13 @@
 
 #pragma once
 
-#include <core/Types.h>
 #include <core/Vector.h>
 #include <graphics/Shader.h>
+
+namespace Platform
+{
+	class OpenGL;
+}
 
 namespace Graphics
 {
@@ -30,7 +34,7 @@ namespace Graphics
 	{
 	public:
 
-		Impl(const ShaderType& type, const Core::String8& source);
+		Impl(Platform::OpenGL* openGL, const ShaderType& type, const Core::String8& source);
 
 		Impl(const Impl& impl) = delete;
 		Impl(Impl&& impl) = delete;
@@ -44,6 +48,7 @@ namespace Graphics
 
 	private:
 
+		Platform::OpenGL* _openGL;
 		Uint32 _shaderHandle;
 
 		void createShader(const ShaderType& type);

@@ -22,6 +22,7 @@
 #include <core/Error.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/debug/Assert.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLShader.h>
 
@@ -50,31 +51,32 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType);
 
 // Public
 
-Shader::Impl::Impl(const ShaderType& type, const String8& source)
-	: _shaderHandle(0u)
+Shader::Impl::Impl(OpenGL* openGL, const ShaderType& type, const Core::String8& source)
+	: _openGL(openGL),
+	  _shaderHandle(0u)
 {
 	createShader(type);
 	compileShader(source);
 	checkCompilationStatus();
-}
+}	
 
 Shader::Impl::~Impl()
 {
-	OpenGL::deleteShader(_shaderHandle);
-	DE_CHECK_ERROR_OPENGL();
+	_openGL->deleteShader(_shaderHandle);
+	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
 // Private
 
 void Shader::Impl::createShader(const ShaderType& type)
 {
-	_shaderHandle = OpenGL::createShader(getShaderTypeId(type));
-	DE_CHECK_ERROR_OPENGL();
+	_shaderHandle = _openGL->createShader(::getShaderTypeId(type));
+	DE_CHECK_ERROR_OPENGL(_openGL);
 
 	if(_shaderHandle == 0u)
 	{
-		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create the " <<
-			SHADER_TYPE_NAMES[static_cast<Int32>(type)] << " shader." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the " <<
+			::SHADER_TYPE_NAMES[static_cast<Int32>(type)] << " shader." << Log::Flush();
 
 		DE_ERROR(0x0);
 	}
@@ -83,10 +85,10 @@ void Shader::Impl::createShader(const ShaderType& type)
 void Shader::Impl::compileShader(const String8& source) const
 {
 	const Char8* sourceCharacters = source.c_str();
-	OpenGL::shaderSource(_shaderHandle, 1, &sourceCharacters, nullptr);
-	DE_CHECK_ERROR_OPENGL();
-	OpenGL::compileShader(_shaderHandle);
-	DE_CHECK_ERROR_OPENGL();
+	_openGL->shaderSource(_shaderHandle, 1, &sourceCharacters, nullptr);
+	DE_CHECK_ERROR_OPENGL(_openGL);
+	_openGL->compileShader(_shaderHandle);
+	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
 void Shader::Impl::checkCompilationStatus() const
@@ -107,15 +109,15 @@ void Shader::Impl::checkCompilationStatus() const
 Int32 Shader::Impl::getParameter(const Uint32 parameterName) const
 {
 	Int32 parameter;
-	OpenGL::getShaderiv(_shaderHandle, parameterName, &parameter);
-	DE_CHECK_ERROR_OPENGL();
+	_openGL->getShaderiv(_shaderHandle, parameterName, &parameter);
+	DE_CHECK_ERROR_OPENGL(_openGL);
 
 	return parameter;
 }
 
 void Shader::Impl::outputCompilerFailureLog() const
 {
-	defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to compile the shader:";
+	defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to compile the shader:";
 	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 	if(logLength > 1u)
@@ -132,7 +134,7 @@ void Shader::Impl::outputCompilerSuccessLog() const
 
 	if(logLength > 1u)
 	{
-		defaultLog << LogLevel::Warning << COMPONENT_TAG << " The shader compiled with warning(s):\n" <<
+		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << " The shader compiled with warning(s):\n" <<
 			getInfoLog(logLength).data() << Log::Flush();
 	}
 }
@@ -140,8 +142,8 @@ void Shader::Impl::outputCompilerSuccessLog() const
 Vector<Char8> Shader::Impl::getInfoLog(const Uint32 logLength) const
 {
 	Vector<Char8> logBuffer(logLength);
-	OpenGL::getShaderInfoLog(_shaderHandle, logBuffer.size(), nullptr, logBuffer.data());
-	DE_CHECK_ERROR_OPENGL();
+	_openGL->getShaderInfoLog(_shaderHandle, logBuffer.size(), nullptr, logBuffer.data());
+	DE_CHECK_ERROR_OPENGL(_openGL);
 
 	return logBuffer;
 }
@@ -151,8 +153,8 @@ Vector<Char8> Shader::Impl::getInfoLog(const Uint32 logLength) const
 
 // Private
 
-Shader::Shader(const ShaderType& type, const String8& source)
-	: _impl(DE_NEW(Impl)(type, source)) { }
+Shader::Shader(GraphicsInterface graphicsInterface, const ShaderType& type, const String8& source)
+	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface), type, source)) { }
 
 Shader::~Shader()
 {
@@ -167,7 +169,7 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType)
 	switch(shaderType)
 	{
 		case ShaderType::Compute:
-			return OpenGL::COMPUTE_SHADER;
+			return OpenGL::COMPUTE_SHADER; // TODO: OpenGL 4.3
 
 		case ShaderType::Fragment:
 			return OpenGL::FRAGMENT_SHADER;
@@ -176,7 +178,7 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType)
 			return OpenGL::GEOMETRY_SHADER;
 
 		case ShaderType::TessellationControl:
-			return OpenGL::TESS_CONTROL_SHADER;
+			return OpenGL::TESS_CONTROL_SHADER; // TODO: OpenGL 4.0
 
 		case ShaderType::TessellationEvaluation:
 			return OpenGL::TESS_EVALUATION_SHADER;
@@ -185,6 +187,7 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType)
 			return OpenGL::VERTEX_SHADER;
 
 		default:
+			DE_ASSERT(false);
 			return 0u;
 	}
 }
