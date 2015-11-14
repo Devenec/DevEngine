@@ -116,7 +116,7 @@ void LogBuffer::appendLineBuffer()
 		lineBufferOffset = availableMainBufferCapacity;
 	}
 
-	_mainBuffer.append(_lineBuffer, lineBufferOffset);
+	_mainBuffer.append(_lineBuffer, lineBufferOffset, String8::npos);
 	_lineBuffer.clear();
 }
 

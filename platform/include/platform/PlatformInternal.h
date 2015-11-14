@@ -31,7 +31,12 @@
 
 // Compiler and compiler version detection
 
-#if defined(_MSC_VER)
+#if defined(__clang__)
+	#define DE_COMPILER			DE_COMPILER_CLANG
+	#define DE_COMPILER_VERSION 0
+
+	// TODO: check the clang features
+#elif defined(_MSC_VER)
 	#define DE_COMPILER			DE_COMPILER_MSVC
 	#define DE_COMPILER_VERSION _MSC_VER
 
@@ -45,7 +50,13 @@
 
 // Compiler specific internal functions
 
-#if DE_COMPILER == DE_COMPILER_MSVC
+#if DE_COMPILER == DE_COMPILER_CLANG
+	#define DE_INTERNAL_COMPILER_WARN(msg) \
+		_Pragma(DE_INTERNAL1_STRING8(message(msg)))
+
+	#define DE_INTERNAL_DEBUGGER_BREAK()
+		// TODO: implement
+#elif DE_COMPILER == DE_COMPILER_MSVC
 	#define DE_INTERNAL_COMPILER_WARN(msg) \
 		__pragma(message(__FILE__ "(" DE_INTERNAL2_STRING8(__LINE__) ") : warning: " msg))
 
@@ -56,7 +67,9 @@
 
 // Compiler specific internal keywords and variables
 
-#if DE_COMPILER == DE_COMPILER_MSVC
+#if DE_COMPILER == DE_COMPILER_CLANG
+	#define DE_INTERNAL_NO_OPERATION static_cast<Void>(0)
+#elif DE_COMPILER == DE_COMPILER_MSVC
 	#define DE_INTERNAL_CALL_STDCALL __stdcall
 	#define DE_INTERNAL_NO_OPERATION __noop
 #endif
@@ -64,7 +77,7 @@
 
 // Target processor architecture detection
 
-#if !defined(_WIN64)
+#if defined(__i386) || defined(__i386__) || (DE_COMPILER == DE_COMPILER_MSVC && !defined(_WIN64))
 	#define DE_ARCHITECTURE DE_ARCHITECTURE_X86
 #else
 	#error The target processor architecture is not supported.
@@ -81,7 +94,7 @@
 	#define DE_BUILD DE_BUILD_PRODUCTION
 #else
 	#define DE_BUILD DE_BUILD_DEBUG
-	
+
 	DE_INTERNAL_COMPILER_WARN("Could not detect the build configuration correctly." \
 		" DE_BUILD is set to DE_BUILD_DEBUG.");
 #endif
@@ -89,7 +102,9 @@
 
 // Target platform detection
 
-#if defined(_WIN32)
+#if defined(__linux) || defined(__linux__)
+	#define DE_PLATFORM DE_PLATFORM_LINUX
+#elif defined(_WIN32)
 	#define DE_PLATFORM DE_PLATFORM_WINDOWS
 #else
 	#error The target platform is not supported.

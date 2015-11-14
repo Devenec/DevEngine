@@ -34,17 +34,20 @@
 
 // Supported compilers
 
-#define DE_COMPILER_MSVC 1
+#define DE_COMPILER_CLANG 1
+#define DE_COMPILER_MSVC  2
 
 
 // Minimum supported compiler versions
 
-#define DE_COMPILER_VERSION_MIN_MSVC 1900
+#define DE_COMPILER_VERSION_MIN_CLANG 0
+#define DE_COMPILER_VERSION_MIN_MSVC  1900
 
 
 // Supported platforms
 
-#define DE_PLATFORM_WINDOWS 1
+#define DE_PLATFORM_LINUX   1
+#define DE_PLATFORM_WINDOWS 2
 
 
 /**
@@ -63,7 +66,7 @@
  *   defined above.
  *
  * DE_COMPILER_VERSION
- *   Specifies the version of the compiler.
+ *   Specifies the version of the compiler. Is 0 when not supported.
  *
  * DE_PLATFORM
  *   Specifies the target platform. The value is one of the DE_PLATFORM_*

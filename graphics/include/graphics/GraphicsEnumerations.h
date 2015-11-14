@@ -22,7 +22,7 @@
 
 #include <core/Platform.h>
 
-#if DE_PLATFORM == DE_PLATFORM_WINDOWS
+#if DE_PLATFORM == DE_PLATFORM_LINUX || DE_PLATFORM == DE_PLATFORM_WINDOWS
 	#include <platform/opengl/OpenGLGraphicsEnumerations.h>
 #else
 	#error The target platform is not supported.

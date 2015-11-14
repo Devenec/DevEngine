@@ -36,7 +36,7 @@ namespace Debug
 	class AllocationTracker final : public Core::Singleton<AllocationTracker>
 	{
 	public:
-		
+
 		AllocationTracker();
 
 		AllocationTracker(const AllocationTracker& allocationTracker) = delete;
@@ -74,7 +74,7 @@ namespace Debug
 		};
 
 		using AllocationRecordMap = Core::Map<Void*, AllocationRecord, std::hash<Void*>, std::equal_to<Void*>,
-			std::allocator<std::pair<const Void*, AllocationRecord>>>;
+			std::allocator<std::pair<Void* const, AllocationRecord>>>;
 
 		AllocationRecordMap _allocationRecords;
 		Bool _isInitialised;

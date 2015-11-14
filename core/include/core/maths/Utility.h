@@ -21,6 +21,7 @@
 #pragma once
 
 #include <cmath>
+#include <cstdlib>
 #include <core/Types.h>
 #include <core/debug/Assert.h>
 
