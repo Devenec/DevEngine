@@ -47,6 +47,8 @@ namespace Platform
 {
 	void failWindowsAssertion(const Char8* file, const Uint32 line, const Char8* function);
 
+	HDC getWindowDeviceContextHandle(HWND windowHandle);
+
 	Uint32 getWindowsErrorCode();
 
 	void invokeWindowsError(const Uint32 errorCode);

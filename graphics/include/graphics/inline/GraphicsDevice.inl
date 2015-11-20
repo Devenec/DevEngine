@@ -1,5 +1,5 @@
 /**
- * @file graphics/GraphicsContext.h
+ * @file graphics/inline/GraphicsDevice.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,39 +18,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Public
 
-namespace Graphics
+Window* GraphicsDevice::window() const
 {
-	class GraphicsConfig;
-	class Window;
-
-	class GraphicsContext final
-	{
-	public:
-
-		~GraphicsContext();
-
-		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
-
-		void makeCurrent() const;
-
-		void makeNonCurrent() const;
-
-		void swapBuffers() const;
-
-		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
-		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
-
-	private:
-
-		friend class GraphicsDeviceManager;
-
-		class Impl;
-
-		Impl* _impl;
-
-		GraphicsContext(Window* window, const GraphicsConfig& graphicsConfig);
-	};
+	return _window;
 }

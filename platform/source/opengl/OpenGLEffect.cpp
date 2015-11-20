@@ -43,7 +43,7 @@ class Effect::Impl final
 {
 public:
 
-	Impl(OpenGL* openGL)
+	explicit Impl(OpenGL* openGL)
 		: _openGL(openGL),
 		  _programHandle(0u)
 	{

@@ -35,6 +35,21 @@ void Platform::failWindowsAssertion(const Char8* file, const Uint32 line, const 
 	std::abort();
 }
 
+HDC Platform::getWindowDeviceContextHandle(HWND windowHandle)
+{
+	HDC deviceContextHandle = GetDC(windowHandle);
+
+	if(deviceContextHandle == nullptr)
+	{
+		defaultLog << LogLevel::Error << "[Platform::getWindowDeviceContextHandle - Windows]"
+			" Failed to get the device context handle of a window." << Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0);
+	}
+
+	return deviceContextHandle;
+}
+
 Uint32 Platform::getWindowsErrorCode()
 {
 	const Uint32 errorCode = GetLastError();

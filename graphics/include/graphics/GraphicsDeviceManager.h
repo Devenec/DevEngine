@@ -20,13 +20,14 @@
 
 #pragma once
 
+#include <core/List.h>
 #include <core/Singleton.h>
+#include <core/Types.h>
 
 namespace Graphics
 {
 	class GraphicsConfig;
 	class GraphicsDevice;
-	class Window;
 
 	class GraphicsDeviceManager final : public Core::Singleton<GraphicsDeviceManager>
 	{
@@ -39,9 +40,11 @@ namespace Graphics
 
 		~GraphicsDeviceManager();
 
-		GraphicsDevice* createDevice(Window* window) const;
+		GraphicsDevice* createWindowAndDevice(const Uint32 windowWidth, const Uint32 windowHeight);
 
-		void destroyDevice(GraphicsDevice* device) const;
+		void destroyWindowAndDevice(GraphicsDevice* device);
+
+		void processWindowMessages() const;
 
 		GraphicsDeviceManager& operator =(const GraphicsDeviceManager& graphicsDeviceManager) = delete;
 		GraphicsDeviceManager& operator =(GraphicsDeviceManager&& graphicsDeviceManager) = delete;
@@ -49,9 +52,12 @@ namespace Graphics
 	private:
 
 		class Impl;
+		
+		using GraphicsDeviceList = Core::List<GraphicsDevice*>;
 
+		GraphicsDeviceList _devices;
 		Impl* _impl;
 	};
 
-	void logGraphicsContextConfiguration(const GraphicsConfig& config);
+	void logGraphicsDeviceConfiguration(const GraphicsConfig& config);
 }

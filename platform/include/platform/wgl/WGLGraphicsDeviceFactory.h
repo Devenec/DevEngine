@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/WGLGraphicsConfigChooser.h
+ * @file platform/wgl/WGLGraphicsDeviceFactory.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -28,36 +28,40 @@
 namespace Graphics
 {
 	class GraphicsConfig;
+	class GraphicsDevice;
+	class Window;
 }
 
 namespace Platform
 {
 	using PixelFormatAttributeList = Core::Array<Int32, 7u>;
 
-	class GraphicsConfigChooser final
+	class GraphicsDeviceFactory final
 	{
 	public:
 
-		explicit GraphicsConfigChooser(HDC deviceContextHandle);
+		GraphicsDeviceFactory();
 
-		GraphicsConfigChooser(const GraphicsConfigChooser& graphicsConfigChooser) = delete;
-		GraphicsConfigChooser(GraphicsConfigChooser&& graphicsConfigChooser) = delete;
+		GraphicsDeviceFactory(const GraphicsDeviceFactory& graphicsDeviceFactory) = delete;
+		GraphicsDeviceFactory(GraphicsDeviceFactory&& graphicsDeviceFactory) = delete;
 
-		~GraphicsConfigChooser() = default;
+		~GraphicsDeviceFactory() = default;
 
-		Graphics::GraphicsConfig chooseConfig() const;
+		Graphics::GraphicsDevice* createDevice(Graphics::Window* window,
+			Graphics::GraphicsConfig& chosenGraphicsConfig);
 
-		GraphicsConfigChooser& operator =(const GraphicsConfigChooser& graphicsConfigChooser) = delete;
-		GraphicsConfigChooser& operator =(GraphicsConfigChooser&& graphicsConfigChooser) = delete;
+		GraphicsDeviceFactory& operator =(const GraphicsDeviceFactory& graphicsDeviceFactory) = delete;
+		GraphicsDeviceFactory& operator =(GraphicsDeviceFactory&& graphicsDeviceFactory) = delete;
 
 	private:
-		
+
 		using PixelFormatIndexList = Core::Vector<Int32>;
 
 		static const PixelFormatAttributeList PIXEL_FORMAT_ATTRIBUTE_IDS;
 
 		HDC _deviceContextHandle;
 
+		Int32 chooseGraphicsConfig(Graphics::GraphicsConfig& chosenConfig) const;
 		Uint32 getPixelFormatCount() const;
 		PixelFormatIndexList getPixelFormatIndices(const Uint32 formatCount) const;
 		

@@ -43,7 +43,7 @@ class VertexBufferState::Impl final
 {
 public:
 
-	Impl(OpenGL* openGL)
+	explicit Impl(OpenGL* openGL)
 		: _indexBuffer(nullptr),
 		_openGL(openGL),
 		_vertexArrayHandle(0u)

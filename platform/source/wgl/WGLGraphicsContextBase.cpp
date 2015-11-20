@@ -61,23 +61,6 @@ void GraphicsContextBase::swapBuffers() const
 	DE_ASSERT(result != 0);
 }
 
-// Static
-
-HDC GraphicsContextBase::getWindowDeviceContext(HWND windowHandle)
-{
-	HDC deviceContextHandle = GetDC(windowHandle);
-
-	if(deviceContextHandle == nullptr)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the device context of a window." <<
-			Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0);
-	}
-
-	return deviceContextHandle;
-}
-
 // Protected
 
 GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
@@ -85,7 +68,7 @@ GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
 	  _graphicsContextHandle(nullptr)
 {
 	DE_ASSERT(windowHandle != nullptr);
-	_deviceContextHandle = getWindowDeviceContext(windowHandle);
+	_deviceContextHandle = getWindowDeviceContextHandle(windowHandle);
 }
 
 GraphicsContextBase::~GraphicsContextBase()

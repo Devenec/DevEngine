@@ -29,9 +29,9 @@ using namespace Graphics;
 
 // Graphics
 
-void Graphics::logGraphicsContextConfiguration(const GraphicsConfig& config)
+void Graphics::logGraphicsDeviceConfiguration(const GraphicsConfig& config)
 {
-	defaultLog << LogLevel::Info << "Created graphics context with configuration:\n\nColour buffer (RGBA): " <<
+	defaultLog << LogLevel::Info << "Created graphics device with configuration:\n\nColour buffer (RGBA): " <<
 		config.redDepth() << ' ' << config.greenDepth() << ' ' << config.blueDepth() << ' ' << config.alphaDepth() <<
 		" bits\nDepth buffer:         " << config.depthBufferDepth() << " bits\nStencil buffer:       " <<
 		config.stencilBufferDepth() << " bits\n" << Log::Flush();

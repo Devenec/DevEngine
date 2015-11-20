@@ -22,11 +22,6 @@
 
 #include <core/Types.h>
 
-namespace Platform
-{
-	class GraphicsConfigChooser;
-}
-
 namespace Graphics
 {
 	class GraphicsConfig final
@@ -38,11 +33,10 @@ namespace Graphics
 		GraphicsConfig(const Uint32 redDepth, const Uint32 greenDepth, const Uint32 blueDepth, const Uint32 alphaDepth,
 			const Uint32 depthBufferDepth, const Uint32 stencilBufferDepth);
 
-		GraphicsConfig(const GraphicsConfig& graphicsConfig);
+		GraphicsConfig(const GraphicsConfig& graphicsConfig) = default;
+		GraphicsConfig(GraphicsConfig&& graphicsConfig) = default;
 
-		GraphicsConfig(GraphicsConfig&& graphicsConfig);
-
-		~GraphicsConfig();
+		~GraphicsConfig() = default;
 
 		inline Uint32 alphaDepth() const;
 
@@ -56,16 +50,11 @@ namespace Graphics
 
 		inline Uint32 stencilBufferDepth() const;
 
-		GraphicsConfig& operator =(GraphicsConfig graphicsConfig);
+		GraphicsConfig& operator =(const GraphicsConfig& graphicsConfig) = default;
+		GraphicsConfig& operator =(GraphicsConfig&& graphicsConfig) = default;
 
 	private:
 
-		friend class GraphicsContext;
-		friend class Platform::GraphicsConfigChooser;
-
-		class Impl;
-
-		Impl* _impl;
 		Uint8 _alphaDepth;
 		Uint8 _blueDepth;
 		Uint8 _depthDepth;

@@ -22,8 +22,14 @@
 
 #include <core/List.h>
 #include <core/String.h>
+#include <core/Types.h>
 #include <graphics/AccessMode.h>
 #include <graphics/GraphicsEnumerations.h>
+
+namespace Platform
+{
+	class GraphicsDeviceFactory;
+}
 
 namespace Graphics
 {
@@ -32,12 +38,12 @@ namespace Graphics
 	class Colour;
 	class Effect;
 	class GraphicsBuffer;
-	class GraphicsContext;
 	class GraphicsResource;
 	class IndexBuffer;
 	class Shader;
 	class VertexBufferState;
 	class Viewport;
+	class Window;
 
 	class GraphicsDevice final
 	{
@@ -77,12 +83,15 @@ namespace Graphics
 
 		const Viewport& viewport() const;
 
+		inline Window* window() const;
+
 		GraphicsDevice& operator =(const GraphicsDevice& graphicsDevice) = delete;
 		GraphicsDevice& operator =(GraphicsDevice&& graphicsDevice) = delete;
 
 	private:
 
 		friend class GraphicsDeviceManager;
+		friend class Platform::GraphicsDeviceFactory;
 
 		class Impl;
 
@@ -90,10 +99,13 @@ namespace Graphics
 
 		GraphicsResourceList _resources;
 		Impl* _impl;
+		Window* _window;
 
-		GraphicsDevice(GraphicsContext* graphicsContext);
+		GraphicsDevice(Impl* impl, Window* window);
 		~GraphicsDevice();
 
 		void destroyResources() const;
 	};
+
+#include "inline/GraphicsDevice.inl"
 }

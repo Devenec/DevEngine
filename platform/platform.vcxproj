@@ -63,12 +63,13 @@
     <ClInclude Include="include\platform\GraphicsExtensionHelper.h" />
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h" />
+    <ClInclude Include="include\platform\opengl\OpenGLGraphicsDevice.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsEnumerations.h" />
     <ClInclude Include="include\platform\opengl\OpenGLShader.h" />
     <ClInclude Include="include\platform\PlatformInternal.h" />
+    <ClInclude Include="include\platform\wgl\WGLGraphicsDeviceFactory.h" />
     <ClInclude Include="include\platform\wgl\WGL.h" />
-    <ClInclude Include="include\platform\wgl\WGLGraphicsConfig.h" />
-    <ClInclude Include="include\platform\wgl\WGLGraphicsConfigChooser.h" />
+    <ClInclude Include="include\platform\wgl\WGLGraphicsContext.h" />
     <ClInclude Include="include\platform\wgl\WGLGraphicsContextBase.h" />
     <ClInclude Include="include\platform\wgl\WGLTemporaryGraphicsContext.h" />
     <ClInclude Include="include\platform\windows\Windows.h" />
@@ -85,11 +86,9 @@
     <ClCompile Include="source\opengl\OpenGLShader.cpp" />
     <ClCompile Include="source\opengl\OpenGLVertexBufferState.cpp" />
     <ClCompile Include="source\wgl\WGL.cpp" />
-    <ClCompile Include="source\wgl\WGLGraphicsConfig.cpp" />
-    <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp" />
-    <ClCompile Include="source\wgl\WGLGraphicsDeviceManager.cpp" />
+    <ClCompile Include="source\wgl\WGLGraphicsDeviceFactory.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsExtensionHelper.cpp" />
     <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp" />
     <ClCompile Include="source\windows\WindowsFileSystem.cpp" />
@@ -97,6 +96,7 @@
     <ClCompile Include="source\windows\WindowsFileStream.cpp" />
     <ClCompile Include="source\windows\WindowsGraphicsAdapter.cpp" />
     <ClCompile Include="source\windows\WindowsGraphicsAdapterManager.cpp" />
+    <ClCompile Include="source\windows\WindowsGraphicsDeviceManager.cpp" />
     <ClCompile Include="source\windows\WindowsIcon.cpp" />
     <ClCompile Include="source\windows\WindowsLog.cpp" />
     <ClCompile Include="source\windows\WindowsLogManager.cpp" />
@@ -106,13 +106,12 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4091;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="source\windows\WindowsWindow.cpp" />
-    <ClCompile Include="source\windows\WindowsWindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\platform\inline\GraphicsExtensionHelper.inl" />
     <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl" />
+    <None Include="include\platform\opengl\inline\OpenGLGraphicsDevice.inl" />
     <None Include="include\platform\opengl\inline\OpenGLShader.inl" />
-    <None Include="include\platform\wgl\inline\WGLGraphicsConfig.inl" />
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl" />
     <None Include="include\platform\windows\inline\WindowsIcon.inl" />
     <None Include="include\platform\windows\inline\WindowsWindow.inl" />

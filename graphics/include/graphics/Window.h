@@ -66,7 +66,7 @@ namespace Graphics
 
 	private:
 
-		friend class WindowManager;
+		friend class GraphicsDeviceManager;
 
 		class Impl;
 

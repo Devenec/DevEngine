@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/inline/WGLGraphicsConfig.inl
+ * @file platform/opengl/OpenGLGraphicsDevice.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,12 +20,17 @@
 
 // Public
 
-Int32 GraphicsConfig::Impl::pixelFormatIndex() const
+void GraphicsDevice::Impl::setEffect(Effect* effect)
 {
-	return _pixelFormatIndex;
+	_activeEffect = effect;
 }
 
-void GraphicsConfig::Impl::setPixelFormatIndex(const Int32 pixelFormatIndex)
+void GraphicsDevice::Impl::setVertexBufferState(VertexBufferState* vertexBufferState)
 {
-	_pixelFormatIndex = pixelFormatIndex;
+	_activeVertexBufferState = vertexBufferState;
+}
+
+const Viewport& GraphicsDevice::Impl::viewport() const
+{
+	return _viewport;
 }

@@ -1,5 +1,5 @@
 /**
- * @file platform/windows/WindowsWindowManager.cpp
+ * @file platform/windows/WindowsGraphicsDeviceManager.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,18 +18,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <algorithm>
-#include <core/List.h>
+#include <core/Error.h>
 #include <core/Log.h>
 #include <core/Memory.h>
-#include <core/Types.h>
-#include <core/UtilityMacros.h>
-#include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
 #include <graphics/GraphicsAdapter.h>
 #include <graphics/GraphicsAdapterManager.h>
+#include <graphics/GraphicsConfig.h>
+#include <graphics/GraphicsDevice.h>
+#include <graphics/GraphicsDeviceManager.h>
 #include <graphics/Window.h>
-#include <graphics/WindowManager.h>
+#include <platform/wgl/WGL.h>
+#include <platform/wgl/WGLGraphicsDeviceFactory.h>
+#include <platform/wgl/WGLTemporaryGraphicsContext.h>
 
 #define OEMRESOURCE
 #include <platform/windows/Windows.h> // Needs to be the first header to include Windows.h
@@ -43,17 +44,16 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Graphics::WindowManager - Windows]";
-static const Char16* WINDOW_CLASS_NAME = DE_CHAR16("devengine");
-static const Uint32 WINDOW_DEFAULT_HEIGHT = 600u;
-static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine");
-static const Uint32 WINDOW_DEFAULT_WIDTH = 800u;
-static const Uint32 WINDOW_STYLE = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
+static const Char8* COMPONENT_TAG		  = "[Graphics::GraphicsManager - Windows]";
+static const Char16* WINDOW_CLASS_NAME	  = DE_CHAR16("devengine");
+static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine Application");
+static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
-static HWND createWindow();
-static RECT createWindowRectangle();
+static HWND createWindow(const Uint32 width = 640u, const Uint32 height = 480u);
+static RECT createWindowRectangle(const Uint32 width, const Uint32 height);
 static void deregisterWindowClass();
 static void destroyWindow(HWND windowHandle);
+static void initialiseWGL();
 static HCURSOR loadCursor();
 static void processMessages();
 static void registerWindowClass(const WNDCLASSEX& windowClassInfo);
@@ -61,14 +61,14 @@ static void registerWindowClass(const WNDCLASSEX& windowClassInfo);
 
 // Implementation
 
-class WindowManager::Impl final
+class GraphicsDeviceManager::Impl final
 {
 public:
 
 	Impl()
 	{
-		const WNDCLASSEX windowClassInfo = createWindowClassInfo();
-		::registerWindowClass(windowClassInfo);
+		initialiseWindowClass();
+		::initialiseWGL();
 	}
 
 	Impl(const Impl& impl) = delete;
@@ -76,26 +76,22 @@ public:
 
 	~Impl()
 	{
-		destroyWindowObjects();
 		::deregisterWindowClass();
 	}
 
-	Window* createWindowObject()
+	Window* createWindowObject(const Uint32 width, const Uint32 height)
 	{
-		HWND windowHandle = ::createWindow();
+		HWND windowHandle = ::createWindow(width, height);
 		Window* window = DE_NEW(Window)(windowHandle);
 		setWindowUserDataPointer(windowHandle, window->_impl);
-		_windows.push_back(window);
 
 		return window;
 	}
 
-	void destroyWindowObject(Window* window)
+	void destroyWindowAndDevice(GraphicsDevice* device)
 	{
-		DE_ASSERT(window != nullptr);
-		WindowList::const_iterator iterator = std::find(_windows.begin(), _windows.end(), window);
-		DE_ASSERT(iterator != _windows.end());
-		_windows.erase(iterator);
+		Window* window = device->window();
+		DE_DELETE(device, GraphicsDevice);
 		::destroyWindow(static_cast<HWND>(window->handle()));
 		DE_DELETE(window, Window);
 	}
@@ -105,16 +101,23 @@ public:
 
 private:
 
-	using WindowList = List<Window*>;
-
-	WindowList _windows;
-
-	void destroyWindowObjects() const
+	void initialiseWindowClass()
 	{
-		for(WindowList::const_iterator i = _windows.begin(), end = _windows.end(); i != end; ++i)
+		const WNDCLASSEX windowClassInfo = createWindowClassInfo();
+		::registerWindowClass(windowClassInfo);
+	}
+
+	void setWindowUserDataPointer(HWND windowHandle, Window::Impl* windowImpl)
+	{
+		SetLastError(0u);
+		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(windowImpl));
+	
+		if(result == 0 && getWindowsErrorCode() != 0u)
 		{
-			::destroyWindow(static_cast<HWND>((*i)->handle()));
-			DE_DELETE(*i, Window);
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the user data pointer of a window." <<
+				Log::Flush();
+	
+			DE_ERROR_WINDOWS(0x0);
 		}
 	}
 
@@ -129,20 +132,6 @@ private:
 		windowClassInfo.style = CS_OWNDC;
 
 		return windowClassInfo;
-	}
-
-	static void setWindowUserDataPointer(HWND windowHandle, Window::Impl* windowImpl)
-	{
-		SetLastError(0u);
-		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(windowImpl));
-
-		if(result == 0 && getWindowsErrorCode() != 0u)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the user data pointer of a window." <<
-				Log::Flush();
-
-			DE_ERROR_WINDOWS(0x0);
-		}
 	}
 
 	static LRESULT CALLBACK processMessage(HWND windowHandle, const Uint32 message, const WPARAM wParam,
@@ -169,39 +158,53 @@ private:
 };
 
 
-// Graphics::WindowManager
+// Graphics::GraphicsDeviceManager
 
 // Public
 
-WindowManager::WindowManager()
+GraphicsDeviceManager::GraphicsDeviceManager()
 	: _impl(DE_NEW(Impl)()) { }
 
-WindowManager::~WindowManager()
+GraphicsDeviceManager::~GraphicsDeviceManager()
 {
+	for(GraphicsDeviceList::const_iterator i = _devices.begin(), end = _devices.end(); i != end; ++i)
+		_impl->destroyWindowAndDevice(*i);
+
 	DE_DELETE(_impl, Impl);
 }
 
-Window* WindowManager::createWindow() const
+GraphicsDevice* GraphicsDeviceManager::createWindowAndDevice(const Uint32 windowWidth, const Uint32 windowHeight)
 {
-	return _impl->createWindowObject();
+	Window* window = _impl->createWindowObject(windowWidth, windowHeight);
+	GraphicsDeviceFactory graphicsDeviceFactory;
+	GraphicsConfig graphicsConfig;
+	GraphicsDevice* device = graphicsDeviceFactory.createDevice(window, graphicsConfig);
+	logGraphicsDeviceConfiguration(graphicsConfig); // TODO: rename
+	_devices.push_back(device);
+
+	return device;
 }
 
-void WindowManager::destroyWindow(Window* window) const
+void GraphicsDeviceManager::destroyWindowAndDevice(GraphicsDevice* device)
 {
-	_impl->destroyWindowObject(window);
+	DE_ASSERT(device != nullptr);
+	GraphicsDeviceList::const_iterator iterator = std::find(_devices.begin(), _devices.end(), device);
+	DE_ASSERT(iterator != _devices.end());
+	_devices.erase(iterator);
+	_impl->destroyWindowAndDevice(device);
 }
 
-void WindowManager::processMessages() const
+void GraphicsDeviceManager::processWindowMessages() const
 {
-	::processMessages();
+	return ::processMessages();
 }
 
 
 // External
 
-static HWND createWindow()
+static HWND createWindow(const Uint32 width, const Uint32 height)
 {
-	const RECT windowRectangle = ::createWindowRectangle();
+	const RECT windowRectangle = ::createWindowRectangle(width, height);
 	const Int32 windowWidth = windowRectangle.right - windowRectangle.left;
 	const Int32 windowHeight = windowRectangle.bottom - windowRectangle.top;
 
@@ -218,16 +221,16 @@ static HWND createWindow()
 	return windowHandle;
 }
 
-static RECT createWindowRectangle()
+static RECT createWindowRectangle(const Uint32 width, const Uint32 height)
 {
 	const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
 	const DisplayMode& currentDisplayMode = graphicsAdapterManager.graphicsAdapters()[0]->currentDisplayMode();
 
 	RECT rectangle;
-	rectangle.left = currentDisplayMode.width() / 2 - ::WINDOW_DEFAULT_WIDTH / 2;
-	rectangle.top = currentDisplayMode.height() / 2 - ::WINDOW_DEFAULT_HEIGHT / 2;
-	rectangle.right = rectangle.left + ::WINDOW_DEFAULT_WIDTH;
-	rectangle.bottom = rectangle.top + ::WINDOW_DEFAULT_HEIGHT;
+	rectangle.left = currentDisplayMode.width() / 2 - width / 2;
+	rectangle.top = currentDisplayMode.height() / 2 - height / 2;
+	rectangle.right = rectangle.left + width;
+	rectangle.bottom = rectangle.top + height;
 
 	const Int32 result = AdjustWindowRectEx(&rectangle, ::WINDOW_STYLE, 0, 0u);
 
@@ -264,6 +267,18 @@ static void destroyWindow(HWND windowHandle)
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to destroy a window." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
+}
+
+static void initialiseWGL()
+{
+	HWND temporaryWindowHandle = ::createWindow();
+	
+	{
+		TemporaryGraphicsContext temporaryGraphicsContext(temporaryWindowHandle);
+		WGL::initialise(temporaryGraphicsContext);
+	}
+
+	::destroyWindow(temporaryWindowHandle);
 }
 
 static HCURSOR loadCursor()

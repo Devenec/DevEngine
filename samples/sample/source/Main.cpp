@@ -39,7 +39,6 @@
 #include <graphics/VertexElement.h>
 #include <graphics/Viewport.h>
 #include <graphics/Window.h>
-#include <graphics/WindowManager.h>
 
 using namespace Content;
 using namespace Core;
@@ -48,12 +47,14 @@ using namespace Maths;
 
 static const Char8* VERTEX_SHADER_SOURCE
 (
-	"#version 450\n"
+	"#version 330\n"
 	"\n"
 	"layout(location = 0) in vec4 inPosition;\n"
 	"layout(location = 1) in vec3 inColour;\n"
 	"\n"
-	"layout(binding = 0) uniform Transforms\n"
+	//"layout(binding = 0) uniform Transforms\n"
+	// TODO: declare uniform bindings from C++
+	"uniform Transforms\n"
 	"{\n"
 	"	mat4 projection;\n"
 	"	mat4 world;\n"
@@ -70,7 +71,7 @@ static const Char8* VERTEX_SHADER_SOURCE
 
 static const Char8* FRAGMENT_SHADER_SOURCE
 (
-	"#version 450\n"
+	"#version 330\n"
 	"\n"
 	"in vec3 colour;\n"
 	"out vec4 outColour;\n"
@@ -87,16 +88,15 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	ContentManager contentManager;
 	GraphicsAdapterManager graphicsAdapterManager;
-	WindowManager windowManager;
 	GraphicsDeviceManager graphicsDeviceManager;
 
-	Window* window = windowManager.createWindow();
+	GraphicsDevice* graphicsDevice = graphicsDeviceManager.createWindowAndDevice(1280u, 720u);
+	Window* window = graphicsDevice->window();
+	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	Image* image = contentManager.load<Image>("assets/icon.png");
 	window->setIcon(image);
-	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	window->show();
 
-	GraphicsDevice* graphicsDevice = graphicsDeviceManager.createDevice(window);
 	Shader* vertexShader = graphicsDevice->createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
 	Shader* fragmentShader = graphicsDevice->createShader(ShaderType::Fragment, FRAGMENT_SHADER_SOURCE);
 	Effect* effect = graphicsDevice->createEffect();
@@ -181,7 +181,7 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	while(!window->shouldClose())
 	{
-		windowManager.processMessages();
+		graphicsDeviceManager.processWindowMessages();
 		graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
 		rotation += 0.01f;
 		worldTransform = Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);

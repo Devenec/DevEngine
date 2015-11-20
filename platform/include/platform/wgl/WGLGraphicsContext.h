@@ -1,5 +1,5 @@
 /**
- * @file graphics/WindowManager.h
+ * @file platform/wgl/WGLGraphicsContext.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,36 +20,30 @@
 
 #pragma once
 
-#include <core/Singleton.h>
+#include <core/Types.h>
+#include <platform/wgl/WGLGraphicsContextBase.h>
+#include <platform/windows/WindowsGraphics.h>
 
-namespace Graphics
+namespace Platform
 {
-	class Window;
-
-	class WindowManager final : public Core::Singleton<WindowManager>
+	class GraphicsContext final : public GraphicsContextBase
 	{
 	public:
 
-		WindowManager();
+		GraphicsContext(HWND windowHandle, const Int32 pixelFormatIndex);
 
-		WindowManager(const WindowManager& windowManager) = delete;
-		WindowManager(WindowManager&& windowManager) = delete;
+		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
+		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
 
-		~WindowManager();
+		~GraphicsContext() = default;
 
-		Window* createWindow() const;
-
-		void destroyWindow(Window* window) const;
-
-		void processMessages() const;
-
-		WindowManager& operator =(const WindowManager& windowManager) = delete;
-		WindowManager& operator =(WindowManager&& windowManager) = delete;
+		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
+		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
 
 	private:
 
-		class Impl;
+		using Base = GraphicsContextBase;
 
-		Impl* _impl;
+		void createContext();
 	};
 }

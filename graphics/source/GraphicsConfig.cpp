@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/WGLGraphicsConfig.h
+ * @file graphics/GraphicsConfig.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,35 +18,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
 #include <graphics/GraphicsConfig.h>
 
-namespace Graphics
-{
-	class GraphicsConfig::Impl final
-	{
-	public:
+using namespace Graphics;
 
-		Impl();
+// Public
 
-		Impl(const Impl& impl) = delete;
-		Impl(Impl&& impl) = delete;
+GraphicsConfig::GraphicsConfig()
+	: GraphicsConfig(0u, 0u, 0u, 0u, 0u, 0u) { }
 
-		~Impl() = default;
-
-		inline Int32 pixelFormatIndex() const;
-
-		inline void setPixelFormatIndex(const Int32 pixelFormatIndex);
-
-		Impl& operator =(const Impl& impl);
-
-		Impl& operator =(Impl&& impl) = delete;
-
-	private:
-
-		Int32 _pixelFormatIndex;
-	};
-
-#include "inline/WGLGraphicsConfig.inl"
-}
+GraphicsConfig::GraphicsConfig(const Uint32 redDepth, const Uint32 greenDepth, const Uint32 blueDepth,
+	const Uint32 alphaDepth, const Uint32 depthBufferDepth, const Uint32 stencilBufferDepth)
+	: _alphaDepth(static_cast<Uint8>(alphaDepth)),
+	  _blueDepth(static_cast<Uint8>(blueDepth)),
+	  _depthDepth(static_cast<Uint8>(depthBufferDepth)),
+	  _greenDepth(static_cast<Uint8>(greenDepth)),
+	  _redDepth(static_cast<Uint8>(redDepth)),
+	  _stencilDepth(static_cast<Uint8>(stencilBufferDepth)) { }

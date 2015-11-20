@@ -44,8 +44,6 @@ namespace Platform
 		GraphicsContextBase& operator =(const GraphicsContextBase& graphicsContext) = delete;
 		GraphicsContextBase& operator =(GraphicsContextBase&& graphicsContext) = delete;
 
-		static HDC getWindowDeviceContext(HWND windowHandle);
-
 	protected:
 
 		HDC _deviceContextHandle;
