@@ -38,7 +38,6 @@
 #include <graphics/Shader.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
-#include <graphics/Viewport.h>
 #include <graphics/Window.h>
 
 using namespace Content;

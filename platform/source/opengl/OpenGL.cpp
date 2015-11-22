@@ -183,6 +183,9 @@ static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 
 
 // Public
 
+const Uint32 OpenGL::MIN_SUPPORTED_VERSION_MAJOR = 3u;
+const Uint32 OpenGL::MIN_SUPPORTED_VERSION_MINOR = 3u;
+
 OpenGL::OpenGL()
 
 	  // Version 1.0

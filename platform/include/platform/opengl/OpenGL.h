@@ -3373,6 +3373,10 @@ namespace Platform
 		VertexArrayVertexBuffers vertexArrayVertexBuffers = nullptr;
 
 
+		static const Uint32 MIN_SUPPORTED_VERSION_MAJOR;
+
+		static const Uint32 MIN_SUPPORTED_VERSION_MINOR;
+
 		OpenGL();
 
 		OpenGL(const OpenGL& openGL) = delete;

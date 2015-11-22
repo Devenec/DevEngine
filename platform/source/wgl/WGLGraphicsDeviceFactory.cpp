@@ -22,7 +22,6 @@
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <graphics/GraphicsConfig.h>
-#include <graphics/GraphicsDevice.h>
 #include <graphics/Window.h>
 #include <platform/opengl/OpenGLGraphicsDevice.h>
 #include <platform/wgl/WGL.h>
@@ -66,10 +65,9 @@ GraphicsDevice* GraphicsDeviceFactory::createDevice(Window* window, GraphicsConf
 	HWND windowHandle = static_cast<HWND>(window->handle());
 	_deviceContextHandle = getWindowDeviceContextHandle(windowHandle);
 	const Int32 pixelFormatIndex = chooseGraphicsConfig(chosenGraphicsConfig);
-	GraphicsContext* graphicsContext = DE_NEW(GraphicsContext)(windowHandle, pixelFormatIndex);
-	GraphicsDevice::Implementation* deviceImplementation = DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
+	GraphicsContext* graphicsContext = createGraphicsContext(windowHandle, pixelFormatIndex);
 
-	return DE_NEW(GraphicsDevice)(deviceImplementation, window);
+	return createDeviceObject(window, graphicsContext);
 }
 
 // Static
@@ -103,6 +101,20 @@ Int32 GraphicsDeviceFactory::chooseGraphicsConfig(GraphicsConfig& chosenConfig) 
 		pixelFormatAttributes[1], pixelFormatAttributes[3], pixelFormatAttributes[6]);
 
 	return pixelFormatIndex;
+}
+
+GraphicsContext* GraphicsDeviceFactory::createGraphicsContext(HWND windowHandle, const Int32 pixelFormatIndex) const
+{
+	GraphicsContext::Implementation* implementation =
+		DE_NEW(GraphicsContext::Implementation)(windowHandle, pixelFormatIndex);
+
+	return DE_NEW(GraphicsContext)(implementation);
+}
+
+GraphicsDevice* GraphicsDeviceFactory::createDeviceObject(Window* window, GraphicsContext* graphicsContext) const
+{
+	GraphicsDevice::Implementation* implementation = DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
+	return DE_NEW(GraphicsDevice)(implementation, window);
 }
 
 Uint32 GraphicsDeviceFactory::getPixelFormatCount() const

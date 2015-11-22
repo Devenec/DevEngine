@@ -20,6 +20,7 @@
 
 #include <core/Array.h>
 #include <core/Log.h>
+#include <core/Memory.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsContext.h>
 #include <platform/windows/Windows.h>
@@ -41,18 +42,20 @@ static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 }};
 
 
+// Implementation
+
 // Public
 
-GraphicsContext::GraphicsContext(HWND windowHandle, const Int32 pixelFormatIndex)
+GraphicsContext::Implementation::Implementation(HWND windowHandle, const Int32 pixelFormatIndex)
 	: Base(windowHandle)
 {
 	setPixelFormat(pixelFormatIndex);
-	createContext();
+	initialise();
 }
 
 // Private
 
-void GraphicsContext::createContext()
+void GraphicsContext::Implementation::initialise()
 {
 	_graphicsContextHandle = WGL::createContextAttribsARB(_deviceContextHandle, nullptr, ::CONTEXT_ATTRIBUTES.data());
 
@@ -61,4 +64,32 @@ void GraphicsContext::createContext()
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
+}
+
+
+// Platform::GraphicsContext
+
+// Public
+
+GraphicsContext::GraphicsContext(Implementation* implementation)
+	: _implementation(implementation) { }
+
+GraphicsContext::~GraphicsContext()
+{
+	DE_DELETE(_implementation, Implementation);
+}
+
+void GraphicsContext::makeCurrent() const
+{
+	_implementation->makeCurrent();
+}
+
+void GraphicsContext::makeNonCurrent() const
+{
+	_implementation->makeNonCurrent();
+}
+
+void GraphicsContext::swapBuffers() const
+{
+	_implementation->swapBuffers();
 }

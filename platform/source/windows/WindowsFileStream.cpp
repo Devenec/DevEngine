@@ -45,8 +45,8 @@ public:
 		: _handle(nullptr),
 		  _openMode(OpenMode()) { }
 
-	Implementation(const Implementation& impl) = delete;
-	Implementation(Implementation&& impl) = delete;
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
 
 	~Implementation()
 	{
@@ -192,8 +192,8 @@ public:
 		return bytesWritten;
 	}
 
-	Implementation& operator =(const Implementation& impl) = delete;
-	Implementation& operator =(Implementation&& impl) = delete;
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
 
 private:
 

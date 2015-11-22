@@ -36,8 +36,8 @@ namespace Graphics
 		Implementation(Platform::OpenGL* openGL, const Uint32 binding, const Uint32 size,
 			const AccessMode& accessMode);
 
-		Implementation(const Implementation& impl) = delete;
-		Implementation(Implementation&& impl) = delete;
+		Implementation(const Implementation& implementation) = delete;
+		Implementation(Implementation&& implementation) = delete;
 
 		~Implementation();
 
@@ -61,8 +61,8 @@ namespace Graphics
 
 		void setData(const Byte* data, const Uint32 size, const Uint32 offset) const;
 
-		Implementation& operator =(const Implementation& impl) = delete;
-		Implementation& operator =(Implementation&& impl) = delete;
+		Implementation& operator =(const Implementation& implementation) = delete;
+		Implementation& operator =(Implementation&& implementation) = delete;
 
 	private:
 

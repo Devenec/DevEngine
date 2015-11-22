@@ -37,14 +37,15 @@ namespace Graphics
 
 		Implementation(Platform::GraphicsContext* graphicsContext);
 
-		Implementation(const Implementation& impl) = delete;
-		Implementation(Implementation&& impl) = delete;
+		Implementation(const Implementation& implementation) = delete;
+		Implementation(Implementation&& implementation) = delete;
 
 		~Implementation();
 
 		void clear(const Colour& colour) const;
 		
-		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size, const AccessMode& accessMode) const;
+		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size, const AccessMode& accessMode)
+			const;
 
 		Effect* createEffect() const;
 
@@ -71,8 +72,8 @@ namespace Graphics
 
 		inline const Viewport& viewport() const;
 
-		Implementation& operator =(const Implementation& impl) = delete;
-		Implementation& operator =(Implementation&& impl) = delete;
+		Implementation& operator =(const Implementation& implementation) = delete;
+		Implementation& operator =(Implementation&& implementation) = delete;
 
 	private:
 

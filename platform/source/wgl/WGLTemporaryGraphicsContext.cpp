@@ -31,8 +31,6 @@ using namespace Platform;
 // External
 
 static const Char8* COMPONENT_TAG = "[Platform::TemporaryGraphicsContext - WGL]";
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 3;
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 3;
 
 static void checkOpenGLVersion();
 static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();
@@ -121,7 +119,7 @@ static void checkOpenGLVersion()
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " The OpenGL version " << majorVersion << '.' <<
 			minorVersion << " is not supported. The minimum supported version is " <<
-			::MIN_SUPPORTED_OPENGL_VERSION_MAJOR << '.' << ::MIN_SUPPORTED_OPENGL_VERSION_MINOR << '.' << Log::Flush();
+			OpenGL::MIN_SUPPORTED_VERSION_MAJOR << '.' << OpenGL::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}
@@ -140,10 +138,10 @@ static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor()
 
 static Bool isOpenGLVersionSupported(const Uint32 majorVersion, const Uint32 minorVersion)
 {
-	if(majorVersion < ::MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
+	if(majorVersion < OpenGL::MIN_SUPPORTED_VERSION_MAJOR)
 		return false;
-	else if(majorVersion == ::MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
-		return minorVersion >= ::MIN_SUPPORTED_OPENGL_VERSION_MINOR;
+	else if(majorVersion == OpenGL::MIN_SUPPORTED_VERSION_MAJOR)
+		return minorVersion >= OpenGL::MIN_SUPPORTED_VERSION_MINOR;
 	else
 		return true;
 }

@@ -68,7 +68,6 @@ GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
 	: _deviceContextHandle(nullptr),
 	  _graphicsContextHandle(nullptr)
 {
-	DE_ASSERT(windowHandle != nullptr);
 	_deviceContextHandle = getWindowDeviceContextHandle(windowHandle);
 }
 

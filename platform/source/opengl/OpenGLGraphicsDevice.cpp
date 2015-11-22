@@ -27,9 +27,9 @@
 #include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
 #include <graphics/VertexBufferState.h>
+#include <platform/GraphicsContext.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsDevice.h>
-#include <platform/wgl/WGLGraphicsContext.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -52,7 +52,6 @@ GraphicsDevice::Implementation::Implementation(GraphicsContext* graphicsContext)
 GraphicsDevice::Implementation::~Implementation()
 {
 	DE_DELETE(_openGL, OpenGL);
-	_graphicsContext->makeNonCurrent();
 	DE_DELETE(_graphicsContext, GraphicsContext);
 }
 
@@ -254,8 +253,8 @@ void GraphicsDevice::swapBuffers() const
 
 // Private
 
-GraphicsDevice::GraphicsDevice(Implementation* impl, Window* window)
-	: _implementation(impl),
+GraphicsDevice::GraphicsDevice(Implementation* implementation, Window* window)
+	: _implementation(implementation),
 	  _window(window) { }
 
 GraphicsDevice::~GraphicsDevice()

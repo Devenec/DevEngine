@@ -103,7 +103,7 @@ namespace Graphics
 		Implementation* _implementation;
 		Window* _window;
 
-		GraphicsDevice(Implementation* impl, Window* window);
+		GraphicsDevice(Implementation* implementation, Window* window);
 		~GraphicsDevice();
 
 		void destroyResources() const;

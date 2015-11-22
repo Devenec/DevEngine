@@ -20,6 +20,7 @@
 
 #include <cstdlib>
 #include <core/Log.h>
+#include <core/debug/Assert.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
@@ -37,6 +38,7 @@ void Platform::failWindowsAssertion(const Char8* file, const Uint32 line, const 
 
 HDC Platform::getWindowDeviceContextHandle(HWND windowHandle)
 {
+	DE_ASSERT(windowHandle != nullptr);
 	HDC deviceContextHandle = GetDC(windowHandle);
 
 	if(deviceContextHandle == nullptr)

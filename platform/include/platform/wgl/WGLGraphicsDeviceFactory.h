@@ -34,6 +34,8 @@ namespace Graphics
 
 namespace Platform
 {
+	class GraphicsContext;
+
 	using PixelFormatAttributeList = Core::Array<Int32, 7u>;
 
 	class GraphicsDeviceFactory final
@@ -64,6 +66,8 @@ namespace Platform
 		HDC _deviceContextHandle;
 
 		Int32 chooseGraphicsConfig(Graphics::GraphicsConfig& chosenConfig) const;
+		GraphicsContext* createGraphicsContext(HWND windowHandle, const Int32 pixelFormatIndex) const;
+		Graphics::GraphicsDevice* createDeviceObject(Graphics::Window* window, GraphicsContext* graphicsContext) const;
 		Uint32 getPixelFormatCount() const;
 		PixelFormatIndexList getPixelFormatIndices(const Uint32 formatCount) const;
 		

@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/WGLGraphicsContext.h
+ * @file platform/GraphicsContext.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,31 +20,32 @@
 
 #pragma once
 
-#include <core/Types.h>
-#include <platform/GraphicsContext.h>
-#include <platform/wgl/WGLGraphicsContextBase.h>
-#include <platform/windows/WindowsGraphics.h>
-
 namespace Platform
 {
-	class GraphicsContext::Implementation final : public GraphicsContextBase
+	class GraphicsContext final
 	{
 	public:
 
-		Implementation(HWND windowHandle, const Int32 pixelFormatIndex);
+		class Implementation;
 
-		Implementation(const Implementation& implementation) = delete;
-		Implementation(Implementation&& implementation) = delete;
+		GraphicsContext(Implementation* implementation);
 
-		~Implementation() = default;
+		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
+		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
 
-		Implementation& operator =(const Implementation& implementation) = delete;
-		Implementation& operator =(Implementation&& implementation) = delete;
+		~GraphicsContext();
+
+		void makeCurrent() const;
+
+		void makeNonCurrent() const;
+
+		void swapBuffers() const;
+
+		GraphicsContext& operator =(const GraphicsContext& graphicsContext) = delete;
+		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
 
 	private:
 
-		using Base = GraphicsContextBase;
-
-		void initialise();
+		Implementation* _implementation;
 	};
 }

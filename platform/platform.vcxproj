@@ -60,6 +60,7 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\platform\GraphicsContext.h" />
     <ClInclude Include="include\platform\GraphicsExtensionHelper.h" />
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h" />

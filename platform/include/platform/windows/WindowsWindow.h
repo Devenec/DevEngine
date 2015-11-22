@@ -33,8 +33,8 @@ namespace Graphics
 
 		explicit Implementation(HWND windowHandle);
 
-		Implementation(const Implementation& impl) = delete;
-		Implementation(Implementation&& impl) = delete;
+		Implementation(const Implementation& implementation) = delete;
+		Implementation(Implementation&& implementation) = delete;
 
 		~Implementation() = default;
 
@@ -64,8 +64,8 @@ namespace Graphics
 
 		inline void show() const;
 
-		Implementation& operator =(const Implementation& impl) = delete;
-		Implementation& operator =(Implementation&& impl) = delete;
+		Implementation& operator =(const Implementation& implementation) = delete;
+		Implementation& operator =(Implementation&& implementation) = delete;
 
 	private:
 

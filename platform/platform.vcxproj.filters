@@ -89,6 +89,9 @@
     <ClInclude Include="include\platform\windows\WindowsWindow.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\GraphicsContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\platform\inline\GraphicsExtensionHelper.inl">
