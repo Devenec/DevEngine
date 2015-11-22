@@ -4,18 +4,18 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/Error.h>
@@ -24,7 +24,6 @@
 #include <core/Types.h>
 #include <core/Vector.h>
 #include <graphics/Effect.h>
-#include <graphics/Shader.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLShader.h>
 
@@ -34,16 +33,16 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::Effect - OpenGL]";
+static const Char8* COMPONENT_TAG = "[Graphics::Effect - OpenGL]";
 
 
 // Implementation
 
-class Effect::Impl final
+class Effect::Implementation final
 {
 public:
 
-	Impl(OpenGL* openGL)
+	explicit Implementation(OpenGL* openGL)
 		: _openGL(openGL),
 		  _programHandle(0u)
 	{
@@ -56,10 +55,10 @@ public:
 		}
 	}
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
 
-	~Impl()
+	~Implementation()
 	{
 		_openGL->deleteProgram(_programHandle);
 		DE_CHECK_ERROR_OPENGL(_openGL);
@@ -67,7 +66,7 @@ public:
 
 	void attachShader(Shader* shader) const
 	{
-		const Uint32 shaderHandle = shader->_impl->handle();
+		const Uint32 shaderHandle = shader->_implementation->handle();
 		_openGL->attachShader(_programHandle, shaderHandle);
 		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
@@ -90,10 +89,12 @@ public:
 		use(_programHandle);
 	}
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
 
 private:
+
+	using CharacterBuffer = Core::Vector<Char8>;
 
 	Platform::OpenGL* _openGL;
 	Uint32 _programHandle;
@@ -170,9 +171,9 @@ private:
 		}
 	}
 
-	Vector<Char8> getInfoLog(const Uint32 logLength) const
+	CharacterBuffer getInfoLog(const Uint32 logLength) const
 	{
-		Vector<Char8> logBuffer(logLength);
+		CharacterBuffer logBuffer(logLength);
 		_openGL->getProgramInfoLog(_programHandle, logBuffer.size(), nullptr, logBuffer.data());
 		DE_CHECK_ERROR_OPENGL(_openGL);
 
@@ -187,30 +188,30 @@ private:
 
 void Effect::attachShader(Shader* shader) const
 {
-	_impl->attachShader(shader);
+	_implementation->attachShader(shader);
 }
 
 void Effect::disuse() const
 {
-	_impl->disuse();
+	_implementation->disuse();
 }
 
 void Effect::link() const
 {
-	_impl->link();
+	_implementation->link();
 }
 
 void Effect::use() const
 {
-	_impl->use();
+	_implementation->use();
 }
 
 // Private
 
 Effect::Effect(GraphicsInterface graphicsInterface)
-	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface))) { }
+	: _implementation(DE_NEW(Implementation)(static_cast<OpenGL*>(graphicsInterface))) { }
 
 Effect::~Effect()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }

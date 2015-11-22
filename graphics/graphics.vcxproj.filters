@@ -38,10 +38,10 @@
     <ClInclude Include="include\graphics\GraphicsConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\graphics\GraphicsContext.h">
+    <ClInclude Include="include\graphics\GraphicsDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\graphics\GraphicsDevice.h">
+    <ClInclude Include="include\graphics\GraphicsDeviceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\GraphicsEnumerations.h">
@@ -62,6 +62,9 @@
     <ClInclude Include="include\graphics\IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\LogUtility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\PNGReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -80,12 +83,6 @@
     <ClInclude Include="include\graphics\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\graphics\WindowManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\graphics\GraphicsDeviceManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\graphics\inline\AccessMode.inl">
@@ -95,6 +92,9 @@
       <Filter>Header Files\inline</Filter>
     </None>
     <None Include="include\graphics\inline\GraphicsConfig.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
+    <None Include="include\graphics\inline\GraphicsDevice.inl">
       <Filter>Header Files\inline</Filter>
     </None>
     <None Include="include\graphics\inline\Image.inl">
@@ -117,10 +117,10 @@
     <ClCompile Include="source\DisplayMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\GraphicsAdapterManager.cpp">
+    <ClCompile Include="source\GraphicsDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\GraphicsDevice.cpp">
+    <ClCompile Include="source\GraphicsConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Image.cpp">
@@ -132,13 +132,13 @@
     <ClCompile Include="source\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\LogUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\PNGReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Viewport.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\GraphicsDeviceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

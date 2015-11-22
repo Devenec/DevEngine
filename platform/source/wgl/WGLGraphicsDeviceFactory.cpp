@@ -1,29 +1,32 @@
 /**
- * @file platform/wgl/WGLGraphicsConfigChooser.cpp
+ * @file platform/wgl/WGLGraphicsDeviceFactory.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/Error.h>
 #include <core/Log.h>
+#include <core/Memory.h>
 #include <graphics/GraphicsConfig.h>
+#include <graphics/Window.h>
+#include <platform/opengl/OpenGLGraphicsDevice.h>
 #include <platform/wgl/WGL.h>
-#include <platform/wgl/WGLGraphicsConfig.h>
-#include <platform/wgl/WGLGraphicsConfigChooser.h>
+#include <platform/wgl/WGLGraphicsContext.h>
+#include <platform/wgl/WGLGraphicsDeviceFactory.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
@@ -34,7 +37,7 @@ using namespace Platform;
 
 using PixelFormatRequiredAttributeList = Array<Int32, 9u>;
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsConfigChooser - WGL]";
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsDeviceFactory - WGL]";
 
 static const PixelFormatRequiredAttributeList PIXEL_FORMAT_REQUIRED_ATTRIBUTES
 {{
@@ -54,26 +57,29 @@ static Bool isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
 
 // Public
 
-GraphicsConfigChooser::GraphicsConfigChooser(HDC deviceContextHandle)
-	: _deviceContextHandle(deviceContextHandle) { }
+GraphicsDeviceFactory::GraphicsDeviceFactory()
+	: _deviceContextHandle(nullptr) { }
 
-GraphicsConfig GraphicsConfigChooser::chooseConfig() const
+GraphicsDevice* GraphicsDeviceFactory::createDevice(Window* window, GraphicsConfig& chosenGraphicsConfig)
 {
-	const Uint32 pixelFormatCount = getPixelFormatCount();
-	const PixelFormatIndexList pixelFormatIndices = getPixelFormatIndices(pixelFormatCount);
-	PixelFormatAttributeList pixelFormatAttributes;
-	const Int32 pixelFormatIndex = chooseBestPixelFormat(pixelFormatIndices, pixelFormatAttributes);
-	
-	GraphicsConfig config(pixelFormatAttributes[5], pixelFormatAttributes[4], pixelFormatAttributes[2],
-		pixelFormatAttributes[1], pixelFormatAttributes[3], pixelFormatAttributes[6]);
+	HWND windowHandle = static_cast<HWND>(window->handle());
+	_deviceContextHandle = getWindowDeviceContextHandle(windowHandle);
+	const Int32 pixelFormatIndex = chooseGraphicsConfig(chosenGraphicsConfig);
+	GraphicsContext* graphicsContext = createGraphicsContext(windowHandle, pixelFormatIndex);
 
-	config._impl->setPixelFormatIndex(pixelFormatIndex);
-	return config;
+	return createDeviceObject(window, graphicsContext);
+}
+
+// Static
+
+void GraphicsDeviceFactory::logDeviceInfo(GraphicsDevice* graphicsDevice)
+{
+	graphicsDevice->_implementation->logInfo();
 }
 
 // Private
 
-const PixelFormatAttributeList GraphicsConfigChooser::PIXEL_FORMAT_ATTRIBUTE_IDS
+const PixelFormatAttributeList GraphicsDeviceFactory::PIXEL_FORMAT_ATTRIBUTE_IDS
 {{
 	WGL::ACCELERATION_ARB,
 	WGL::ALPHA_BITS_ARB,
@@ -84,7 +90,34 @@ const PixelFormatAttributeList GraphicsConfigChooser::PIXEL_FORMAT_ATTRIBUTE_IDS
 	WGL::STENCIL_BITS_ARB
 }};
 
-Uint32 GraphicsConfigChooser::getPixelFormatCount() const
+Int32 GraphicsDeviceFactory::chooseGraphicsConfig(GraphicsConfig& chosenConfig) const
+{
+	const Uint32 pixelFormatCount = getPixelFormatCount();
+	const PixelFormatIndexList pixelFormatIndices = getPixelFormatIndices(pixelFormatCount);
+	PixelFormatAttributeList pixelFormatAttributes;
+	const Int32 pixelFormatIndex = chooseBestPixelFormat(pixelFormatIndices, pixelFormatAttributes);
+	
+	chosenConfig = GraphicsConfig(pixelFormatAttributes[5], pixelFormatAttributes[4], pixelFormatAttributes[2],
+		pixelFormatAttributes[1], pixelFormatAttributes[3], pixelFormatAttributes[6]);
+
+	return pixelFormatIndex;
+}
+
+GraphicsContext* GraphicsDeviceFactory::createGraphicsContext(HWND windowHandle, const Int32 pixelFormatIndex) const
+{
+	GraphicsContext::Implementation* implementation =
+		DE_NEW(GraphicsContext::Implementation)(windowHandle, pixelFormatIndex);
+
+	return DE_NEW(GraphicsContext)(implementation);
+}
+
+GraphicsDevice* GraphicsDeviceFactory::createDeviceObject(Window* window, GraphicsContext* graphicsContext) const
+{
+	GraphicsDevice::Implementation* implementation = DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
+	return DE_NEW(GraphicsDevice)(implementation, window);
+}
+
+Uint32 GraphicsDeviceFactory::getPixelFormatCount() const
 {
 	const Int32 attributeName = WGL::NUMBER_PIXEL_FORMATS_ARB;
 	Int32 formatCount;
@@ -101,7 +134,7 @@ Uint32 GraphicsConfigChooser::getPixelFormatCount() const
 	return formatCount;
 }
 
-GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelFormatIndices(const Uint32 formatCount)
+GraphicsDeviceFactory::PixelFormatIndexList GraphicsDeviceFactory::getPixelFormatIndices(const Uint32 formatCount)
 	const
 {
 	PixelFormatIndexList formatIndices(formatCount);
@@ -112,9 +145,7 @@ GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelForma
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the matching configurations." <<
-			Log::Flush();
-
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get matching configurations." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -125,12 +156,10 @@ GraphicsConfigChooser::PixelFormatIndexList GraphicsConfigChooser::getPixelForma
 	}
 
 	formatIndices.resize(matchingFormatCount);
-	formatIndices.shrink_to_fit();
-
 	return formatIndices;
 }
 
-Int32 GraphicsConfigChooser::chooseBestPixelFormat(const PixelFormatIndexList& formatIndices,
+Int32 GraphicsDeviceFactory::chooseBestPixelFormat(const PixelFormatIndexList& formatIndices,
 	PixelFormatAttributeList& formatAttributes) const
 {
 	Int32 bestFormatIndex = formatIndices.front();
@@ -150,7 +179,7 @@ Int32 GraphicsConfigChooser::chooseBestPixelFormat(const PixelFormatIndexList& f
 	return bestFormatIndex;
 }
 
-PixelFormatAttributeList GraphicsConfigChooser::getPixelFormatAttributes(const Int32 formatIndex) const
+PixelFormatAttributeList GraphicsDeviceFactory::getPixelFormatAttributes(const Int32 formatIndex) const
 {
 	PixelFormatAttributeList attributes;
 
@@ -159,9 +188,7 @@ PixelFormatAttributeList GraphicsConfigChooser::getPixelFormatAttributes(const I
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the attributes of a configuration." <<
-			Log::Flush();
-		
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get configuration attributes." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 

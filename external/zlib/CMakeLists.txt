@@ -18,7 +18,11 @@ set(SOURCE_FILES
 	source/zutil.c
 )
 
-include_directories(include)
+set(INCLUDE_DIRECTORIES
+	include
+)
+
+include_directories(${INCLUDE_DIRECTORIES})
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wno-implicit-function-declaration")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Wno-implicit-function-declaration")
 add_library(zlib STATIC ${SOURCE_FILES})

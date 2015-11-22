@@ -4,18 +4,18 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <algorithm>
@@ -32,14 +32,15 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsBuffer - OpenGL]";
+static const Char8* COMPONENT_TAG = "[Graphics::GraphicsBuffer - OpenGL]";
 
 
 // Implementation
 
 // Public
 
-GraphicsBuffer::Impl::Impl(OpenGL* openGL, const Uint32 binding, const Uint32 size, const AccessMode& accessMode)
+GraphicsBuffer::Implementation::Implementation(OpenGL* openGL, const Uint32 binding, const Uint32 size,
+	const AccessMode& accessMode)
 	: _openGL(openGL),
 	  _binding(binding),
 	  _bufferHandle(0u),
@@ -51,25 +52,25 @@ GraphicsBuffer::Impl::Impl(OpenGL* openGL, const Uint32 binding, const Uint32 si
 	initialiseStorage();
 }
 
-GraphicsBuffer::Impl::~Impl()
+GraphicsBuffer::Implementation::~Implementation()
 {
 	_openGL->deleteBuffers(1, &_bufferHandle);
 	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
-void GraphicsBuffer::Impl::bindIndexed(const Uint32 bindingIndex) const
+void GraphicsBuffer::Implementation::bindIndexed(const Uint32 bindingIndex) const
 {
 	_openGL->bindBufferBase(_binding, bindingIndex, _bufferHandle);
 	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
-void GraphicsBuffer::Impl::debindIndexed(const Uint32 bindingIndex) const
+void GraphicsBuffer::Implementation::debindIndexed(const Uint32 bindingIndex) const
 {
 	_openGL->bindBufferBase(_binding, bindingIndex, 0u);
 	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
-void GraphicsBuffer::Impl::demapData() const
+void GraphicsBuffer::Implementation::demapData() const
 {
 	bind();
 	const Uint32 result = _openGL->unmapBuffer(_binding);
@@ -85,7 +86,7 @@ void GraphicsBuffer::Impl::demapData() const
 	// TODO: restore old binding?
 }
 
-Byte* GraphicsBuffer::Impl::mapData(const Uint32 size, const Uint32 bufferOffset) const
+Byte* GraphicsBuffer::Implementation::mapData(const Uint32 size, const Uint32 bufferOffset) const
 {
 	bind();
 	Void* pointer = _openGL->mapBufferRange(_binding, bufferOffset, size, _flags);
@@ -97,30 +98,27 @@ Byte* GraphicsBuffer::Impl::mapData(const Uint32 size, const Uint32 bufferOffset
 		DE_ERROR(0x0);
 	}
 
-	debind();
-	// TODO: restore old binding?
+	debind(); // TODO: restore old binding?
 	return static_cast<Byte*>(pointer);
 }
 
-void GraphicsBuffer::Impl::setData(const Byte* data, const Uint32 size, const Uint32 bufferOffset) const
+void GraphicsBuffer::Implementation::setData(const Byte* data, const Uint32 size, const Uint32 bufferOffset) const
 {
-	// TODO: bind and debind the buffer here, instead of in mapData and demapData?
 	DE_ASSERT(data != nullptr);
 	Byte* mappedData = mapData(size, bufferOffset);
 	std::copy(data, data + size, mappedData);
-	demapData();
-	// TODO: restore old binding?
+	demapData(); // TODO: restore old binding?
 }
 
 // Private
 
-void GraphicsBuffer::Impl::bind(const Uint32 bufferHandle) const
+void GraphicsBuffer::Implementation::bind(const Uint32 bufferHandle) const
 {
 	_openGL->bindBuffer(_binding, bufferHandle);
 	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
-void GraphicsBuffer::Impl::initialiseAccessMode(const AccessMode& accessMode)
+void GraphicsBuffer::Implementation::initialiseAccessMode(const AccessMode& accessMode)
 {
 	if((accessMode & AccessMode::Read) == AccessMode::Read)
 		_flags |= OpenGL::MAP_READ_BIT;
@@ -129,20 +127,18 @@ void GraphicsBuffer::Impl::initialiseAccessMode(const AccessMode& accessMode)
 		_flags |= OpenGL::MAP_WRITE_BIT;
 }
 
-void GraphicsBuffer::Impl::createBuffer()
+void GraphicsBuffer::Implementation::createBuffer()
 {
 	_openGL->genBuffers(1, &_bufferHandle);
 	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
-void GraphicsBuffer::Impl::initialiseStorage() const
+void GraphicsBuffer::Implementation::initialiseStorage() const
 {
 	bind();
-	// TODO: allow updating 'usage', use _flags partially (mainly for *_DRAW and *_READ)?
 	_openGL->bufferData(_binding, _size, nullptr, OpenGL::STATIC_DRAW);
 	DE_CHECK_ERROR_OPENGL(_openGL);
-	debind();
-	// TODO: restore old binding?
+	debind(); // TODO: restore old binding?
 }
 
 
@@ -152,46 +148,47 @@ void GraphicsBuffer::Impl::initialiseStorage() const
 
 void GraphicsBuffer::bind() const
 {
-	_impl->bind();
+	_implementation->bind();
 }
 
 void GraphicsBuffer::bindIndexed(const Uint32 bindingIndex) const
 {
-	_impl->bindIndexed(bindingIndex);
+	_implementation->bindIndexed(bindingIndex);
 }
 
 void GraphicsBuffer::debind() const
 {
-	_impl->debind();
+	_implementation->debind();
 }
 
 void GraphicsBuffer::debindIndexed(const Uint32 bindingIndex) const
 {
-	_impl->debindIndexed(bindingIndex);
+	_implementation->debindIndexed(bindingIndex);
 }
 
 void GraphicsBuffer::demapData() const
 {
-	_impl->demapData();
+	_implementation->demapData();
 }
 
 Byte* GraphicsBuffer::mapData(const Uint32 size, const Uint32 bufferOffset) const
 {
-	return _impl->mapData(size, bufferOffset);
+	return _implementation->mapData(size, bufferOffset);
 }
 
 void GraphicsBuffer::setData(const Byte* data, const Uint32 dataSize, const Uint32 bufferOffset) const
 {
-	_impl->setData(data, dataSize, bufferOffset);
+	_implementation->setData(data, dataSize, bufferOffset);
 }
 
 // Protected
 
-GraphicsBuffer::GraphicsBuffer(GraphicsInterface graphicsInterface, const Uint32 binding, const Uint32 size,
+GraphicsBuffer::GraphicsBuffer(GraphicsInterface graphicsInterface, const BufferBinding& binding, const Uint32 size,
 	const AccessMode& accessMode)
-	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface), binding, size, accessMode)) { }
+	: _implementation(DE_NEW(Implementation)(static_cast<OpenGL*>(graphicsInterface), static_cast<Uint32>(binding),
+		size, accessMode)) { }
 
 GraphicsBuffer::~GraphicsBuffer()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }

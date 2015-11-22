@@ -4,40 +4,48 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
 
 #include <core/List.h>
 #include <core/String.h>
+#include <core/Types.h>
 #include <graphics/AccessMode.h>
-#include <graphics/GraphicsEnumerations.h>
+
+namespace Platform
+{
+	class GraphicsDeviceFactory;
+}
 
 namespace Graphics
 {
+	enum class BufferBinding;
+	enum class IndexType;
+	enum class PrimitiveType;
 	enum class ShaderType;
 
 	class Colour;
 	class Effect;
 	class GraphicsBuffer;
-	class GraphicsContext;
 	class GraphicsResource;
 	class IndexBuffer;
 	class Shader;
 	class VertexBufferState;
 	class Viewport;
+	class Window;
 
 	class GraphicsDevice final
 	{
@@ -77,23 +85,29 @@ namespace Graphics
 
 		const Viewport& viewport() const;
 
+		inline Window* window() const;
+
 		GraphicsDevice& operator =(const GraphicsDevice& graphicsDevice) = delete;
 		GraphicsDevice& operator =(GraphicsDevice&& graphicsDevice) = delete;
 
 	private:
 
 		friend class GraphicsDeviceManager;
+		friend class Platform::GraphicsDeviceFactory;
 
-		class Impl;
+		class Implementation;
 
 		using GraphicsResourceList = Core::List<GraphicsResource*>;
 
 		GraphicsResourceList _resources;
-		Impl* _impl;
+		Implementation* _implementation;
+		Window* _window;
 
-		GraphicsDevice(GraphicsContext* graphicsContext);
+		GraphicsDevice(Implementation* implementation, Window* window);
 		~GraphicsDevice();
 
 		void destroyResources() const;
 	};
+
+#include "inline/GraphicsDevice.inl"
 }

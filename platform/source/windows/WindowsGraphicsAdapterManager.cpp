@@ -4,18 +4,18 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <algorithm>
@@ -25,6 +25,7 @@
 #include <graphics/DisplayMode.h>
 #include <graphics/GraphicsAdapter.h>
 #include <graphics/GraphicsAdapterManager.h>
+#include <graphics/LogUtility.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
@@ -43,11 +44,11 @@ static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMO
 
 // Implementation
 
-class GraphicsAdapterManager::Impl final
+class GraphicsAdapterManager::Implementation final
 {
 public:
 
-	Impl()
+	Implementation()
 	{
 		Bool areAdaptersAvailable = true;
 		DISPLAY_DEVICEW adapterInfo = ::createAdapterInfo();
@@ -56,10 +57,10 @@ public:
 			areAdaptersAvailable = initialiseAdapter(i, adapterInfo);
 	}
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
 
-	~Impl()
+	~Implementation()
 	{
 		for(GraphicsAdapterList::const_iterator i = _graphicsAdapters.begin(), end = _graphicsAdapters.end(); i != end;
 			++i)
@@ -73,8 +74,8 @@ public:
 		return _graphicsAdapters;
 	}
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
 
 private:
 
@@ -108,19 +109,19 @@ private:
 // Public
 
 GraphicsAdapterManager::GraphicsAdapterManager()
-	: _impl(DE_NEW(Impl)())
+	: _implementation(DE_NEW(Implementation)())
 {
-	logAdapters();
+	logGraphicsAdapters(_implementation->graphicsAdapters());
 }
 
 GraphicsAdapterManager::~GraphicsAdapterManager()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }
 
 const GraphicsAdapterList& GraphicsAdapterManager::graphicsAdapters() const
 {
-	return _impl->graphicsAdapters();
+	return _implementation->graphicsAdapters();
 }
 
 
@@ -159,21 +160,21 @@ static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32
 
 static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes)
 {
-	DisplayMode displayMode(1u, 0u, 0u, 0u);
-	DEVMODEW displayModeInfo = ::createDisplayModeInfo();
+	DisplayMode mode(1u, 0u, 0u, 0u);
+	DEVMODEW modeInfo = ::createDisplayModeInfo();
 
-	for(Uint32 i = 0u; displayMode.width() != 0u; ++i)
+	for(Uint32 i = 0u; mode.width() != 0u; ++i)
 	{
-		displayMode = ::getAdapterDisplayMode(adapterName, i, displayModeInfo);
+		mode = ::getAdapterDisplayMode(adapterName, i, modeInfo);
 
-		if(displayMode.width() != 0u && std::find(modes.begin(), modes.end(), displayMode) == modes.end())
-			modes.push_back(displayMode);
+		if(mode.width() != 0u && std::find(modes.begin(), modes.end(), mode) == modes.end())
+			modes.push_back(mode);
 	}
 
 	modes.shrink_to_fit();
 	std::sort(modes.begin(), modes.end());
 
-	return ::getCurrentAdapterDisplayModeIndex(adapterName, displayModeInfo, modes);
+	return ::getCurrentAdapterDisplayModeIndex(adapterName, modeInfo, modes);
 }
 
 static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,

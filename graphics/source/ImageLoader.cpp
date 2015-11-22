@@ -4,24 +4,23 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/FileStream.h>
 #include <core/Memory.h>
 #include <core/Types.h>
-#include <core/Vector.h>
 #include <graphics/Image.h>
 #include <graphics/ImageLoader.h>
 #include <graphics/PNGReader.h>
@@ -35,12 +34,9 @@ using namespace Graphics;
 Image* ImageLoader::load(FileStream& fileStream)
 {
 	PNGReader pngReader;
-	const Vector<Byte> imageData = pngReader.readImage(fileStream);
-	const Uint32 imageWidth = pngReader.imageWidth();
-	const Uint32 imageHeight = pngReader.imageHeight();
-	const ImageFormat imageFormat = pngReader.imageFormat();
+	const ByteData imageData = pngReader.readImage(fileStream);
 
-	return DE_NEW(Image)(imageWidth, imageHeight, imageFormat, imageData);
+	return DE_NEW(Image)(pngReader.imageWidth(), pngReader.imageHeight(), pngReader.imageFormat(), imageData);
 }
 
 

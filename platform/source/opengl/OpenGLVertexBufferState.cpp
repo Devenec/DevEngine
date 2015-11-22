@@ -4,28 +4,28 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
-#include <graphics/GraphicsBuffer.h>
 #include <graphics/IndexBuffer.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
+#include <platform/opengl/OpenGLGraphicsEnumerations.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -39,11 +39,11 @@ static Uint32 getVertexElementSize(const VertexElement& element);
 
 // Implementation
 
-class VertexBufferState::Impl final
+class VertexBufferState::Implementation final
 {
 public:
 
-	Impl(OpenGL* openGL)
+	explicit Implementation(OpenGL* openGL)
 		: _indexBuffer(nullptr),
 		_openGL(openGL),
 		_vertexArrayHandle(0u)
@@ -52,10 +52,10 @@ public:
 		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
 
-	~Impl()
+	~Implementation()
 	{
 		_openGL->deleteVertexArrays(1, &_vertexArrayHandle);
 		DE_CHECK_ERROR_OPENGL(_openGL);
@@ -78,27 +78,25 @@ public:
 
 	void setIndexBuffer(IndexBuffer* buffer)
 	{
-		// TODO: assert that buffer has BufferBinding::Index
 		bind();
 
 		if(buffer == nullptr)
-			_indexBuffer->_impl->debind(); // TODO: restore old binding?
+			_indexBuffer->_implementation->debind(); // TODO: restore old binding?
 		else
-			buffer->_impl->bind();
+			buffer->_implementation->bind();
 
-		debind();
-		// TODO: restore old binding?
+		debind(); // TODO: restore old binding?
 		_indexBuffer = buffer;
 	}
 
-	// TODO: rename and rename bufferIndex
-	void setVertexBuffer(const GraphicsBuffer* buffer, const InitialiserList<VertexElement>& vertexElements,
-		const Uint32 stride, const Uint32 offset) const
+	void setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements, const Uint32 stride,
+		const Uint32 offset) const
 	{
+		DE_ASSERT(buffer->_implementation->binding() == static_cast<Uint32>(BufferBinding::Vertex));
 		Uint32 bufferHandle = 0u;
 
 		if(buffer != nullptr)
-			bufferHandle = buffer->_impl->handle();
+			bufferHandle = buffer->_implementation->handle();
 
 		bind();
 		buffer->bind();
@@ -108,8 +106,8 @@ public:
 		// TODO: restore old bindings?
 	}
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
 
 private:
 
@@ -123,13 +121,11 @@ private:
 		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
-	void setVertexLayout(const InitialiserList<VertexElement>& vertexElements, const Uint32 stride,
-		const Uint32 bufferOffset) const
+	void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride, const Uint32 bufferOffset) const
 	{
 		Uint32 elementOffset = bufferOffset;
 
-		for(InitialiserList<VertexElement>::const_iterator i = vertexElements.begin(), end = vertexElements.end();
-			i != end; ++i)
+		for(VertexElementList::const_iterator i = vertexElements.begin(), end = vertexElements.end(); i != end; ++i)
 		{
 			if(i->offset != VertexElement::AFTER_PREVIOUS)
 				elementOffset += i->offset;
@@ -159,38 +155,38 @@ private:
 
 void VertexBufferState::bind() const
 {
-	_impl->bind();
+	_implementation->bind();
 }
 
 void VertexBufferState::debind() const
 {
-	_impl->debind();
+	_implementation->debind();
 }
 
 IndexBuffer* VertexBufferState::indexBuffer() const
 {
-	return _impl->indexBuffer();
+	return _implementation->indexBuffer();
 }
 
 void VertexBufferState::setIndexBuffer(IndexBuffer* indexBuffer) const
 {
-	return _impl->setIndexBuffer(indexBuffer);
+	return _implementation->setIndexBuffer(indexBuffer);
 }
 
 void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer,
-	const InitialiserList<VertexElement>& vertexElements, const Uint32 stride, const Uint32 offset) const
+	const VertexElementList& vertexElements, const Uint32 stride, const Uint32 offset) const
 {
-	_impl->setVertexBuffer(buffer, vertexElements, stride, offset);
+	_implementation->setVertexBuffer(buffer, vertexElements, stride, offset);
 }
 
 // Private
 
 VertexBufferState::VertexBufferState(GraphicsInterface graphicsInterface)
-	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface))) { }
+	: _implementation(DE_NEW(Implementation)(static_cast<OpenGL*>(graphicsInterface))) { }
 
 VertexBufferState::~VertexBufferState()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }
 
 

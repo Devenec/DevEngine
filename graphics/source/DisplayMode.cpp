@@ -4,18 +4,18 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <graphics/DisplayMode.h>
@@ -26,14 +26,14 @@ using namespace Graphics;
 
 DisplayMode::DisplayMode()
 	: _colourDepth(0u),
-	  _frequency(0u),
 	  _height(0u),
+	  _refreshRate(0u),
 	  _width(0u) { }
 
-DisplayMode::DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 frequency)
+DisplayMode::DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 refreshRate)
 	: _colourDepth(colourDepth),
-	  _frequency(frequency),
 	  _height(height),
+	  _refreshRate(refreshRate),
 	  _width(width) { }
 
 
@@ -47,8 +47,8 @@ Bool Graphics::operator <(const DisplayMode& displayModeA, const DisplayMode& di
 		return displayModeA.height() < displayModeB.height();
 	else if(displayModeA.colourDepth() != displayModeB.colourDepth())
 		return displayModeA.colourDepth() < displayModeB.colourDepth();
-	else if(displayModeA.frequency() != displayModeB.frequency())
-		return displayModeA.frequency() < displayModeB.frequency();
+	else if(displayModeA.refreshRate() != displayModeB.refreshRate())
+		return displayModeA.refreshRate() < displayModeB.refreshRate();
 	else
 		return false;
 }

@@ -4,18 +4,18 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // Public
@@ -25,14 +25,14 @@ Uint32 DisplayMode::colourDepth() const
 	return _colourDepth;
 }
 
-Uint32 DisplayMode::frequency() const
-{
-	return _frequency;
-}
-
 Uint32 DisplayMode::height() const
 {
 	return _height;
+}
+
+Uint32 DisplayMode::refreshRate() const
+{
+	return _refreshRate;
 }
 
 Uint32 DisplayMode::width() const
@@ -45,10 +45,10 @@ Uint32 DisplayMode::width() const
 
 Bool operator ==(const DisplayMode& displayModeA, const DisplayMode& displayModeB)
 {
-	return displayModeA.width() == displayModeB.width() &&
-		displayModeA.height() == displayModeB.height() &&
+	return displayModeA.refreshRate() == displayModeB.refreshRate() &&
 		displayModeA.colourDepth() == displayModeB.colourDepth() &&
-		displayModeA.frequency() == displayModeB.frequency();
+		displayModeA.height() == displayModeB.height() &&
+		displayModeA.width() == displayModeB.width();
 }
 
 Bool operator !=(const DisplayMode& displayModeA, const DisplayMode& displayModeB)

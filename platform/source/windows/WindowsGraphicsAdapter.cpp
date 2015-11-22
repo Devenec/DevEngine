@@ -4,18 +4,18 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <algorithm>
@@ -32,27 +32,28 @@ using namespace Graphics;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsAdapter - Windows]";
+static const Char8* COMPONENT_TAG = "[Graphics::GraphicsAdapter - Windows]";
 
 static DEVMODEW createDisplayModeInfo(const DisplayMode& mode);
 
 
 // Implementation
 
-class GraphicsAdapter::Impl final
+class GraphicsAdapter::Implementation final
 {
 public:
 
-	Impl(const String8& name, const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex)
+	Implementation(const String8& name, const DisplayModeList& supportedDisplayModes,
+		const Uint32 currentDisplayModeIndex)
 		: _name(toString16(name)),
 		  _supportedDisplayModes(supportedDisplayModes),
 		  _currentDisplayModeIndex(currentDisplayModeIndex),
 		  _initialDisplayModeIndex(currentDisplayModeIndex) { }
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
 
-	~Impl()
+	~Implementation()
 	{
 		if(_currentDisplayModeIndex != _initialDisplayModeIndex)
 			changeDisplaySettings(nullptr, 0u);
@@ -84,8 +85,8 @@ public:
 		return _supportedDisplayModes;
 	}
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
 
 private:
 
@@ -115,33 +116,33 @@ private:
 
 const DisplayMode& GraphicsAdapter::currentDisplayMode() const
 {
-	return _impl->currentDisplayMode();
+	return _implementation->currentDisplayMode();
 }
 
 String8 GraphicsAdapter::name() const
 {
-	return _impl->name();
+	return _implementation->name();
 }
 
 void GraphicsAdapter::setDisplayMode(const DisplayMode& mode) const
 {
-	_impl->setDisplayMode(mode);
+	_implementation->setDisplayMode(mode);
 }
 
 const DisplayModeList& GraphicsAdapter::supportedDisplayModes() const
 {
-	return _impl->supportedDisplayModes();
+	return _implementation->supportedDisplayModes();
 }
 
 // Private
 
 GraphicsAdapter::GraphicsAdapter(const String8& name, const DisplayModeList& supportedDisplayModes,
 	const Uint32 currentDisplayModeIndex)
-	: _impl(DE_NEW(Impl)(name, supportedDisplayModes, currentDisplayModeIndex)) { }
+	: _implementation(DE_NEW(Implementation)(name, supportedDisplayModes, currentDisplayModeIndex)) { }
 
 GraphicsAdapter::~GraphicsAdapter()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }
 
 
@@ -151,7 +152,7 @@ static DEVMODEW createDisplayModeInfo(const DisplayMode& mode)
 {
 	DEVMODEW displayModeInfo = DEVMODEW();
 	displayModeInfo.dmBitsPerPel = mode.colourDepth();
-	displayModeInfo.dmDisplayFrequency = mode.frequency();
+	displayModeInfo.dmDisplayFrequency = mode.refreshRate();
 	displayModeInfo.dmFields = DM_BITSPERPEL | DM_DISPLAYFREQUENCY | DM_PELSHEIGHT | DM_PELSWIDTH;
 	displayModeInfo.dmPelsHeight = mode.height();
 	displayModeInfo.dmPelsWidth = mode.width();

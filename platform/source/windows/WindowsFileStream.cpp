@@ -4,18 +4,18 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/FileStream.h>
@@ -28,7 +28,7 @@ using namespace Core;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::FileStream - Windows]";
+static const Char8* COMPONENT_TAG = "[Core::FileStream - Windows]";
 
 static LARGE_INTEGER createLargeInteger(const Int64& value = 0);
 static Uint32 getAccessMode(const OpenMode& openMode);
@@ -37,18 +37,18 @@ static Uint32 getCreationMode(const OpenMode& openMode);
 
 // Implementation
 
-class FileStream::Impl final
+class FileStream::Implementation final
 {
 public:
 
-	Impl()
+	Implementation()
 		: _handle(nullptr),
 		  _openMode(OpenMode()) { }
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
 
-	~Impl()
+	~Implementation()
 	{
 		close();
 	}
@@ -192,8 +192,8 @@ public:
 		return bytesWritten;
 	}
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
 
 private:
 
@@ -218,67 +218,67 @@ private:
 // Public
 
 FileStream::FileStream()
-	: _impl(DE_NEW(Impl)()) { }
+	: _implementation(DE_NEW(Implementation)()) { }
 
 FileStream::FileStream(const String8& filepath, const OpenMode& openMode)
 	: FileStream()
 {
-	_impl->open(filepath, openMode);
+	_implementation->open(filepath, openMode);
 }
 
 FileStream::~FileStream()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }
 
 void FileStream::close() const
 {
-	_impl->close();
+	_implementation->close();
 }
 
 Bool FileStream::isAtEndOfFile() const
 {
-	return _impl->isAtEndOfFile();
+	return _implementation->isAtEndOfFile();
 }
 
 Bool FileStream::isOpen() const
 {
-	return _impl->isOpen();
+	return _implementation->isOpen();
 }
 
 void FileStream::open(const String8& filepath, const OpenMode& openMode) const
 {
-	_impl->open(filepath, openMode);
+	_implementation->open(filepath, openMode);
 }
 
 Int64 FileStream::position() const
 {
-	return _impl->position();
+	return _implementation->position();
 }
 
 Uint32 FileStream::read(Byte* buffer, const Uint32 size) const
 {
-	return _impl->read(buffer, size);
+	return _implementation->read(buffer, size);
 }
 
 void FileStream::seek(const Int64& position) const
 {
-	_impl->seek(position);
+	_implementation->seek(position);
 }
 
 void FileStream::seek(const SeekPosition& position, const Int64& offset) const
 {
-	_impl->seek(position, offset);
+	_implementation->seek(position, offset);
 }
 
 Int64 FileStream::size() const
 {
-	return _impl->size();
+	return _implementation->size();
 }
 
 Uint32 FileStream::write(const Byte* data, const Uint32 size) const
 {
-	return _impl->write(data, size);
+	return _implementation->write(data, size);
 }
 
 

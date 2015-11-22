@@ -18,5 +18,10 @@ set(SOURCE_FILES
 	source/pngwutil.c
 )
 
-include_directories(include ../zlib/include)
+set(INCLUDE_DIRECTORIES
+	include
+	../zlib/include
+)
+
+include_directories(${INCLUDE_DIRECTORIES})
 add_library(libpng STATIC ${SOURCE_FILES})

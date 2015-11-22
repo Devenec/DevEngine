@@ -4,18 +4,18 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
@@ -30,7 +30,7 @@ namespace Graphics
 
 		DisplayMode();
 
-		DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 frequency);
+		DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 refreshRate);
 
 		DisplayMode(const DisplayMode& displayMode) = default;
 
@@ -40,9 +40,9 @@ namespace Graphics
 
 		inline Uint32 colourDepth() const;
 
-		inline Uint32 frequency() const;
-
 		inline Uint32 height() const;
+
+		inline Uint32 refreshRate() const;
 
 		inline Uint32 width() const;
 
@@ -53,8 +53,8 @@ namespace Graphics
 	private:
 
 		Uint32 _colourDepth;
-		Uint32 _frequency;
 		Uint32 _height;
+		Uint32 _refreshRate;
 		Uint32 _width;
 	};
 

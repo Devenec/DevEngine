@@ -30,11 +30,11 @@
     <Filter Include="Source Files\debug">
       <UniqueIdentifier>{0fd53b2c-3230-417e-9aaf-b65aa60dfc90}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\memory">
-      <UniqueIdentifier>{c90a8658-5814-4704-90ae-0903eeec1f42}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\maths">
       <UniqueIdentifier>{08a3479e-1b67-4549-b268-905c2693af5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\memory">
+      <UniqueIdentifier>{c90a8658-5814-4704-90ae-0903eeec1f42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -4,30 +4,30 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http:  //www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http:  //www.gnu.org/licenses/>.
  */
 
 #include <cstdlib>
 #include <core/Array.h>
 #include <core/Log.h>
-#include <core/String.h>
-#include <core/Vector.h>
 #include <core/debug/Assert.h>
+#include <graphics/LogUtility.h>
 #include <platform/GraphicsExtensionHelper.h>
 #include <platform/opengl/OpenGL.h>
 
 using namespace Core;
+using namespace Graphics;
 using namespace Platform;
 
 // External
@@ -169,7 +169,6 @@ static Uint32 minorVersion = 1u;
 
 static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
 static const Char8* getDebugMessageTypeName(const Uint32 messageType);
-static ExtensionNameList getExtensionNames(OpenGL& openGL);
 static void getStandardFunctions(OpenGL& openGL);
 static void initialiseDebugMessaging(OpenGL& openGL);
 static void initialiseMajorVersion(const String8& versionString);
@@ -183,6 +182,9 @@ static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 
 
 
 // Public
+
+const Uint32 OpenGL::MIN_SUPPORTED_VERSION_MAJOR = 3u;
+const Uint32 OpenGL::MIN_SUPPORTED_VERSION_MINOR = 3u;
 
 OpenGL::OpenGL()
 
@@ -254,21 +256,27 @@ OpenGL::OpenGL()
 	  texSubImage1D(glTexSubImage1D),
 	  texSubImage2D(glTexSubImage2D)
 {
-	// TODO: check current context state? check via GraphicsContextBase?
+	// TODO: check current context state?
 	::getStandardFunctions(*this);
-	const ExtensionNameList extensionNames = ::getExtensionNames(*this);
-	GraphicsExtensionHelper::logExtensions("graphics interface", extensionNames);
 
 	if(debugMessageCallback != nullptr)
 		::initialiseDebugMessaging(*this);
 }
 
-void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* function)
+void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const
 {
 	Uint32 errorCode;
 
 	while((errorCode = getError()) != NO_ERROR)
 		::reportError(errorCode, file, line, function);
+}
+
+void OpenGL::logInfo() const
+{
+	defaultLog << LogLevel::Info << "Initialised OpenGL rendering:\n\nVersion: " << majorVersion << '.' <<
+		minorVersion << '\n';
+
+	logGraphicsExtensions("graphics interface", getExtensionNames());
 }
 
 // Static
@@ -280,6 +288,25 @@ void OpenGL::initialiseVersion(Uint32& major, Uint32& minor)
 	::initialiseMinorVersion(versionString);
 	major = ::majorVersion;
 	minor = ::minorVersion;
+}
+
+// Private
+
+ExtensionNameList OpenGL::getExtensionNames() const
+{
+	Int32 extensionCount = 0u;
+	getIntegerv(OpenGL::NUM_EXTENSIONS, &extensionCount);
+	DE_CHECK_ERROR_OPENGL(this);
+	ExtensionNameList extensionNames;
+
+	for(Int32 i = 0; i < extensionCount; ++i)
+	{
+		const Char8* extensionName = reinterpret_cast<const Char8*>(getStringi(OpenGL::EXTENSIONS, i));
+		DE_CHECK_ERROR_OPENGL(this);
+		extensionNames.push_back(extensionName);
+	}
+
+	return extensionNames;
 }
 
 
@@ -340,25 +367,6 @@ static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 			DE_ASSERT(false);
 			return ::DEBUG_MESSAGE_TYPE_NAMES[0];
 	}
-}
-
-static ExtensionNameList getExtensionNames(OpenGL& openGL)
-{
-	Int32 extensionCount = 0u;
-	// TODO: wrap
-	openGL.getIntegerv(OpenGL::NUM_EXTENSIONS, &extensionCount);
-	DE_CHECK_ERROR_OPENGL(&openGL);
-	//
-	ExtensionNameList extensionNames;
-
-	for(Int32 i = 0; i < extensionCount; ++i)
-	{
-		const Char8* extensionName = reinterpret_cast<const Char8*>(openGL.getStringi(OpenGL::EXTENSIONS, i));
-		DE_CHECK_ERROR_OPENGL(&openGL);
-		extensionNames.push_back(extensionName);
-	}
-
-	return extensionNames;
 }
 
 static void getStandardFunctions(OpenGL& openGL)
@@ -451,7 +459,7 @@ static void getStandardFunctions(OpenGL& openGL)
 	openGL.deleteShader = GraphicsExtensionHelper::getFunction<OpenGL::DeleteShader>("glDeleteShader");
 	openGL.detachShader = GraphicsExtensionHelper::getFunction<OpenGL::DetachShader>("glDetachShader");
 
-	openGL.disableVertexAttribArray =	
+	openGL.disableVertexAttribArray =
 		GraphicsExtensionHelper::getFunction<OpenGL::DisableVertexAttribArray>("glDisableVertexAttribArray");
 
 	openGL.drawBuffers = GraphicsExtensionHelper::getFunction<OpenGL::DrawBuffers>("glDrawBuffers");
@@ -868,134 +876,120 @@ static void getStandardFunctions(OpenGL& openGL)
 
 	if(::majorVersion >= 4u)
 	{
-		if(::minorVersion >= 0u)
-		{
-			// Version 4.0
+		// Version 4.0
 
-			openGL.beginQueryIndexed =
-				GraphicsExtensionHelper::getFunction<OpenGL::BeginQueryIndexed>("glBeginQueryIndexed");
+		openGL.beginQueryIndexed =
+			GraphicsExtensionHelper::getFunction<OpenGL::BeginQueryIndexed>("glBeginQueryIndexed");
 
-			openGL.bindTransformFeedback =
-				GraphicsExtensionHelper::getFunction<OpenGL::BindTransformFeedback>("glBindTransformFeedback");
+		openGL.bindTransformFeedback =
+			GraphicsExtensionHelper::getFunction<OpenGL::BindTransformFeedback>("glBindTransformFeedback");
 
-			openGL.blendEquationi = GraphicsExtensionHelper::getFunction<OpenGL::BlendEquationI>("glBlendEquationi");
+		openGL.blendEquationi = GraphicsExtensionHelper::getFunction<OpenGL::BlendEquationI>("glBlendEquationi");
 
-			openGL.blendEquationSeparatei =
-				GraphicsExtensionHelper::getFunction<OpenGL::BlendEquationSeparateI>("glBlendEquationSeparatei");
+		openGL.blendEquationSeparatei =
+			GraphicsExtensionHelper::getFunction<OpenGL::BlendEquationSeparateI>("glBlendEquationSeparatei");
 
-			openGL.blendFunci = GraphicsExtensionHelper::getFunction<OpenGL::BlendFuncI>("glBlendFunci");
+		openGL.blendFunci = GraphicsExtensionHelper::getFunction<OpenGL::BlendFuncI>("glBlendFunci");
 
-			openGL.blendFuncSeparatei =
-				GraphicsExtensionHelper::getFunction<OpenGL::BlendFuncSeparateI>("glBlendFuncSeparatei");
+		openGL.blendFuncSeparatei =
+			GraphicsExtensionHelper::getFunction<OpenGL::BlendFuncSeparateI>("glBlendFuncSeparatei");
 
-			openGL.deleteTransformFeedbacks =
-				GraphicsExtensionHelper::getFunction<OpenGL::DeleteTransformFeedbacks>("glDeleteTransformFeedbacks");
+		openGL.deleteTransformFeedbacks =
+			GraphicsExtensionHelper::getFunction<OpenGL::DeleteTransformFeedbacks>("glDeleteTransformFeedbacks");
 
-			openGL.drawArraysIndirect =
-				GraphicsExtensionHelper::getFunction<OpenGL::DrawArraysIndirect>("glDrawArraysIndirect");
+		openGL.drawArraysIndirect =
+			GraphicsExtensionHelper::getFunction<OpenGL::DrawArraysIndirect>("glDrawArraysIndirect");
 
-			openGL.drawElementsIndirect =
-				GraphicsExtensionHelper::getFunction<OpenGL::DrawElementsIndirect>("glDrawElementsIndirect");
+		openGL.drawElementsIndirect =
+			GraphicsExtensionHelper::getFunction<OpenGL::DrawElementsIndirect>("glDrawElementsIndirect");
 
-			openGL.drawTransformFeedback =
-				GraphicsExtensionHelper::getFunction<OpenGL::DrawTransformFeedback>("glDrawTransformFeedback");
+		openGL.drawTransformFeedback =
+			GraphicsExtensionHelper::getFunction<OpenGL::DrawTransformFeedback>("glDrawTransformFeedback");
 
-			openGL.drawTransformFeedbackStream =
-				GraphicsExtensionHelper::getFunction<OpenGL::DrawTransformFeedbackStream>(
-					"glDrawTransformFeedbackStream");
+		openGL.drawTransformFeedbackStream =
+			GraphicsExtensionHelper::getFunction<OpenGL::DrawTransformFeedbackStream>("glDrawTransformFeedbackStream");
 
-			openGL.endQueryIndexed =
-				GraphicsExtensionHelper::getFunction<OpenGL::EndQueryIndexed>("glEndQueryIndexed");
+		openGL.endQueryIndexed = GraphicsExtensionHelper::getFunction<OpenGL::EndQueryIndexed>("glEndQueryIndexed");
 
-			openGL.genTransformFeedbacks =
-				GraphicsExtensionHelper::getFunction<OpenGL::GenTransformFeedbacks>("glGenTransformFeedbacks");
+		openGL.genTransformFeedbacks =
+			GraphicsExtensionHelper::getFunction<OpenGL::GenTransformFeedbacks>("glGenTransformFeedbacks");
 
-			openGL.getActiveSubroutineName =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetActiveSubroutineName>("glGetActiveSubroutineName");
+		openGL.getActiveSubroutineName =
+			GraphicsExtensionHelper::getFunction<OpenGL::GetActiveSubroutineName>("glGetActiveSubroutineName");
 
-			openGL.getActiveSubroutineUniformiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetActiveSubroutineUniformIV>(
-					"glGetActiveSubroutineUniformiv");
+		openGL.getActiveSubroutineUniformiv =
+			GraphicsExtensionHelper::getFunction<OpenGL::GetActiveSubroutineUniformIV>(
+				"glGetActiveSubroutineUniformiv");
 
-			openGL.getActiveSubroutineUniformName =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetActiveSubroutineUniformName>(
-					"glGetActiveSubroutineUniformName");
+		openGL.getActiveSubroutineUniformName =
+			GraphicsExtensionHelper::getFunction<OpenGL::GetActiveSubroutineUniformName>(
+				"glGetActiveSubroutineUniformName");
 
-			openGL.getProgramStageiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramStageIV>("glGetProgramStageiv");
+		openGL.getProgramStageiv =
+			GraphicsExtensionHelper::getFunction<OpenGL::GetProgramStageIV>("glGetProgramStageiv");
 
-			openGL.getQueryIndexediv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetQueryIndexedIV>("glGetQueryIndexediv");
+		openGL.getQueryIndexediv =
+			GraphicsExtensionHelper::getFunction<OpenGL::GetQueryIndexedIV>("glGetQueryIndexediv");
 
-			openGL.getSubroutineIndex =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetSubroutineIndex>("glGetSubroutineIndex");
+		openGL.getSubroutineIndex =
+			GraphicsExtensionHelper::getFunction<OpenGL::GetSubroutineIndex>("glGetSubroutineIndex");
 
-			openGL.getSubroutineUniformLocation =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetSubroutineUniformLocation>(
-					"glGetSubroutineUniformLocation");
+		openGL.getSubroutineUniformLocation =
+			GraphicsExtensionHelper::getFunction<OpenGL::GetSubroutineUniformLocation>(
+				"glGetSubroutineUniformLocation");
 
-			openGL.getUniformdv = GraphicsExtensionHelper::getFunction<OpenGL::GetUniformDV>("glGetUniformdv");
+		openGL.getUniformdv = GraphicsExtensionHelper::getFunction<OpenGL::GetUniformDV>("glGetUniformdv");
 
-			openGL.getUniformSubroutineuiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetUniformSubroutineUIV>("glGetUniformSubroutineuiv");
+		openGL.getUniformSubroutineuiv =
+			GraphicsExtensionHelper::getFunction<OpenGL::GetUniformSubroutineUIV>("glGetUniformSubroutineuiv");
 
-			openGL.isTransformFeedback =
-				GraphicsExtensionHelper::getFunction<OpenGL::IsTransformFeedback>("glIsTransformFeedback");
+		openGL.isTransformFeedback =
+			GraphicsExtensionHelper::getFunction<OpenGL::IsTransformFeedback>("glIsTransformFeedback");
 
-			openGL.minSampleShading =
-				GraphicsExtensionHelper::getFunction<OpenGL::MinSampleShading>("glMinSampleShading");
+		openGL.minSampleShading = GraphicsExtensionHelper::getFunction<OpenGL::MinSampleShading>("glMinSampleShading");
+		openGL.patchParameterfv = GraphicsExtensionHelper::getFunction<OpenGL::PatchParameterFV>("glPatchParameterfv");
+		openGL.patchParameteri = GraphicsExtensionHelper::getFunction<OpenGL::PatchParameterI>("glPatchParameteri");
 
-			openGL.patchParameterfv =
-				GraphicsExtensionHelper::getFunction<OpenGL::PatchParameterFV>("glPatchParameterfv");
+		openGL.pauseTransformFeedback =
+			GraphicsExtensionHelper::getFunction<OpenGL::PauseTransformFeedback>("glPauseTransformFeedback");
 
-			openGL.patchParameteri =
-				GraphicsExtensionHelper::getFunction<OpenGL::PatchParameterI>("glPatchParameteri");
+		openGL.resumeTransformFeedback =
+			GraphicsExtensionHelper::getFunction<OpenGL::ResumeTransformFeedback>("glResumeTransformFeedback");
 
-			openGL.pauseTransformFeedback =
-				GraphicsExtensionHelper::getFunction<OpenGL::PauseTransformFeedback>("glPauseTransformFeedback");
+		openGL.uniform1d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1D>("glUniform1d");
+		openGL.uniform1dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1DV>("glUniform1dv");
+		openGL.uniform2d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2D>("glUniform2d");
+		openGL.uniform2dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2DV>("glUniform2dv");
+		openGL.uniform3d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3D>("glUniform3d");
+		openGL.uniform3dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3DV>("glUniform3dv");
+		openGL.uniform4d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4D>("glUniform4d");
+		openGL.uniform4dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4DV>("glUniform4dv");
+		openGL.uniformMatrix2dv = GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2DV>("glUniformMatrix2dv");
 
-			openGL.resumeTransformFeedback =
-				GraphicsExtensionHelper::getFunction<OpenGL::ResumeTransformFeedback>("glResumeTransformFeedback");
+		openGL.uniformMatrix2x3dv =
+			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2X3DV>("glUniformMatrix2x3dv");
 
-			openGL.uniform1d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1D>("glUniform1d");
-			openGL.uniform1dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1DV>("glUniform1dv");
-			openGL.uniform2d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2D>("glUniform2d");
-			openGL.uniform2dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2DV>("glUniform2dv");
-			openGL.uniform3d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3D>("glUniform3d");
-			openGL.uniform3dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3DV>("glUniform3dv");
-			openGL.uniform4d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4D>("glUniform4d");
-			openGL.uniform4dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4DV>("glUniform4dv");
+		openGL.uniformMatrix2x4dv =
+			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2X4DV>("glUniformMatrix2x4dv");
 
-			openGL.uniformMatrix2dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2DV>("glUniformMatrix2dv");
+		openGL.uniformMatrix3dv = GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3DV>("glUniformMatrix3dv");
 
-			openGL.uniformMatrix2x3dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2X3DV>("glUniformMatrix2x3dv");
+		openGL.uniformMatrix3x2dv =
+			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3X2DV>("glUniformMatrix3x2dv");
 
-			openGL.uniformMatrix2x4dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2X4DV>("glUniformMatrix2x4dv");
+		openGL.uniformMatrix3x4dv =
+			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3X4DV>("glUniformMatrix3x4dv");
 
-			openGL.uniformMatrix3dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3DV>("glUniformMatrix3dv");
+		openGL.uniformMatrix4dv = GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4DV>("glUniformMatrix4dv");
 
-			openGL.uniformMatrix3x2dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3X2DV>("glUniformMatrix3x2dv");
+		openGL.uniformMatrix4x2dv =
+			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4X2DV>("glUniformMatrix4x2dv");
 
-			openGL.uniformMatrix3x4dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3X4DV>("glUniformMatrix3x4dv");
+		openGL.uniformMatrix4x3dv =
+			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4X3DV>("glUniformMatrix4x3dv");
 
-			openGL.uniformMatrix4dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4DV>("glUniformMatrix4dv");
-
-			openGL.uniformMatrix4x2dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4X2DV>("glUniformMatrix4x2dv");
-
-			openGL.uniformMatrix4x3dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4X3DV>("glUniformMatrix4x3dv");
-
-			openGL.uniformSubroutinesuiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::UniformSubroutineSUIV>("glUniformSubroutinesuiv");
-		}
+		openGL.uniformSubroutinesuiv =
+			GraphicsExtensionHelper::getFunction<OpenGL::UniformSubroutineSUIV>("glUniformSubroutinesuiv");
 
 		if(::minorVersion >= 1u)
 		{
@@ -1254,7 +1248,7 @@ static void getStandardFunctions(OpenGL& openGL)
 			openGL.viewportIndexedfv =
 				GraphicsExtensionHelper::getFunction<OpenGL::ViewportIndexedFV>("glViewportIndexedfv");
 		}
-		
+
 		if(::minorVersion >= 2u)
 		{
 			// Version 4.2
@@ -1294,7 +1288,7 @@ static void getStandardFunctions(OpenGL& openGL)
 			openGL.texStorage2D = GraphicsExtensionHelper::getFunction<OpenGL::TexStorage2D>("glTexStorage2D");
 			openGL.texStorage3D = GraphicsExtensionHelper::getFunction<OpenGL::TexStorage3D>("glTexStorage3D");
 		}
-		
+
 		if(::minorVersion >= 3u)
 		{
 			// Version 4.3
@@ -1822,7 +1816,6 @@ static void initialiseMinorVersion(const String8& versionString)
 	::minorVersion = std::strtol(minorVersionString.c_str(), nullptr, 10);
 }
 
-// TODO: identify the OpenGL object/context in which the error occurs?
 static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
 	const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
 	const Void* userData)
@@ -1837,7 +1830,6 @@ static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const
 		StreamFormat::Decimal << ") from " << messageSourceName << ": '" << message << '\'' << Log::Flush();
 }
 
-// TODO: identify the OpenGL object/context in which the error occurs?
 static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
 {
 	defaultLog << LogLevel::Warning << "OpenGL error occurred, " << ::ERROR_NAMES[OpenGL::INVALID_ENUM - errorCode] <<

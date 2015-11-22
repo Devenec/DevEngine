@@ -21,5 +21,10 @@ set(SOURCE_FILES
 	source/memory/AllocationPolicyBase.cpp
 )
 
-include_directories(include ../platform/include)
+set(INCLUDE_DIRECTORIES
+	include
+	../platform/include
+)
+
+include_directories(${INCLUDE_DIRECTORIES})
 add_library(core STATIC ${SOURCE_FILES})

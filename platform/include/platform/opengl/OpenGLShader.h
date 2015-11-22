@@ -4,22 +4,23 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
 
+#include <core/Types.h>
 #include <core/Vector.h>
 #include <graphics/Shader.h>
 
@@ -30,23 +31,25 @@ namespace Platform
 
 namespace Graphics
 {
-	class Shader::Impl final
+	class Shader::Implementation final
 	{
 	public:
 
-		Impl(Platform::OpenGL* openGL, const ShaderType& type, const Core::String8& source);
+		Implementation(Platform::OpenGL* openGL, const ShaderType& type, const Core::String8& source);
 
-		Impl(const Impl& impl) = delete;
-		Impl(Impl&& impl) = delete;
+		Implementation(const Implementation& implementation) = delete;
+		Implementation(Implementation&& implementation) = delete;
 
-		~Impl();
+		~Implementation();
 
 		inline Uint32 handle() const;
 
-		Impl& operator =(const Impl& impl) = delete;
-		Impl& operator =(Impl&& impl) = delete;
+		Implementation& operator =(const Implementation& implementation) = delete;
+		Implementation& operator =(Implementation&& implementation) = delete;
 
 	private:
+
+		using CharacterBuffer = Core::Vector<Char8>;
 
 		Platform::OpenGL* _openGL;
 		Uint32 _shaderHandle;
@@ -57,7 +60,7 @@ namespace Graphics
 		Int32 getParameter(const Uint32 parameterName) const;
 		void outputCompilerFailureLog() const;
 		void outputCompilerSuccessLog() const;
-		Core::Vector<Char8> getInfoLog(const Uint32 logLength) const;
+		CharacterBuffer getInfoLog(const Uint32 logLength) const;
 	};
 
 #include "inline/OpenGLShader.inl"

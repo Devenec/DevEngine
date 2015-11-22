@@ -4,28 +4,23 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
 
 #include <core/Types.h>
-
-namespace Platform
-{
-	class GraphicsConfigChooser;
-}
 
 namespace Graphics
 {
@@ -38,11 +33,10 @@ namespace Graphics
 		GraphicsConfig(const Uint32 redDepth, const Uint32 greenDepth, const Uint32 blueDepth, const Uint32 alphaDepth,
 			const Uint32 depthBufferDepth, const Uint32 stencilBufferDepth);
 
-		GraphicsConfig(const GraphicsConfig& graphicsConfig);
+		GraphicsConfig(const GraphicsConfig& graphicsConfig) = default;
+		GraphicsConfig(GraphicsConfig&& graphicsConfig) = default;
 
-		GraphicsConfig(GraphicsConfig&& graphicsConfig);
-
-		~GraphicsConfig();
+		~GraphicsConfig() = default;
 
 		inline Uint32 alphaDepth() const;
 
@@ -56,16 +50,11 @@ namespace Graphics
 
 		inline Uint32 stencilBufferDepth() const;
 
-		GraphicsConfig& operator =(GraphicsConfig graphicsConfig);
+		GraphicsConfig& operator =(const GraphicsConfig& graphicsConfig) = default;
+		GraphicsConfig& operator =(GraphicsConfig&& graphicsConfig) = default;
 
 	private:
 
-		friend class GraphicsContext;
-		friend class Platform::GraphicsConfigChooser;
-
-		class Impl;
-
-		Impl* _impl;
 		Uint8 _alphaDepth;
 		Uint8 _blueDepth;
 		Uint8 _depthDepth;

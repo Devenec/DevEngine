@@ -4,23 +4,22 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <core/Error.h>
 #include <core/Log.h>
-#include <core/String.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>
@@ -32,8 +31,6 @@ using namespace Platform;
 // External
 
 static const Char8* COMPONENT_TAG = "[Platform::TemporaryGraphicsContext - WGL]";
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MAJOR = 3;
-static const Int32 MIN_SUPPORTED_OPENGL_VERSION_MINOR = 3;
 
 static void checkOpenGLVersion();
 static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();
@@ -122,7 +119,7 @@ static void checkOpenGLVersion()
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " The OpenGL version " << majorVersion << '.' <<
 			minorVersion << " is not supported. The minimum supported version is " <<
-			::MIN_SUPPORTED_OPENGL_VERSION_MAJOR << '.' << ::MIN_SUPPORTED_OPENGL_VERSION_MINOR << '.' << Log::Flush();
+			OpenGL::MIN_SUPPORTED_VERSION_MAJOR << '.' << OpenGL::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}
@@ -141,10 +138,10 @@ static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor()
 
 static Bool isOpenGLVersionSupported(const Uint32 majorVersion, const Uint32 minorVersion)
 {
-	if(majorVersion < ::MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
+	if(majorVersion < OpenGL::MIN_SUPPORTED_VERSION_MAJOR)
 		return false;
-	else if(majorVersion == ::MIN_SUPPORTED_OPENGL_VERSION_MAJOR)
-		return minorVersion >= ::MIN_SUPPORTED_OPENGL_VERSION_MINOR;
+	else if(majorVersion == OpenGL::MIN_SUPPORTED_VERSION_MAJOR)
+		return minorVersion >= OpenGL::MIN_SUPPORTED_VERSION_MINOR;
 	else
 		return true;
 }

@@ -4,18 +4,18 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <content/ContentManager.h>
@@ -32,14 +32,13 @@
 #include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/GraphicsDeviceManager.h>
+#include <graphics/GraphicsEnumerations.h>
 #include <graphics/Image.h>
 #include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
-#include <graphics/Viewport.h>
 #include <graphics/Window.h>
-#include <graphics/WindowManager.h>
 
 using namespace Content;
 using namespace Core;
@@ -48,12 +47,13 @@ using namespace Maths;
 
 static const Char8* VERTEX_SHADER_SOURCE
 (
-	"#version 450\n"
+	"#version 330\n"
 	"\n"
 	"layout(location = 0) in vec4 inPosition;\n"
 	"layout(location = 1) in vec3 inColour;\n"
 	"\n"
-	"layout(binding = 0) uniform Transforms\n"
+	//"layout(binding = 0) uniform Transforms\n"
+	"uniform Transforms\n"
 	"{\n"
 	"	mat4 projection;\n"
 	"	mat4 world;\n"
@@ -70,7 +70,7 @@ static const Char8* VERTEX_SHADER_SOURCE
 
 static const Char8* FRAGMENT_SHADER_SOURCE
 (
-	"#version 450\n"
+	"#version 330\n"
 	"\n"
 	"in vec3 colour;\n"
 	"out vec4 outColour;\n"
@@ -87,16 +87,15 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	ContentManager contentManager;
 	GraphicsAdapterManager graphicsAdapterManager;
-	WindowManager windowManager;
 	GraphicsDeviceManager graphicsDeviceManager;
 
-	Window* window = windowManager.createWindow();
+	GraphicsDevice* graphicsDevice = graphicsDeviceManager.createWindowAndDevice(1280u, 720u);
+	Window* window = graphicsDevice->window();
+	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	Image* image = contentManager.load<Image>("assets/icon.png");
 	window->setIcon(image);
-	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	window->show();
 
-	GraphicsDevice* graphicsDevice = graphicsDeviceManager.createDevice(window);
 	Shader* vertexShader = graphicsDevice->createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
 	Shader* fragmentShader = graphicsDevice->createShader(ShaderType::Fragment, FRAGMENT_SHADER_SOURCE);
 	Effect* effect = graphicsDevice->createEffect();
@@ -140,17 +139,17 @@ void devEngineMain(const StartupParameters& startupParameters)
 		sizeof(Float32) * VERTEX_DATA.size());
 
 	vertexBuffer->setData(reinterpret_cast<const Byte*>(VERTEX_DATA.data()), sizeof(Float32) * VERTEX_DATA.size());
-	// TODO: when creating index buffer, provide element count instead of byte
-	//   size and calculate the byte size in ctor?
 	IndexBuffer* indexBuffer = graphicsDevice->createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
 	indexBuffer->setData(reinterpret_cast<const Byte*>(INDEX_DATA.data()), sizeof(Uint8) * INDEX_DATA.size());
 	VertexBufferState* vertexBufferState = graphicsDevice->createVertexBufferState();
 
-	vertexBufferState->setVertexBuffer(vertexBuffer, {
+	VertexElementList vertexElements
+	{
 		VertexElement(0u, VertexElementType::Float32Vector3),
 		VertexElement(1u, VertexElementType::Uint32_R10G10B10A2)
-	}, 4u * sizeof(Float32));
+	};
 
+	vertexBufferState->setVertexBuffer(vertexBuffer, vertexElements, 4u * sizeof(Float32));
 	vertexBufferState->setIndexBuffer(indexBuffer);
 	graphicsDevice->setEffect(effect);
 	graphicsDevice->setVertexBufferState(vertexBufferState);
@@ -181,7 +180,7 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	while(!window->shouldClose())
 	{
-		windowManager.processMessages();
+		graphicsDeviceManager.processWindowMessages();
 		graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
 		rotation += 0.01f;
 		worldTransform = Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);

@@ -15,8 +15,6 @@ set(CMAKE_C_FLAGS_RELEASE "${COMMON_C_FLAGS} -g -O2")
 set(CMAKE_CXX_FLAGS_DEBUG "${COMMON_CXX_FLAGS} -g -O0 -DDE_BUILD_CONFIG_DEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_CXX_FLAGS} -g -O2 -DDE_BUILD_CONFIG_RELEASE")
 
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")
-
 # external
 add_subdirectory(external/libpng)
 add_subdirectory(external/zlib)

@@ -4,22 +4,23 @@
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
  *
- * This program is free software: you can redistribute it and/or modify
+ * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * DevEngine is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <utility>
 #include <core/Log.h>
-#include <core/Vector.h>
+#include <core/Types.h>
 #include <core/debug/Assert.h>
 #include <graphics/Image.h>
 #include <graphics/ImageFormat.h>
@@ -83,6 +84,12 @@ Icon::~Icon()
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
+}
+
+Icon& Icon::operator =(Icon&& icon)
+{
+	std::swap(_iconHandle, icon._iconHandle);
+	return *this;
 }
 
 // Private
@@ -243,7 +250,7 @@ static void setColourBitmapData(const Image* image, Byte* dataBuffer, const Bool
 {
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 componentCount = hasAlpha ? 4u : 3u;
-	const Vector<Byte>& imageData = image->data();
+	const ByteData& imageData = image->data();
 
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{
@@ -261,7 +268,7 @@ static void setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool h
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 sourceComponentCount = hasAlpha ? 2u : 1u;
 	const Uint32 destinationComponentCount = hasAlpha ? 4u : 3u;
-	const Vector<Byte>& imageData = image->data();
+	const ByteData& imageData = image->data();
 
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{

@@ -4,5 +4,11 @@ set(SOURCE_FILES
 	source/ContentManager.cpp
 )
 
-include_directories(include ../core/include ../platform/include)
+set(INCLUDE_DIRECTORIES
+	include
+	../core/include
+	../platform/include
+)
+
+include_directories(${INCLUDE_DIRECTORIES})
 add_library(content STATIC ${SOURCE_FILES})
