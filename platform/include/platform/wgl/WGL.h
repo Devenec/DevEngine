@@ -42,8 +42,8 @@
 
 #pragma once
 
+#include <core/Platform.h>
 #include <core/Types.h>
-#include <platform/PlatformInternal.h>
 #include <platform/windows/WindowsGraphics.h>
 
 #define DE_CALL_WGL DE_INTERNAL_CALL_STDCALL
