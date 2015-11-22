@@ -30,7 +30,7 @@ namespace Graphics
 
 		DisplayMode();
 
-		DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 frequency);
+		DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 refreshRate);
 
 		DisplayMode(const DisplayMode& displayMode) = default;
 
@@ -40,9 +40,9 @@ namespace Graphics
 
 		inline Uint32 colourDepth() const;
 
-		inline Uint32 frequency() const;
-
 		inline Uint32 height() const;
+
+		inline Uint32 refreshRate() const;
 
 		inline Uint32 width() const;
 
@@ -53,8 +53,8 @@ namespace Graphics
 	private:
 
 		Uint32 _colourDepth;
-		Uint32 _frequency;
 		Uint32 _height;
+		Uint32 _refreshRate;
 		Uint32 _width;
 	};
 

@@ -35,7 +35,7 @@ static const Char8* COMPONENT_TAG = "[Graphics::Window - Windows]";
 
 // Public
 
-Window::Impl::Impl(HWND windowHandle)
+Window::Implementation::Implementation(HWND windowHandle)
 	: _windowHandle(windowHandle),
 	  _isCursorVisible(true),
 	  _isFullscreen(false),
@@ -44,7 +44,7 @@ Window::Impl::Impl(HWND windowHandle)
 	_rectangle = getRectangle();
 }
 
-Core::Rectangle Window::Impl::rectangle() const
+Core::Rectangle Window::Implementation::rectangle() const
 {
 	if(_isFullscreen)
 		return getRectangle();
@@ -52,7 +52,7 @@ Core::Rectangle Window::Impl::rectangle() const
 		return _rectangle;
 }
 
-void Window::Impl::setFullscreen(const Bool isFullscreen)
+void Window::Implementation::setFullscreen(const Bool isFullscreen)
 {
 	if(isFullscreen != _isFullscreen)
 	{
@@ -67,7 +67,7 @@ void Window::Impl::setFullscreen(const Bool isFullscreen)
 	}
 }
 
-void Window::Impl::setIcon(const Image* image)
+void Window::Implementation::setIcon(const Image* image)
 {
 	if(image == nullptr)
 		_icon = Icon();
@@ -77,7 +77,7 @@ void Window::Impl::setIcon(const Image* image)
 	SendMessageW(_windowHandle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));
 }
 	
-void Window::Impl::setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle)
+void Window::Implementation::setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle)
 {
 	const Int32 result = SetWindowPos(_windowHandle, HWND_TOP, rectangle.x, rectangle.y, rectangle.width,
 		rectangle.height, SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
@@ -92,7 +92,7 @@ void Window::Impl::setRectangle(const Core::Rectangle& rectangle, const Bool isF
 		_rectangle = rectangle;
 }
 
-void Window::Impl::setTitle(const String8& title) const
+void Window::Implementation::setTitle(const String8& title) const
 {
 	const String16 title16 = toString16(title);
 	const Int32 result = SetWindowTextW(_windowHandle, title16.c_str());
@@ -104,7 +104,7 @@ void Window::Impl::setTitle(const String8& title) const
 	}
 }
 
-Bool Window::Impl::shouldHideCursor(const Bool isCursorInClientArea) const
+Bool Window::Implementation::shouldHideCursor(const Bool isCursorInClientArea) const
 {
 	if(!_isCursorVisible && isCursorInClientArea)
 	{
@@ -117,7 +117,7 @@ Bool Window::Impl::shouldHideCursor(const Bool isCursorInClientArea) const
 
 // Private
 
-Core::Rectangle Window::Impl::getRectangle() const
+Core::Rectangle Window::Implementation::getRectangle() const
 {
 	RECT rectangle;
 	const Int32 result = GetWindowRect(_windowHandle, &rectangle);
@@ -132,7 +132,7 @@ Core::Rectangle Window::Impl::getRectangle() const
 		rectangle.bottom - rectangle.top);
 }
 
-void Window::Impl::setFullscreenStyle(const Bool isFullscreen) const
+void Window::Implementation::setFullscreenStyle(const Bool isFullscreen) const
 {
 	const Int32 style = GetWindowLongPtrW(_windowHandle, GWL_STYLE);
 	Int32 newStyle = style;
@@ -151,7 +151,7 @@ void Window::Impl::setFullscreenStyle(const Bool isFullscreen) const
 	}
 }
 
-Core::Rectangle Window::Impl::getFullscreenRectangle() const
+Core::Rectangle Window::Implementation::getFullscreenRectangle() const
 {
 	const RECT monitorRectangle = getMonitorRectangle();
 
@@ -159,7 +159,7 @@ Core::Rectangle Window::Impl::getFullscreenRectangle() const
 		monitorRectangle.bottom - monitorRectangle.top);
 }
 
-RECT Window::Impl::getMonitorRectangle() const
+RECT Window::Implementation::getMonitorRectangle() const
 {
 	HMONITOR monitorHandle = MonitorFromWindow(_windowHandle, MONITOR_DEFAULTTONEAREST);
 	MONITORINFO monitorInfo;
@@ -184,61 +184,61 @@ RECT Window::Impl::getMonitorRectangle() const
 
 WindowHandle Window::handle() const
 {
-	return _impl->handle();
+	return _implementation->handle();
 }
 
 void Window::hide() const
 {
-	_impl->hide();
+	_implementation->hide();
 }
 
 Core::Rectangle Window::rectangle() const
 {
-	return _impl->rectangle();
+	return _implementation->rectangle();
 }
 
 void Window::setCursorVisibility(const Bool isCursorVisible) const
 {
-	_impl->setCursorVisibility(isCursorVisible);
+	_implementation->setCursorVisibility(isCursorVisible);
 }
 
 void Window::setFullscreen(const Bool isFullscreen) const
 {
-	_impl->setFullscreen(isFullscreen);
+	_implementation->setFullscreen(isFullscreen);
 }
 
 void Window::setIcon(const Image* image) const
 {
-	_impl->setIcon(image);
+	_implementation->setIcon(image);
 }
 
 void Window::setRectangle(const Core::Rectangle& rectangle) const
 {
-	if(!_impl->isFullscreen())
-		_impl->setRectangle(rectangle, false);
+	if(!_implementation->isFullscreen())
+		_implementation->setRectangle(rectangle, false);
 }
 
 void Window::setTitle(const String8& title) const
 {
-	_impl->setTitle(title);
+	_implementation->setTitle(title);
 }
 
 Bool Window::shouldClose() const
 {
-	return _impl->shouldClose();
+	return _implementation->shouldClose();
 }
 
 void Window::show() const
 {
-	_impl->show();
+	_implementation->show();
 }
 
 // Private
 
 Window::Window(WindowHandle windowHandle)
-	: _impl(DE_NEW(Impl)(static_cast<HWND>(windowHandle))) { }
+	: _implementation(DE_NEW(Implementation)(static_cast<HWND>(windowHandle))) { }
 
 Window::~Window()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }

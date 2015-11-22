@@ -77,9 +77,9 @@ namespace Core
 
 	private:
 
-		class Impl;
+		class Implementation;
 
-		Impl* _impl;
+		Implementation* _implementation;
 	};
 
 	inline OpenMode operator &(OpenMode openModeA, const OpenMode& openModeB);

@@ -18,7 +18,6 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/Error.h>
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <graphics/DisplayMode.h>
@@ -27,6 +26,7 @@
 #include <graphics/GraphicsConfig.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/GraphicsDeviceManager.h>
+#include <graphics/LogUtility.h>
 #include <graphics/Window.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsDeviceFactory.h>
@@ -44,7 +44,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG		  = "[Graphics::GraphicsManager - Windows]";
+static const Char8* COMPONENT_TAG		  = "[Graphics::GraphicsDeviceManager - Windows]";
 static const Char16* WINDOW_CLASS_NAME	  = DE_CHAR16("devengine");
 static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine Application");
 static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
@@ -61,20 +61,20 @@ static void registerWindowClass(const WNDCLASSEX& windowClassInfo);
 
 // Implementation
 
-class GraphicsDeviceManager::Impl final
+class GraphicsDeviceManager::Implementation final
 {
 public:
 
-	Impl()
+	Implementation()
 	{
 		initialiseWindowClass();
 		::initialiseWGL();
 	}
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Implementation(const Implementation& impl) = delete;
+	Implementation(Implementation&& impl) = delete;
 
-	~Impl()
+	~Implementation()
 	{
 		::deregisterWindowClass();
 	}
@@ -83,7 +83,7 @@ public:
 	{
 		HWND windowHandle = ::createWindow(width, height);
 		Window* window = DE_NEW(Window)(windowHandle);
-		setWindowUserDataPointer(windowHandle, window->_impl);
+		setWindowUserDataPointer(windowHandle, window->_implementation);
 
 		return window;
 	}
@@ -96,8 +96,8 @@ public:
 		DE_DELETE(window, Window);
 	}
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+	Implementation& operator =(const Implementation& impl) = delete;
+	Implementation& operator =(Implementation&& impl) = delete;
 
 private:
 
@@ -107,10 +107,12 @@ private:
 		::registerWindowClass(windowClassInfo);
 	}
 
-	void setWindowUserDataPointer(HWND windowHandle, Window::Impl* windowImpl)
+	void setWindowUserDataPointer(HWND windowHandle, Window::Implementation* windowImplementation)
 	{
 		SetLastError(0u);
-		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(windowImpl));
+
+		const Int32 result =
+			SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(windowImplementation));
 	
 		if(result == 0 && getWindowsErrorCode() != 0u)
 		{
@@ -137,7 +139,8 @@ private:
 	static LRESULT CALLBACK processMessage(HWND windowHandle, const Uint32 message, const WPARAM wParam,
 		const LPARAM lParam)
 	{
-		Window::Impl* windowImpl = reinterpret_cast<Window::Impl*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
+		Window::Implementation* windowImpl =
+			reinterpret_cast<Window::Implementation*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
 
 		switch(message)
 		{
@@ -163,24 +166,27 @@ private:
 // Public
 
 GraphicsDeviceManager::GraphicsDeviceManager()
-	: _impl(DE_NEW(Impl)()) { }
+	: _implementation(DE_NEW(Implementation)()) { }
 
 GraphicsDeviceManager::~GraphicsDeviceManager()
 {
 	for(GraphicsDeviceList::const_iterator i = _devices.begin(), end = _devices.end(); i != end; ++i)
-		_impl->destroyWindowAndDevice(*i);
+		_implementation->destroyWindowAndDevice(*i);
 
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }
 
 GraphicsDevice* GraphicsDeviceManager::createWindowAndDevice(const Uint32 windowWidth, const Uint32 windowHeight)
 {
-	Window* window = _impl->createWindowObject(windowWidth, windowHeight);
+	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
+	logWindowCreation();
 	GraphicsDeviceFactory graphicsDeviceFactory;
 	GraphicsConfig graphicsConfig;
 	GraphicsDevice* device = graphicsDeviceFactory.createDevice(window, graphicsConfig);
-	logGraphicsDeviceConfiguration(graphicsConfig); // TODO: rename
 	_devices.push_back(device);
+	logChosenGraphicsConfig(graphicsConfig);
+	logGraphicsDeviceCreation(device);
+	GraphicsDeviceFactory::logDeviceInterfaceExtensions(device);
 
 	return device;
 }
@@ -191,7 +197,7 @@ void GraphicsDeviceManager::destroyWindowAndDevice(GraphicsDevice* device)
 	GraphicsDeviceList::const_iterator iterator = std::find(_devices.begin(), _devices.end(), device);
 	DE_ASSERT(iterator != _devices.end());
 	_devices.erase(iterator);
-	_impl->destroyWindowAndDevice(device);
+	_implementation->destroyWindowAndDevice(device);
 }
 
 void GraphicsDeviceManager::processWindowMessages() const

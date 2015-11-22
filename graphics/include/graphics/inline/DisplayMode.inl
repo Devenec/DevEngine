@@ -25,14 +25,14 @@ Uint32 DisplayMode::colourDepth() const
 	return _colourDepth;
 }
 
-Uint32 DisplayMode::frequency() const
-{
-	return _frequency;
-}
-
 Uint32 DisplayMode::height() const
 {
 	return _height;
+}
+
+Uint32 DisplayMode::refreshRate() const
+{
+	return _refreshRate;
 }
 
 Uint32 DisplayMode::width() const
@@ -45,10 +45,10 @@ Uint32 DisplayMode::width() const
 
 Bool operator ==(const DisplayMode& displayModeA, const DisplayMode& displayModeB)
 {
-	return displayModeA.width() == displayModeB.width() &&
-		displayModeA.height() == displayModeB.height() &&
+	return displayModeA.refreshRate() == displayModeB.refreshRate() &&
 		displayModeA.colourDepth() == displayModeB.colourDepth() &&
-		displayModeA.frequency() == displayModeB.frequency();
+		displayModeA.height() == displayModeB.height() &&
+		displayModeA.width() == displayModeB.width();
 }
 
 Bool operator !=(const DisplayMode& displayModeA, const DisplayMode& displayModeB)

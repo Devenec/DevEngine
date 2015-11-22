@@ -20,8 +20,12 @@
 
 #pragma once
 
+#include <core/Types.h>
+
 namespace Graphics
 {
+	using GraphicsInterface = Void*;
+
 	class GraphicsResource
 	{
 	public:

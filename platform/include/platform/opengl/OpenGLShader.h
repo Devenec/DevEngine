@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <core/Types.h>
 #include <core/Vector.h>
 #include <graphics/Shader.h>
 
@@ -30,23 +31,25 @@ namespace Platform
 
 namespace Graphics
 {
-	class Shader::Impl final
+	class Shader::Implementation final
 	{
 	public:
 
-		Impl(Platform::OpenGL* openGL, const ShaderType& type, const Core::String8& source);
+		Implementation(Platform::OpenGL* openGL, const ShaderType& type, const Core::String8& source);
 
-		Impl(const Impl& impl) = delete;
-		Impl(Impl&& impl) = delete;
+		Implementation(const Implementation& impl) = delete;
+		Implementation(Implementation&& impl) = delete;
 
-		~Impl();
+		~Implementation();
 
 		inline Uint32 handle() const;
 
-		Impl& operator =(const Impl& impl) = delete;
-		Impl& operator =(Impl&& impl) = delete;
+		Implementation& operator =(const Implementation& impl) = delete;
+		Implementation& operator =(Implementation&& impl) = delete;
 
 	private:
+
+		using CharacterBuffer = Core::Vector<Char8>;
 
 		Platform::OpenGL* _openGL;
 		Uint32 _shaderHandle;
@@ -57,7 +60,7 @@ namespace Graphics
 		Int32 getParameter(const Uint32 parameterName) const;
 		void outputCompilerFailureLog() const;
 		void outputCompilerSuccessLog() const;
-		Core::Vector<Char8> getInfoLog(const Uint32 logLength) const;
+		CharacterBuffer getInfoLog(const Uint32 logLength) const;
 	};
 
 #include "inline/OpenGLShader.inl"

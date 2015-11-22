@@ -18,8 +18,9 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <utility>
 #include <core/Log.h>
-#include <core/Vector.h>
+#include <core/Types.h>
 #include <core/debug/Assert.h>
 #include <graphics/Image.h>
 #include <graphics/ImageFormat.h>
@@ -83,6 +84,12 @@ Icon::~Icon()
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
+}
+
+Icon& Icon::operator =(Icon&& icon)
+{
+	std::swap(_iconHandle, icon._iconHandle);
+	return *this;
 }
 
 // Private
@@ -243,7 +250,7 @@ static void setColourBitmapData(const Image* image, Byte* dataBuffer, const Bool
 {
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 componentCount = hasAlpha ? 4u : 3u;
-	const Vector<Byte>& imageData = image->data();
+	const ByteData& imageData = image->data();
 
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{
@@ -261,7 +268,7 @@ static void setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool h
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 sourceComponentCount = hasAlpha ? 2u : 1u;
 	const Uint32 destinationComponentCount = hasAlpha ? 4u : 3u;
-	const Vector<Byte>& imageData = image->data();
+	const ByteData& imageData = image->data();
 
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{

@@ -20,12 +20,14 @@
 
 #include <core/Error.h>
 #include <core/Log.h>
+#include <graphics/LogUtility.h>
 #include <platform/GraphicsExtensionHelper.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
+using namespace Graphics;
 using namespace Platform;
 
 // External
@@ -72,9 +74,9 @@ void WGL::initialise(const GraphicsContextBase& graphicsContext)
 {
 	::getExtensionFunctions();
 	::checkExtensions();
+	// TODO: check current context state?
 	const ExtensionNameList extensionNames = ::getExtensionNames(graphicsContext);
-	// TODO: check current context state? check via GraphicsContextBase?
-	GraphicsExtensionHelper::logExtensions("graphics context", extensionNames);
+	logGraphicsExtensions("graphics context", extensionNames);
 }
 
 

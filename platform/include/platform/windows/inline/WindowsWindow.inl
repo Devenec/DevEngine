@@ -20,37 +20,37 @@
 
 // Public
 
-void Window::Impl::close()
+void Window::Implementation::close()
 {
 	_isOpen = false;
 }
 
-HWND Window::Impl::handle() const
+HWND Window::Implementation::handle() const
 {
 	return _windowHandle;
 }
 
-void Window::Impl::hide() const
+void Window::Implementation::hide() const
 {
 	ShowWindow(_windowHandle, SW_HIDE);
 }
 
-Bool Window::Impl::isFullscreen() const
+Bool Window::Implementation::isFullscreen() const
 {
 	return _isFullscreen;
 }
 
-void Window::Impl::setCursorVisibility(const Bool isCursorVisible)
+void Window::Implementation::setCursorVisibility(const Bool isCursorVisible)
 {
 	_isCursorVisible = isCursorVisible;
 }
 
-Bool Window::Impl::shouldClose() const
+Bool Window::Implementation::shouldClose() const
 {
 	return !_isOpen;
 }
 
-void Window::Impl::show() const
+void Window::Implementation::show() const
 {
 	ShowWindow(_windowHandle, SW_SHOW);
 }

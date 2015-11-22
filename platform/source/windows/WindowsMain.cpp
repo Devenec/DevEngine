@@ -19,8 +19,8 @@
  */
 
 #include <core/Application.h>
-#include <core/Main.h>
 #include <core/Config.h>
+#include <core/Main.h>
 #include <core/Types.h>
 
 using namespace Core;

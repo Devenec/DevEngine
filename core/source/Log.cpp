@@ -36,10 +36,7 @@ static const Array<const Char8*, 4u> LOG_LEVEL_NAMES =
 static const Char8* LOG_LEVEL_SEPARATOR = " | ";
 
 
-// Core
-
 // Some functions are defined in platform/*/*Log.cpp
-
 
 // Public
 

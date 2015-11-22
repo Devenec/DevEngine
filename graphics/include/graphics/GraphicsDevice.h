@@ -24,7 +24,6 @@
 #include <core/String.h>
 #include <core/Types.h>
 #include <graphics/AccessMode.h>
-#include <graphics/GraphicsEnumerations.h>
 
 namespace Platform
 {
@@ -33,6 +32,9 @@ namespace Platform
 
 namespace Graphics
 {
+	enum class BufferBinding;
+	enum class IndexType;
+	enum class PrimitiveType;
 	enum class ShaderType;
 
 	class Colour;
@@ -93,15 +95,15 @@ namespace Graphics
 		friend class GraphicsDeviceManager;
 		friend class Platform::GraphicsDeviceFactory;
 
-		class Impl;
+		class Implementation;
 
 		using GraphicsResourceList = Core::List<GraphicsResource*>;
 
 		GraphicsResourceList _resources;
-		Impl* _impl;
+		Implementation* _implementation;
 		Window* _window;
 
-		GraphicsDevice(Impl* impl, Window* window);
+		GraphicsDevice(Implementation* impl, Window* window);
 		~GraphicsDevice();
 
 		void destroyResources() const;

@@ -25,7 +25,7 @@ using namespace Graphics;
 
 // Public
 
-Image::Image(const Uint32 width, const Uint32 height, const ImageFormat& format, const Vector<Byte>& data)
+Image::Image(const Uint32 width, const Uint32 height, const ImageFormat& format, const ByteData& data)
 	: _data(data),
 	  _format(format),
 	  _height(height),

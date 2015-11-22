@@ -76,6 +76,7 @@
     <ClInclude Include="include\graphics\ImageFormat.h" />
     <ClInclude Include="include\graphics\ImageLoader.h" />
     <ClInclude Include="include\graphics\IndexBuffer.h" />
+    <ClInclude Include="include\graphics\LogUtility.h" />
     <ClInclude Include="include\graphics\PNGReader.h" />
     <ClInclude Include="include\graphics\Shader.h" />
     <ClInclude Include="include\graphics\VertexBufferState.h" />
@@ -96,13 +97,12 @@
   <ItemGroup>
     <ClCompile Include="source\Colour.cpp" />
     <ClCompile Include="source\DisplayMode.cpp" />
-    <ClCompile Include="source\GraphicsAdapterManager.cpp" />
     <ClCompile Include="source\GraphicsConfig.cpp" />
-    <ClCompile Include="source\GraphicsDeviceManager.cpp" />
     <ClCompile Include="source\GraphicsDevice.cpp" />
     <ClCompile Include="source\Image.cpp" />
     <ClCompile Include="source\ImageLoader.cpp" />
     <ClCompile Include="source\IndexBuffer.cpp" />
+    <ClCompile Include="source\LogUtility.cpp" />
     <ClCompile Include="source\PNGReader.cpp" />
     <ClCompile Include="source\Viewport.cpp" />
   </ItemGroup>

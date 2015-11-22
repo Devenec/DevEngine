@@ -29,20 +29,23 @@ namespace Platform
 
 namespace Graphics
 {
-	class GraphicsBuffer::Impl final
+	class GraphicsBuffer::Implementation final
 	{
 	public:
 
-		Impl(Platform::OpenGL* openGL, const Uint32 binding, const Uint32 size, const AccessMode& accessMode);
+		Implementation(Platform::OpenGL* openGL, const Uint32 binding, const Uint32 size,
+			const AccessMode& accessMode);
 
-		Impl(const Impl& impl) = delete;
-		Impl(Impl&& impl) = delete;
+		Implementation(const Implementation& impl) = delete;
+		Implementation(Implementation&& impl) = delete;
 
-		~Impl();
+		~Implementation();
 
 		inline void bind() const;
 
 		void bindIndexed(const Uint32 bindingIndex) const;
+
+		inline Uint32 binding() const;
 
 		inline void debind() const;
 
@@ -58,8 +61,8 @@ namespace Graphics
 
 		void setData(const Byte* data, const Uint32 size, const Uint32 offset) const;
 
-		Impl& operator =(const Impl& impl) = delete;
-		Impl& operator =(Impl&& impl) = delete;
+		Implementation& operator =(const Implementation& impl) = delete;
+		Implementation& operator =(Implementation&& impl) = delete;
 
 	private:
 

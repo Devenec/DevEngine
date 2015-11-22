@@ -41,7 +41,7 @@ HDC Platform::getWindowDeviceContextHandle(HWND windowHandle)
 
 	if(deviceContextHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << "[Platform::getWindowDeviceContextHandle - Windows]"
+		defaultLog << LogLevel::Error << "[Platform::getWindowDeviceContextHandle() - Windows]"
 			" Failed to get the device context handle of a window." << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);

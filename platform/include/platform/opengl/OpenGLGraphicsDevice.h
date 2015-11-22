@@ -31,20 +31,20 @@ namespace Platform
 
 namespace Graphics
 {
-	class GraphicsDevice::Impl final
+	class GraphicsDevice::Implementation final
 	{
 	public:
 
-		Impl(Platform::GraphicsContext* graphicsContext);
+		Implementation(Platform::GraphicsContext* graphicsContext);
 
-		Impl(const Impl& impl) = delete;
-		Impl(Impl&& impl) = delete;
+		Implementation(const Implementation& impl) = delete;
+		Implementation(Implementation&& impl) = delete;
 
-		~Impl();
+		~Implementation();
 
 		void clear(const Colour& colour) const;
 		
-		GraphicsBuffer* createBuffer(const Uint32 binding, const Uint32 size, const AccessMode& accessMode) const;
+		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size, const AccessMode& accessMode) const;
 
 		Effect* createEffect() const;
 
@@ -59,6 +59,8 @@ namespace Graphics
 
 		void drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset) const;
 
+		void logExtensions() const;
+
 		inline void setEffect(Effect* effect);
 
 		inline void setVertexBufferState(VertexBufferState* vertexBufferState);
@@ -69,8 +71,8 @@ namespace Graphics
 
 		inline const Viewport& viewport() const;
 
-		Impl& operator =(const Impl& impl) = delete;
-		Impl& operator =(Impl&& impl) = delete;
+		Implementation& operator =(const Implementation& impl) = delete;
+		Implementation& operator =(Implementation&& impl) = delete;
 
 	private:
 

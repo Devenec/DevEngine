@@ -188,6 +188,7 @@ namespace Platform
 		static GetSwapIntervalEXT getSwapIntervalEXT;
 		static SwapIntervalEXT swapIntervalEXT;
 
+
 		WGL() = delete;
 
 		WGL(const WGL& wgl) = delete;

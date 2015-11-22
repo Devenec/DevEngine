@@ -32,6 +32,7 @@
 #include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/GraphicsDeviceManager.h>
+#include <graphics/GraphicsEnumerations.h>
 #include <graphics/Image.h>
 #include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
@@ -53,7 +54,6 @@ static const Char8* VERTEX_SHADER_SOURCE
 	"layout(location = 1) in vec3 inColour;\n"
 	"\n"
 	//"layout(binding = 0) uniform Transforms\n"
-	// TODO: declare uniform bindings from C++
 	"uniform Transforms\n"
 	"{\n"
 	"	mat4 projection;\n"
@@ -140,17 +140,17 @@ void devEngineMain(const StartupParameters& startupParameters)
 		sizeof(Float32) * VERTEX_DATA.size());
 
 	vertexBuffer->setData(reinterpret_cast<const Byte*>(VERTEX_DATA.data()), sizeof(Float32) * VERTEX_DATA.size());
-	// TODO: when creating index buffer, provide element count instead of byte
-	//   size and calculate the byte size in ctor?
 	IndexBuffer* indexBuffer = graphicsDevice->createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
 	indexBuffer->setData(reinterpret_cast<const Byte*>(INDEX_DATA.data()), sizeof(Uint8) * INDEX_DATA.size());
 	VertexBufferState* vertexBufferState = graphicsDevice->createVertexBufferState();
 
-	vertexBufferState->setVertexBuffer(vertexBuffer, {
+	VertexElementList vertexElements
+	{
 		VertexElement(0u, VertexElementType::Float32Vector3),
 		VertexElement(1u, VertexElementType::Uint32_R10G10B10A2)
-	}, 4u * sizeof(Float32));
+	};
 
+	vertexBufferState->setVertexBuffer(vertexBuffer, vertexElements, 4u * sizeof(Float32));
 	vertexBufferState->setIndexBuffer(indexBuffer);
 	graphicsDevice->setEffect(effect);
 	graphicsDevice->setVertexBufferState(vertexBufferState);

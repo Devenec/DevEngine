@@ -27,16 +27,16 @@
 
 namespace Graphics
 {
-	class Window::Impl final
+	class Window::Implementation final
 	{
 	public:
 
-		explicit Impl(HWND windowHandle);
+		explicit Implementation(HWND windowHandle);
 
-		Impl(const Impl& impl) = delete;
-		Impl(Impl&& impl) = delete;
+		Implementation(const Implementation& impl) = delete;
+		Implementation(Implementation&& impl) = delete;
 
-		~Impl() = default;
+		~Implementation() = default;
 
 		inline void close();
 
@@ -64,8 +64,8 @@ namespace Graphics
 
 		inline void show() const;
 
-		Impl& operator =(const Impl& impl) = delete;
-		Impl& operator =(Impl&& impl) = delete;
+		Implementation& operator =(const Implementation& impl) = delete;
+		Implementation& operator =(Implementation&& impl) = delete;
 
 	private:
 

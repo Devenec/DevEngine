@@ -21,7 +21,6 @@
 #include <core/FileStream.h>
 #include <core/Memory.h>
 #include <core/Types.h>
-#include <core/Vector.h>
 #include <graphics/Image.h>
 #include <graphics/ImageLoader.h>
 #include <graphics/PNGReader.h>
@@ -35,12 +34,9 @@ using namespace Graphics;
 Image* ImageLoader::load(FileStream& fileStream)
 {
 	PNGReader pngReader;
-	const Vector<Byte> imageData = pngReader.readImage(fileStream);
-	const Uint32 imageWidth = pngReader.imageWidth();
-	const Uint32 imageHeight = pngReader.imageHeight();
-	const ImageFormat imageFormat = pngReader.imageFormat();
+	const ByteData imageData = pngReader.readImage(fileStream);
 
-	return DE_NEW(Image)(imageWidth, imageHeight, imageFormat, imageData);
+	return DE_NEW(Image)(pngReader.imageWidth(), pngReader.imageHeight(), pngReader.imageFormat(), imageData);
 }
 
 

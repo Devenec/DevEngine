@@ -54,8 +54,8 @@ namespace Debug
 
 	private:
 
-		class Impl;
+		class Implementation;
 
-		Impl* _impl;
+		Implementation* _implementation;
 	};
 }

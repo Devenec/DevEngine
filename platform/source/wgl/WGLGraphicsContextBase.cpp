@@ -19,6 +19,7 @@
  */
 
 #include <core/Log.h>
+#include <core/debug/Assert.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/windows/Windows.h>

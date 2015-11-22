@@ -20,7 +20,6 @@
 
 #include <core/Error.h>
 #include <core/Log.h>
-#include <core/String.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>

@@ -20,14 +20,11 @@
 
 #pragma once
 
-#include <core/Types.h>
 #include <graphics/GraphicsResource.h>
 
 namespace Graphics
 {
 	class Shader;
-
-	using GraphicsInterface = Void*;
 
 	class Effect final : public GraphicsResource
 	{
@@ -51,9 +48,9 @@ namespace Graphics
 
 		friend class GraphicsDevice;
 
-		class Impl;
+		class Implementation;
 
-		Impl* _impl;
+		Implementation* _implementation;
 
 		Effect(GraphicsInterface graphicsInterface);
 		~Effect();

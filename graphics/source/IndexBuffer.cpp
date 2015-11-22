@@ -27,5 +27,5 @@ using namespace Graphics;
 
 IndexBuffer::IndexBuffer(GraphicsInterface graphicsInterface, const Uint32 size, const IndexType& indexType,
 	const AccessMode& accessMode)
-	: GraphicsBuffer(graphicsInterface, static_cast<Uint32>(BufferBinding::Index), size, accessMode),
+	: GraphicsBuffer(graphicsInterface, BufferBinding::Index, size, accessMode),
 	  _indexType(indexType) { }

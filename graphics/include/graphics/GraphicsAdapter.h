@@ -52,9 +52,9 @@ namespace Graphics
 
 		friend class GraphicsAdapterManager;
 
-		class Impl;
+		class Implementation;
 		
-		Impl* _impl;
+		Implementation* _implementation;
 
 		GraphicsAdapter(const Core::String8& name, const DisplayModeList& supportedDisplayModes,
 			const Uint32 currentDisplayModeIndex);

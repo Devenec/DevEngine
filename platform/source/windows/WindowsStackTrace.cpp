@@ -39,11 +39,11 @@ static const Char8* COMPONENT_TAG = "[Debug::StackTrace - Windows]";
 
 // Implementation
 
-class StackTrace::Impl final
+class StackTrace::Implementation final
 {
 public:
 
-	explicit Impl(const Uint32 maxEntryCount)
+	explicit Implementation(const Uint32 maxEntryCount)
 		: _symbolAddresses(maxEntryCount),
 		  _processHandle(GetCurrentProcess()),
 		  _symbolInfo(reinterpret_cast<SYMBOL_INFOW*>(_symbolInfoMemory.data())),
@@ -62,10 +62,10 @@ public:
 		_symbolInfo->SizeOfStruct = sizeof(SYMBOL_INFOW);
 	}
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Implementation(const Implementation& impl) = delete;
+	Implementation(Implementation&& impl) = delete;
 
-	~Impl() = default;
+	~Implementation() = default;
 
 	StackEntryList generate(const Uint32 stackFrameOffset)
 	{
@@ -84,8 +84,8 @@ public:
 		return entries;
 	}
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+	Implementation& operator =(const Implementation& impl) = delete;
+	Implementation& operator =(Implementation&& impl) = delete;
 
 private:
 
@@ -147,14 +147,14 @@ private:
 // Public
 
 StackTrace::StackTrace(const Uint32 maxEntryCount)
-	: _impl(DE_NEW(Impl)(maxEntryCount)) { }
+	: _implementation(DE_NEW(Implementation)(maxEntryCount)) { }
 
 StackTrace::~StackTrace()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }
 
 StackEntryList StackTrace::generate(const Uint32 stackFrameOffset) const
 {
-	return _impl->generate(stackFrameOffset);
+	return _implementation->generate(stackFrameOffset);
 }

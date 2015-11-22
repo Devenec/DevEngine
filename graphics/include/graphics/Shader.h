@@ -21,7 +21,6 @@
 #pragma once
 
 #include <core/String.h>
-#include <core/Types.h>
 #include <graphics/GraphicsResource.h>
 
 namespace Graphics
@@ -35,8 +34,6 @@ namespace Graphics
 		TessellationEvaluation,
 		Vertex
 	};
-
-	using GraphicsInterface = Void*;
 
 	class Shader final : public GraphicsResource
 	{
@@ -53,9 +50,9 @@ namespace Graphics
 		friend class Effect;
 		friend class GraphicsDevice;
 
-		class Impl;
+		class Implementation;
 
-		Impl* _impl;
+		Implementation* _implementation;
 
 		Shader(GraphicsInterface graphicsInterface, const ShaderType& type, const Core::String8& source);
 		~Shader();

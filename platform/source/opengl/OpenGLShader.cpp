@@ -32,7 +32,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::Shader - OpenGL]";
+static const Char8* COMPONENT_TAG = "[Graphics::Shader - OpenGL]";
 
 static const Array<const Char8*, 6u> SHADER_TYPE_NAMES
 {{
@@ -51,7 +51,7 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType);
 
 // Public
 
-Shader::Impl::Impl(OpenGL* openGL, const ShaderType& type, const Core::String8& source)
+Shader::Implementation::Implementation(OpenGL* openGL, const ShaderType& type, const Core::String8& source)
 	: _openGL(openGL),
 	  _shaderHandle(0u)
 {
@@ -60,7 +60,7 @@ Shader::Impl::Impl(OpenGL* openGL, const ShaderType& type, const Core::String8& 
 	checkCompilationStatus();
 }	
 
-Shader::Impl::~Impl()
+Shader::Implementation::~Implementation()
 {
 	_openGL->deleteShader(_shaderHandle);
 	DE_CHECK_ERROR_OPENGL(_openGL);
@@ -68,7 +68,7 @@ Shader::Impl::~Impl()
 
 // Private
 
-void Shader::Impl::createShader(const ShaderType& type)
+void Shader::Implementation::createShader(const ShaderType& type)
 {
 	_shaderHandle = _openGL->createShader(::getShaderTypeId(type));
 	DE_CHECK_ERROR_OPENGL(_openGL);
@@ -82,7 +82,7 @@ void Shader::Impl::createShader(const ShaderType& type)
 	}
 }
 
-void Shader::Impl::compileShader(const String8& source) const
+void Shader::Implementation::compileShader(const String8& source) const
 {
 	const Char8* sourceCharacters = source.c_str();
 	_openGL->shaderSource(_shaderHandle, 1, &sourceCharacters, nullptr);
@@ -91,7 +91,7 @@ void Shader::Impl::compileShader(const String8& source) const
 	DE_CHECK_ERROR_OPENGL(_openGL);
 }
 
-void Shader::Impl::checkCompilationStatus() const
+void Shader::Implementation::checkCompilationStatus() const
 {
 	const Int32 compilationStatus = getParameter(OpenGL::COMPILE_STATUS);
 
@@ -106,7 +106,7 @@ void Shader::Impl::checkCompilationStatus() const
 	}
 }
 
-Int32 Shader::Impl::getParameter(const Uint32 parameterName) const
+Int32 Shader::Implementation::getParameter(const Uint32 parameterName) const
 {
 	Int32 parameter;
 	_openGL->getShaderiv(_shaderHandle, parameterName, &parameter);
@@ -115,7 +115,7 @@ Int32 Shader::Impl::getParameter(const Uint32 parameterName) const
 	return parameter;
 }
 
-void Shader::Impl::outputCompilerFailureLog() const
+void Shader::Implementation::outputCompilerFailureLog() const
 {
 	defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to compile the shader:";
 	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
@@ -128,7 +128,7 @@ void Shader::Impl::outputCompilerFailureLog() const
 	defaultLog << Log::Flush();
 }
 
-void Shader::Impl::outputCompilerSuccessLog() const
+void Shader::Implementation::outputCompilerSuccessLog() const
 {
 	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
@@ -139,9 +139,9 @@ void Shader::Impl::outputCompilerSuccessLog() const
 	}
 }
 
-Vector<Char8> Shader::Impl::getInfoLog(const Uint32 logLength) const
+Shader::Implementation::CharacterBuffer Shader::Implementation::getInfoLog(const Uint32 logLength) const
 {
-	Vector<Char8> logBuffer(logLength);
+	CharacterBuffer logBuffer(logLength);
 	_openGL->getShaderInfoLog(_shaderHandle, logBuffer.size(), nullptr, logBuffer.data());
 	DE_CHECK_ERROR_OPENGL(_openGL);
 
@@ -154,11 +154,11 @@ Vector<Char8> Shader::Impl::getInfoLog(const Uint32 logLength) const
 // Private
 
 Shader::Shader(GraphicsInterface graphicsInterface, const ShaderType& type, const String8& source)
-	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface), type, source)) { }
+	: _implementation(DE_NEW(Implementation)(static_cast<OpenGL*>(graphicsInterface), type, source)) { }
 
 Shader::~Shader()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }
 
 
@@ -169,7 +169,7 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType)
 	switch(shaderType)
 	{
 		case ShaderType::Compute:
-			return OpenGL::COMPUTE_SHADER; // TODO: OpenGL 4.3
+			return OpenGL::COMPUTE_SHADER;
 
 		case ShaderType::Fragment:
 			return OpenGL::FRAGMENT_SHADER;
@@ -178,7 +178,7 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType)
 			return OpenGL::GEOMETRY_SHADER;
 
 		case ShaderType::TessellationControl:
-			return OpenGL::TESS_CONTROL_SHADER; // TODO: OpenGL 4.0
+			return OpenGL::TESS_CONTROL_SHADER;
 
 		case ShaderType::TessellationEvaluation:
 			return OpenGL::TESS_EVALUATION_SHADER;

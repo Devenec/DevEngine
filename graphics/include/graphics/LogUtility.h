@@ -1,5 +1,5 @@
 /**
- * @file graphics/inline/Image.inl
+ * @file graphics/LogUtility.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,24 +18,27 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Public
+#pragma once
 
-const ByteData& Image::data() const
-{
-	return _data;
-}
+#include <core/String.h>
+#include <core/Types.h>
+#include <core/Vector.h>
+#include <graphics/GraphicsAdapterManager.h>
 
-const ImageFormat Image::format() const
+namespace Graphics
 {
-	return _format;
-}
+	class GraphicsConfig;
+	class GraphicsDevice;
 
-const Uint32 Image::height() const
-{
-	return _height;
-}
+	using ExtensionNameList = Core::Vector<Core::String8>;
 
-const Uint32 Image::width() const
-{
-	return _width;
+	void logChosenGraphicsConfig(const GraphicsConfig& config);
+
+	void logGraphicsAdapters(const GraphicsAdapterList& adapters);
+
+	void logGraphicsDeviceCreation(GraphicsDevice* device);
+
+	void logGraphicsExtensions(const Char8* description, const ExtensionNameList& extensionNames);
+
+	void logWindowCreation();
 }

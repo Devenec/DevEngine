@@ -21,13 +21,13 @@
 #include <cstdlib>
 #include <core/Array.h>
 #include <core/Log.h>
-#include <core/String.h>
-#include <core/Vector.h>
 #include <core/debug/Assert.h>
+#include <graphics/LogUtility.h>
 #include <platform/GraphicsExtensionHelper.h>
 #include <platform/opengl/OpenGL.h>
 
 using namespace Core;
+using namespace Graphics;
 using namespace Platform;
 
 // External
@@ -169,7 +169,6 @@ static Uint32 minorVersion = 1u;
 
 static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
 static const Char8* getDebugMessageTypeName(const Uint32 messageType);
-static ExtensionNameList getExtensionNames(OpenGL& openGL);
 static void getStandardFunctions(OpenGL& openGL);
 static void initialiseDebugMessaging(OpenGL& openGL);
 static void initialiseMajorVersion(const String8& versionString);
@@ -254,21 +253,24 @@ OpenGL::OpenGL()
 	  texSubImage1D(glTexSubImage1D),
 	  texSubImage2D(glTexSubImage2D)
 {
-	// TODO: check current context state? check via GraphicsContextBase?
+	// TODO: check current context state?
 	::getStandardFunctions(*this);
-	const ExtensionNameList extensionNames = ::getExtensionNames(*this);
-	GraphicsExtensionHelper::logExtensions("graphics interface", extensionNames);
 
 	if(debugMessageCallback != nullptr)
 		::initialiseDebugMessaging(*this);
 }
 
-void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* function)
+void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const
 {
 	Uint32 errorCode;
 
 	while((errorCode = getError()) != NO_ERROR)
 		::reportError(errorCode, file, line, function);
+}
+
+void OpenGL::logExtensions() const
+{
+	logGraphicsExtensions("graphics interface", getExtensionNames());
 }
 
 // Static
@@ -280,6 +282,25 @@ void OpenGL::initialiseVersion(Uint32& major, Uint32& minor)
 	::initialiseMinorVersion(versionString);
 	major = ::majorVersion;
 	minor = ::minorVersion;
+}
+
+// Private
+
+ExtensionNameList OpenGL::getExtensionNames() const
+{
+	Int32 extensionCount = 0u;
+	getIntegerv(OpenGL::NUM_EXTENSIONS, &extensionCount);
+	DE_CHECK_ERROR_OPENGL(this);
+	ExtensionNameList extensionNames;
+
+	for(Int32 i = 0; i < extensionCount; ++i)
+	{
+		const Char8* extensionName = reinterpret_cast<const Char8*>(getStringi(OpenGL::EXTENSIONS, i));
+		DE_CHECK_ERROR_OPENGL(this);
+		extensionNames.push_back(extensionName);
+	}
+
+	return extensionNames;
 }
 
 
@@ -340,25 +361,6 @@ static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 			DE_ASSERT(false);
 			return ::DEBUG_MESSAGE_TYPE_NAMES[0];
 	}
-}
-
-static ExtensionNameList getExtensionNames(OpenGL& openGL)
-{
-	Int32 extensionCount = 0u;
-	// TODO: wrap
-	openGL.getIntegerv(OpenGL::NUM_EXTENSIONS, &extensionCount);
-	DE_CHECK_ERROR_OPENGL(&openGL);
-	//
-	ExtensionNameList extensionNames;
-
-	for(Int32 i = 0; i < extensionCount; ++i)
-	{
-		const Char8* extensionName = reinterpret_cast<const Char8*>(openGL.getStringi(OpenGL::EXTENSIONS, i));
-		DE_CHECK_ERROR_OPENGL(&openGL);
-		extensionNames.push_back(extensionName);
-	}
-
-	return extensionNames;
 }
 
 static void getStandardFunctions(OpenGL& openGL)
@@ -1822,7 +1824,6 @@ static void initialiseMinorVersion(const String8& versionString)
 	::minorVersion = std::strtol(minorVersionString.c_str(), nullptr, 10);
 }
 
-// TODO: identify the OpenGL object/context in which the error occurs?
 static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
 	const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
 	const Void* userData)
@@ -1837,7 +1838,6 @@ static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const
 		StreamFormat::Decimal << ") from " << messageSourceName << ": '" << message << '\'' << Log::Flush();
 }
 
-// TODO: identify the OpenGL object/context in which the error occurs?
 static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
 {
 	defaultLog << LogLevel::Warning << "OpenGL error occurred, " << ::ERROR_NAMES[OpenGL::INVALID_ENUM - errorCode] <<

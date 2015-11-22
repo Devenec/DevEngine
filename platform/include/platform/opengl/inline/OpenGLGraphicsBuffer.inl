@@ -20,22 +20,27 @@
 
 // Public
 
-void GraphicsBuffer::Impl::bind() const
+void GraphicsBuffer::Implementation::bind() const
 {
 	bind(_bufferHandle);
 }
 
-void GraphicsBuffer::Impl::debind() const
+Uint32 GraphicsBuffer::Implementation::binding() const
+{
+	return _binding;
+}
+
+void GraphicsBuffer::Implementation::debind() const
 {
 	bind(0u);
 }
 
-Uint32 GraphicsBuffer::Impl::handle() const
+Uint32 GraphicsBuffer::Implementation::handle() const
 {
 	return _bufferHandle;
 }
 
-Byte* GraphicsBuffer::Impl::mapData() const
+Byte* GraphicsBuffer::Implementation::mapData() const
 {
 	return mapData(_size, 0u);
 }

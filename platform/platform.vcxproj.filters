@@ -114,9 +114,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\GraphicsExtensionHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\opengl\OpenGL.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>

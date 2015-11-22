@@ -20,8 +20,8 @@
 
 #pragma once
 
-#include <core/InitialiserList.h>
 #include <core/Types.h>
+#include <core/Vector.h>
 #include <graphics/GraphicsResource.h>
 
 namespace Graphics
@@ -31,7 +31,7 @@ namespace Graphics
 	class GraphicsBuffer;
 	class IndexBuffer;
 
-	using GraphicsInterface = Void*;
+	using VertexElementList = Core::Vector<VertexElement>;
 
 	class VertexBufferState final : public GraphicsResource
 	{
@@ -48,8 +48,7 @@ namespace Graphics
 
 		void setIndexBuffer(IndexBuffer* buffer) const;
 
-		// TODO: change InitialiserList to Vector?
-		void setVertexBuffer(const GraphicsBuffer* buffer, const Core::InitialiserList<VertexElement>& vertexElements,
+		void setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements,
 			const Uint32 stride, const Uint32 offset = 0u) const;
 
 		VertexBufferState& operator =(const VertexBufferState& vertexBufferState) = delete;
@@ -59,9 +58,9 @@ namespace Graphics
 
 		friend class GraphicsDevice;
 
-		class Impl;
+		class Implementation;
 
-		Impl* _impl;
+		Implementation* _implementation;
 
 		VertexBufferState(GraphicsInterface graphicsInterface);
 		~VertexBufferState();

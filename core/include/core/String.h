@@ -27,7 +27,7 @@
 namespace Core
 {
 	/**
-	 * Character array template 
+	 * Character array template
 	 */
 	template<typename T, typename Allocator = Memory::STDAllocator<T>>
 	using StringTemplate = std::basic_string<T, std::char_traits<T>, Allocator>;

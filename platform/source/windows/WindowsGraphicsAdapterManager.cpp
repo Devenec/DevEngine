@@ -25,6 +25,7 @@
 #include <graphics/DisplayMode.h>
 #include <graphics/GraphicsAdapter.h>
 #include <graphics/GraphicsAdapterManager.h>
+#include <graphics/LogUtility.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
@@ -43,11 +44,11 @@ static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMO
 
 // Implementation
 
-class GraphicsAdapterManager::Impl final
+class GraphicsAdapterManager::Implementation final
 {
 public:
 
-	Impl()
+	Implementation()
 	{
 		Bool areAdaptersAvailable = true;
 		DISPLAY_DEVICEW adapterInfo = ::createAdapterInfo();
@@ -56,10 +57,10 @@ public:
 			areAdaptersAvailable = initialiseAdapter(i, adapterInfo);
 	}
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Implementation(const Implementation& impl) = delete;
+	Implementation(Implementation&& impl) = delete;
 
-	~Impl()
+	~Implementation()
 	{
 		for(GraphicsAdapterList::const_iterator i = _graphicsAdapters.begin(), end = _graphicsAdapters.end(); i != end;
 			++i)
@@ -73,8 +74,8 @@ public:
 		return _graphicsAdapters;
 	}
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+	Implementation& operator =(const Implementation& impl) = delete;
+	Implementation& operator =(Implementation&& impl) = delete;
 
 private:
 
@@ -108,19 +109,19 @@ private:
 // Public
 
 GraphicsAdapterManager::GraphicsAdapterManager()
-	: _impl(DE_NEW(Impl)())
+	: _implementation(DE_NEW(Implementation)())
 {
-	logAdapters();
+	logGraphicsAdapters(_implementation->graphicsAdapters());
 }
 
 GraphicsAdapterManager::~GraphicsAdapterManager()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }
 
 const GraphicsAdapterList& GraphicsAdapterManager::graphicsAdapters() const
 {
-	return _impl->graphicsAdapters();
+	return _implementation->graphicsAdapters();
 }
 
 

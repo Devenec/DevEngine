@@ -21,7 +21,6 @@
 #pragma once
 
 #include <core/Types.h>
-#include <core/debug/Assert.h>
 #include <platform/windows/WindowsGraphics.h>
 
 namespace Platform

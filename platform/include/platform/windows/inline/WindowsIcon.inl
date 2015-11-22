@@ -20,15 +20,7 @@
 
 // Public
 
-const HICON Icon::handle() const
+HICON Icon::handle() const
 {
 	return _iconHandle;
-}
-
-// Operators
-
-Icon& Icon::operator =(Icon&& icon)
-{
-	std::swap(_iconHandle, icon._iconHandle);
-	return *this;
 }

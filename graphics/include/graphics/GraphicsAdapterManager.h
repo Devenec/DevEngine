@@ -47,10 +47,8 @@ namespace Graphics
 
 	private:
 
-		class Impl;
+		class Implementation;
 
-		Impl* _impl;
-
-		void logAdapters() const;
+		Implementation* _implementation;
 	};
 }

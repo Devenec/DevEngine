@@ -22,6 +22,7 @@
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <graphics/GraphicsConfig.h>
+#include <graphics/GraphicsDevice.h>
 #include <graphics/Window.h>
 #include <platform/opengl/OpenGLGraphicsDevice.h>
 #include <platform/wgl/WGL.h>
@@ -66,9 +67,16 @@ GraphicsDevice* GraphicsDeviceFactory::createDevice(Window* window, GraphicsConf
 	_deviceContextHandle = getWindowDeviceContextHandle(windowHandle);
 	const Int32 pixelFormatIndex = chooseGraphicsConfig(chosenGraphicsConfig);
 	GraphicsContext* graphicsContext = DE_NEW(GraphicsContext)(windowHandle, pixelFormatIndex);
-	GraphicsDevice::Impl* deviceImplementation = DE_NEW(GraphicsDevice::Impl)(graphicsContext);
+	GraphicsDevice::Implementation* deviceImplementation = DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
 
 	return DE_NEW(GraphicsDevice)(deviceImplementation, window);
+}
+
+// Static
+
+void GraphicsDeviceFactory::logDeviceInterfaceExtensions(GraphicsDevice* graphicsDevice)
+{
+	graphicsDevice->_implementation->logExtensions();
 }
 
 // Private

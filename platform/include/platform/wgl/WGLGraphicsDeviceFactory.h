@@ -53,6 +53,8 @@ namespace Platform
 		GraphicsDeviceFactory& operator =(const GraphicsDeviceFactory& graphicsDeviceFactory) = delete;
 		GraphicsDeviceFactory& operator =(GraphicsDeviceFactory&& graphicsDeviceFactory) = delete;
 
+		static void logDeviceInterfaceExtensions(Graphics::GraphicsDevice* graphicsDevice);
+
 	private:
 
 		using PixelFormatIndexList = Core::Vector<Int32>;

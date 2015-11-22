@@ -21,6 +21,7 @@
 #pragma once
 
 #include <core/Rectangle.h>
+#include <core/Types.h>
 
 namespace Graphics
 {

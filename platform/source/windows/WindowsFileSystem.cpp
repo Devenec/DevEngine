@@ -27,7 +27,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::FileSystem - Windows]";
+static const Char8* COMPONENT_TAG = "[Core::FileSystem - Windows]";
 
 
 // Public

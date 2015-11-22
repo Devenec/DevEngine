@@ -26,7 +26,6 @@
 
 namespace Graphics
 {
-	class GraphicsConfig;
 	class GraphicsDevice;
 
 	class GraphicsDeviceManager final : public Core::Singleton<GraphicsDeviceManager>
@@ -51,13 +50,11 @@ namespace Graphics
 
 	private:
 
-		class Impl;
+		class Implementation;
 		
 		using GraphicsDeviceList = Core::List<GraphicsDevice*>;
 
 		GraphicsDeviceList _devices;
-		Impl* _impl;
+		Implementation* _implementation;
 	};
-
-	void logGraphicsDeviceConfiguration(const GraphicsConfig& config);
 }

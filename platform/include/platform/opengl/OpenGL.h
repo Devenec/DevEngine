@@ -44,8 +44,10 @@
 
 #include <core/ConfigInternal.h>
 #include <core/Platform.h>
+#include <core/String.h>
 #include <core/Types.h>
-#include <core/UtilityMacros.h>	
+#include <core/UtilityMacros.h>
+#include <core/Vector.h>
 
 #if DE_COMPILER == DE_COMPILER_MSVC
 	#define DE_CALL_OPENGL DE_INTERNAL_CALL_STDCALL
@@ -3370,6 +3372,7 @@ namespace Platform
 		VertexArrayVertexBuffer vertexArrayVertexBuffer = nullptr;
 		VertexArrayVertexBuffers vertexArrayVertexBuffers = nullptr;
 
+
 		OpenGL();
 
 		OpenGL(const OpenGL& openGL) = delete;
@@ -3380,8 +3383,16 @@ namespace Platform
 		OpenGL& operator =(const OpenGL& openGL) = delete;
 		OpenGL& operator =(OpenGL&& openGL) = delete;
 
-		void checkForErrors(const Char8* file, const Uint32 line, const Char8* function);
+		void checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const;
+
+		void logExtensions() const;
 
 		static void initialiseVersion(Uint32& major, Uint32& minor);
+
+	private:
+
+		using ExtensionNameList = Core::Vector<Core::String8>;
+
+		ExtensionNameList getExtensionNames() const;
 	};
 }

@@ -21,10 +21,11 @@
 #pragma once
 
 #include <core/Types.h>
-#include <graphics/GraphicsEnumerations.h>
 
 namespace Graphics
 {
+	enum class VertexElementType;
+
 	struct VertexElement final
 	{
 		static const Uint32 AFTER_PREVIOUS = 0xFFFFFFFF;

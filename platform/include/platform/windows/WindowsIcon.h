@@ -20,13 +20,10 @@
 
 #pragma once
 
-#include <utility>
-#include <core/Types.h>
 #include <platform/windows/Windows.h>
 
 namespace Graphics
 {
-	enum class ImageFormat;
 	class Image;
 }
 
@@ -46,11 +43,11 @@ namespace Platform
 
 		~Icon();
 
-		inline const HICON handle() const;
+		inline HICON handle() const;
 
 		Icon& operator =(const Icon& icon) = delete;
 
-		inline Icon& operator =(Icon&& icon);
+		Icon& operator =(Icon&& icon);
 
 	private:
 

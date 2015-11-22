@@ -20,7 +20,7 @@
 
 // Public
 
-Uint32 Shader::Impl::handle() const
+Uint32 Shader::Implementation::handle() const
 {
 	return _shaderHandle;
 }

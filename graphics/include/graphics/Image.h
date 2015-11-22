@@ -27,18 +27,20 @@
 
 namespace Graphics
 {
+	using ByteData = Core::Vector<Byte>;
+
 	class Image final : public Content::ContentBase
 	{
 	public:
 
-		Image(const Uint32 width, const Uint32 height, const ImageFormat& format, const Core::Vector<Byte>& data);
+		Image(const Uint32 width, const Uint32 height, const ImageFormat& format, const ByteData& data);
 
 		Image(const Image& image) = delete;
 		Image(Image&& image) = delete;
 
 		~Image() = default;
 
-		inline const Core::Vector<Byte>& data() const;
+		inline const ByteData& data() const;
 
 		inline const ImageFormat format() const;
 
@@ -51,7 +53,7 @@ namespace Graphics
 
 	private:
 
-		Core::Vector<Byte> _data;
+		ByteData _data;
 		ImageFormat _format;
 		Uint32 _height;
 		Uint32 _width;

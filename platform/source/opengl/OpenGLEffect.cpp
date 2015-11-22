@@ -34,16 +34,16 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::Effect - OpenGL]";
+static const Char8* COMPONENT_TAG = "[Graphics::Effect - OpenGL]";
 
 
 // Implementation
 
-class Effect::Impl final
+class Effect::Implementation final
 {
 public:
 
-	explicit Impl(OpenGL* openGL)
+	explicit Implementation(OpenGL* openGL)
 		: _openGL(openGL),
 		  _programHandle(0u)
 	{
@@ -56,10 +56,10 @@ public:
 		}
 	}
 
-	Impl(const Impl& impl) = delete;
-	Impl(Impl&& impl) = delete;
+	Implementation(const Implementation& impl) = delete;
+	Implementation(Implementation&& impl) = delete;
 
-	~Impl()
+	~Implementation()
 	{
 		_openGL->deleteProgram(_programHandle);
 		DE_CHECK_ERROR_OPENGL(_openGL);
@@ -67,7 +67,7 @@ public:
 
 	void attachShader(Shader* shader) const
 	{
-		const Uint32 shaderHandle = shader->_impl->handle();
+		const Uint32 shaderHandle = shader->_implementation->handle();
 		_openGL->attachShader(_programHandle, shaderHandle);
 		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
@@ -90,10 +90,12 @@ public:
 		use(_programHandle);
 	}
 
-	Impl& operator =(const Impl& impl) = delete;
-	Impl& operator =(Impl&& impl) = delete;
+	Implementation& operator =(const Implementation& impl) = delete;
+	Implementation& operator =(Implementation&& impl) = delete;
 
 private:
+
+	using CharacterBuffer = Core::Vector<Char8>;
 
 	Platform::OpenGL* _openGL;
 	Uint32 _programHandle;
@@ -170,9 +172,9 @@ private:
 		}
 	}
 
-	Vector<Char8> getInfoLog(const Uint32 logLength) const
+	CharacterBuffer getInfoLog(const Uint32 logLength) const
 	{
-		Vector<Char8> logBuffer(logLength);
+		CharacterBuffer logBuffer(logLength);
 		_openGL->getProgramInfoLog(_programHandle, logBuffer.size(), nullptr, logBuffer.data());
 		DE_CHECK_ERROR_OPENGL(_openGL);
 
@@ -187,30 +189,30 @@ private:
 
 void Effect::attachShader(Shader* shader) const
 {
-	_impl->attachShader(shader);
+	_implementation->attachShader(shader);
 }
 
 void Effect::disuse() const
 {
-	_impl->disuse();
+	_implementation->disuse();
 }
 
 void Effect::link() const
 {
-	_impl->link();
+	_implementation->link();
 }
 
 void Effect::use() const
 {
-	_impl->use();
+	_implementation->use();
 }
 
 // Private
 
 Effect::Effect(GraphicsInterface graphicsInterface)
-	: _impl(DE_NEW(Impl)(static_cast<OpenGL*>(graphicsInterface))) { }
+	: _implementation(DE_NEW(Implementation)(static_cast<OpenGL*>(graphicsInterface))) { }
 
 Effect::~Effect()
 {
-	DE_DELETE(_impl, Impl);
+	DE_DELETE(_implementation, Implementation);
 }

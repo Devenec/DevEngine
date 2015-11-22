@@ -68,9 +68,9 @@ namespace Graphics
 
 		friend class GraphicsDeviceManager;
 
-		class Impl;
+		class Implementation;
 
-		Impl* _impl;
+		Implementation* _implementation;
 
 		explicit Window(WindowHandle windowHandle);
 		~Window();

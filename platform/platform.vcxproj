@@ -78,7 +78,6 @@
     <ClInclude Include="include\platform\windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\GraphicsExtensionHelper.cpp" />
     <ClCompile Include="source\opengl\OpenGLEffect.cpp" />
     <ClCompile Include="source\opengl\OpenGLGraphicsBuffer.cpp" />
     <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp" />

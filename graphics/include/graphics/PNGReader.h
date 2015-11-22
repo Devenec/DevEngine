@@ -33,6 +33,8 @@ namespace Graphics
 {
 	enum class ImageFormat;
 
+	using ByteData = Core::Vector<Byte>;
+
 	class PNGReader final
 	{
 	public:
@@ -50,7 +52,7 @@ namespace Graphics
 
 		inline const Uint32 imageWidth() const;
 
-		Core::Vector<Byte> readImage(Core::FileStream& fileStream);
+		ByteData readImage(Core::FileStream& fileStream);
 
 		PNGReader& operator =(const PNGReader& pngReader) = delete;
 		PNGReader& operator =(PNGReader&& pngReader) = delete;

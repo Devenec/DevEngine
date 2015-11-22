@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/OpenGLGraphicsDevice.inl
+ * @file platform/opengl/inline/OpenGLGraphicsDevice.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,17 +20,17 @@
 
 // Public
 
-void GraphicsDevice::Impl::setEffect(Effect* effect)
+void GraphicsDevice::Implementation::setEffect(Effect* effect)
 {
 	_activeEffect = effect;
 }
 
-void GraphicsDevice::Impl::setVertexBufferState(VertexBufferState* vertexBufferState)
+void GraphicsDevice::Implementation::setVertexBufferState(VertexBufferState* vertexBufferState)
 {
 	_activeVertexBufferState = vertexBufferState;
 }
 
-const Viewport& GraphicsDevice::Impl::viewport() const
+const Viewport& GraphicsDevice::Implementation::viewport() const
 {
 	return _viewport;
 }

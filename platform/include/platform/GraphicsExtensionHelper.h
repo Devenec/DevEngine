@@ -20,14 +20,10 @@
 
 #pragma once
 
-#include <core/String.h>
 #include <core/Types.h>
-#include <core/Vector.h>
 
 namespace Platform
 {
-	using ExtensionNameList = Core::Vector<Core::String8>;
-
 	class GraphicsExtensionHelper
 	{
 	public:
@@ -42,10 +38,8 @@ namespace Platform
 		GraphicsExtensionHelper& operator =(const GraphicsExtensionHelper& graphicsExtensionHelper) = delete;
 		GraphicsExtensionHelper& operator =(GraphicsExtensionHelper&& graphicsExtensionHelper) = delete;
 
-		static void logExtensions(const Char8* description, const ExtensionNameList& extensionNames);
-
 		template<typename T>
-		static T getFunction(const Char8* name);
+		static inline T getFunction(const Char8* name);
 
 	private:
 

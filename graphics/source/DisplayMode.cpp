@@ -26,14 +26,14 @@ using namespace Graphics;
 
 DisplayMode::DisplayMode()
 	: _colourDepth(0u),
-	  _frequency(0u),
 	  _height(0u),
+	  _refreshRate(0u),
 	  _width(0u) { }
 
-DisplayMode::DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 frequency)
+DisplayMode::DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 refreshRate)
 	: _colourDepth(colourDepth),
-	  _frequency(frequency),
 	  _height(height),
+	  _refreshRate(refreshRate),
 	  _width(width) { }
 
 
@@ -47,8 +47,8 @@ Bool Graphics::operator <(const DisplayMode& displayModeA, const DisplayMode& di
 		return displayModeA.height() < displayModeB.height();
 	else if(displayModeA.colourDepth() != displayModeB.colourDepth())
 		return displayModeA.colourDepth() < displayModeB.colourDepth();
-	else if(displayModeA.frequency() != displayModeB.frequency())
-		return displayModeA.frequency() < displayModeB.frequency();
+	else if(displayModeA.refreshRate() != displayModeB.refreshRate())
+		return displayModeA.refreshRate() < displayModeB.refreshRate();
 	else
 		return false;
 }
