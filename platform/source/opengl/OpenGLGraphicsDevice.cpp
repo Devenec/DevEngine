@@ -114,9 +114,9 @@ void GraphicsDevice::Implementation::drawIndexed(const PrimitiveType& primitiveT
 	deinitialiseDrawing();
 }
 
-void GraphicsDevice::Implementation::logExtensions() const
+void GraphicsDevice::Implementation::logInfo() const
 {
-	_openGL->logExtensions();
+	_openGL->logInfo();
 }
 
 void GraphicsDevice::Implementation::setViewport(const Viewport& viewport)

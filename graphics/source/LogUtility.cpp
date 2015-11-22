@@ -41,7 +41,8 @@ template<typename T>
 static void logElementsInColumns(const Vector<T>& elements, const Uint32 columnCount,
 	LogElementFunction<T> logElementFunction);
 
-static void logGraphicsAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator);
+static void logGraphicsAdapterDisplayMode(const DisplayMode& mode, const Bool insertSeparator);
+
 static void logGraphicsExtensionName(const String8& name, const Bool insertSeparator);
 
 
@@ -61,7 +62,9 @@ void Graphics::logGraphicsAdapters(const GraphicsAdapterList& adapters)
 
 	for(GraphicsAdapterList::const_iterator i = adapters.begin(), end = adapters.end(); i != end; ++i)
 	{
-		defaultLog << '\n' << (*i)->name() << '\n';
+		defaultLog << '\n' << (*i)->name() << " (current: ";
+		::logGraphicsAdapterDisplayMode((*i)->currentDisplayMode(), false);
+		defaultLog << ")\n";
 		::logElementsInColumns<DisplayMode>((*i)->supportedDisplayModes(), 3u, ::logGraphicsAdapterDisplayMode);
 	}
 
@@ -117,27 +120,27 @@ static void logElementsInColumns(const Vector<T>& elements, const Uint32 columnC
 	}
 }
 
-static void logGraphicsAdapterDisplayMode(const DisplayMode& displayMode, const Bool insertSeparator)
+static void logGraphicsAdapterDisplayMode(const DisplayMode& mode, const Bool insertSeparator)
 {
-	if(displayMode.width() < 1000u)
+	if(mode.width() < 1000u)
 		defaultLog << ' ';
 
-	defaultLog << displayMode.width() << " x ";
+	defaultLog << mode.width() << " x ";
 
-	if(displayMode.height() < 1000u)
+	if(mode.height() < 1000u)
 		defaultLog << ' ';
 
-	defaultLog << displayMode.height() << ", ";
+	defaultLog << mode.height() << ", ";
 
-	if(displayMode.colourDepth() < 10u)
+	if(mode.colourDepth() < 10u)
 		defaultLog << ' ';
 
-	defaultLog << displayMode.colourDepth() << " bit, ";
+	defaultLog << mode.colourDepth() << " bit, ";
 
-	if(displayMode.refreshRate() < 100u)
+	if(mode.refreshRate() < 100u)
 		defaultLog << ' ';
 
-	defaultLog << displayMode.refreshRate() << "Hz";
+	defaultLog << mode.refreshRate() << "Hz";
 
 	if(insertSeparator)
 		defaultLog << "    ";

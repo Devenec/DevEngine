@@ -186,7 +186,7 @@ GraphicsDevice* GraphicsDeviceManager::createWindowAndDevice(const Uint32 window
 	_devices.push_back(device);
 	logChosenGraphicsConfig(graphicsConfig);
 	logGraphicsDeviceCreation(device);
-	GraphicsDeviceFactory::logDeviceInterfaceExtensions(device);
+	GraphicsDeviceFactory::logDeviceInfo(device);
 
 	return device;
 }

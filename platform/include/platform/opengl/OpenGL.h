@@ -3389,7 +3389,7 @@ namespace Platform
 
 		void checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const;
 
-		void logExtensions() const;
+		void logInfo() const;
 
 		static void initialiseVersion(Uint32& major, Uint32& minor);
 

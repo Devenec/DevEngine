@@ -271,8 +271,11 @@ void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* f
 		::reportError(errorCode, file, line, function);
 }
 
-void OpenGL::logExtensions() const
+void OpenGL::logInfo() const
 {
+	defaultLog << LogLevel::Info << "Initialised OpenGL rendering:\n\nVersion: " << majorVersion << '.' <<
+		minorVersion << '\n';
+
 	logGraphicsExtensions("graphics interface", getExtensionNames());
 }
 

@@ -55,7 +55,7 @@ namespace Platform
 		GraphicsDeviceFactory& operator =(const GraphicsDeviceFactory& graphicsDeviceFactory) = delete;
 		GraphicsDeviceFactory& operator =(GraphicsDeviceFactory&& graphicsDeviceFactory) = delete;
 
-		static void logDeviceInterfaceExtensions(Graphics::GraphicsDevice* graphicsDevice);
+		static void logDeviceInfo(Graphics::GraphicsDevice* graphicsDevice);
 
 	private:
 

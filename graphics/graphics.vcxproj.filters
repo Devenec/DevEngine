@@ -62,6 +62,9 @@
     <ClInclude Include="include\graphics\IndexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\LogUtility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\PNGReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -78,9 +81,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\graphics\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\graphics\LogUtility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -132,13 +132,13 @@
     <ClCompile Include="source\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\LogUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\PNGReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Viewport.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\LogUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

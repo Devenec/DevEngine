@@ -72,9 +72,9 @@ GraphicsDevice* GraphicsDeviceFactory::createDevice(Window* window, GraphicsConf
 
 // Static
 
-void GraphicsDeviceFactory::logDeviceInterfaceExtensions(GraphicsDevice* graphicsDevice)
+void GraphicsDeviceFactory::logDeviceInfo(GraphicsDevice* graphicsDevice)
 {
-	graphicsDevice->_implementation->logExtensions();
+	graphicsDevice->_implementation->logInfo();
 }
 
 // Private

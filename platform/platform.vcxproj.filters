@@ -41,6 +41,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\platform\GraphicsContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\GraphicsExtensionHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -88,9 +91,6 @@
     </ClInclude>
     <ClInclude Include="include\platform\windows\WindowsWindow.h">
       <Filter>Header Files\windows</Filter>
-    </ClInclude>
-    <ClInclude Include="include\platform\GraphicsContext.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

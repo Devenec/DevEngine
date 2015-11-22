@@ -60,7 +60,7 @@ namespace Graphics
 
 		void drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset) const;
 
-		void logExtensions() const;
+		void logInfo() const;
 
 		inline void setEffect(Effect* effect);
 
