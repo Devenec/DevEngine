@@ -9,7 +9,7 @@ set(SOURCE_FILES
 	source/ImageLoader.cpp
 	source/IndexBuffer.cpp
 	source/LogUtility.cpp
-	source/PngReader.cpp
+	source/PNGReader.cpp
 	source/Viewport.cpp
 )
 

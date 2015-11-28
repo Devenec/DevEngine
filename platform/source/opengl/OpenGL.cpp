@@ -140,7 +140,7 @@ static const Array<const Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES
 	"other source"
 }};
 
-static const Array<const Char8*, 9u> DEBUG_MESSAGE_TYPE_NAMES
+static const Array<const Char8*, 10u> DEBUG_MESSAGE_TYPE_NAMES
 {{
 	"Deprecated behaviour",
 	"Error",
@@ -150,7 +150,8 @@ static const Array<const Char8*, 9u> DEBUG_MESSAGE_TYPE_NAMES
 	"Other",
 	"Performance",
 	"Portability",
-	"Undefined behaviour"
+	"Undefined behaviour",
+	"Unknown"
 }};
 
 static const Array<const Char8*, 7u> ERROR_NAMES
@@ -327,7 +328,6 @@ static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity)
 			return LogLevel::Warning;
 
 		default:
-			DE_ASSERT(false);
 			return LogLevel::Debug;
 	}
 }
@@ -364,8 +364,7 @@ static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 			return ::DEBUG_MESSAGE_TYPE_NAMES[2];
 
 		default:
-			DE_ASSERT(false);
-			return ::DEBUG_MESSAGE_TYPE_NAMES[0];
+			return ::DEBUG_MESSAGE_TYPE_NAMES[9];
 	}
 }
 

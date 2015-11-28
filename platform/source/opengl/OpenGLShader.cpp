@@ -58,7 +58,7 @@ Shader::Implementation::Implementation(OpenGL* openGL, const ShaderType& type, c
 	createShader(type);
 	compileShader(source);
 	checkCompilationStatus();
-}	
+}
 
 Shader::Implementation::~Implementation()
 {
@@ -187,7 +187,6 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType)
 			return OpenGL::VERTEX_SHADER;
 
 		default:
-			DE_ASSERT(false);
 			return 0u;
 	}
 }

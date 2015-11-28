@@ -19,6 +19,7 @@
  */
 
 #include <utility>
+#include <core/Error.h>
 #include <core/Log.h>
 #include <core/Types.h>
 #include <core/debug/Assert.h>
@@ -34,6 +35,7 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG = "[Platform::Icon - Windows]";
 
+static void checkImageFormat(const Imageformat& format);
 static BITMAPV5HEADER createBitmapHeader(const Image* image);
 static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer);
 static ICONINFO createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
@@ -56,6 +58,7 @@ Icon::Icon(const Image* image)
 	: Icon()
 {
 	DE_ASSERT(image != nullptr);
+	checkImageFormat(image->format());
 	BITMAPV5HEADER bitmapHeader = ::createBitmapHeader(image);
 	Byte* bitmapDataBuffer;
 	HBITMAP colourBitmapHandle = ::createColourBitmap(bitmapHeader, bitmapDataBuffer);
@@ -108,6 +111,22 @@ void Icon::createIcon(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 
 
 // External
+
+static void checkImageFormat(const Imageformat& format)
+{
+	switch(format)
+	{
+		case ImageFormat::R8:
+		case ImageFormat::RGB8:
+		case ImageFormat::RA8:
+		case ImageFormat::RGBA8:
+			break;
+
+		default:
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "The image format is invalid." << Log::Flush();
+			DE_ERROR(0x0);
+	}
+}
 
 static BITMAPV5HEADER createBitmapHeader(const Image* image)
 {
@@ -208,7 +227,6 @@ static Uint32 getImageBitDepth(const ImageFormat& imageFormat)
 			return 32u;
 
 		default:
-			DE_ASSERT(false);
 			return 0u;
 	}
 }
@@ -241,7 +259,6 @@ static void setBitmapData(const Image* image, Byte* dataBuffer)
 			break;
 
 		default:
-			DE_ASSERT(false);
 			break;
 	}
 }

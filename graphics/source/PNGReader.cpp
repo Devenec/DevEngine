@@ -74,7 +74,7 @@ ImageFormat PNGReader::imageFormat() const
 
 		default:
 			DE_ASSERT(false);
-			return ImageFormat::R8;
+			return ImageFormat();
 	}
 }
 
@@ -171,7 +171,18 @@ static void readData(png_struct* pngStructure, Byte* buffer, Uint32 size)
 	FileStream* fileStream = static_cast<FileStream*>(png_get_io_ptr(pngStructure));
 
 	if(fileStream->isPastEndOfFile())
-		png_error(pngStructure, "Reached the end of the file");
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Reached the end of the file unexpectedly." << Log::Flush();
+		DE_ERROR(0x0);
+	}
 
-	fileStream->read(buffer, size);
+	const Uint32 bytesRead = fileStream->read(buffer, size);
+
+	if(bytesRead < size)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to read the specified number of bytes." <<
+			Log::Flush();
+
+		DE_ERROR(0x0);
+	}
 }

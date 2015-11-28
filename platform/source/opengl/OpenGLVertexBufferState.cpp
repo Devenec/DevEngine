@@ -275,7 +275,6 @@ static Uint32 getVertexElementSize(const VertexElement& element)
 			return 3u;
 
 		default:
-			DE_ASSERT(false);
 			return 0u;
 	}
 }
