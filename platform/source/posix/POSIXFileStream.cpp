@@ -1,5 +1,5 @@
 /**
- * @file platform/windows/WindowsFileStream.cpp
+ * @file platform/posix/POSIXFileStream.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,21 +18,24 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cstdio>
+#include <fcntl.h>
+#include <sys/stat.h>
 #include <core/FileStream.h>
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
-#include <platform/windows/Windows.h>
 
 using namespace Core;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Core::FileStream - Windows]";
+static const Char8* COMPONENT_TAG		= "[Core::FileStream - POSIX]";
+static const Int32 CREATION_PERMISSIONS = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
 
-static LARGE_INTEGER createLargeInteger(const Int64& value = 0);
-static Uint32 getAccessMode(const OpenMode& openMode);
-static Uint32 getCreationMode(const OpenMode& openMode);
+static Int32 getFileDescriptorAccessMode(const OpenMode& openMode);
+static const char* getFileHandleAccessMode(const OpenMode& openMode);
+static Int32 getSeekOrigin(const SeekPosition& position);
 
 
 // Implementation
@@ -43,7 +46,7 @@ public:
 
 	Implementation()
 		: _handle(nullptr),
-		  _openMode() { }
+		  _previousAction(PreviousAction::None) { }
 
 	Implementation(const Implementation& implementation) = delete;
 	Implementation(Implementation&& implementation) = delete;
@@ -57,18 +60,14 @@ public:
 	{
 		if(isOpen())
 		{
-			if((_openMode & OpenMode::Write) == OpenMode::Write)
-				flushBuffer();
+			const Int32 result = std::fclose(_handle);
 
-			const Int32 result = CloseHandle(_handle);
-
-			if(result == 0)
+			if(result != 0)
 			{
 				defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to close the file." << Log::Flush();
-				DE_ERROR_WINDOWS(0x0);
+				//DE_ERROR_WINDOWS(0x0);
 			}
 
-			_handle = nullptr;
 			_openMode = OpenMode();
 		}
 	}
@@ -89,102 +88,108 @@ public:
 		DE_ASSERT((openMode & OpenMode::Read) == OpenMode::Read || (openMode & OpenMode::Write) == OpenMode::Write);
 		DE_ASSERT(!isOpen());
 
-		const String16 filepath16 = toString16(filepath);
-		const Uint32 accessMode = ::getAccessMode(openMode);
-		const Uint32 creationMode = ::getCreationMode(openMode);
+		const Int32 fileDescriptorAccessMode = ::getFileDescriptorAccessMode(openMode);
+		const Int32 fileDescriptor = ::open(filepath.c_str(), fileDescriptorAccessMode, CREATION_PERMISSIONS);
 
-		_handle = CreateFileW(filepath16.c_str(), accessMode, FILE_SHARE_READ, nullptr, creationMode,
-			FILE_ATTRIBUTE_NORMAL, nullptr);
-
-		if(_handle == INVALID_HANDLE_VALUE)
+		if(fileDescriptor == -1)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0x0);
+			//DE_ERROR_WINDOWS(0x0);
 		}
 
-		SetLastError(0u);
+		const char* handleAccessMode = ::getFileHandleAccessMode(openMode);
+		_handle = ::fdopen(fileDescriptor, handleAccessMode);
+
+		if(_handle == nullptr)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
+				Log::Flush();
+
+			//DE_ERROR_WINDOWS(0x0);
+		}
+
 		_openMode = openMode;
+		calculateSize();
 	}
 
 	Int64 position() const
 	{
 		DE_ASSERT(isOpen());
-		const LARGE_INTEGER offset = ::createLargeInteger();
-		LARGE_INTEGER position;
-		const Int32 result = SetFilePointerEx(_handle, offset, &position, FILE_CURRENT);
+		const Int64 result = std::ftell(_handle);
 
-		if(result == 0)
+		if(result == -1)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the file pointer position." <<
 				Log::Flush();
 
-			DE_ERROR_WINDOWS(0x0);
+			//DE_ERROR_WINDOWS(0x0);
 		}
 
-		return position.QuadPart;
+		return result;
 	}
 
-	Uint32 read(Byte* buffer, const Uint32 size) const
+	Uint32 read(Byte* buffer, const Uint32 size)
 	{
 		DE_ASSERT(buffer != nullptr);
 		DE_ASSERT(isOpen());
 
-		unsigned long bytesRead;
-		const Int32 result = ReadFile(_handle, buffer, size, &bytesRead, nullptr);
+		if(_previousAction == PreviousAction::Write)
+			seek(SeekPosition::Current, 0);
 
-		if(result == 0)
+		const Uint32 bytesRead = std::fread(buffer, 1u, size, _handle);
+		const Int32 result = std::ferror(_handle);
+
+		if(result != 0)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to read the file." << Log::Flush();
-			DE_ERROR_WINDOWS(0x0);
+			//DE_ERROR_WINDOWS(0x0);
 		}
 
+		_previousAction = PreviousAction::Read;
 		return bytesRead;
 	}
 
-	void seek(const SeekPosition& position, const Int64& offset) const
+	void seek(const SeekPosition& position, const Int64& offset)
 	{
 		DE_ASSERT(isOpen());
-		const LARGE_INTEGER seekOffset = ::createLargeInteger(offset);
-		const Int32 result = SetFilePointerEx(_handle, seekOffset, nullptr, static_cast<Int32>(position));
+		const Int32 origin = ::getSeekOrigin(position);
+		const Int32 result = std::fseek(_handle, offset, origin);
 
-		if(result == 0)
+		if(result != 0)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to seek the file." << Log::Flush();
-			DE_ERROR_WINDOWS(0x0);
+			//DE_ERROR_WINDOWS(0x0);
 		}
+
+		_previousAction = PreviousAction::None;
 	}
 
 	Int64 size() const
 	{
 		DE_ASSERT(isOpen());
-		LARGE_INTEGER size;
-		const Int32 result = GetFileSizeEx(_handle, &size);
-
-		if(result == 0)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the file size." << Log::Flush();
-			DE_ERROR_WINDOWS(0x0);
-		}
-
-		return size.QuadPart;
+		return _size;
 	}
 
-	Uint32 write(const Byte* data, const Uint32 size) const
+	Uint32 write(const Byte* data, const Uint32 size)
 	{
 		DE_ASSERT(data != nullptr);
 		DE_ASSERT(isOpen());
 
-		unsigned long bytesWritten;
-		const Int32 result = WriteFile(_handle, data, size, &bytesWritten, nullptr);
+		if(_previousAction == PreviousAction::Read)
+			seek(SeekPosition::Current, 0);
 
-		if(result == 0)
+		const Uint32 bytesWritten = std::fwrite(data, 1u, size, _handle);
+		const Int32 result = std::ferror(_handle);
+
+		if(result != 0)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to write to the file." << Log::Flush();
-			DE_ERROR_WINDOWS(0x0);
+			//DE_ERROR_WINDOWS(0x0);
 		}
 
+		_previousAction = PreviousAction::Write;
 		return bytesWritten;
 	}
 
@@ -193,18 +198,23 @@ public:
 
 private:
 
-	HANDLE _handle;
+	enum class PreviousAction
+	{
+		None,
+		Read,
+		Write
+	};
+
+	std::FILE* _handle;
+	Int64 _size;
+	PreviousAction _previousAction;
 	OpenMode _openMode;
 
-	void flushBuffer() const
+	void calculateSize()
 	{
-		const Int32 result = FlushFileBuffers(_handle);
-
-		if(result == 0)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to flush the file buffer." << Log::Flush();
-			DE_ERROR_WINDOWS(0x0);
-		}
+		seek(SeekPosition::End, 0);
+		_size = position();
+		seek(SeekPosition::Begin, 0);
 	}
 };
 
@@ -275,41 +285,59 @@ Uint32 FileStream::write(const Byte* data, const Uint32 size) const
 
 // External
 
-static LARGE_INTEGER createLargeInteger(const Int64& value)
+static Int32 getFileDescriptorAccessMode(const OpenMode& openMode)
 {
-	LARGE_INTEGER integer;
-	integer.QuadPart = value;
+	const Bool read = (openMode & OpenMode::Read) == OpenMode::Read;
+	const Bool write = (openMode & OpenMode::Write) == OpenMode::Write;
+	Int32 accessMode = 0;
 
-	return integer;
-}
+	if(read && write)
+		accessMode = O_RDWR;
+	else if(read)
+		accessMode = O_RDONLY;
+	else if(write)
+		accessMode = O_WRONLY;
 
-static Uint32 getAccessMode(const OpenMode& openMode)
-{
-	Uint32 mode = 0u;
-
-	if((openMode & OpenMode::Read) == OpenMode::Read)
-		mode |= GENERIC_READ;
-
-	if((openMode & OpenMode::Write) == OpenMode::Write)
-		mode |= GENERIC_WRITE;
-
-	return mode;
-}
-
-static Uint32 getCreationMode(const OpenMode& openMode)
-{
-	Uint32 mode = 0u;
-
-	if((openMode & OpenMode::Read) == OpenMode::Read)
-		mode = OPEN_EXISTING;
-
-	if((openMode & OpenMode::Write) == OpenMode::Write)
+	if(write)
 	{
+		accessMode |= O_CREAT;
+
 		if((openMode & OpenMode::Truncate) == OpenMode::Truncate)
-			mode = CREATE_ALWAYS;
-		else
-			mode = OPEN_ALWAYS;
+			accessMode |= O_TRUNC;
 	}
 
-	return mode;
+	return accessMode;
+}
+
+static const char* getFileHandleAccessMode(const OpenMode& openMode)
+{
+	const Bool read = (openMode & OpenMode::Read) == OpenMode::Read;
+	const Bool write = (openMode & OpenMode::Write) == OpenMode::Write;
+
+	if(read && write)
+		return "r+";
+	else if(read)
+		return "r";
+	else if(write)
+		return "w";
+
+	return nullptr;
+}
+
+static Int32 getSeekOrigin(const SeekPosition& position)
+{
+	switch(position)
+	{
+		case SeekPosition::Begin:
+			return SEEK_SET;
+
+		case SeekPosition::Current:
+			return SEEK_CUR;
+
+		case SeekPosition::End:
+			return SEEK_END;
+
+		default:
+			return 0;
+	}
 }

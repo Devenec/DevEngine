@@ -123,7 +123,10 @@ void LogBuffer::appendLineBuffer()
 void LogBuffer::flushMainBuffer()
 {
 	_flushFunction(_mainBuffer);
-	_fileStream.write(reinterpret_cast<const Byte*>(_mainBuffer.c_str()), _mainBuffer.length());
+
+	if(_fileStream.isOpen())
+		_fileStream.write(reinterpret_cast<const Byte*>(_mainBuffer.c_str()), _mainBuffer.length());
+
 	_mainBuffer.clear();
 }
 

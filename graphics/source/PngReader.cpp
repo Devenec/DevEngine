@@ -170,7 +170,7 @@ static void readData(png_struct* pngStructure, Byte* buffer, Uint32 size)
 {
 	FileStream* fileStream = static_cast<FileStream*>(png_get_io_ptr(pngStructure));
 
-	if(fileStream->isAtEndOfFile())
+	if(fileStream->isPastEndOfFile())
 		png_error(pngStructure, "Reached the end of the file");
 
 	fileStream->read(buffer, size);
