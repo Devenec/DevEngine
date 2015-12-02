@@ -20,13 +20,13 @@
 
 #include <algorithm>
 #include <core/Memory.h>
-#include <core/String.h>
 #include <core/Types.h>
 #include <graphics/DisplayMode.h>
 #include <graphics/GraphicsAdapter.h>
 #include <graphics/GraphicsAdapterManager.h>
 #include <graphics/LogUtility.h>
 #include <platform/windows/Windows.h>
+#include <platform/windows/WindowsGraphicsAdapter.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -54,7 +54,7 @@ public:
 		DISPLAY_DEVICEW adapterInfo = ::createAdapterInfo();
 
 		for(Uint32 i = 0u; areAdaptersAvailable; ++i)
-			areAdaptersAvailable = initialiseAdapter(i, adapterInfo);
+			areAdaptersAvailable = createAdapter(i, adapterInfo);
 	}
 
 	Implementation(const Implementation& implementation) = delete;
@@ -81,7 +81,7 @@ private:
 
 	GraphicsAdapterList _graphicsAdapters;
 
-	Bool initialiseAdapter(const Uint32 adapterIndex, DISPLAY_DEVICEW& adapterInfo)
+	Bool createAdapter(const Uint32 adapterIndex, DISPLAY_DEVICEW& adapterInfo)
 	{
 		const Int32 result = EnumDisplayDevicesW(nullptr, adapterIndex, &adapterInfo, 0u);
 
@@ -90,8 +90,10 @@ private:
 			DisplayModeList displayModes;
 			const Uint32 currentDisplayModeIndex = ::getAdapterDisplayModes(adapterInfo.DeviceName, displayModes);
 
-			GraphicsAdapter* graphicsAdapter = DE_NEW(GraphicsAdapter)(toString8(adapterInfo.DeviceName), displayModes,
-				currentDisplayModeIndex);
+			GraphicsAdapter::Implementation* graphicsAdapterImplementation =
+				DE_NEW(GraphicsAdapter::Implementation)(adapterInfo.DeviceName, displayModes, currentDisplayModeIndex);
+
+			GraphicsAdapter* graphicsAdapter = DE_NEW(GraphicsAdapter)(graphicsAdapterImplementation);
 
 			if((adapterInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) != 0u)
 				_graphicsAdapters.insert(_graphicsAdapters.begin(), graphicsAdapter);

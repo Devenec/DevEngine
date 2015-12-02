@@ -1,5 +1,5 @@
 /**
- * @file platform/windows/WindowsGraphicsAdapter.cpp
+ * @file platform/x/XGraphicsAdapter.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -19,38 +19,41 @@
  */
 
 #include <algorithm>
-#include <core/Error.h>
-#include <core/Log.h>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
-#include <platform/windows/WindowsGraphicsAdapter.h>
+#include <platform/x/XGraphicsAdapter.h>
 
 using namespace Core;
 using namespace Graphics;
-
-// External
-
-static const Char8* COMPONENT_TAG = "[Graphics::GraphicsAdapter - Windows]";
-
-static DEVMODEW createDisplayModeInfo(const DisplayMode& mode);
-
+using namespace Platform;
 
 // Implementation
 
 // Public
 
-GraphicsAdapter::Implementation::Implementation(const String16& name, const DisplayModeList& supportedDisplayModes,
-	const Uint32 currentDisplayModeIndex)
+GraphicsAdapter::Implementation::Implementation(const Uint32 adapterIndex, const String8& name,
+	const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex)
 	: _name(name),
 	  _supportedDisplayModes(supportedDisplayModes),
+	  _config(nullptr),
+	  _configTimestamp(0u),
+	  _adapterIndex(adapterIndex),
 	  _currentDisplayModeIndex(currentDisplayModeIndex),
-	  _initialDisplayModeIndex(currentDisplayModeIndex) { }
+	  _initialDisplayModeIndex(currentDisplayModeIndex)
+{
+	Display* xConnection = X::instance().connection();
+	Window rootWindow = XRootWindow(xConnection, adapterIndex);
+	_config = XRRGetScreenInfo(xConnection, rootWindow);
+	XRRConfigTimes(_config, &_configTimestamp);
+}
 
 GraphicsAdapter::Implementation::~Implementation()
 {
 	if(_currentDisplayModeIndex != _initialDisplayModeIndex)
-		changeDisplayMode(nullptr, 0u);
+		changeDisplayMode(_initialDisplayModeIndex);
+
+	XRRFreeScreenConfigInfo(_config);
 }
 
 void GraphicsAdapter::Implementation::setDisplayMode(const DisplayMode& mode)
@@ -59,24 +62,22 @@ void GraphicsAdapter::Implementation::setDisplayMode(const DisplayMode& mode)
 		_supportedDisplayModes.end(), mode);
 
 	DE_ASSERT(iterator != _supportedDisplayModes.end());
-	DEVMODEW displayModeInfo = ::createDisplayModeInfo(mode);
-	changeDisplayMode(&displayModeInfo, CDS_FULLSCREEN);
-	_currentDisplayModeIndex = iterator - _supportedDisplayModes.begin();
+	const Uint32 modeIndex = iterator - _supportedDisplayModes.begin();
+	changeDisplayMode(modeIndex);
+	_currentDisplayModeIndex = modeIndex;
 }
 
 // Private
 
-void GraphicsAdapter::Implementation::changeDisplayMode(DEVMODEW* displayModeInfo, const Uint32 flags) const
+void GraphicsAdapter::Implementation::changeDisplayMode(const Uint32 modeIndex) const
 {
-	const Int32 result = ChangeDisplaySettingsExW(_name.c_str(), displayModeInfo, nullptr, flags, nullptr);
+	Display* xConnection = X::instance().connection();
+	const DisplayMode& mode = _supportedDisplayModes[modeIndex];
 
-	if(result != DISP_CHANGE_SUCCESSFUL)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to change the display mode with"
-			"ChangeDisplaySettingsEx, return code " << result << '.' << Log::Flush();
+	XRRSetScreenConfigAndRate(xConnection, _config, _adapterIndex, modeIndex, RR_Rotate_0,
+		static_cast<Int16>(mode.refreshRate()), _configTimestamp);
 
-		DE_ERROR(0x0);
-	}
+	// TODO: check return value?
 }
 
 
@@ -112,20 +113,4 @@ GraphicsAdapter::GraphicsAdapter(Implementation* implementation)
 GraphicsAdapter::~GraphicsAdapter()
 {
 	DE_DELETE(_implementation, Implementation);
-}
-
-
-// External
-
-static DEVMODEW createDisplayModeInfo(const DisplayMode& mode)
-{
-	DEVMODEW displayModeInfo = DEVMODEW();
-	displayModeInfo.dmBitsPerPel = mode.colourDepth();
-	displayModeInfo.dmDisplayFrequency = mode.refreshRate();
-	displayModeInfo.dmFields = DM_BITSPERPEL | DM_DISPLAYFREQUENCY | DM_PELSHEIGHT | DM_PELSWIDTH;
-	displayModeInfo.dmPelsHeight = mode.height();
-	displayModeInfo.dmPelsWidth = mode.width();
-	displayModeInfo.dmSize = sizeof(DEVMODEW);
-
-	return displayModeInfo;
 }

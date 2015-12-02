@@ -87,7 +87,7 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	ContentManager contentManager;
 	GraphicsAdapterManager graphicsAdapterManager;
-	GraphicsDeviceManager graphicsDeviceManager;
+	/*GraphicsDeviceManager graphicsDeviceManager;
 
 	GraphicsDevice* graphicsDevice = graphicsDeviceManager.createWindowAndDevice(1280u, 720u);
 	Window* window = graphicsDevice->window();
@@ -189,5 +189,5 @@ void devEngineMain(const StartupParameters& startupParameters)
 		graphicsDevice->swapBuffers();
 	}
 
-	uniformBuffer->debindIndexed(0u);
+	uniformBuffer->debindIndexed(0u);*/
 }

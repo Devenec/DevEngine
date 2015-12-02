@@ -13,14 +13,15 @@ set(INCLUDE_DIRECTORIES
 )
 
 set(LIBRARIES
-	platform
+	content
+	graphics
 	core
 	platform
+	graphics
 	core
-	#content
-	#graphics
-	#libpng
-	#zlib
+	platform
+	X11
+	Xrandr
 )
 
 include_directories(${INCLUDE_DIRECTORIES})

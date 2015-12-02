@@ -21,7 +21,6 @@
 #pragma once
 
 #include <core/String.h>
-#include <core/Types.h>
 #include <core/Vector.h>
 
 namespace Graphics
@@ -53,12 +52,10 @@ namespace Graphics
 		friend class GraphicsAdapterManager;
 
 		class Implementation;
-		
+
 		Implementation* _implementation;
 
-		GraphicsAdapter(const Core::String8& name, const DisplayModeList& supportedDisplayModes,
-			const Uint32 currentDisplayModeIndex);
-
+		GraphicsAdapter(Implementation* implementation);
 		~GraphicsAdapter();
 	};
 }
