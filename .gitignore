@@ -2,6 +2,7 @@
 
 **/obj/
 build/.vs/
+build/linux/
 build/Win32/
 
 

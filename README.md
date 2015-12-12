@@ -35,14 +35,38 @@ for custom content types.
 
 ### Upcoming Features
 
+- x64 support
 - Proper memory management
-- OpenGL 3.x support
 - Multithreading support
 
 
 ### Supported Platforms
 
-- Windows (tested on Windows 7 and Windows 10)
+- Linux (tested on Xubuntu 14.04 x64)
+- Windows (tested on Windows 7 x64 and Windows 10 x64)
+
+
+### Building
+
+#### Linux
+
+Clang 3.6 and (GNU) Make 3.81 is required (older versions may also work).
+
+The project depends on the following additional development libraries:
+- libc++
+- libX11
+- libXrandr
+
+Call ```make``` in the root directory. See the root makefile for configuration.
+
+#### Windows
+
+Visual Studio 2015 is required.
+
+Open build/devengine.sln and build the solution. libpng and zlib projects are
+excluded from "Build Solution" on Debug configuration, and they need to be
+built separately. This way, when rebuilding the entire solution, they don't
+need to be rebuilt and some time is saved.
 
 
 ### Third Party Source Code Included
@@ -50,14 +74,6 @@ for custom content types.
 - [libpng] 1.6.19
 - [OpenGL and WGL API] header files
 - [zlib] 1.2.8
-
-
-### Building
-
-Visual Studio 2015 is required.
-
-libpng and zlib projects are excluded from "Build Solution" on Debug
-configuration, in order to prevent rebuilding them and to save some time.
 
 
 ### Copyright & License

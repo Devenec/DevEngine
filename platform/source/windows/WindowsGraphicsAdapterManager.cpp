@@ -62,16 +62,13 @@ public:
 
 	~Implementation()
 	{
-		for(GraphicsAdapterList::const_iterator i = _graphicsAdapters.begin(), end = _graphicsAdapters.end(); i != end;
-			++i)
-		{
+		for(GraphicsAdapterList::const_iterator i = _adapters.begin(), end = _adapters.end(); i != end; ++i)
 			DE_DELETE(*i, GraphicsAdapter);
-		}
 	}
 
-	const GraphicsAdapterList& graphicsAdapters() const
+	const GraphicsAdapterList& adapters() const
 	{
-		return _graphicsAdapters;
+		return _adapters;
 	}
 
 	Implementation& operator =(const Implementation& implementation) = delete;
@@ -79,7 +76,7 @@ public:
 
 private:
 
-	GraphicsAdapterList _graphicsAdapters;
+	GraphicsAdapterList _adapters;
 
 	Bool createAdapter(const Uint32 adapterIndex, DISPLAY_DEVICEW& adapterInfo)
 	{
@@ -87,21 +84,27 @@ private:
 
 		if(result != 0 && (adapterInfo.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) != 0u)
 		{
-			DisplayModeList displayModes;
-			const Uint32 currentDisplayModeIndex = ::getAdapterDisplayModes(adapterInfo.DeviceName, displayModes);
+			GraphicsAdapter::Implementation* adapterImplementation = createAdapterImplementation(adapterIndex,
+				adapterInfo);
 
-			GraphicsAdapter::Implementation* graphicsAdapterImplementation =
-				DE_NEW(GraphicsAdapter::Implementation)(adapterInfo.DeviceName, displayModes, currentDisplayModeIndex);
-
-			GraphicsAdapter* graphicsAdapter = DE_NEW(GraphicsAdapter)(graphicsAdapterImplementation);
+			GraphicsAdapter* adapter = DE_NEW(GraphicsAdapter)(adapterImplementation);
 
 			if((adapterInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) != 0u)
-				_graphicsAdapters.insert(_graphicsAdapters.begin(), graphicsAdapter);
+				_adapters.insert(_adapters.begin(), adapter);
 			else
-				_graphicsAdapters.push_back(graphicsAdapter);
+				_adapters.push_back(adapter);
 		}
 
 		return result != 0;
+	}
+
+	GraphicsAdapter::Implementation* createAdapterImplementation(const Uint32 adapterIndex, DISPLAY_DEVICEW& adapterInfo)
+		const
+	{
+		DisplayModeList displayModes;
+		const Uint32 currentDisplayModeIndex = ::getAdapterDisplayModes(adapterInfo.DeviceName, displayModes);
+
+		return DE_NEW(GraphicsAdapter::Implementation)(adapterInfo.DeviceName, displayModes, currentDisplayModeIndex);
 	}
 };
 
@@ -113,7 +116,7 @@ private:
 GraphicsAdapterManager::GraphicsAdapterManager()
 	: _implementation(DE_NEW(Implementation)())
 {
-	logGraphicsAdapters(_implementation->graphicsAdapters());
+	logGraphicsAdapters(_implementation->adapters());
 }
 
 GraphicsAdapterManager::~GraphicsAdapterManager()
@@ -121,9 +124,9 @@ GraphicsAdapterManager::~GraphicsAdapterManager()
 	DE_DELETE(_implementation, Implementation);
 }
 
-const GraphicsAdapterList& GraphicsAdapterManager::graphicsAdapters() const
+const GraphicsAdapterList& GraphicsAdapterManager::adapters() const
 {
-	return _implementation->graphicsAdapters();
+	return _implementation->adapters();
 }
 
 

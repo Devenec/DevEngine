@@ -40,7 +40,7 @@ namespace Graphics
 
 		~GraphicsAdapterManager();
 
-		const GraphicsAdapterList& graphicsAdapters() const;
+		const GraphicsAdapterList& adapters() const;
 
 		GraphicsAdapterManager& operator =(const GraphicsAdapterManager& graphicsAdapterManager) = delete;
 		GraphicsAdapterManager& operator =(GraphicsAdapterManager&& graphicsAdapterManager) = delete;

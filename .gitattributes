@@ -4,8 +4,12 @@
 *.h				  text
 *.inl			  text
 *.md			  text
+*.mk			  text
 *.props			  text eol=crlf
 *.sln			  text eol=crlf
 *.txt			  text
 *.vcxproj		  text eol=crlf
 *.vcxproj.filters text eol=crlf
+*.vcxproj.user	  text eol=crlf
+
+makefile		  text

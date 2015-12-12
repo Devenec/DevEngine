@@ -165,8 +165,8 @@ static const Array<const Char8*, 7u> ERROR_NAMES
 	"Invalid framebuffer operation"
 }};
 
-static Uint32 majorVersion = 1u;
-static Uint32 minorVersion = 1u;
+static Uint32 versionMajor = 1u;
+static Uint32 versionMinor = 1u;
 
 static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
 static const Char8* getDebugMessageTypeName(const Uint32 messageType);
@@ -274,8 +274,8 @@ void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* f
 
 void OpenGL::logInfo() const
 {
-	defaultLog << LogLevel::Info << "Initialised OpenGL rendering:\n\nVersion: " << majorVersion << '.' <<
-		minorVersion << '\n';
+	defaultLog << LogLevel::Info << "Initialised OpenGL rendering.\n\nVersion: " << ::versionMajor << '.' <<
+		::versionMinor << '\n';
 
 	logGraphicsExtensions("graphics interface", getExtensionNames());
 }
@@ -287,8 +287,8 @@ void OpenGL::initialiseVersion(Uint32& major, Uint32& minor)
 	const String8 versionString(reinterpret_cast<const Char8*>(glGetString(VERSION)));
 	::initialiseMajorVersion(versionString);
 	::initialiseMinorVersion(versionString);
-	major = ::majorVersion;
-	minor = ::minorVersion;
+	major = ::versionMajor;
+	minor = ::versionMinor;
 }
 
 // Private
@@ -873,7 +873,7 @@ static void getStandardFunctions(OpenGL& openGL)
 	openGL.vertexAttribP4ui = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP4UI>("glVertexAttribP4ui");
 	openGL.vertexAttribP4uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP4UIV>("glVertexAttribP4uiv");
 
-	if(::majorVersion >= 4u)
+	if(::versionMajor >= 4u)
 	{
 		// Version 4.0
 
@@ -990,7 +990,7 @@ static void getStandardFunctions(OpenGL& openGL)
 		openGL.uniformSubroutinesuiv =
 			GraphicsExtensionHelper::getFunction<OpenGL::UniformSubroutineSUIV>("glUniformSubroutinesuiv");
 
-		if(::minorVersion >= 1u)
+		if(::versionMinor >= 1u)
 		{
 			// Version 4.1
 
@@ -1248,7 +1248,7 @@ static void getStandardFunctions(OpenGL& openGL)
 				GraphicsExtensionHelper::getFunction<OpenGL::ViewportIndexedFV>("glViewportIndexedfv");
 		}
 
-		if(::minorVersion >= 2u)
+		if(::versionMinor >= 2u)
 		{
 			// Version 4.2
 
@@ -1288,7 +1288,7 @@ static void getStandardFunctions(OpenGL& openGL)
 			openGL.texStorage3D = GraphicsExtensionHelper::getFunction<OpenGL::TexStorage3D>("glTexStorage3D");
 		}
 
-		if(::minorVersion >= 3u)
+		if(::versionMinor >= 3u)
 		{
 			// Version 4.3
 
@@ -1414,7 +1414,7 @@ static void getStandardFunctions(OpenGL& openGL)
 				GraphicsExtensionHelper::getFunction<OpenGL::VertexBindingDivisor>("glVertexBindingDivisor");
 		}
 
-		if(::minorVersion >= 4u)
+		if(::versionMinor >= 4u)
 		{
 			// Version 4.4
 
@@ -1440,7 +1440,7 @@ static void getStandardFunctions(OpenGL& openGL)
 				GraphicsExtensionHelper::getFunction<OpenGL::ClearTexSubImage>("glClearTexSubImage");
 		}
 
-		if(::minorVersion >= 5u)
+		if(::versionMinor >= 5u)
 		{
 			// Version 4.5
 
@@ -1797,22 +1797,20 @@ static void initialiseDebugMessaging(OpenGL& openGL)
 static void initialiseMajorVersion(const String8& versionString)
 {
 	const Uint32 delimiterPosition = versionString.find('.');
-	::majorVersion = std::strtol(versionString.substr(0u, delimiterPosition).c_str(), nullptr, 10);
+	::versionMajor = std::strtol(versionString.substr(0u, delimiterPosition).c_str(), nullptr, 10);
 }
 
 static void initialiseMinorVersion(const String8& versionString)
 {
-	const Uint32 minorNumberPosition = versionString.find('.') + 1u;
-	const Uint32 secondDelimiterPosition = versionString.find('.', minorNumberPosition);
-	Uint32 versionEndPosition = versionString.find(' ', minorNumberPosition);
+	const Uint32 minorPosition = versionString.find('.') + 1u;
+	const Uint32 secondDelimiterPosition = versionString.find('.', minorPosition);
+	Uint32 versionEndPosition = versionString.find(' ', minorPosition);
 
 	if(secondDelimiterPosition < versionEndPosition)
 		versionEndPosition = secondDelimiterPosition;
 
-	const String8 minorVersionString = versionString.substr(minorNumberPosition,
-		versionEndPosition - minorNumberPosition);
-
-	::minorVersion = std::strtol(minorVersionString.c_str(), nullptr, 10);
+	const String8 minorString = versionString.substr(minorPosition, versionEndPosition - minorPosition);
+	::versionMinor = std::strtol(minorString.c_str(), nullptr, 10);
 }
 
 static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,

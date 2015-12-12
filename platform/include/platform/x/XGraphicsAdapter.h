@@ -30,8 +30,9 @@ namespace Graphics
 	{
 	public:
 
-		Implementation(const Uint32 adapterIndex, const Core::String8& name, const DisplayModeList& supportedDisplayModes,
-			const Uint32 currentDisplayModeIndex);
+		Implementation(const Uint32 adapterIndex, const Core::String8& name,
+			const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex,
+			XRRScreenConfiguration* config);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
@@ -55,11 +56,12 @@ namespace Graphics
 		DisplayModeList _supportedDisplayModes;
 		XRRScreenConfiguration* _config;
 		Time _configTimestamp;
-		Uint32 _adapterIndex;
+		Window _rootWindow;
 		Uint32 _currentDisplayModeIndex;
 		Uint32 _initialDisplayModeIndex;
 
-		void changeDisplayMode(const Uint32 modeIndex) const;
+		DisplayModeList::const_iterator findDisplayMode(const DisplayMode& mode, Uint32& resolutionIndex) const;
+		void changeDisplayMode(const Uint32 resolutionIndex, const Uint32 refreshRate) const;
 	};
 
 #include "inline/XGraphicsAdapter.inl"

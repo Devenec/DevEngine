@@ -45,7 +45,7 @@ using namespace Core;
 using namespace Graphics;
 using namespace Maths;
 
-static const Char8* VERTEX_SHADER_SOURCE
+/*static const Char8* VERTEX_SHADER_SOURCE
 (
 	"#version 330\n"
 	"\n"
@@ -79,7 +79,7 @@ static const Char8* FRAGMENT_SHADER_SOURCE
 	"{\n"
 	"	outColour = vec4(colour, 1.0);\n"
 	"}\n"
-);
+);*/
 
 void devEngineMain(const StartupParameters& startupParameters)
 {

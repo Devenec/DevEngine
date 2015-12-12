@@ -22,7 +22,21 @@
 
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
+
+#undef Bool
+
+#include <core/ConfigInternal.h>
 #include <core/Singleton.h>
+#include <core/Types.h>
+#include <core/UtilityMacros.h>
+
+#if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
+	#define DE_ERROR_X(errorCode) \
+		Platform::X::instance().invokeError(errorCode, DE_FILE, DE_LINE, DE_FUNCTION)
+#else
+	#define DE_ERROR_X(errorCode) \
+		Platform::X::instance().invokeError(errorCode)
+#endif
 
 namespace Platform
 {
@@ -39,12 +53,20 @@ namespace Platform
 
 		inline Display* connection() const;
 
+		void invokeError(const Uint32 errorCode) const;
+
+		void invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function) const;
+
 		X& operator =(const X& x) = delete;
 		X& operator =(X&& x) = delete;
 
 	private:
 
 		Display* _connection;
+
+		void checkConnection() const;
+		void checkRandRSupport() const;
+		Bool isExtensionSupported(const Char8* name) const;
 	};
 
 #include "inline/X.inl"

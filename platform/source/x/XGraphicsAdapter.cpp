@@ -18,7 +18,7 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <algorithm>
+#include <core/Log.h>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
@@ -28,56 +28,80 @@ using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsAdapter - X]";
+
+
 // Implementation
 
 // Public
 
 GraphicsAdapter::Implementation::Implementation(const Uint32 adapterIndex, const String8& name,
-	const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex)
+	const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex, XRRScreenConfiguration* config)
 	: _name(name),
 	  _supportedDisplayModes(supportedDisplayModes),
-	  _config(nullptr),
+	  _config(config),
 	  _configTimestamp(0u),
-	  _adapterIndex(adapterIndex),
+	  _rootWindow(0u),
 	  _currentDisplayModeIndex(currentDisplayModeIndex),
 	  _initialDisplayModeIndex(currentDisplayModeIndex)
 {
-	Display* xConnection = X::instance().connection();
-	Window rootWindow = XRootWindow(xConnection, adapterIndex);
-	_config = XRRGetScreenInfo(xConnection, rootWindow);
-	XRRConfigTimes(_config, &_configTimestamp);
+	_rootWindow = XRootWindow(X::instance().connection(), adapterIndex);
+	XRRConfigTimes(config, &_configTimestamp);
 }
 
 GraphicsAdapter::Implementation::~Implementation()
 {
 	if(_currentDisplayModeIndex != _initialDisplayModeIndex)
-		changeDisplayMode(_initialDisplayModeIndex);
+		setDisplayMode(_supportedDisplayModes[_initialDisplayModeIndex]);
 
 	XRRFreeScreenConfigInfo(_config);
 }
 
 void GraphicsAdapter::Implementation::setDisplayMode(const DisplayMode& mode)
 {
-	DisplayModeList::const_iterator iterator = std::find(_supportedDisplayModes.begin(),
-		_supportedDisplayModes.end(), mode);
-
+	Uint32 resolutionIndex;
+	DisplayModeList::const_iterator iterator = findDisplayMode(mode, resolutionIndex);
 	DE_ASSERT(iterator != _supportedDisplayModes.end());
-	const Uint32 modeIndex = iterator - _supportedDisplayModes.begin();
-	changeDisplayMode(modeIndex);
-	_currentDisplayModeIndex = modeIndex;
+	changeDisplayMode(resolutionIndex, iterator->refreshRate());
+	_currentDisplayModeIndex = iterator - _supportedDisplayModes.begin();
 }
 
 // Private
 
-void GraphicsAdapter::Implementation::changeDisplayMode(const Uint32 modeIndex) const
+DisplayModeList::const_iterator GraphicsAdapter::Implementation::findDisplayMode(const DisplayMode& mode,
+	Uint32& resolutionIndex) const
+{
+	DisplayModeList::const_iterator iterator = _supportedDisplayModes.begin();
+	DisplayModeList::const_iterator previous = iterator;
+	resolutionIndex = 0u;
+
+	for(DisplayModeList::const_iterator end = _supportedDisplayModes.end(); iterator != end; ++iterator)
+	{
+		if(*iterator == mode)
+			break;
+		else if(iterator->width() != previous->width() || iterator->height() != previous->height())
+			++resolutionIndex;
+
+		previous = iterator;
+	}
+
+	return iterator;
+}
+
+void GraphicsAdapter::Implementation::changeDisplayMode(const Uint32 resolutionIndex, const Uint32 refreshRate) const
 {
 	Display* xConnection = X::instance().connection();
-	const DisplayMode& mode = _supportedDisplayModes[modeIndex];
 
-	XRRSetScreenConfigAndRate(xConnection, _config, _adapterIndex, modeIndex, RR_Rotate_0,
-		static_cast<Int16>(mode.refreshRate()), _configTimestamp);
+	const Int32 result = XRRSetScreenConfigAndRate(xConnection, _config, _rootWindow, resolutionIndex, RR_Rotate_0,
+		static_cast<Int16>(refreshRate), _configTimestamp);
 
-	// TODO: check return value?
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to change the display mode." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
 }
 
 

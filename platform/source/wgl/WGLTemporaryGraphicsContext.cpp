@@ -20,6 +20,7 @@
 
 #include <core/Error.h>
 #include <core/Log.h>
+#include <platform/Utility.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>
@@ -34,7 +35,6 @@ static const Char8* COMPONENT_TAG = "[Platform::TemporaryGraphicsContext - WGL]"
 
 static void checkOpenGLVersion();
 static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();
-static Bool isOpenGLVersionSupported(const Uint32 majorVersion, const Uint32 minorVersion);
 
 
 // Public
@@ -111,15 +111,15 @@ void TemporaryGraphicsContext::checkPixelFormat(const Int32 pixelFormatIndex) co
 
 static void checkOpenGLVersion()
 {
-	Uint32 majorVersion;
-	Uint32 minorVersion;
-	OpenGL::initialiseVersion(majorVersion, minorVersion);
+	Uint32 major;
+	Uint32 minor;
+	OpenGL::initialiseVersion(major, minor);
 
-	if(!::isOpenGLVersionSupported(majorVersion, minorVersion))
+	if(isVersionLess(major, minor, OpenGL::MIN_SUPPORTED_VERSION_MAJOR, OpenGL::MIN_SUPPORTED_VERSION_MINOR))
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " The OpenGL version " << majorVersion << '.' <<
-			minorVersion << " is not supported. The minimum supported version is " <<
-			OpenGL::MIN_SUPPORTED_VERSION_MAJOR << '.' << OpenGL::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " The OpenGL version " << major << '.' << minor <<
+			" is not supported. The minimum supported version is " << OpenGL::MIN_SUPPORTED_VERSION_MAJOR << '.' <<
+			OpenGL::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}
@@ -134,14 +134,4 @@ static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor()
 	pixelFormatDescriptor.nVersion = 1u;
 
 	return pixelFormatDescriptor;
-}
-
-static Bool isOpenGLVersionSupported(const Uint32 majorVersion, const Uint32 minorVersion)
-{
-	if(majorVersion < OpenGL::MIN_SUPPORTED_VERSION_MAJOR)
-		return false;
-	else if(majorVersion == OpenGL::MIN_SUPPORTED_VERSION_MAJOR)
-		return minorVersion >= OpenGL::MIN_SUPPORTED_VERSION_MINOR;
-	else
-		return true;
 }

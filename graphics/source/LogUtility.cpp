@@ -140,7 +140,7 @@ static void logGraphicsAdapterDisplayMode(const DisplayMode& mode, const Bool in
 	if(mode.refreshRate() < 100u)
 		defaultLog << ' ';
 
-	defaultLog << mode.refreshRate() << "Hz";
+	defaultLog << mode.refreshRate() << " Hz";
 
 	if(insertSeparator)
 		defaultLog << "    ";
