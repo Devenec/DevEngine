@@ -29,8 +29,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::X]";
-
+static const Char8* COMPONENT_TAG 					  = "[Platform::X]";
 static const Int32 MIN_SUPPORTED_XRANDR_VERSION_MAJOR = 1;
 static const Int32 MIN_SUPPORTED_XRANDR_VERSION_MINOR = 1;
 
@@ -46,7 +45,7 @@ X::X()
 {
 	checkConnection();
 	::setErrorHandlers();
-	checkRandRSupport();
+	checkXRandRSupport();
 }
 
 X::~X()
@@ -91,9 +90,18 @@ void X::checkConnection() const
 	}
 }
 
-void X::checkRandRSupport() const
+void X::checkXRandRSupport() const
 {
-	if(isExtensionSupported("RANDR"))
+	Int32 baseEventType;
+	Int32 baseErrorCode;
+	const Int32 result = XRRQueryExtension(_connection, &baseEventType, &baseErrorCode);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " XRandR is not supported." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
+	else
 	{
 		Int32 versionMajor = 0;
 		Int32 versionMinor = 0;
@@ -114,21 +122,6 @@ void X::checkRandRSupport() const
 				Log::Flush();
 		}
 	}
-	else
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " XRandR is not supported." << Log::Flush();
-		DE_ERROR(0x0);
-	}
-}
-
-Bool X::isExtensionSupported(const Char8* name) const
-{
-	Int32 majorOpcode;
-	Int32 baseEventType;
-	Int32 baseErrorCode;
-	const Int32 result = XQueryExtension(_connection, name, &majorOpcode, &baseEventType, &baseErrorCode);
-
-	return result == 1;
 }
 
 
@@ -136,10 +129,10 @@ Bool X::isExtensionSupported(const Char8* name) const
 
 static Int32 handleError(Display* xConnection, XErrorEvent* errorInfo)
 {
-	Char8 errorText[512];
-	XGetErrorText(xConnection, errorInfo->error_code, errorText, sizeof(errorText));
+	Char8 errorMessage[512];
+	XGetErrorText(xConnection, errorInfo->error_code, errorMessage, sizeof(errorMessage));
 
-	defaultLog << LogLevel::Error << ::COMPONENT_TAG << " X error occurred, " << errorText << " (" <<
+	defaultLog << LogLevel::Error << ::COMPONENT_TAG << " X error occurred, " << errorMessage << " (" <<
 		StreamFormat::Hexadecimal << static_cast<Uint32>(errorInfo->error_code) << StreamFormat::Decimal << ")." <<
 		Log::Flush();
 

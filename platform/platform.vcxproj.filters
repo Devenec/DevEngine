@@ -144,9 +144,6 @@
     <ClCompile Include="source\wgl\WGLGraphicsDeviceFactory.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
-    <ClCompile Include="source\wgl\WGLGraphicsExtensionHelper.cpp">
-      <Filter>Source Files\wgl</Filter>
-    </ClCompile>
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>

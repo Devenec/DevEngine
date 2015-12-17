@@ -65,8 +65,7 @@ namespace Platform
 		Display* _connection;
 
 		void checkConnection() const;
-		void checkRandRSupport() const;
-		Bool isExtensionSupported(const Char8* name) const;
+		void checkXRandRSupport() const;
 	};
 
 #include "inline/X.inl"

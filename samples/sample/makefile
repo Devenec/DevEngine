@@ -46,6 +46,7 @@ STATIC_LIBRARIES = \
 	graphics \
 	core \
 	platform \
+	dl \
 	X11 \
 	Xrandr
 

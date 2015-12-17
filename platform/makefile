@@ -21,6 +21,7 @@ INCLUDE_DIRECTORIES = \
 
 SOURCE_DIRECTORIES = \
 	source \
+	source/glx \
 	source/null \
 	source/posix \
 	source/std \
@@ -28,13 +29,16 @@ SOURCE_DIRECTORIES = \
 
 SOURCE_FILES = \
 	Utility.cpp \
+	glx/GLX.cpp \
+	glx/GLXGraphicsConfigChooser.cpp \
 	null/NullLogManager.cpp \
 	posix/POSIXFileStream.cpp \
 	std/STDLog.cpp \
 	std/STDMain.cpp \
 	x/X.cpp \
 	x/XGraphicsAdapter.cpp \
-	x/XGraphicsAdapterManager.cpp
+	x/XGraphicsAdapterManager.cpp \
+	x/XGraphicsDeviceManager.cpp
 
 
 include $(MAKE_DIRECTORY)/linux-build.mk

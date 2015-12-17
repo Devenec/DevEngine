@@ -113,12 +113,12 @@ private:
 
 		const Int32 result =
 			SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(windowImplementation));
-	
+
 		if(result == 0 && getWindowsErrorCode() != 0u)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the user data pointer of a window." <<
 				Log::Flush();
-	
+
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
@@ -202,7 +202,7 @@ void GraphicsDeviceManager::destroyWindowAndDevice(GraphicsDevice* device)
 
 void GraphicsDeviceManager::processWindowMessages() const
 {
-	return ::processMessages();
+	::processMessages();
 }
 
 
@@ -278,7 +278,7 @@ static void destroyWindow(HWND windowHandle)
 static void initialiseWGL()
 {
 	HWND temporaryWindowHandle = ::createWindow();
-	
+
 	{
 		TemporaryGraphicsContext temporaryGraphicsContext(temporaryWindowHandle);
 		WGL::initialise(temporaryGraphicsContext);

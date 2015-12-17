@@ -18,7 +18,7 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * Copyright (c) 2013-2014 The Khronos Group Inc.
+ * Copyright (c) 2013-2015 The Khronos Group Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and/or associated documentation files (the
@@ -191,13 +191,13 @@ namespace Platform
 
 		WGL() = delete;
 
-		WGL(const WGL& wgl) = delete;
-		WGL(WGL&& wgl) = delete;
+		WGL(const WGL& wGL) = delete;
+		WGL(WGL&& wGL) = delete;
 
 		~WGL() = delete;
 
-		WGL& operator =(const WGL& wgl) = delete;
-		WGL& operator =(WGL&& wgl) = delete;
+		WGL& operator =(const WGL& wGL) = delete;
+		WGL& operator =(WGL&& wGL) = delete;
 
 		static void initialise(const GraphicsContextBase& graphicsContext);
 	};

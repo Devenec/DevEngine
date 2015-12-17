@@ -18,7 +18,7 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  *
  *
- * Copyright (c) 2013-2014 The Khronos Group Inc.
+ * Copyright (c) 2013-2015 The Khronos Group Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and/or associated documentation files (the

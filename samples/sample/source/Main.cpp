@@ -87,9 +87,9 @@ void devEngineMain(const StartupParameters& startupParameters)
 
 	ContentManager contentManager;
 	GraphicsAdapterManager graphicsAdapterManager;
-	/*GraphicsDeviceManager graphicsDeviceManager;
+	GraphicsDeviceManager graphicsDeviceManager;
 
-	GraphicsDevice* graphicsDevice = graphicsDeviceManager.createWindowAndDevice(1280u, 720u);
+	/*GraphicsDevice* graphicsDevice = graphicsDeviceManager.createWindowAndDevice(1280u, 720u);
 	Window* window = graphicsDevice->window();
 	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 	Image* image = contentManager.load<Image>("assets/icon.png");

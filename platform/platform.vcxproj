@@ -89,7 +89,6 @@
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsDeviceFactory.cpp" />
-    <ClCompile Include="source\wgl\WGLGraphicsExtensionHelper.cpp" />
     <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp" />
     <ClCompile Include="source\windows\WindowsFileSystem.cpp" />
     <ClCompile Include="source\windows\Windows.cpp" />

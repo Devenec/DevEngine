@@ -43,7 +43,9 @@ namespace Platform
 
 	private:
 
-		static Void* getFunctionPointer(const Char8* name);
+		using Function = void (*)();
+
+		static Function getFunctionInternal(const Char8* name);
 	};
 
 #include "inline/GraphicsExtensionHelper.inl"

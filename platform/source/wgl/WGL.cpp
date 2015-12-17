@@ -80,6 +80,18 @@ void WGL::initialise(const GraphicsContextBase& graphicsContext)
 }
 
 
+// Platform::GraphicsExtensionHelper
+
+// Private
+
+// Static
+
+GraphicsExtensionHelper::Function GraphicsExtensionHelper::getFunctionInternal(const Char8* name)
+{
+	return WGL::getProcAddress(name);
+}
+
+
 // External
 
 static void checkExtensions()

@@ -25,5 +25,5 @@
 template<typename T>
 T GraphicsExtensionHelper::getFunction(const Char8* name)
 {
-	return reinterpret_cast<T>(getFunctionPointer(name));
+	return reinterpret_cast<T>(getFunctionInternal(name));
 }

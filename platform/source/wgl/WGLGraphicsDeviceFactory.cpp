@@ -96,7 +96,7 @@ Int32 GraphicsDeviceFactory::chooseGraphicsConfig(GraphicsConfig& chosenConfig) 
 	const PixelFormatIndexList pixelFormatIndices = getPixelFormatIndices(pixelFormatCount);
 	PixelFormatAttributeList pixelFormatAttributes;
 	const Int32 pixelFormatIndex = chooseBestPixelFormat(pixelFormatIndices, pixelFormatAttributes);
-	
+
 	chosenConfig = GraphicsConfig(pixelFormatAttributes[5], pixelFormatAttributes[4], pixelFormatAttributes[2],
 		pixelFormatAttributes[1], pixelFormatAttributes[3], pixelFormatAttributes[6]);
 
@@ -148,8 +148,7 @@ GraphicsDeviceFactory::PixelFormatIndexList GraphicsDeviceFactory::getPixelForma
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get matching configurations." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
-
-	if(matchingFormatCount == 0u)
+	else if(matchingFormatCount == 0u)
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " No matching configurations were found." << Log::Flush();
 		DE_ERROR(0x0);
@@ -198,14 +197,14 @@ PixelFormatAttributeList GraphicsDeviceFactory::getPixelFormatAttributes(const I
 
 // External
 
-Bool isPixelFormatAccelerationLess(const PixelFormatAttributeList& formatAttributesA,
+static Bool isPixelFormatAccelerationLess(const PixelFormatAttributeList& formatAttributesA,
 	const PixelFormatAttributeList& formatAttributesB)
 {
 	return formatAttributesA[0] == WGL::NO_ACCELERATION_ARB ||
 		(formatAttributesA[0] == WGL::GENERIC_ACCELERATION_ARB && formatAttributesB[0] == WGL::FULL_ACCELERATION_ARB);
 }
 
-Bool isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
+static Bool isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
 	const PixelFormatAttributeList& formatAttributesB)
 {
 	if(formatAttributesA[0] != formatAttributesB[0])

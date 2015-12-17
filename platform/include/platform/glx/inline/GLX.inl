@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/WGLGraphicsExtensionHelper.cpp
+ * @file platform/glx/inline/GLX.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,16 +18,10 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <platform/GraphicsExtensionHelper.h>
-#include <platform/wgl/WGL.h>
-
-using namespace Platform;
-
 // Private
 
-// Static
-
-Void* GraphicsExtensionHelper::getFunctionPointer(const Char8* name)
+template<typename T>
+T GLX::loadFunction(const Char8* name) const
 {
-	return WGL::getProcAddress(name);
+	return reinterpret_cast<T>(loadFunctionInternal(name));
 }

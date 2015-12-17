@@ -52,8 +52,9 @@ for custom content types.
 
 Clang 3.6 and (GNU) Make 3.81 is required (older versions may also work).
 
-The project depends on the following additional development libraries:
+The project depends on the following additional libraries:
 - libc++
+- libGL(.so)
 - libX11
 - libXrandr
 
@@ -72,7 +73,7 @@ need to be rebuilt and some time is saved.
 ### Third Party Source Code Included
 
 - [libpng] 1.6.19
-- [OpenGL and WGL API] header files
+- [GLX, OpenGL and WGL API] header files
 - [zlib] 1.2.8
 
 
@@ -86,5 +87,5 @@ described in LICENCE-3RD-PARTY.txt
 
 
 [libpng]: http://www.libpng.org/pub/png/libpng.html
-[OpenGL and WGL API]: https://www.opengl.org/registry/#headers
+[GLX, OpenGL and WGL API]: https://www.opengl.org/registry/#headers
 [zlib]: http://www.zlib.net/
