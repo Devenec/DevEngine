@@ -21,11 +21,11 @@
 #pragma once
 
 #include <core/ConfigInternal.h>
+#include <core/UtilityMacros.h>
 
 #if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 
 #include <core/Types.h>
-#include <core/UtilityMacros.h>
 
 #define DE_ASSERT(expression) \
 	(expression) ? DE_NO_OPERATION : Debug::failAssertion(DE_STRING8(expression), DE_FILE, DE_LINE, DE_FUNCTION)

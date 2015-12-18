@@ -59,7 +59,7 @@
 	#define DE_CHECK_ERROR_OPENGL(openGLPointer) \
 		(openGLPointer)->checkForErrors(DE_FILE, DE_LINE, DE_FUNCTION)
 #else
-	#define DE_CHECK_ERROR_OPENGL() \
+	#define DE_CHECK_ERROR_OPENGL(openGLPointer) \
 		DE_NO_OPERATION
 #endif
 

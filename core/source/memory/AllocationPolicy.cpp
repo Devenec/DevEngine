@@ -21,6 +21,7 @@
 #include <cstdlib>
 #include <core/Error.h>
 #include <core/Log.h>
+#include <core/debug/Assert.h>
 #include <core/memory/AllocationPolicy.h>
 
 using namespace Core;

@@ -1,9 +1,8 @@
 # directories
 
-**/obj/
 build/.vs/
 build/linux/
-build/Win32/
+build/windows/
 
 
 # file extensions

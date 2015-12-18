@@ -84,9 +84,7 @@ private:
 
 		if(result != 0 && (adapterInfo.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP) != 0u)
 		{
-			GraphicsAdapter::Implementation* adapterImplementation = createAdapterImplementation(adapterIndex,
-				adapterInfo);
-
+			GraphicsAdapter::Implementation* adapterImplementation = createAdapterImplementation(adapterInfo);
 			GraphicsAdapter* adapter = DE_NEW(GraphicsAdapter)(adapterImplementation);
 
 			if((adapterInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) != 0u)
@@ -98,7 +96,7 @@ private:
 		return result != 0;
 	}
 
-	GraphicsAdapter::Implementation* createAdapterImplementation(const Uint32 adapterIndex, DISPLAY_DEVICEW& adapterInfo)
+	GraphicsAdapter::Implementation* createAdapterImplementation(DISPLAY_DEVICEW& adapterInfo)
 		const
 	{
 		DisplayModeList displayModes;

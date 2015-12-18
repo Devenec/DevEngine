@@ -26,12 +26,20 @@ using namespace Core;
 
 void Application::deinitialise()
 {
+
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 	_allocationTracker.deinitialise();
+#endif
+
 	_logManager.deinitialise();
 }
 
 void Application::initialise()
 {
 	_logManager.initialise();
+
+#if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 	_allocationTracker.initialise();
+#endif
+
 }
