@@ -230,7 +230,7 @@ static HWND createWindow(const Uint32 width, const Uint32 height)
 static RECT createWindowRectangle(const Uint32 width, const Uint32 height)
 {
 	const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
-	const DisplayMode& currentDisplayMode = graphicsAdapterManager.graphicsAdapters()[0]->currentDisplayMode();
+	const DisplayMode& currentDisplayMode = graphicsAdapterManager.adapters()[0]->currentDisplayMode();
 
 	RECT rectangle;
 	rectangle.left = currentDisplayMode.width() / 2 - width / 2;

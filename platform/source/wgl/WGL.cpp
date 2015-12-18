@@ -88,7 +88,7 @@ void WGL::initialise(const GraphicsContextBase& graphicsContext)
 
 GraphicsExtensionHelper::Function GraphicsExtensionHelper::getFunctionInternal(const Char8* name)
 {
-	return WGL::getProcAddress(name);
+	return reinterpret_cast<Function>(WGL::getProcAddress(name));
 }
 
 

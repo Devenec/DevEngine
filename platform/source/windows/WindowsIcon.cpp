@@ -35,7 +35,7 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG = "[Platform::Icon - Windows]";
 
-static void checkImageFormat(const Imageformat& format);
+static void checkImageFormat(const ImageFormat& format);
 static BITMAPV5HEADER createBitmapHeader(const Image* image);
 static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer);
 static ICONINFO createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
@@ -112,7 +112,7 @@ void Icon::createIcon(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 
 // External
 
-static void checkImageFormat(const Imageformat& format)
+static void checkImageFormat(const ImageFormat& format)
 {
 	switch(format)
 	{
