@@ -85,11 +85,6 @@ namespace Platform
 		using GetPixelFormatAttribIVARB = Int32 (DE_CALL_WGL*)(HDC hdc, Int32 piValues, Int32 iLayerPlane,
 			Uint32 nAttributes, const Int32* piAttributes, Int32* attributeValues);
 
-		// WGL_EXT_swap_control
-
-		using GetSwapIntervalEXT = Int32 (DE_CALL_WGL*)();
-		using SwapIntervalEXT = Int32 (DE_CALL_WGL*)(Int32 interval);
-
 
 		// Standard
 

@@ -18,7 +18,6 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/Log.h>
 #include <core/Memory.h>
 #include <core/StringStream.h>
 #include <core/Types.h>
@@ -35,8 +34,6 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsAdapterManager - X]";
-
 static String8 getAdapterName(const Uint32 adapterIndex);
 static Uint32 getCurrentAdapterResolutionIndex(XRRScreenConfiguration* adapterConfig);
 
@@ -49,9 +46,9 @@ public:
 
 	Implementation()
 	{
-		const Int32 adapterCount = XScreenCount(_x.connection());
+		const Uint32 adapterCount = _x.getGraphicsAdapterCount();
 
-		for(Int32 i = 0; i < adapterCount; ++i)
+		for(Uint32 i = 0u; i < adapterCount; ++i)
 		{
 			GraphicsAdapter::Implementation* adapterImplementation = createAdapterImplementation(i);
 			createAdapter(adapterImplementation);
@@ -82,7 +79,7 @@ private:
 
 	GraphicsAdapter::Implementation* createAdapterImplementation(const Uint32 adapterIndex) const
 	{
-		XRRScreenConfiguration* adapterConfig = getAdapterConfig(adapterIndex);
+		XRRScreenConfiguration* adapterConfig = X::instance().getGraphicsAdapterConfig(adapterIndex);
 		const Uint32 currentResolutionIndex = ::getCurrentAdapterResolutionIndex(adapterConfig);
 		const Uint32 currentRefreshRate = XRRConfigCurrentRate(adapterConfig);
 		DisplayModeList displayModes;
@@ -100,42 +97,25 @@ private:
 		_adapters.push_back(adapter);
 	}
 
-	XRRScreenConfiguration* getAdapterConfig(const Int32 adapterIndex) const
-	{
-		Display* xConnection = _x.connection();
-		Window rootWindow = XRootWindow(xConnection, adapterIndex);
-		XRRScreenConfiguration* config = XRRGetScreenInfo(xConnection, rootWindow);
-
-		if(config == nullptr)
-		{
-			defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the adapter configuration." <<
-				Log::Flush();
-
-			DE_ERROR_X(0x0);
-		}
-
-		return config;
-	}
-
 	Uint32 getAdapterDisplayModes(const Int32 adapterIndex, DisplayModeList& modes, const Uint32 currentResolutionIndex,
 		const Uint32 currentRefreshRate) const
 	{
-		Display* xConnection = _x.connection();
-		Int32 resolutionCount;
-		XRRScreenSize* resolutions = XRRSizes(xConnection, adapterIndex, &resolutionCount);
+		X& x = X::instance();
+		Uint32 resolutionCount;
+		XRRScreenSize* resolutions = x.getGraphicsAdapterResolutions(adapterIndex, resolutionCount);
 		Uint32 currentModeIndex = 0u;
 
 		for(Int32 i = 0; i < resolutionCount; ++i)
 		{
-			Int32 frequencyCount;
-			Int16* frequencies = XRRRates(xConnection, adapterIndex, i, &frequencyCount);
+			Uint32 refreshRateCount;
+			Int16* refreshRates = x.getGraphicsAdapterRefreshRates(adapterIndex, i, refreshRateCount);
 
-			for(Int32 j = 0; j < frequencyCount; ++j)
+			for(Int32 j = 0; j < refreshRateCount; ++j)
 			{
-				if(i == currentResolutionIndex && frequencies[j] == currentRefreshRate)
+				if(i == currentResolutionIndex && refreshRates[j] == currentRefreshRate)
 					currentModeIndex = modes.size();
 
-				DisplayMode mode(resolutions[i].width, resolutions[i].height, 0u, frequencies[j]);
+				DisplayMode mode(resolutions[i].width, resolutions[i].height, 0u, refreshRates[j]);
 				modes.push_back(mode);
 			}
 		}

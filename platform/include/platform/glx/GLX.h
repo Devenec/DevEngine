@@ -45,6 +45,7 @@
 #include <core/Singleton.h>
 #include <core/Types.h>
 #include <graphics/LogUtility.h>
+#include <platform/glx/GLXTypes.h>
 #include <platform/x/X.h>
 
 namespace Platform
@@ -55,14 +56,11 @@ namespace Platform
 
 		// Version 1.0
 
-		struct Context;
-		struct Drawable;
-
-		using DestroyContext = void (*)(Display* dpy, Context ctx);
-		using IsDirect = Int32 (*)(Display* dpy, Context ctx);
+		using DestroyContext = void (*)(Display* dpy, GLXContext ctx);
+		using IsDirect = Int32 (*)(Display* dpy, GLXContext ctx);
 		using QueryExtension = Int32 (*)(Display* dpy, Int32* errorb, Int32* event);
 		using QueryVersion = Int32 (*)(Display* dpy, Int32* maj, Int32* min);
-		using SwapBuffers = void (*)(Display* dpy, Drawable drawable);
+		using SwapBuffers = void (*)(Display* dpy, GLXDrawable drawable);
 
 		// Version 1.1
 
@@ -70,13 +68,10 @@ namespace Platform
 
 		// Version 1.3
 
-		struct FBConfigStruct;
-		using FBConfig = FBConfigStruct*;
-
-		using ChooseFBConfig = FBConfig* (*)(Display* dpy, Int32 screen, const Int32* attrib_list, Int32* nelements);
-		using GetFBConfigAttrib = Int32 (*)(Display* dpy, FBConfig config, Int32 attribute, Int32* value);
-		using GetVisualFromFBConfig = XVisualInfo* (*)(Display* dpy, FBConfig config);
-		using MakeContextCurrent = Int32 (*)(Display* dpy, Drawable draw, Drawable read, Context ctx);
+		using ChooseFBConfig = GLXFBConfig* (*)(Display* dpy, Int32 screen, const Int32* attrib_list, Int32* nelements);
+		using GetFBConfigAttrib = Int32 (*)(Display* dpy, GLXFBConfig config, Int32 attribute, Int32* value);
+		using GetVisualFromFBConfig = XVisualInfo* (*)(Display* dpy, GLXFBConfig config);
+		using MakeContextCurrent = Int32 (*)(Display* dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
 
 		// version 1.4
 
@@ -86,12 +81,8 @@ namespace Platform
 
 		// GLX_ARB_create_context
 
-		using CreateContextAttribsARB = Context (*)(Display* dpy, FBConfig config, Context share_context, Int32 direct,
-			const Int32* attrib_list);
-
-		// GLX_EXT_swap_control
-
-		using SwapIntervalEXT = void (*)(Display* dpy, Drawable drawable, Int32 interval);
+		using CreateContextAttribsARB = GLXContext (*)(Display* dpy, GLXFBConfig config, GLXContext share_context,
+			Int32 direct, const Int32* attrib_list);
 
 
 		// Version 1.0
@@ -210,13 +201,6 @@ namespace Platform
 		static const Int32 CONTEXT_CORE_PROFILE_BIT_ARB			 = 0x0001;
 		static const Int32 CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB = 0x0002;
 		static const Int32 CONTEXT_PROFILE_MASK_ARB				 = 0x9126;
-
-		// GLX_EXT_swap_control
-
-		static const Int32 SWAP_INTERVAL_EXT	 = 0x20F1;
-		static const Int32 MAX_SWAP_INTERVAL_EXT = 0x20F2;
-
-		static SwapIntervalEXT swapIntervalEXT;
 
 
 		GLX();

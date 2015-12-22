@@ -66,9 +66,6 @@ GLX::GetProcAddress GLX::getProcAddress = nullptr;
 
 GLX::CreateContextAttribsARB GLX::createContextAttribsARB = nullptr;
 
-// GLX_EXT_swap_control
-
-GLX::SwapIntervalEXT GLX::swapIntervalEXT = nullptr;
 
 GLX::GLX()
 	: _libraryHandle(nullptr)
@@ -130,20 +127,12 @@ void GLX::loadStandardFunctions() const
 
 void GLX::checkSupport() const
 {
-	Display* xConnection = X::instance().connection();
-	const Int32 result = queryExtension(xConnection, nullptr, nullptr);
+	Uint32 versionMajor = 0u;
+	Uint32 versionMinor = 0u;
+	const Bool isSupported = X::instance().isGLXSupported(versionMajor, versionMinor);
 
-	if(result == 0)
+	if(isSupported)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " GLX is not supported." << Log::Flush();
-		DE_ERROR_X(0x0);
-	}
-	else
-	{
-		Int32 versionMajor = 0;
-		Int32 versionMinor = 0;
-		queryVersion(xConnection, &versionMajor, &versionMinor);
-
 		if(isVersionLess(versionMajor, versionMinor, MIN_SUPPORTED_GLX_VERSION_MAJOR, MIN_SUPPORTED_GLX_VERSION_MINOR))
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " GLX version " << versionMajor << '.' << versionMinor <<
@@ -158,6 +147,11 @@ void GLX::checkSupport() const
 				Log::Flush();
 		}
 	}
+	else
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " GLX is not supported." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
 }
 
 void GLX::getExtensionFunctions() const
@@ -166,10 +160,6 @@ void GLX::getExtensionFunctions() const
 
 	createContextAttribsARB =
 		GraphicsExtensionHelper::getFunction<CreateContextAttribsARB>("glXCreateContextAttribsARB");
-
-	// GLX_EXT_swap_control
-
-	swapIntervalEXT = GraphicsExtensionHelper::getFunction<SwapIntervalEXT>("glXSwapIntervalEXT");
 }
 
 void GLX::checkExtensions() const
@@ -179,9 +169,7 @@ void GLX::checkExtensions() const
 
 ExtensionNameList GLX::getExtensionNames() const
 {
-	Display* xConnection = X::instance().connection();
-	const Int32 screen = XDefaultScreen(xConnection);
-	const String8 extensionNamesString(queryExtensionsString(xConnection, screen));
+	const String8 extensionNamesString(X::instance().getExtensionNameString());
 	ExtensionNameList extensionNames;
 
 	if(extensionNamesString.length() != 0u)
@@ -201,19 +189,18 @@ ExtensionNameList GLX::getExtensionNames() const
 
 void GLX::unloadFunctions() const
 {
-	destroyContext = nullptr;
-	isDirect = nullptr;
-	queryExtension = nullptr;
-	queryVersion = nullptr;
-	swapBuffers = nullptr;
-	queryExtensionsString = nullptr;
-	chooseFBConfig = nullptr;
-	getFBConfigAttrib = nullptr;
-	getVisualFromFBConfig = nullptr;
-	makeContextCurrent = nullptr;
-	getProcAddress = nullptr;
 	createContextAttribsARB = nullptr;
-	swapIntervalEXT = nullptr;
+	getProcAddress = nullptr;
+	makeContextCurrent = nullptr;
+	getVisualFromFBConfig = nullptr;
+	getFBConfigAttrib = nullptr;
+	chooseFBConfig = nullptr;
+	queryExtensionsString = nullptr;
+	swapBuffers = nullptr;
+	queryVersion = nullptr;
+	queryExtension = nullptr;
+	isDirect = nullptr;
+	destroyContext = nullptr;
 }
 
 void GLX::unloadLibrary() const

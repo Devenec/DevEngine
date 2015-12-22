@@ -63,10 +63,6 @@ WGL::ChoosePixelFormatARB WGL::choosePixelFormatARB = nullptr;
 WGL::GetPixelFormatAttribFVARB WGL::getPixelFormatAttribfvARB = nullptr;
 WGL::GetPixelFormatAttribIVARB WGL::getPixelFormatAttribivARB = nullptr;
 
-// WGL_EXT_swap_control
-
-WGL::GetSwapIntervalEXT WGL::getSwapIntervalEXT = nullptr;
-WGL::SwapIntervalEXT WGL::swapIntervalEXT = nullptr;
 
 // Static
 
@@ -127,11 +123,6 @@ static void getExtensionFunctions()
 
 	WGL::getPixelFormatAttribivARB =
 		GraphicsExtensionHelper::getFunction<WGL::GetPixelFormatAttribIVARB>("wglGetPixelFormatAttribivARB");
-
-	// WGL_EXT_swap_control
-
-	WGL::getSwapIntervalEXT = GraphicsExtensionHelper::getFunction<WGL::GetSwapIntervalEXT>("wglGetSwapIntervalEXT");
-	WGL::swapIntervalEXT = GraphicsExtensionHelper::getFunction<WGL::SwapIntervalEXT>("wglSwapIntervalEXT");
 }
 
 static ExtensionNameList getExtensionNames(const GraphicsContextBase& graphicsContext)

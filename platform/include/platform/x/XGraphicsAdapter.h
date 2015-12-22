@@ -56,12 +56,11 @@ namespace Graphics
 		DisplayModeList _supportedDisplayModes;
 		XRRScreenConfiguration* _config;
 		Time _configTimestamp;
-		Window _rootWindow;
+		Window _rootWindowHandle;
 		Uint32 _currentDisplayModeIndex;
 		Uint32 _initialDisplayModeIndex;
 
 		DisplayModeList::const_iterator findDisplayMode(const DisplayMode& mode, Uint32& resolutionIndex) const;
-		void changeDisplayMode(const Uint32 resolutionIndex, const Uint32 refreshRate) const;
 	};
 
 #include "inline/XGraphicsAdapter.inl"

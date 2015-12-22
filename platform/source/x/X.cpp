@@ -53,6 +53,97 @@ X::~X()
 	XCloseDisplay(_connection);
 }
 
+//
+
+#include <platform/glx/GLX.h>
+
+GLXContext X::createGraphicsContext(GLXFBConfig configHandle, const Int32* attributes, const Bool isDirect) const
+{
+	// TODO: implement
+	return nullptr;
+}
+
+Window X::createWindow(const Window parentWindowHandle, const Int32 x, const Int32 y, const Uint32 width,
+	const Uint32 height, XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask) const
+{
+	attributes.colormap = XCreateColormap(_connection, parentWindowHandle, visualInfo->visual, AllocNone);
+
+	return XCreateWindow(_connection, parentWindowHandle, x, y, width, height, 0u, visualInfo->depth,
+		InputOutput, visualInfo->visual, attributeMask, &attributes);
+}
+
+void X::destroyGraphicsContext(GLXContext contextHandle) const
+{
+	// TODO: implement
+}
+
+const Char8* X::getExtensionNameString() const
+{
+	const Int32 screen = XDefaultScreen(_connection);
+	return GLX::queryExtensionsString(_connection, screen);
+}
+
+XRRScreenConfiguration* X::getGraphicsAdapterConfig(const Uint32 adapterIndex) const
+{
+	const Window rootWindowHandle = XRootWindow(_connection, adapterIndex);
+	XRRScreenConfiguration* config = XRRGetScreenInfo(_connection, rootWindowHandle);
+
+	if(config == nullptr)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the graphics adapter configuration." <<
+			Log::Flush();
+
+		DE_ERROR_X(0x0);
+	}
+
+	return config;
+}
+
+Int32 X::getGraphicsConfigAttribute(GLXFBConfig configHandle, const Int32 attributeName) const
+{
+	Int32 value = 0;
+	const Int32 result = GLX::getFBConfigAttrib(_connection, configHandle, attributeName, &value);
+
+	if(result != 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get a configuration attribute." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
+
+	return value;
+}
+
+GLXFBConfig* X::getGraphicsConfigs(const Int32* attributes, Uint32& configCount) const
+{
+	const Int32 screen = XDefaultScreen(_connection);
+
+	GLXFBConfig* configHandles = GLX::chooseFBConfig(_connection, screen, attributes,
+		reinterpret_cast<Int32*>(&configCount));
+
+	if(configHandles == nullptr)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get matching configurations." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
+
+	return configHandles;
+}
+
+XVisualInfo* X::getGraphicsConfigVisualInfo(GLXFBConfig configHandle) const
+{
+	XVisualInfo* visualInfo = GLX::getVisualFromFBConfig(_connection, configHandle);
+
+	if(visualInfo == nullptr)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
+			" Failed to get the visual info of a graphics configuration." << Log::Flush();
+
+		DE_ERROR_X(0x0);
+	}
+
+	return visualInfo;
+}
+
 void X::invokeError(const Uint32 errorCode) const
 {
 	defaultLog << LogLevel::Error << "Error occurred with code " << StreamFormat::Hexadecimal << errorCode <<
@@ -72,6 +163,60 @@ void X::invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line
 	XSync(_connection, False);
 	DE_DEBUGGER_BREAK();
 	std::abort();
+}
+
+Bool X::isGLXSupported(Uint32& versionMajor, Uint32& versionMinor) const
+{
+	Int32 result = GLX::queryExtension(_connection, nullptr, nullptr);
+
+	if(result == 0)
+	{
+		return false;
+	}
+	else
+	{
+		result = GLX::queryVersion(_connection, reinterpret_cast<Int32*>(&versionMajor),
+			reinterpret_cast<Int32*>(&versionMinor));
+
+		return result != 0;
+	}
+}
+
+Bool X::isGraphicsContextDirect(GLXContext contextHandle) const
+{
+	// TODO: implement
+	return false;
+}
+
+void X::makeGraphicsContextCurrent(GLXDrawable drawableHandle, GLXContext contextHandle) const
+{
+	// TODO: implement
+}
+
+XEvent X::popEvent() const
+{
+	XEvent event;
+	XNextEvent(_connection, &event);
+
+	return event;
+}
+
+void X::setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
+	const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const
+{
+	const Int32 result = XRRSetScreenConfigAndRate(_connection, graphicsAdapterConfig, rootWindowHandle, resolutionIndex,
+		RR_Rotate_0, static_cast<Int16>(refreshRate), timestamp);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the display mode." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
+}
+
+void X::swapBuffers(GLXDrawable drawableHandle) const
+{
+	// TODO: implement
 }
 
 // Private

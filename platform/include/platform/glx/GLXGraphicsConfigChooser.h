@@ -46,7 +46,7 @@ namespace Platform
 
 		~GraphicsConfigChooser() = default;
 
-		GLX::FBConfig chooseConfig(Graphics::GraphicsConfig& chosenConfig) const;
+		GLXFBConfig chooseConfig(Graphics::GraphicsConfig& chosenConfig) const;
 
 		GraphicsConfigChooser& operator =(const GraphicsConfigChooser& graphicsConfigChooser) = delete;
 		GraphicsConfigChooser& operator =(GraphicsConfigChooser&& graphicsConfigChooser) = delete;
@@ -57,13 +57,13 @@ namespace Platform
 
 		static const ConfigAttributeList CONFIG_ATTRIBUTE_IDS;
 
-		Display* _xConnection;
+		X& _x;
 
-		GLX::FBConfig* getConfigs(Int32& configCount) const;
+		GLXFBConfig* getConfigs(Uint32& configCount) const;
 
-		GLX::FBConfig chooseBestConfig(GLX::FBConfig* configs, const Uint32 configCount,
+		GLXFBConfig chooseBestConfig(GLXFBConfig* configHandles, const Uint32 configCount,
 			ConfigAttributeList& configAttributes) const;
 
-		ConfigAttributeList getConfigAttributes(const GLX::FBConfig config) const;
+		ConfigAttributeList getConfigAttributes(GLXFBConfig configHandle) const;
 	};
 }

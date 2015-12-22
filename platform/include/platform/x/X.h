@@ -29,6 +29,7 @@
 #include <core/Singleton.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
+#include <platform/glx/GLXTypes.h>
 
 #if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 	#define DE_ERROR_X(errorCode) \
@@ -51,11 +52,55 @@ namespace Platform
 
 		~X();
 
-		inline Display* connection() const;
+		GLXContext createGraphicsContext(GLXFBConfig configHandle, const Int32* attributes, const Bool isDirect) const;
+
+		Window createWindow(const Window parentWindowHandle, const Int32 x, const Int32 y, const Uint32 width,
+			const Uint32 height, XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask)
+			const;
+
+		void destroyGraphicsContext(GLXContext contextHandle) const;
+
+		inline void destroyWindow(const Window windowHandle) const;
+
+		inline Int32 getDefaultGraphicsAdapterIndex() const;
+
+		const Char8* getExtensionNameString() const;
+
+		XRRScreenConfiguration* getGraphicsAdapterConfig(const Uint32 adapterIndex) const;
+
+		inline Uint32 getGraphicsAdapterCount() const;
+
+		inline Int16* getGraphicsAdapterRefreshRates(const Uint32 adapterIndex, const Uint32 resolutionIndex,
+			Uint32& rateCount) const;
+
+		inline XRRScreenSize* getGraphicsAdapterResolutions(const Uint32 adapterIndex, Uint32& resolutionCount) const;
+
+		Int32 getGraphicsConfigAttribute(GLXFBConfig configHandle, const Int32 attributeName) const;
+
+		GLXFBConfig* getGraphicsConfigs(const Int32* attributes, Uint32& configCount) const;
+
+		XVisualInfo* getGraphicsConfigVisualInfo(GLXFBConfig configHandle) const;
+
+		inline Window getRootWindowHandle(const Uint32 graphicsAdapterIndex) const;
+
+		inline Bool hasPendingEvents() const;
 
 		void invokeError(const Uint32 errorCode) const;
 
 		void invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function) const;
+
+		Bool isGLXSupported(Uint32& versionMajor, Uint32& versionMinor) const;
+
+		Bool isGraphicsContextDirect(GLXContext contextHandle) const;
+
+		void makeGraphicsContextCurrent(GLXDrawable drawableHandle, GLXContext contextHandle) const;
+
+		XEvent popEvent() const;
+
+		void setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
+			const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const;
+
+		void swapBuffers(GLXDrawable drawableHandle) const;
 
 		X& operator =(const X& x) = delete;
 		X& operator =(X&& x) = delete;

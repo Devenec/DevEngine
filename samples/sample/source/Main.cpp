@@ -89,14 +89,14 @@ void devEngineMain(const StartupParameters& startupParameters)
 	GraphicsAdapterManager graphicsAdapterManager;
 	GraphicsDeviceManager graphicsDeviceManager;
 
-	/*GraphicsDevice* graphicsDevice = graphicsDeviceManager.createWindowAndDevice(1280u, 720u);
-	Window* window = graphicsDevice->window();
-	window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
-	Image* image = contentManager.load<Image>("assets/icon.png");
-	window->setIcon(image);
-	window->show();
+	//GraphicsDevice* graphicsDevice = graphicsDeviceManager.createWindowAndDevice(1280u, 720u);
+	//Window* window = graphicsDevice->window();
+	//window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
+	//Image* image = contentManager.load<Image>("assets/icon.png");
+	//window->setIcon(image);
+	//window->show();
 
-	Shader* vertexShader = graphicsDevice->createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
+	/*Shader* vertexShader = graphicsDevice->createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
 	Shader* fragmentShader = graphicsDevice->createShader(ShaderType::Fragment, FRAGMENT_SHADER_SOURCE);
 	Effect* effect = graphicsDevice->createEffect();
 	effect->attachShader(vertexShader);
@@ -176,18 +176,18 @@ void devEngineMain(const StartupParameters& startupParameters)
 	Matrix4 worldTransform;
 	Angle rotation(0.0f);
 	Vector3 axis(0.0f, 1.0f, 1.0f);
-	axis.normalise();
+	axis.normalise();*/
 
-	while(!window->shouldClose())
-	{
-		graphicsDeviceManager.processWindowMessages();
-		graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
-		rotation += 0.01f;
-		worldTransform = Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
-		uniformBuffer->setData(reinterpret_cast<const Byte*>(worldTransform.data()), sizeof(Matrix4), sizeof(Matrix4));
-		graphicsDevice->draw(PrimitiveType::TriangleStrip, 4u);
-		graphicsDevice->swapBuffers();
-	}
+	//while(!window->shouldClose())
+	//{
+		//graphicsDeviceManager.processWindowMessages();
+		//graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
+		//rotation += 0.01f;
+		//worldTransform = Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
+		//uniformBuffer->setData(reinterpret_cast<const Byte*>(worldTransform.data()), sizeof(Matrix4), sizeof(Matrix4));
+		//graphicsDevice->draw(PrimitiveType::TriangleStrip, 4u);
+		//graphicsDevice->swapBuffers();
+	//}
 
-	uniformBuffer->debindIndexed(0u);*/
+	//uniformBuffer->debindIndexed(0u);*/
 }

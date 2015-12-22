@@ -18,18 +18,27 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Error.h>
+#include <core/Log.h>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
+#include <graphics/GraphicsConfig.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/GraphicsDeviceManager.h>
 #include <graphics/LogUtility.h>
 #include <graphics/Window.h>
 #include <platform/glx/GLX.h>
+#include <platform/glx/GLXGraphicsConfigChooser.h>
 #include <platform/x/X.h>
 
 using namespace Core;
 using namespace Graphics;
 using namespace Platform;
+
+// External
+
+static GLXFBConfig chooseGraphicsConfig(GraphicsConfig& chosenConfig);
+
 
 // Implementation
 
@@ -37,22 +46,53 @@ class GraphicsDeviceManager::Implementation final
 {
 public:
 
-	Implementation() = default;
+	Implementation()
+		: _x(X::instance()) { }
 
 	Implementation(const Implementation& implementation) = delete;
 	Implementation(Implementation&& implementation) = delete;
 
 	~Implementation() = default;
 
-	Window* createWindowObject(const Uint32 width, const Uint32 height)
+	Graphics::Window* createWindowObject(const Uint32 width, const Uint32 height) const
 	{
-		// TODO: implement
-		return nullptr;
+		::Window windowHandle = createWindow(width, height);
+		return DE_NEW(Graphics::Window)(reinterpret_cast<WindowHandle>(windowHandle));
 	}
 
-	void destroyWindowAndDevice(GraphicsDevice* device)
+	void destroyWindowAndDevice(GraphicsDevice* device) const
 	{
-		// TODO: implement
+		using Graphics::Window;
+
+		//Window* window = device->window();
+		//DE_DELETE(device, GraphicsDevice);
+		//::Window windowHandle = reinterpret_cast<::Window>(window->handle());
+		//DE_DELETE(window, Window);
+		//_x.destroyWindow(windowHandle);
+	}
+
+	void processMessages() const
+	{
+		while(_x.hasPendingEvents())
+		{
+			XEvent event = _x.popEvent();
+
+			switch(event.type)
+			{
+				case ClientMessage:
+					// TODO: implement
+					//if(event.xclient.data.l[0] == deleteMessageAtom)
+
+					break;
+
+				case MapNotify:
+					// TODO: implement
+					break;
+
+				default:
+					break;
+			}
+		}
 	}
 
 	Implementation& operator =(const Implementation& implementation) = delete;
@@ -61,6 +101,34 @@ public:
 private:
 
 	GLX _glX;
+	X& _x;
+
+	::Window createWindow(const Uint32 width, const Uint32 height) const
+	{
+		GraphicsConfig chosenGraphicsConfig;
+		GLXFBConfig graphicsConfigHandle = ::chooseGraphicsConfig(chosenGraphicsConfig);
+		XVisualInfo* visualInfo = _x.getGraphicsConfigVisualInfo(graphicsConfigHandle);
+		::Window rootWindowHandle = _x.getRootWindowHandle(visualInfo->screen);
+		Int32 windowAttributeMask = 0;
+
+		XSetWindowAttributes windowAttributes = createWindowAttributes(windowAttributeMask);
+
+		::Window windowHandle = _x.createWindow(rootWindowHandle, 0, 0, width, height, visualInfo, windowAttributes,
+			windowAttributeMask);
+
+		XFree(visualInfo);
+		return windowHandle;
+	}
+
+	XSetWindowAttributes createWindowAttributes(Int32& attributeMask) const
+	{
+		XSetWindowAttributes attributes;
+		attributes.border_pixel = 0u;
+		attributes.event_mask = StructureNotifyMask;
+		attributeMask = CWBorderPixel | CWColormap | CWEventMask;
+
+		return attributes;
+	}
 };
 
 
@@ -81,11 +149,9 @@ GraphicsDeviceManager::~GraphicsDeviceManager()
 
 GraphicsDevice* GraphicsDeviceManager::createWindowAndDevice(const Uint32 windowWidth, const Uint32 windowHeight)
 {
-	// TODO: implement
-
-	/*Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
-	logWindowCreation();
-	GraphicsDeviceFactory graphicsDeviceFactory;
+	//Graphics::Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
+	//logWindowCreation();
+	/*GraphicsDeviceFactory graphicsDeviceFactory;
 	GraphicsConfig graphicsConfig;
 	GraphicsDevice* device = graphicsDeviceFactory.createDevice(window, graphicsConfig);
 	_devices.push_back(device);
@@ -107,6 +173,14 @@ void GraphicsDeviceManager::destroyWindowAndDevice(GraphicsDevice* device)
 
 void GraphicsDeviceManager::processWindowMessages() const
 {
-	// TODO: implement
-	//::processMessages();
+	_implementation->processMessages();
+}
+
+
+// External
+
+static GLXFBConfig chooseGraphicsConfig(GraphicsConfig& chosenConfig)
+{
+	GraphicsConfigChooser graphicsConfigChooser;
+	return graphicsConfigChooser.chooseConfig(chosenConfig);
 }

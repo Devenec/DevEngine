@@ -92,8 +92,9 @@ public:
 	{
 		Window* window = device->window();
 		DE_DELETE(device, GraphicsDevice);
-		::destroyWindow(static_cast<HWND>(window->handle()));
+		HWND windowHandle = static_cast<HWND>(window->handle());
 		DE_DELETE(window, Window);
+		::destroyWindow(windowHandle);
 	}
 
 	Implementation& operator =(const Implementation& implementation) = delete;
