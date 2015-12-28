@@ -29,6 +29,7 @@ SOURCE_FILES = \
 	DisplayMode.cpp \
 	GraphicsConfig.cpp \
 	GraphicsDevice.cpp \
+	GraphicsDeviceManager.cpp \
 	Image.cpp \
 	ImageLoader.cpp \
 	IndexBuffer.cpp \

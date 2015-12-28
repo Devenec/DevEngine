@@ -20,10 +20,12 @@
 
 #include <cstdlib>
 #include <core/Array.h>
+#include <core/Error.h>
 #include <core/Log.h>
 #include <core/debug/Assert.h>
 #include <graphics/LogUtility.h>
-#include <platform/GraphicsExtensionHelper.h>
+#include <platform/GraphicsFunctionUtility.h>
+#include <platform/Utility.h>
 #include <platform/opengl/OpenGL.h>
 
 using namespace Core;
@@ -31,102 +33,6 @@ using namespace Graphics;
 using namespace Platform;
 
 // External
-
-using Bitfield = Uint32;
-using Boolean  = Uint8;
-using Enum	   = Uint32;
-using Sizei	   = Int32;
-
-extern "C"
-{
-	// Version 1.0
-
-	void DE_CALL_OPENGL glBlendFunc(Enum sfactor, Enum dfactor);
-	void DE_CALL_OPENGL glClear(Bitfield mask);
-	void DE_CALL_OPENGL glClearColor(Float32 red, Float32 green, Float32 blue, Float32 alpha);
-	void DE_CALL_OPENGL glClearDepth(Float64 depth);
-	void DE_CALL_OPENGL glClearStencil(Int32 s);
-	void DE_CALL_OPENGL glColorMask(Boolean red, Boolean green, Boolean blue, Boolean alpha);
-	void DE_CALL_OPENGL glCullFace(Enum mode);
-	void DE_CALL_OPENGL glDepthFunc(Enum func);
-	void DE_CALL_OPENGL glDepthMask(Boolean flag);
-	void DE_CALL_OPENGL glDepthRange(Float64 near, Float64 far);
-	void DE_CALL_OPENGL glDisable(Enum cap);
-	void DE_CALL_OPENGL glDrawBuffer(Enum buf);
-	void DE_CALL_OPENGL glEnable(Enum cap);
-	void DE_CALL_OPENGL glFinish();
-	void DE_CALL_OPENGL glFlush();
-	void DE_CALL_OPENGL glFrontFace(Enum mode);
-	void DE_CALL_OPENGL glGetBooleanv(Enum pname, Boolean* data);
-	void DE_CALL_OPENGL glGetDoublev(Enum pname, Float64* data);
-	Enum DE_CALL_OPENGL glGetError();
-	void DE_CALL_OPENGL glGetFloatv(Enum pname, Float32* data);
-	void DE_CALL_OPENGL glGetIntegerv(Enum pname, Int32* data);
-	const Uint8* DE_CALL_OPENGL glGetString(Enum name);
-	void DE_CALL_OPENGL glGetTexImage(Enum target, Int32 level, Enum format, Enum type, Void* pixels);
-	void DE_CALL_OPENGL glGetTexLevelParameterfv(Enum target, Int32 level, Enum pname, Float32* params);
-	void DE_CALL_OPENGL glGetTexLevelParameteriv(Enum target, Int32 level, Enum pname, Int32* params);
-	void DE_CALL_OPENGL glGetTexParameterfv(Enum target, Enum pname, Float32* params);
-	void DE_CALL_OPENGL glGetTexParameteriv(Enum target, Enum pname, Int32* params);
-	void DE_CALL_OPENGL glHint(Enum target, Enum mode);
-	Boolean DE_CALL_OPENGL glIsEnabled(Enum cap);
-	void DE_CALL_OPENGL glLineWidth(Float32 width);
-	void DE_CALL_OPENGL glLogicOp(Enum opcode);
-	void DE_CALL_OPENGL glPixelStoref(Enum pname, Float32 param);
-	void DE_CALL_OPENGL glPixelStorei(Enum pname, Int32 param);
-	void DE_CALL_OPENGL glPointSize(Float32 size);
-	void DE_CALL_OPENGL glPolygonMode(Enum face, Enum mode);
-	void DE_CALL_OPENGL glReadBuffer(Enum src);
-
-	void DE_CALL_OPENGL glReadPixels(Int32 x, Int32 y, Sizei width, Sizei height, Enum format, Enum type,
-		Void* pixels);
-
-	void DE_CALL_OPENGL glScissor(Int32 x, Int32 y, Sizei width, Sizei height);
-	void DE_CALL_OPENGL glStencilFunc(Enum func, Int32 ref, Uint32 mask);
-	void DE_CALL_OPENGL glStencilMask(Uint32 mask);
-	void DE_CALL_OPENGL glStencilOp(Enum fail, Enum zfail, Enum zpass);
-
-	void DE_CALL_OPENGL glTexImage1D(Enum target, Int32 level, Int32 internalformat, Sizei width, Int32 border,
-		Enum format, Enum type, const Void* pixels);
-
-	void DE_CALL_OPENGL glTexImage2D(Enum target, Int32 level, Int32 internalformat, Sizei width, Sizei height,
-		Int32 border, Enum format, Enum type, const Void* pixels);
-
-	void DE_CALL_OPENGL glTexParameterf(Enum target, Enum pname, Float32 param);
-	void DE_CALL_OPENGL glTexParameterfv(Enum target, Enum pname, const Float32* params);
-	void DE_CALL_OPENGL glTexParameteri(Enum target, Enum pname, Int32 param);
-	void DE_CALL_OPENGL glTexParameteriv(Enum target, Enum pname, const Int32* params);
-	void DE_CALL_OPENGL glViewport(Int32 x, Int32 y, Sizei width, Sizei height);
-
-	// Version 1.1
-
-	void DE_CALL_OPENGL glBindTexture(Enum target, Uint32 texture);
-
-	void DE_CALL_OPENGL glCopyTexImage1D(Enum target, Int32 level, Enum internalformat, Int32 x, Int32 y, Sizei width,
-		Int32 border);
-
-	void DE_CALL_OPENGL glCopyTexImage2D(Enum target, Int32 level, Enum internalformat, Int32 x, Int32 y, Sizei width,
-		Sizei height, Int32 border);
-
-	void DE_CALL_OPENGL glCopyTexSubImage1D(Enum target, Int32 level, Int32 xoffset, Int32 x, Int32 y, Sizei width);
-
-	void DE_CALL_OPENGL glCopyTexSubImage2D(Enum target, Int32 level, Int32 xoffset, Int32 yoffset, Int32 x, Int32 y,
-		Sizei width, Sizei height);
-
-	void DE_CALL_OPENGL glDeleteTextures(Sizei n, const Uint32* textures);
-	void DE_CALL_OPENGL glDrawArrays(Enum mode, Int32 first, Sizei count);
-	void DE_CALL_OPENGL glDrawElements(Enum mode, Sizei count, Enum type, const Void* indices);
-	void DE_CALL_OPENGL glGenTextures(Sizei n, Uint32* textures);
-	void DE_CALL_OPENGL glGetPointerv(Enum pname, Void** params);
-	Boolean DE_CALL_OPENGL glIsTexture(Uint32 texture);
-	void DE_CALL_OPENGL glPolygonOffset(Float32 factor, Float32 units);
-
-	void DE_CALL_OPENGL glTexSubImage1D(Enum target, Int32 level, Int32 xoffset, Sizei width, Enum format, Enum type,
-		const Void* pixels);
-
-	void DE_CALL_OPENGL glTexSubImage2D(Enum target, Int32 level, Int32 xoffset, Int32 yoffset, Sizei width,
-		Sizei height, Enum format, Enum type, const Void* pixels);
-}
 
 static const Char8* COMPONENT_TAG = "[Platform::OpenGL]";
 
@@ -165,13 +71,14 @@ static const Array<const Char8*, 7u> ERROR_NAMES
 	"Invalid framebuffer operation"
 }};
 
-static Uint32 versionMajor = 1u;
-static Uint32 versionMinor = 1u;
+static const Uint32 MIN_SUPPORTED_VERSION_MAJOR = 3u;
+static const Uint32 MIN_SUPPORTED_VERSION_MINOR = 3u;
+
+static Uint32 versionMajor = 0u;
+static Uint32 versionMinor = 0u;
 
 static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
 static const Char8* getDebugMessageTypeName(const Uint32 messageType);
-static void getStandardFunctions(OpenGL& openGL);
-static void initialiseDebugMessaging(OpenGL& openGL);
 static void initialiseMajorVersion(const String8& versionString);
 static void initialiseMinorVersion(const String8& versionString);
 
@@ -184,84 +91,14 @@ static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 
 
 // Public
 
-const Uint32 OpenGL::MIN_SUPPORTED_VERSION_MAJOR = 3u;
-const Uint32 OpenGL::MIN_SUPPORTED_VERSION_MINOR = 3u;
-
 OpenGL::OpenGL()
-
-	  // Version 1.0
-
-	: blendFunc(glBlendFunc),
-	  clear(glClear),
-	  clearColor(glClearColor),
-	  clearDepth(glClearDepth),
-	  clearStencil(glClearStencil),
-	  colorMask(glColorMask),
-	  cullFace(glCullFace),
-	  depthFunc(glDepthFunc),
-	  depthMask(glDepthMask),
-	  depthRange(glDepthRange),
-	  disable(glDisable),
-	  drawBuffer(glDrawBuffer),
-	  enable(glEnable),
-	  finish(glFinish),
-	  flush(glFlush),
-	  frontFace(glFrontFace),
-	  getBooleanv(glGetBooleanv),
-	  getDoublev(glGetDoublev),
-	  getError(glGetError),
-	  getFloatv(glGetFloatv),
-	  getIntegerv(glGetIntegerv),
-	  getString(glGetString),
-	  getTexImage(glGetTexImage),
-	  getTexLevelParameterfv(glGetTexLevelParameterfv),
-	  getTexLevelParameteriv(glGetTexLevelParameteriv),
-	  getTexParameterfv(glGetTexParameterfv),
-	  getTexParameteriv(glGetTexParameteriv),
-	  hint(glHint),
-	  isEnabled(glIsEnabled),
-	  lineWidth(glLineWidth),
-	  logicOp(glLogicOp),
-	  pixelStoref(glPixelStoref),
-	  pixelStorei(glPixelStorei),
-	  pointSize(glPointSize),
-	  polygonMode(glPolygonMode),
-	  readBuffer(glReadBuffer),
-	  readPixels(glReadPixels),
-	  scissor(glScissor),
-	  stencilFunc(glStencilFunc),
-	  stencilMask(glStencilMask),
-	  stencilOp(glStencilOp),
-	  texImage1D(glTexImage1D),
-	  texImage2D(glTexImage2D),
-	  texParameterf(glTexParameterf),
-	  texParameterfv(glTexParameterfv),
-	  texParameteri(glTexParameteri),
-	  texParameteriv(glTexParameteriv),
-	  viewport(glViewport),
-
-	  // Version 1.1
-
-	  bindTexture(glBindTexture),
-	  copyTexImage1D(glCopyTexImage1D),
-	  copyTexImage2D(glCopyTexImage2D),
-	  copyTexSubImage1D(glCopyTexSubImage1D),
-	  copyTexSubImage2D(glCopyTexSubImage2D),
-	  deleteTextures(glDeleteTextures),
-	  drawArrays(glDrawArrays),
-	  drawElements(glDrawElements),
-	  genTextures(glGenTextures),
-	  getPointerv(glGetPointerv),
-	  isTexture(glIsTexture),
-	  polygonOffset(glPolygonOffset),
-	  texSubImage1D(glTexSubImage1D),
-	  texSubImage2D(glTexSubImage2D)
 {
 	// TODO: check current context state?
-	::getStandardFunctions(*this);
+	checkSupport();
+	getStandardFunctions();
 
 	if(debugMessageCallback != nullptr)
-		::initialiseDebugMessaging(*this);
+		initialiseDebugMessaging();
 }
 
 void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const
@@ -280,18 +117,1398 @@ void OpenGL::logInfo() const
 	logGraphicsExtensions("graphics interface", getExtensionNames());
 }
 
-// Static
+// Private
 
-void OpenGL::initialiseVersion(Uint32& major, Uint32& minor)
+void OpenGL::checkSupport()
 {
-	const String8 versionString(reinterpret_cast<const Char8*>(glGetString(VERSION)));
+	GraphicsFunctionUtility functionUtility;
+	getString = functionUtility.getStandardFunction<GetString>("glGetString");
+	const String8 versionString(reinterpret_cast<const Char8*>(getString(VERSION)));
 	::initialiseMajorVersion(versionString);
 	::initialiseMinorVersion(versionString);
-	major = ::versionMajor;
-	minor = ::versionMinor;
+
+	if(isVersionLess(::versionMajor, ::versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR, ::MIN_SUPPORTED_VERSION_MINOR))
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " OpenGL version " << ::versionMajor << '.' <<
+			::versionMinor << " is not supported. The minimum supported version is " << ::MIN_SUPPORTED_VERSION_MAJOR <<
+			'.' << ::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
+
+		DE_ERROR(0x0);
+	}
 }
 
-// Private
+void OpenGL::getStandardFunctions()
+{
+	GraphicsFunctionUtility functionUtility;
+
+	// Version 1.0
+
+	blendFunc = functionUtility.getStandardFunction<BlendFunc>("glBlendFunc");
+	clear = functionUtility.getStandardFunction<Clear>("glClear");
+	clearColor = functionUtility.getStandardFunction<ClearColor>("glClearColor");
+	clearDepth = functionUtility.getStandardFunction<ClearDepth>("glClearDepth");
+	clearStencil = functionUtility.getStandardFunction<ClearStencil>("glClearStencil");
+	colorMask = functionUtility.getStandardFunction<ColorMask>("glColorMask");
+	cullFace = functionUtility.getStandardFunction<CullFace>("glCullFace");
+	depthFunc = functionUtility.getStandardFunction<DepthFunc>("glDepthFunc");
+	depthMask = functionUtility.getStandardFunction<DepthMask>("glDepthMask");
+	depthRange = functionUtility.getStandardFunction<DepthRange>("glDepthRange");
+	disable = functionUtility.getStandardFunction<Disable>("glDisable");
+	drawBuffer = functionUtility.getStandardFunction<DrawBuffer>("glDrawBuffer");
+	enable = functionUtility.getStandardFunction<Enable>("glEnable");
+	finish = functionUtility.getStandardFunction<Finish>("glFinish");
+	flush = functionUtility.getStandardFunction<Flush>("glFlush");
+	frontFace = functionUtility.getStandardFunction<FrontFace>("glFrontFace");
+	getBooleanv = functionUtility.getStandardFunction<GetBooleanV>("glGetBooleanv");
+	getDoublev = functionUtility.getStandardFunction<GetDoubleV>("glGetDoublev");
+	getError = functionUtility.getStandardFunction<GetError>("glGetError");
+	getFloatv = functionUtility.getStandardFunction<GetFloatV>("glGetFloatv");
+	getIntegerv = functionUtility.getStandardFunction<GetIntegerV>("glGetIntegerv");
+	//getString = functionUtility.getStandardFunction<GetString>("glGetString");
+	getTexImage = functionUtility.getStandardFunction<GetTexImage>("glGetTexImage");
+
+	getTexLevelParameterfv =
+		functionUtility.getStandardFunction<GetTexLevelParameterFV>("glGetTexLevelParameterfv");
+
+	getTexLevelParameteriv =
+		functionUtility.getStandardFunction<GetTexLevelParameterIV>("glGetTexLevelParameteriv");
+
+	getTexParameterfv = functionUtility.getStandardFunction<GetTexParameterFV>("glGetTexParameterfv");
+	getTexParameteriv = functionUtility.getStandardFunction<GetTexParameterIV>("glGetTexParameteriv");
+	hint = functionUtility.getStandardFunction<Hint>("glHint");
+	isEnabled = functionUtility.getStandardFunction<IsEnabled>("glIsEnabled");
+	lineWidth = functionUtility.getStandardFunction<LineWidth>("glLineWidth");
+	logicOp = functionUtility.getStandardFunction<LogicOp>("glLogicOp");
+	pixelStoref = functionUtility.getStandardFunction<PixelStoreF>("glPixelStoref");
+	pixelStorei = functionUtility.getStandardFunction<PixelStoreI>("glPixelStorei");
+	pointSize = functionUtility.getStandardFunction<PointSize>("glPointSize");
+	polygonMode = functionUtility.getStandardFunction<PolygonMode>("glPolygonMode");
+	readBuffer = functionUtility.getStandardFunction<ReadBuffer>("glReadBuffer");
+	readPixels = functionUtility.getStandardFunction<ReadPixels>("glReadPixels");
+	scissor = functionUtility.getStandardFunction<Scissor>("glScissor");
+	stencilFunc = functionUtility.getStandardFunction<StencilFunc>("glStencilFunc");
+	stencilMask = functionUtility.getStandardFunction<StencilMask>("glStencilMask");
+	stencilOp = functionUtility.getStandardFunction<StencilOp>("glStencilOp");
+	texImage1D = functionUtility.getStandardFunction<TexImage1D>("glTexImage1D");
+	texImage2D = functionUtility.getStandardFunction<TexImage2D>("glTexImage2D");
+	texParameterf = functionUtility.getStandardFunction<TexParameterF>("glTexParameterf");
+	texParameterfv = functionUtility.getStandardFunction<TexParameterFV>("glTexParameterfv");
+	texParameteri = functionUtility.getStandardFunction<TexParameterI>("glTexParameteri");
+	texParameteriv = functionUtility.getStandardFunction<TexParameterIV>("glTexParameteriv");
+	viewport = functionUtility.getStandardFunction<Viewport>("glViewport");
+
+	// Version 1.1
+
+	bindTexture = functionUtility.getStandardFunction<BindTexture>("glBindTexture");
+	copyTexImage1D = functionUtility.getStandardFunction<CopyTexImage1D>("glCopyTexImage1D");
+	copyTexImage2D = functionUtility.getStandardFunction<CopyTexImage2D>("glCopyTexImage2D");
+	copyTexSubImage1D = functionUtility.getStandardFunction<CopyTexSubImage1D>("glCopyTexSubImage1D");
+	copyTexSubImage2D = functionUtility.getStandardFunction<CopyTexSubImage2D>("glCopyTexSubImage2D");
+	deleteTextures = functionUtility.getStandardFunction<DeleteTextures>("glDeleteTextures");
+	drawArrays = functionUtility.getStandardFunction<DrawArrays>("glDrawArrays");
+	drawElements = functionUtility.getStandardFunction<DrawElements>("glDrawElements");
+	genTextures = functionUtility.getStandardFunction<GenTextures>("glGenTextures");
+	getPointerv = functionUtility.getStandardFunction<GetPointerV>("glGetPointerv");
+	isTexture = functionUtility.getStandardFunction<IsTexture>("glIsTexture");
+	polygonOffset = functionUtility.getStandardFunction<PolygonOffset>("glPolygonOffset");
+	texSubImage1D = functionUtility.getStandardFunction<TexSubImage1D>("glTexSubImage1D");
+	texSubImage2D = functionUtility.getStandardFunction<TexSubImage2D>("glTexSubImage2D");
+
+	// Version 1.2
+
+	copyTexSubImage3D = functionUtility.getExtensionFunction<CopyTexSubImage3D>("glCopyTexSubImage3D");
+	drawRangeElements = functionUtility.getExtensionFunction<DrawRangeElements>("glDrawRangeElements");
+	texImage3D = functionUtility.getExtensionFunction<TexImage3D>("glTexImage3D");
+	texSubImage3D = functionUtility.getExtensionFunction<TexSubImage3D>("glTexSubImage3D");
+
+	// Version 1.3
+
+	activeTexture = functionUtility.getExtensionFunction<ActiveTexture>("glActiveTexture");
+
+	compressedTexImage1D =
+		functionUtility.getExtensionFunction<CompressedTexImage1D>("glCompressedTexImage1D");
+
+	compressedTexImage2D =
+		functionUtility.getExtensionFunction<CompressedTexImage2D>("glCompressedTexImage2D");
+
+	compressedTexImage3D =
+		functionUtility.getExtensionFunction<CompressedTexImage3D>("glCompressedTexImage3D");
+
+	compressedTexSubImage1D =
+		functionUtility.getExtensionFunction<CompressedTexSubImage1D>("glCompressedTexSubImage1D");
+
+	compressedTexSubImage2D =
+		functionUtility.getExtensionFunction<CompressedTexSubImage2D>("glCompressedTexSubImage2D");
+
+	compressedTexSubImage3D =
+		functionUtility.getExtensionFunction<CompressedTexSubImage3D>("glCompressedTexSubImage3D");
+
+	getCompressedTexImage =
+		functionUtility.getExtensionFunction<GetCompressedTexImage>("glGetCompressedTexImage");
+
+	sampleCoverage = functionUtility.getExtensionFunction<SampleCoverage>("glSampleCoverage");
+
+	// Version 1.4
+
+	blendColor = functionUtility.getExtensionFunction<BlendColor>("glBlendColor");
+	blendEquation = functionUtility.getExtensionFunction<BlendEquation>("glBlendEquation");
+	blendFuncSeparate = functionUtility.getExtensionFunction<BlendFuncSeparate>("glBlendFuncSeparate");
+	multiDrawArrays = functionUtility.getExtensionFunction<MultiDrawArrays>("glMultiDrawArrays");
+	multiDrawElements = functionUtility.getExtensionFunction<MultiDrawElements>("glMultiDrawElements");
+	pointParameterf = functionUtility.getExtensionFunction<PointParameterF>("glPointParameterf");
+	pointParameterfv = functionUtility.getExtensionFunction<PointParameterFV>("glPointParameterfv");
+	pointParameteri = functionUtility.getExtensionFunction<PointParameterI>("glPointParameteri");
+	pointParameteriv = functionUtility.getExtensionFunction<PointParameterIV>("glPointParameteriv");
+
+	// Version 1.5
+
+	beginQuery = functionUtility.getExtensionFunction<BeginQuery>("glBeginQuery");
+	bindBuffer = functionUtility.getExtensionFunction<BindBuffer>("glBindBuffer");
+	bufferData = functionUtility.getExtensionFunction<BufferData>("glBufferData");
+	bufferSubData = functionUtility.getExtensionFunction<BufferSubData>("glBufferSubData");
+	deleteBuffers = functionUtility.getExtensionFunction<DeleteBuffers>("glDeleteBuffers");
+	deleteQueries = functionUtility.getExtensionFunction<DeleteQueries>("glDeleteQueries");
+	endQuery = functionUtility.getExtensionFunction<EndQuery>("glEndQuery");
+	genBuffers = functionUtility.getExtensionFunction<GenBuffers>("glGenBuffers");
+	genQueries = functionUtility.getExtensionFunction<GenQueries>("glGenQueries");
+
+	getBufferParameteriv =
+		functionUtility.getExtensionFunction<GetBufferParameterIV>("glGetBufferParameteriv");
+
+	getBufferPointerv = functionUtility.getExtensionFunction<GetBufferPointerV>("glGetBufferPointerv");
+	getBufferSubData = functionUtility.getExtensionFunction<GetBufferSubData>("glGetBufferSubData");
+	getQueryiv = functionUtility.getExtensionFunction<GetQueryIV>("glGetQueryiv");
+	getQueryObjectiv = functionUtility.getExtensionFunction<GetQueryObjectIV>("glGetQueryObjectiv");
+	getQueryObjectuiv = functionUtility.getExtensionFunction<GetQueryObjectUIV>("glGetQueryObjectuiv");
+	isBuffer = functionUtility.getExtensionFunction<IsBuffer>("glIsBuffer");
+	isQuery = functionUtility.getExtensionFunction<IsQuery>("glIsQuery");
+	mapBuffer = functionUtility.getExtensionFunction<MapBuffer>("glMapBuffer");
+	unmapBuffer = functionUtility.getExtensionFunction<UnmapBuffer>("glUnmapBuffer");
+
+	// Version 2.0
+
+	attachShader = functionUtility.getExtensionFunction<AttachShader>("glAttachShader");
+	bindAttribLocation = functionUtility.getExtensionFunction<BindAttribLocation>("glBindAttribLocation");
+
+	blendEquationSeparate =
+		functionUtility.getExtensionFunction<BlendEquationSeparate>("glBlendEquationSeparate");
+
+	compileShader = functionUtility.getExtensionFunction<CompileShader>("glCompileShader");
+	createProgram = functionUtility.getExtensionFunction<CreateProgram>("glCreateProgram");
+	createShader = functionUtility.getExtensionFunction<CreateShader>("glCreateShader");
+	deleteProgram = functionUtility.getExtensionFunction<DeleteProgram>("glDeleteProgram");
+	deleteShader = functionUtility.getExtensionFunction<DeleteShader>("glDeleteShader");
+	detachShader = functionUtility.getExtensionFunction<DetachShader>("glDetachShader");
+
+	disableVertexAttribArray =
+		functionUtility.getExtensionFunction<DisableVertexAttribArray>("glDisableVertexAttribArray");
+
+	drawBuffers = functionUtility.getExtensionFunction<DrawBuffers>("glDrawBuffers");
+
+	enableVertexAttribArray =
+		functionUtility.getExtensionFunction<EnableVertexAttribArray>("glEnableVertexAttribArray");
+
+	getActiveAttrib = functionUtility.getExtensionFunction<GetActiveAttrib>("glGetActiveAttrib");
+	getActiveUniform = functionUtility.getExtensionFunction<GetActiveUniform>("glGetActiveUniform");
+	getAttachedShaders = functionUtility.getExtensionFunction<GetAttachedShaders>("glGetAttachedShaders");
+	getAttribLocation = functionUtility.getExtensionFunction<GetAttribLocation>("glGetAttribLocation");
+	getProgramInfoLog = functionUtility.getExtensionFunction<GetProgramInfoLog>("glGetProgramInfoLog");
+	getProgramiv = functionUtility.getExtensionFunction<GetProgramIV>("glGetProgramiv");
+	getShaderInfoLog = functionUtility.getExtensionFunction<GetShaderInfoLog>("glGetShaderInfoLog");
+	getShaderiv = functionUtility.getExtensionFunction<GetShaderIV>("glGetShaderiv");
+	getShaderSource = functionUtility.getExtensionFunction<GetShaderSource>("glGetShaderSource");
+	getUniformfv = functionUtility.getExtensionFunction<GetUniformFV>("glGetUniformfv");
+	getUniformiv = functionUtility.getExtensionFunction<GetUniformIV>("glGetUniformiv");
+	getUniformLocation = functionUtility.getExtensionFunction<GetUniformLocation>("glGetUniformLocation");
+	getVertexAttribdv = functionUtility.getExtensionFunction<GetVertexAttribDV>("glGetVertexAttribdv");
+	getVertexAttribfv = functionUtility.getExtensionFunction<GetVertexAttribFV>("glGetVertexAttribfv");
+	getVertexAttribiv = functionUtility.getExtensionFunction<GetVertexAttribIV>("glGetVertexAttribiv");
+
+	getVertexAttribPointerv =
+		functionUtility.getExtensionFunction<GetVertexAttribPointerV>("glGetVertexAttribPointerv");
+
+	isProgram = functionUtility.getExtensionFunction<IsProgram>("glIsProgram");
+	isShader = functionUtility.getExtensionFunction<IsShader>("glIsShader");
+	linkProgram = functionUtility.getExtensionFunction<LinkProgram>("glLinkProgram");
+	shaderSource = functionUtility.getExtensionFunction<ShaderSource>("glShaderSource");
+	stencilFuncSeparate = functionUtility.getExtensionFunction<StencilFuncSeparate>("glStencilFuncSeparate");
+	stencilMaskSeparate = functionUtility.getExtensionFunction<StencilMaskSeparate>("glStencilMaskSeparate");
+	stencilOpSeparate = functionUtility.getExtensionFunction<StencilOpSeparate>("glStencilOpSeparate");
+	uniform1f = functionUtility.getExtensionFunction<Uniform1F>("glUniform1f");
+	uniform1fv = functionUtility.getExtensionFunction<Uniform1FV>("glUniform1fv");
+	uniform1i = functionUtility.getExtensionFunction<Uniform1I>("glUniform1i");
+	uniform1iv = functionUtility.getExtensionFunction<Uniform1IV>("glUniform1iv");
+	uniform2f = functionUtility.getExtensionFunction<Uniform2F>("glUniform2f");
+	uniform2fv = functionUtility.getExtensionFunction<Uniform2FV>("glUniform2fv");
+	uniform2i = functionUtility.getExtensionFunction<Uniform2I>("glUniform2i");
+	uniform2iv = functionUtility.getExtensionFunction<Uniform2IV>("glUniform2iv");
+	uniform3f = functionUtility.getExtensionFunction<Uniform3F>("glUniform3f");
+	uniform3fv = functionUtility.getExtensionFunction<Uniform3FV>("glUniform3fv");
+	uniform3i = functionUtility.getExtensionFunction<Uniform3I>("glUniform3i");
+	uniform3iv = functionUtility.getExtensionFunction<Uniform3IV>("glUniform3iv");
+	uniform4f = functionUtility.getExtensionFunction<Uniform4F>("glUniform4f");
+	uniform4fv = functionUtility.getExtensionFunction<Uniform4FV>("glUniform4fv");
+	uniform4i = functionUtility.getExtensionFunction<Uniform4I>("glUniform4i");
+	uniform4iv = functionUtility.getExtensionFunction<Uniform4IV>("glUniform4iv");
+	uniformMatrix2fv = functionUtility.getExtensionFunction<UniformMatrix2FV>("glUniformMatrix2fv");
+	uniformMatrix3fv = functionUtility.getExtensionFunction<UniformMatrix3FV>("glUniformMatrix3fv");
+	uniformMatrix4fv = functionUtility.getExtensionFunction<UniformMatrix4FV>("glUniformMatrix4fv");
+	useProgram = functionUtility.getExtensionFunction<UseProgram>("glUseProgram");
+	validateProgram = functionUtility.getExtensionFunction<ValidateProgram>("glValidateProgram");
+	vertexAttrib1d = functionUtility.getExtensionFunction<VertexAttrib1D>("glVertexAttrib1d");
+	vertexAttrib1dv = functionUtility.getExtensionFunction<VertexAttrib1DV>("glVertexAttrib1dv");
+	vertexAttrib1f = functionUtility.getExtensionFunction<VertexAttrib1F>("glVertexAttrib1f");
+	vertexAttrib1fv = functionUtility.getExtensionFunction<VertexAttrib1FV>("glVertexAttrib1fv");
+	vertexAttrib1s = functionUtility.getExtensionFunction<VertexAttrib1S>("glVertexAttrib1s");
+	vertexAttrib1sv = functionUtility.getExtensionFunction<VertexAttrib1SV>("glVertexAttrib1sv");
+	vertexAttrib2d = functionUtility.getExtensionFunction<VertexAttrib2D>("glVertexAttrib2d");
+	vertexAttrib2dv = functionUtility.getExtensionFunction<VertexAttrib2DV>("glVertexAttrib2dv");
+	vertexAttrib2f = functionUtility.getExtensionFunction<VertexAttrib2F>("glVertexAttrib2f");
+	vertexAttrib2fv = functionUtility.getExtensionFunction<VertexAttrib2FV>("glVertexAttrib2fv");
+	vertexAttrib2s = functionUtility.getExtensionFunction<VertexAttrib2S>("glVertexAttrib2s");
+	vertexAttrib2sv = functionUtility.getExtensionFunction<VertexAttrib2SV>("glVertexAttrib2sv");
+	vertexAttrib3d = functionUtility.getExtensionFunction<VertexAttrib3D>("glVertexAttrib3d");
+	vertexAttrib3dv = functionUtility.getExtensionFunction<VertexAttrib3DV>("glVertexAttrib3dv");
+	vertexAttrib3f = functionUtility.getExtensionFunction<VertexAttrib3F>("glVertexAttrib3f");
+	vertexAttrib3fv = functionUtility.getExtensionFunction<VertexAttrib3FV>("glVertexAttrib3fv");
+	vertexAttrib3s = functionUtility.getExtensionFunction<VertexAttrib3S>("glVertexAttrib3s");
+	vertexAttrib3sv = functionUtility.getExtensionFunction<VertexAttrib3SV>("glVertexAttrib3sv");
+	vertexAttrib4bv = functionUtility.getExtensionFunction<VertexAttrib4BV>("glVertexAttrib4bv");
+	vertexAttrib4d = functionUtility.getExtensionFunction<VertexAttrib4D>("glVertexAttrib4d");
+	vertexAttrib4dv = functionUtility.getExtensionFunction<VertexAttrib4DV>("glVertexAttrib4dv");
+	vertexAttrib4f = functionUtility.getExtensionFunction<VertexAttrib4F>("glVertexAttrib4f");
+	vertexAttrib4fv = functionUtility.getExtensionFunction<VertexAttrib4FV>("glVertexAttrib4fv");
+	vertexAttrib4iv = functionUtility.getExtensionFunction<VertexAttrib4IV>("glVertexAttrib4iv");
+	vertexAttrib4Nbv = functionUtility.getExtensionFunction<VertexAttrib4NBV>("glVertexAttrib4Nbv");
+	vertexAttrib4Niv = functionUtility.getExtensionFunction<VertexAttrib4NIV>("glVertexAttrib4Niv");
+	vertexAttrib4Nsv = functionUtility.getExtensionFunction<VertexAttrib4NSV>("glVertexAttrib4Nsv");
+	vertexAttrib4Nub = functionUtility.getExtensionFunction<VertexAttrib4NUB>("glVertexAttrib4Nub");
+	vertexAttrib4Nubv = functionUtility.getExtensionFunction<VertexAttrib4NUBV>("glVertexAttrib4Nubv");
+	vertexAttrib4Nuiv = functionUtility.getExtensionFunction<VertexAttrib4NUIV>("glVertexAttrib4Nuiv");
+	vertexAttrib4Nusv = functionUtility.getExtensionFunction<VertexAttrib4NUSV>("glVertexAttrib4Nusv");
+	vertexAttrib4s = functionUtility.getExtensionFunction<VertexAttrib4S>("glVertexAttrib4s");
+	vertexAttrib4sv = functionUtility.getExtensionFunction<VertexAttrib4SV>("glVertexAttrib4sv");
+	vertexAttrib4ubv = functionUtility.getExtensionFunction<VertexAttrib4UBV>("glVertexAttrib4ubv");
+	vertexAttrib4uiv = functionUtility.getExtensionFunction<VertexAttrib4UIV>("glVertexAttrib4uiv");
+	vertexAttrib4usv = functionUtility.getExtensionFunction<VertexAttrib4USV>("glVertexAttrib4usv");
+	vertexAttribPointer = functionUtility.getExtensionFunction<VertexAttribPointer>("glVertexAttribPointer");
+
+	// Version 2.1
+
+	uniformMatrix2x3fv = functionUtility.getExtensionFunction<UniformMatrix2X3FV>("glUniformMatrix2x3fv");
+	uniformMatrix2x4fv = functionUtility.getExtensionFunction<UniformMatrix2X4FV>("glUniformMatrix2x4fv");
+	uniformMatrix3x2fv = functionUtility.getExtensionFunction<UniformMatrix3X2FV>("glUniformMatrix3x2fv");
+	uniformMatrix3x4fv = functionUtility.getExtensionFunction<UniformMatrix3X4FV>("glUniformMatrix3x4fv");
+	uniformMatrix4x2fv = functionUtility.getExtensionFunction<UniformMatrix4X2FV>("glUniformMatrix4x2fv");
+	uniformMatrix4x3fv = functionUtility.getExtensionFunction<UniformMatrix4X3FV>("glUniformMatrix4x3fv");
+
+	// Version 3.0
+
+	beginConditionalRender =
+		functionUtility.getExtensionFunction<BeginConditionalRender>("glBeginConditionalRender");
+
+	beginTransformFeedback =
+		functionUtility.getExtensionFunction<BeginTransformFeedback>("glBeginTransformFeedback");
+
+	bindBufferBase = functionUtility.getExtensionFunction<BindBufferBase>("glBindBufferBase");
+	bindBufferRange = functionUtility.getExtensionFunction<BindBufferRange>("glBindBufferRange");
+
+	bindFragDataLocation =
+		functionUtility.getExtensionFunction<BindFragDataLocation>("glBindFragDataLocation");
+
+	bindFramebuffer = functionUtility.getExtensionFunction<BindFramebuffer>("glBindFramebuffer");
+	bindRenderbuffer = functionUtility.getExtensionFunction<BindRenderbuffer>("glBindRenderbuffer");
+	bindVertexArray = functionUtility.getExtensionFunction<BindVertexArray>("glBindVertexArray");
+	blitFramebuffer = functionUtility.getExtensionFunction<BlitFramebuffer>("glBlitFramebuffer");
+
+	checkFramebufferStatus =
+		functionUtility.getExtensionFunction<CheckFramebufferStatus>("glCheckFramebufferStatus");
+
+	clampColor = functionUtility.getExtensionFunction<ClampColor>("glClampColor");
+	clearBufferfi = functionUtility.getExtensionFunction<ClearBufferFI>("glClearBufferfi");
+	clearBufferfv = functionUtility.getExtensionFunction<ClearBufferFV>("glClearBufferfv");
+	clearBufferiv = functionUtility.getExtensionFunction<ClearBufferIV>("glClearBufferiv");
+	clearBufferuiv = functionUtility.getExtensionFunction<ClearBufferUIV>("glClearBufferuiv");
+	colorMaski = functionUtility.getExtensionFunction<ColorMaskI>("glColorMaski");
+	deleteFramebuffers = functionUtility.getExtensionFunction<DeleteFramebuffers>("glDeleteFramebuffers");
+	deleteRenderbuffers = functionUtility.getExtensionFunction<DeleteRenderbuffers>("glDeleteRenderbuffers");
+	deleteVertexArrays = functionUtility.getExtensionFunction<DeleteVertexArrays>("glDeleteVertexArrays");
+	disablei = functionUtility.getExtensionFunction<DisableI>("glDisablei");
+	enablei = functionUtility.getExtensionFunction<EnableI>("glEnablei");
+
+	endConditionalRender =
+		functionUtility.getExtensionFunction<EndConditionalRender>("glEndConditionalRender");
+
+	endTransformFeedback =
+		functionUtility.getExtensionFunction<EndTransformFeedback>("glEndTransformFeedback");
+
+	flushMappedBufferRange =
+		functionUtility.getExtensionFunction<FlushMappedBufferRange>("glFlushMappedBufferRange");
+
+	framebufferRenderbuffer =
+		functionUtility.getExtensionFunction<FramebufferRenderbuffer>("glFramebufferRenderbuffer");
+
+	framebufferTexture1D =
+		functionUtility.getExtensionFunction<FramebufferTexture1D>("glFramebufferTexture1D");
+
+	framebufferTexture2D =
+		functionUtility.getExtensionFunction<FramebufferTexture2D>("glFramebufferTexture2D");
+
+	framebufferTexture3D =
+		functionUtility.getExtensionFunction<FramebufferTexture3D>("glFramebufferTexture3D");
+
+	framebufferTextureLayer =
+		functionUtility.getExtensionFunction<FramebufferTextureLayer>("glFramebufferTextureLayer");
+
+	generateMipmap = functionUtility.getExtensionFunction<GenerateMipmap>("glGenerateMipmap");
+	genFramebuffers = functionUtility.getExtensionFunction<GenFramebuffers>("glGenFramebuffers");
+	genRenderbuffers = functionUtility.getExtensionFunction<GenRenderbuffers>("glGenRenderbuffers");
+	genVertexArrays = functionUtility.getExtensionFunction<GenVertexArrays>("glGenVertexArrays");
+	getBooleani_v = functionUtility.getExtensionFunction<GetBooleanI_V>("glGetBooleani_v");
+	getFragDataLocation = functionUtility.getExtensionFunction<GetFragDataLocation>("glGetFragDataLocation");
+
+	getFramebufferAttachmentParameteriv =
+		functionUtility.getExtensionFunction<GetFramebufferAttachmentParameterIV>(
+			"glGetFramebufferAttachmentParameteriv");
+
+	getIntegeri_v = functionUtility.getExtensionFunction<GetIntegerI_V>("glGetIntegeri_v");
+
+	getRenderbufferParameteriv =
+		functionUtility.getExtensionFunction<GetRenderbufferParameterIV>("glGetRenderbufferParameteriv");
+
+	getStringi = functionUtility.getExtensionFunction<GetStringI>("glGetStringi");
+	getTexParameterIiv = functionUtility.getExtensionFunction<GetTexParameterIIV>("glGetTexParameterIiv");
+	getTexParameterIuiv = functionUtility.getExtensionFunction<GetTexParameterIUIV>("glGetTexParameterIuiv");
+
+	getTransformFeedbackVarying =
+		functionUtility.getExtensionFunction<GetTransformFeedbackVarying>("glGetTransformFeedbackVarying");
+
+	getUniformuiv = functionUtility.getExtensionFunction<GetUniformUIV>("glGetUniformuiv");
+	getVertexAttribIiv = functionUtility.getExtensionFunction<GetVertexAttribIIV>("glGetVertexAttribIiv");
+	getVertexAttribIuiv = functionUtility.getExtensionFunction<GetVertexAttribIUIV>("glGetVertexAttribIuiv");
+	isEnabledi = functionUtility.getExtensionFunction<IsEnabledI>("glIsEnabledi");
+	isFramebuffer = functionUtility.getExtensionFunction<IsFramebuffer>("glIsFramebuffer");
+	isRenderbuffer = functionUtility.getExtensionFunction<IsRenderbuffer>("glIsRenderbuffer");
+	isVertexArray = functionUtility.getExtensionFunction<IsVertexArray>("glIsVertexArray");
+	mapBufferRange = functionUtility.getExtensionFunction<MapBufferRange>("glMapBufferRange");
+	renderbufferStorage = functionUtility.getExtensionFunction<RenderbufferStorage>("glRenderbufferStorage");
+
+	renderbufferStorageMultisample =
+		functionUtility.getExtensionFunction<RenderbufferStorageMultisample>(
+			"glRenderbufferStorageMultisample");
+
+	texParameterIiv = functionUtility.getExtensionFunction<TexParameterIIV>("glTexParameterIiv");
+	texParameterIuiv = functionUtility.getExtensionFunction<TexParameterIUIV>("glTexParameterIuiv");
+
+	transformFeedbackVaryings =
+		functionUtility.getExtensionFunction<TransformFeedbackVaryings>("glTransformFeedbackVaryings");
+
+	uniform1ui = functionUtility.getExtensionFunction<Uniform1UI>("glUniform1ui");
+	uniform1uiv = functionUtility.getExtensionFunction<Uniform1UIV>("glUniform1uiv");
+	uniform2ui = functionUtility.getExtensionFunction<Uniform2UI>("glUniform2ui");
+	uniform2uiv = functionUtility.getExtensionFunction<Uniform2UIV>("glUniform2uiv");
+	uniform3ui = functionUtility.getExtensionFunction<Uniform3UI>("glUniform3ui");
+	uniform3uiv = functionUtility.getExtensionFunction<Uniform3UIV>("glUniform3uiv");
+	uniform4ui = functionUtility.getExtensionFunction<Uniform4UI>("glUniform4ui");
+	uniform4uiv = functionUtility.getExtensionFunction<Uniform4UIV>("glUniform4uiv");
+	vertexAttribI1i = functionUtility.getExtensionFunction<VertexAttribI1I>("glVertexAttribI1i");
+	vertexAttribI1iv = functionUtility.getExtensionFunction<VertexAttribI1IV>("glVertexAttribI1iv");
+	vertexAttribI1ui = functionUtility.getExtensionFunction<VertexAttribI1UI>("glVertexAttribI1ui");
+	vertexAttribI1uiv = functionUtility.getExtensionFunction<VertexAttribI1UIV>("glVertexAttribI1uiv");
+	vertexAttribI2i = functionUtility.getExtensionFunction<VertexAttribI2I>("glVertexAttribI2i");
+	vertexAttribI2iv = functionUtility.getExtensionFunction<VertexAttribI2IV>("glVertexAttribI2iv");
+	vertexAttribI2ui = functionUtility.getExtensionFunction<VertexAttribI2UI>("glVertexAttribI2ui");
+	vertexAttribI2uiv = functionUtility.getExtensionFunction<VertexAttribI2UIV>("glVertexAttribI2uiv");
+	vertexAttribI3i = functionUtility.getExtensionFunction<VertexAttribI3I>("glVertexAttribI3i");
+	vertexAttribI3iv = functionUtility.getExtensionFunction<VertexAttribI3IV>("glVertexAttribI3iv");
+	vertexAttribI3ui = functionUtility.getExtensionFunction<VertexAttribI3UI>("glVertexAttribI3ui");
+	vertexAttribI3uiv = functionUtility.getExtensionFunction<VertexAttribI3UIV>("glVertexAttribI3uiv");
+	vertexAttribI4bv = functionUtility.getExtensionFunction<VertexAttribI4BV>("glVertexAttribI4bv");
+	vertexAttribI4i = functionUtility.getExtensionFunction<VertexAttribI4I>("glVertexAttribI4i");
+	vertexAttribI4iv = functionUtility.getExtensionFunction<VertexAttribI4IV>("glVertexAttribI4iv");
+	vertexAttribI4sv = functionUtility.getExtensionFunction<VertexAttribI4SV>("glVertexAttribI4sv");
+	vertexAttribI4ubv = functionUtility.getExtensionFunction<VertexAttribI4UBV>("glVertexAttribI4ubv");
+	vertexAttribI4ui = functionUtility.getExtensionFunction<VertexAttribI4UI>("glVertexAttribI4ui");
+	vertexAttribI4uiv = functionUtility.getExtensionFunction<VertexAttribI4UIV>("glVertexAttribI4uiv");
+	vertexAttribI4usv = functionUtility.getExtensionFunction<VertexAttribI4USV>("glVertexAttribI4usv");
+
+	vertexAttribIPointer =
+		functionUtility.getExtensionFunction<VertexAttribIPointer>("glVertexAttribIPointer");
+
+	// Version 3.1
+
+	copyBufferSubData = functionUtility.getExtensionFunction<CopyBufferSubData>("glCopyBufferSubData");
+	drawArraysInstanced = functionUtility.getExtensionFunction<DrawArraysInstanced>("glDrawArraysInstanced");
+
+	drawElementsInstanced =
+		functionUtility.getExtensionFunction<DrawElementsInstanced>("glDrawElementsInstanced");
+
+	getActiveUniformBlockiv =
+		functionUtility.getExtensionFunction<GetActiveUniformBlockIV>("glGetActiveUniformBlockiv");
+
+	getActiveUniformBlockName =
+		functionUtility.getExtensionFunction<GetActiveUniformBlockName>("glGetActiveUniformBlockName");
+
+	getActiveUniformName =
+		functionUtility.getExtensionFunction<GetActiveUniformName>("glGetActiveUniformName");
+
+	getActiveUniformsiv = functionUtility.getExtensionFunction<GetActiveUniformsIV>("glGetActiveUniformsiv");
+
+	getUniformBlockIndex =
+		functionUtility.getExtensionFunction<GetUniformBlockIndex>("glGetUniformBlockIndex");
+
+	getUniformIndices = functionUtility.getExtensionFunction<GetUniformIndices>("glGetUniformIndices");
+
+	primitiveRestartIndex =
+		functionUtility.getExtensionFunction<PrimitiveRestartIndex>("glPrimitiveRestartIndex");
+
+	texBuffer = functionUtility.getExtensionFunction<TexBuffer>("glTexBuffer");
+	uniformBlockBinding = functionUtility.getExtensionFunction<UniformBlockBinding>("glUniformBlockBinding");
+
+	// Version 3.2
+
+	clientWaitSync = functionUtility.getExtensionFunction<ClientWaitSync>("glClientWaitSync");
+	deleteSync = functionUtility.getExtensionFunction<DeleteSync>("glDeleteSync");
+
+	drawElementsBaseVertex =
+		functionUtility.getExtensionFunction<DrawElementsBaseVertex>("glDrawElementsBaseVertex");
+
+	drawElementsInstancedBaseVertex =
+		functionUtility.getExtensionFunction<DrawElementsInstancedBaseVertex>(
+			"glDrawElementsInstancedBaseVertex");
+
+	drawRangeElementsBaseVertex =
+		functionUtility.getExtensionFunction<DrawRangeElementsBaseVertex>("glDrawRangeElementsBaseVertex");
+
+	fenceSync = functionUtility.getExtensionFunction<FenceSync>("glFenceSync");
+	framebufferTexture = functionUtility.getExtensionFunction<FramebufferTexture>("glFramebufferTexture");
+
+	getBufferParameteri64v =
+		functionUtility.getExtensionFunction<GetBufferParameterI64V>("glGetBufferParameteri64v");
+
+	getInteger64i_v = functionUtility.getExtensionFunction<GetInteger64I_V>("glGetInteger64i_v");
+	getInteger64v = functionUtility.getExtensionFunction<GetInteger64V>("glGetInteger64v");
+	getMultisamplefv = functionUtility.getExtensionFunction<GetMultisampleFV>("glGetMultisamplefv");
+	getSynciv = functionUtility.getExtensionFunction<GetSyncIV>("glGetSynciv");
+	isSync = functionUtility.getExtensionFunction<IsSync>("glIsSync");
+
+	multiDrawElementsBaseVertex =
+		functionUtility.getExtensionFunction<MultiDrawElementsBaseVertex>("glMultiDrawElementsBaseVertex");
+
+	provokingVertex = functionUtility.getExtensionFunction<ProvokingVertex>("glProvokingVertex");
+	sampleMaski = functionUtility.getExtensionFunction<SampleMaskI>("glSampleMaski");
+
+	texImage2DMultisample =
+		functionUtility.getExtensionFunction<TexImage2DMultisample>("glTexImage2DMultisample");
+
+	texImage3DMultisample =
+		functionUtility.getExtensionFunction<TexImage3DMultisample>("glTexImage3DMultisample");
+
+	waitSync = functionUtility.getExtensionFunction<WaitSync>("glWaitSync");
+
+	// Version 3.3
+
+	bindFragDataLocationIndexed =
+		functionUtility.getExtensionFunction<BindFragDataLocationIndexed>("glBindFragDataLocationIndexed");
+
+	bindSampler = functionUtility.getExtensionFunction<BindSampler>("glBindSampler");
+	deleteSamplers = functionUtility.getExtensionFunction<DeleteSamplers>("glDeleteSamplers");
+	genSamplers = functionUtility.getExtensionFunction<GenSamplers>("glGenSamplers");
+	getFragDataIndex = functionUtility.getExtensionFunction<GetFragDataIndex>("glGetFragDataIndex");
+	getQueryObjecti64v = functionUtility.getExtensionFunction<GetQueryObjectI64V>("glGetQueryObjecti64v");
+	getQueryObjectui64v = functionUtility.getExtensionFunction<GetQueryObjectUI64V>("glGetQueryObjectui64v");
+
+	getSamplerParameterfv =
+		functionUtility.getExtensionFunction<GetSamplerParameterFV>("glGetSamplerParameterfv");
+
+	getSamplerParameterIiv =
+		functionUtility.getExtensionFunction<GetSamplerParameterIIV>("glGetSamplerParameterIiv");
+
+	getSamplerParameterIuiv =
+		functionUtility.getExtensionFunction<GetSamplerParameterIUIV>("glGetSamplerParameterIuiv");
+
+	getSamplerParameteriv =
+		functionUtility.getExtensionFunction<GetSamplerParameterIV>("glGetSamplerParameteriv");
+
+	isSampler = functionUtility.getExtensionFunction<IsSampler>("glIsSampler");
+	queryCounter = functionUtility.getExtensionFunction<QueryCounter>("glQueryCounter");
+	samplerParameterf = functionUtility.getExtensionFunction<SamplerParameterF>("glSamplerParameterf");
+	samplerParameterfv = functionUtility.getExtensionFunction<SamplerParameterFV>("glSamplerParameterfv");
+	samplerParameteri = functionUtility.getExtensionFunction<SamplerParameterI>("glSamplerParameteri");
+	samplerParameteriv = functionUtility.getExtensionFunction<SamplerParameterIV>("glSamplerParameteriv");
+	samplerParameterIiv = functionUtility.getExtensionFunction<SamplerParameterIIV>("glSamplerParameterIiv");
+
+	samplerParameterIuiv =
+		functionUtility.getExtensionFunction<SamplerParameterIUIV>("glSamplerParameterIuiv");
+
+	vertexAttribDivisor = functionUtility.getExtensionFunction<VertexAttribDivisor>("glVertexAttribDivisor");
+	vertexAttribP1ui = functionUtility.getExtensionFunction<VertexAttribP1UI>("glVertexAttribP1ui");
+	vertexAttribP1uiv = functionUtility.getExtensionFunction<VertexAttribP1UIV>("glVertexAttribP1uiv");
+	vertexAttribP2ui = functionUtility.getExtensionFunction<VertexAttribP2UI>("glVertexAttribP2ui");
+	vertexAttribP2uiv = functionUtility.getExtensionFunction<VertexAttribP2UIV>("glVertexAttribP2uiv");
+	vertexAttribP3ui = functionUtility.getExtensionFunction<VertexAttribP3UI>("glVertexAttribP3ui");
+	vertexAttribP3uiv = functionUtility.getExtensionFunction<VertexAttribP3UIV>("glVertexAttribP3uiv");
+	vertexAttribP4ui = functionUtility.getExtensionFunction<VertexAttribP4UI>("glVertexAttribP4ui");
+	vertexAttribP4uiv = functionUtility.getExtensionFunction<VertexAttribP4UIV>("glVertexAttribP4uiv");
+
+	if(::versionMajor >= 4u)
+	{
+		// Version 4.0
+
+		beginQueryIndexed = functionUtility.getExtensionFunction<BeginQueryIndexed>("glBeginQueryIndexed");
+
+		bindTransformFeedback =
+			functionUtility.getExtensionFunction<BindTransformFeedback>("glBindTransformFeedback");
+
+		blendEquationi = functionUtility.getExtensionFunction<BlendEquationI>("glBlendEquationi");
+
+		blendEquationSeparatei =
+			functionUtility.getExtensionFunction<BlendEquationSeparateI>("glBlendEquationSeparatei");
+
+		blendFunci = functionUtility.getExtensionFunction<BlendFuncI>("glBlendFunci");
+		blendFuncSeparatei = functionUtility.getExtensionFunction<BlendFuncSeparateI>("glBlendFuncSeparatei");
+
+		deleteTransformFeedbacks =
+			functionUtility.getExtensionFunction<DeleteTransformFeedbacks>("glDeleteTransformFeedbacks");
+
+		drawArraysIndirect = functionUtility.getExtensionFunction<DrawArraysIndirect>("glDrawArraysIndirect");
+
+		drawElementsIndirect =
+			functionUtility.getExtensionFunction<DrawElementsIndirect>("glDrawElementsIndirect");
+
+		drawTransformFeedback =
+			functionUtility.getExtensionFunction<DrawTransformFeedback>("glDrawTransformFeedback");
+
+		drawTransformFeedbackStream =
+			functionUtility.getExtensionFunction<DrawTransformFeedbackStream>(
+				"glDrawTransformFeedbackStream");
+
+		endQueryIndexed = functionUtility.getExtensionFunction<EndQueryIndexed>("glEndQueryIndexed");
+
+		genTransformFeedbacks =
+			functionUtility.getExtensionFunction<GenTransformFeedbacks>("glGenTransformFeedbacks");
+
+		getActiveSubroutineName =
+			functionUtility.getExtensionFunction<GetActiveSubroutineName>("glGetActiveSubroutineName");
+
+		getActiveSubroutineUniformiv =
+			functionUtility.getExtensionFunction<GetActiveSubroutineUniformIV>(
+				"glGetActiveSubroutineUniformiv");
+
+		getActiveSubroutineUniformName =
+			functionUtility.getExtensionFunction<GetActiveSubroutineUniformName>(
+				"glGetActiveSubroutineUniformName");
+
+		getProgramStageiv = functionUtility.getExtensionFunction<GetProgramStageIV>("glGetProgramStageiv");
+		getQueryIndexediv = functionUtility.getExtensionFunction<GetQueryIndexedIV>("glGetQueryIndexediv");
+		getSubroutineIndex = functionUtility.getExtensionFunction<GetSubroutineIndex>("glGetSubroutineIndex");
+
+		getSubroutineUniformLocation =
+			functionUtility.getExtensionFunction<GetSubroutineUniformLocation>(
+				"glGetSubroutineUniformLocation");
+
+		getUniformdv = functionUtility.getExtensionFunction<GetUniformDV>("glGetUniformdv");
+
+		getUniformSubroutineuiv =
+			functionUtility.getExtensionFunction<GetUniformSubroutineUIV>("glGetUniformSubroutineuiv");
+
+		isTransformFeedback =
+			functionUtility.getExtensionFunction<IsTransformFeedback>("glIsTransformFeedback");
+
+		minSampleShading = functionUtility.getExtensionFunction<MinSampleShading>("glMinSampleShading");
+		patchParameterfv = functionUtility.getExtensionFunction<PatchParameterFV>("glPatchParameterfv");
+		patchParameteri = functionUtility.getExtensionFunction<PatchParameterI>("glPatchParameteri");
+
+		pauseTransformFeedback =
+			functionUtility.getExtensionFunction<PauseTransformFeedback>("glPauseTransformFeedback");
+
+		resumeTransformFeedback =
+			functionUtility.getExtensionFunction<ResumeTransformFeedback>("glResumeTransformFeedback");
+
+		uniform1d = functionUtility.getExtensionFunction<Uniform1D>("glUniform1d");
+		uniform1dv = functionUtility.getExtensionFunction<Uniform1DV>("glUniform1dv");
+		uniform2d = functionUtility.getExtensionFunction<Uniform2D>("glUniform2d");
+		uniform2dv = functionUtility.getExtensionFunction<Uniform2DV>("glUniform2dv");
+		uniform3d = functionUtility.getExtensionFunction<Uniform3D>("glUniform3d");
+		uniform3dv = functionUtility.getExtensionFunction<Uniform3DV>("glUniform3dv");
+		uniform4d = functionUtility.getExtensionFunction<Uniform4D>("glUniform4d");
+		uniform4dv = functionUtility.getExtensionFunction<Uniform4DV>("glUniform4dv");
+		uniformMatrix2dv = functionUtility.getExtensionFunction<UniformMatrix2DV>("glUniformMatrix2dv");
+		uniformMatrix2x3dv = functionUtility.getExtensionFunction<UniformMatrix2X3DV>("glUniformMatrix2x3dv");
+		uniformMatrix2x4dv = functionUtility.getExtensionFunction<UniformMatrix2X4DV>("glUniformMatrix2x4dv");
+		uniformMatrix3dv = functionUtility.getExtensionFunction<UniformMatrix3DV>("glUniformMatrix3dv");
+		uniformMatrix3x2dv = functionUtility.getExtensionFunction<UniformMatrix3X2DV>("glUniformMatrix3x2dv");
+		uniformMatrix3x4dv = functionUtility.getExtensionFunction<UniformMatrix3X4DV>("glUniformMatrix3x4dv");
+		uniformMatrix4dv = functionUtility.getExtensionFunction<UniformMatrix4DV>("glUniformMatrix4dv");
+		uniformMatrix4x2dv = functionUtility.getExtensionFunction<UniformMatrix4X2DV>("glUniformMatrix4x2dv");
+		uniformMatrix4x3dv = functionUtility.getExtensionFunction<UniformMatrix4X3DV>("glUniformMatrix4x3dv");
+
+		uniformSubroutinesuiv =
+			functionUtility.getExtensionFunction<UniformSubroutineSUIV>("glUniformSubroutinesuiv");
+
+		if(::versionMinor >= 1u)
+		{
+			// Version 4.1
+
+			activeShaderProgram =
+				functionUtility.getExtensionFunction<ActiveShaderProgram>("glActiveShaderProgram");
+
+			bindProgramPipeline =
+				functionUtility.getExtensionFunction<BindProgramPipeline>("glBindProgramPipeline");
+
+			clearDepthf = functionUtility.getExtensionFunction<ClearDepthF>("glClearDepthf");
+
+			createShaderProgramv =
+				functionUtility.getExtensionFunction<CreateShaderProgramV>("glCreateShaderProgramv");
+
+			deleteProgramPipelines =
+				functionUtility.getExtensionFunction<DeleteProgramPipelines>("glDeleteProgramPipelines");
+
+			depthRangeArrayv = functionUtility.getExtensionFunction<DepthRangeArrayV>("glDepthRangeArrayv");
+			depthRangef = functionUtility.getExtensionFunction<DepthRangeF>("glDepthRangef");
+
+			depthRangeIndexed =
+				functionUtility.getExtensionFunction<DepthRangeIndexed>("glDepthRangeIndexed");
+
+			genProgramPipelines =
+				functionUtility.getExtensionFunction<GenProgramPipelines>("glGenProgramPipelines");
+
+			getDoublei_v = functionUtility.getExtensionFunction<GetDoubleI_V>("glGetDoublei_v");
+			getFloati_v = functionUtility.getExtensionFunction<GetFloatI_V>("glGetFloati_v");
+			getProgramBinary = functionUtility.getExtensionFunction<GetProgramBinary>("glGetProgramBinary");
+
+			getProgramPipelineInfoLog =
+				functionUtility.getExtensionFunction<GetProgramPipelineInfoLog>(
+					"glGetProgramPipelineInfoLog");
+
+			getProgramPipelineiv =
+				functionUtility.getExtensionFunction<GetProgramPipelineIV>("glGetProgramPipelineiv");
+
+			getShaderPrecisionFormat =
+				functionUtility.getExtensionFunction<GetShaderPrecisionFormat>("glGetShaderPrecisionFormat");
+
+			getVertexAttribLdv =
+				functionUtility.getExtensionFunction<GetVertexAttribLDV>("glGetVertexAttribLdv");
+
+			isProgramPipeline =
+				functionUtility.getExtensionFunction<IsProgramPipeline>("glIsProgramPipeline");
+
+			programBinary = functionUtility.getExtensionFunction<ProgramBinary>("glProgramBinary");
+
+			programParameteri =
+				functionUtility.getExtensionFunction<ProgramParameterI>("glProgramParameteri");
+
+			programUniform1d = functionUtility.getExtensionFunction<ProgramUniform1D>("glProgramUniform1d");
+
+			programUniform1dv =
+				functionUtility.getExtensionFunction<ProgramUniform1DV>("glProgramUniform1dv");
+
+			programUniform1f = functionUtility.getExtensionFunction<ProgramUniform1F>("glProgramUniform1f");
+
+			programUniform1fv =
+				functionUtility.getExtensionFunction<ProgramUniform1FV>("glProgramUniform1fv");
+
+			programUniform1i = functionUtility.getExtensionFunction<ProgramUniform1I>("glProgramUniform1i");
+
+			programUniform1iv =
+				functionUtility.getExtensionFunction<ProgramUniform1IV>("glProgramUniform1iv");
+
+			programUniform1ui =
+				functionUtility.getExtensionFunction<ProgramUniform1UI>("glProgramUniform1ui");
+
+			programUniform1uiv =
+				functionUtility.getExtensionFunction<ProgramUniform1UIV>("glProgramUniform1uiv");
+
+			programUniform2d = functionUtility.getExtensionFunction<ProgramUniform2D>("glProgramUniform2d");
+
+			programUniform2dv =
+				functionUtility.getExtensionFunction<ProgramUniform2DV>("glProgramUniform2dv");
+
+			programUniform2f = functionUtility.getExtensionFunction<ProgramUniform2F>("glProgramUniform2f");
+
+			programUniform2fv =
+				functionUtility.getExtensionFunction<ProgramUniform2FV>("glProgramUniform2fv");
+
+			programUniform2i = functionUtility.getExtensionFunction<ProgramUniform2I>("glProgramUniform2i");
+
+			programUniform2iv =
+				functionUtility.getExtensionFunction<ProgramUniform2IV>("glProgramUniform2iv");
+
+			programUniform2ui =
+				functionUtility.getExtensionFunction<ProgramUniform2UI>("glProgramUniform2ui");
+
+			programUniform2uiv =
+				functionUtility.getExtensionFunction<ProgramUniform2UIV>("glProgramUniform2uiv");
+
+			programUniform3d = functionUtility.getExtensionFunction<ProgramUniform3D>("glProgramUniform3d");
+
+			programUniform3dv =
+				functionUtility.getExtensionFunction<ProgramUniform3DV>("glProgramUniform3dv");
+
+			programUniform3f = functionUtility.getExtensionFunction<ProgramUniform3F>("glProgramUniform3f");
+
+			programUniform3fv =
+				functionUtility.getExtensionFunction<ProgramUniform3FV>("glProgramUniform3fv");
+
+			programUniform3i = functionUtility.getExtensionFunction<ProgramUniform3I>("glProgramUniform3i");
+
+			programUniform3iv =
+				functionUtility.getExtensionFunction<ProgramUniform3IV>("glProgramUniform3iv");
+
+			programUniform3ui =
+				functionUtility.getExtensionFunction<ProgramUniform3UI>("glProgramUniform3ui");
+
+			programUniform3uiv =
+				functionUtility.getExtensionFunction<ProgramUniform3UIV>("glProgramUniform3uiv");
+
+			programUniform4d = functionUtility.getExtensionFunction<ProgramUniform4D>("glProgramUniform4d");
+
+			programUniform4dv =
+				functionUtility.getExtensionFunction<ProgramUniform4DV>("glProgramUniform4dv");
+
+			programUniform4f = functionUtility.getExtensionFunction<ProgramUniform4F>("glProgramUniform4f");
+
+			programUniform4fv =
+				functionUtility.getExtensionFunction<ProgramUniform4FV>("glProgramUniform4fv");
+
+			programUniform4i = functionUtility.getExtensionFunction<ProgramUniform4I>("glProgramUniform4i");
+
+			programUniform4iv =
+				functionUtility.getExtensionFunction<ProgramUniform4IV>("glProgramUniform4iv");
+
+			programUniform4ui =
+				functionUtility.getExtensionFunction<ProgramUniform4UI>("glProgramUniform4ui");
+
+			programUniform4uiv =
+				functionUtility.getExtensionFunction<ProgramUniform4UIV>("glProgramUniform4uiv");
+
+			programUniformMatrix2dv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix2DV>("glProgramUniformMatrix2dv");
+
+			programUniformMatrix2fv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix2FV>("glProgramUniformMatrix2fv");
+
+			programUniformMatrix2x3dv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix2X3DV>(
+					"glProgramUniformMatrix2x3dv");
+
+			programUniformMatrix2x3fv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix2X3FV>(
+					"glProgramUniformMatrix2x3fv");
+
+			programUniformMatrix2x4dv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix2X4DV>(
+					"glProgramUniformMatrix2x4dv");
+
+			programUniformMatrix2x4fv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix2X4FV>(
+					"glProgramUniformMatrix2x4fv");
+
+			programUniformMatrix3dv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix3DV>("glProgramUniformMatrix3dv");
+
+			programUniformMatrix3fv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix3FV>("glProgramUniformMatrix3fv");
+
+			programUniformMatrix3x2dv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix3X2DV>(
+					"glProgramUniformMatrix3x2dv");
+
+			programUniformMatrix3x2fv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix3X2FV>(
+					"glProgramUniformMatrix3x2fv");
+
+			programUniformMatrix3x4dv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix3X4DV>(
+					"glProgramUniformMatrix3x4dv");
+
+			programUniformMatrix3x4fv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix3X4FV>(
+					"glProgramUniformMatrix3x4fv");
+
+			programUniformMatrix4dv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix4DV>("glProgramUniformMatrix4dv");
+
+			programUniformMatrix4fv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix4FV>("glProgramUniformMatrix4fv");
+
+			programUniformMatrix4x2dv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix4X2DV>(
+					"glProgramUniformMatrix4x2dv");
+
+			programUniformMatrix4x2fv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix4X2FV>(
+					"glProgramUniformMatrix4x2fv");
+
+			programUniformMatrix4x3dv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix4X3DV>(
+					"glProgramUniformMatrix4x3dv");
+
+			programUniformMatrix4x3fv =
+				functionUtility.getExtensionFunction<ProgramUniformMatrix4X3FV>(
+					"glProgramUniformMatrix4x3fv");
+
+			releaseShaderCompiler =
+				functionUtility.getExtensionFunction<ReleaseShaderCompiler>("glReleaseShaderCompiler");
+
+			shaderBinary = functionUtility.getExtensionFunction<ShaderBinary>("glShaderBinary");
+			scissorArrayv = functionUtility.getExtensionFunction<ScissorArrayV>("glScissorArrayv");
+			scissorIndexed = functionUtility.getExtensionFunction<ScissorIndexed>("glScissorIndexed");
+			scissorIndexedv = functionUtility.getExtensionFunction<ScissorIndexedV>("glScissorIndexedv");
+			useProgramStages = functionUtility.getExtensionFunction<UseProgramStages>("glUseProgramStages");
+
+			validateProgramPipeline =
+				functionUtility.getExtensionFunction<ValidateProgramPipeline>("glValidateProgramPipeline");
+
+			vertexAttribL1d = functionUtility.getExtensionFunction<VertexAttribL1D>("glVertexAttribL1d");
+			vertexAttribL1dv = functionUtility.getExtensionFunction<VertexAttribL1DV>("glVertexAttribL1dv");
+			vertexAttribL2d = functionUtility.getExtensionFunction<VertexAttribL2D>("glVertexAttribL2d");
+			vertexAttribL2dv = functionUtility.getExtensionFunction<VertexAttribL2DV>("glVertexAttribL2dv");
+			vertexAttribL3d = functionUtility.getExtensionFunction<VertexAttribL3D>("glVertexAttribL3d");
+			vertexAttribL3dv = functionUtility.getExtensionFunction<VertexAttribL3DV>("glVertexAttribL3dv");
+			vertexAttribL4d = functionUtility.getExtensionFunction<VertexAttribL4D>("glVertexAttribL4d");
+			vertexAttribL4dv = functionUtility.getExtensionFunction<VertexAttribL4DV>("glVertexAttribL4dv");
+
+			vertexAttribLPointer =
+				functionUtility.getExtensionFunction<VertexAttribLPointer>("glVertexAttribLPointer");
+
+			viewportArrayv = functionUtility.getExtensionFunction<ViewportArrayV>("glViewportArrayv");
+			viewportIndexedf = functionUtility.getExtensionFunction<ViewportIndexedF>("glViewportIndexedf");
+
+			viewportIndexedfv =
+				functionUtility.getExtensionFunction<ViewportIndexedFV>("glViewportIndexedfv");
+		}
+
+		if(::versionMinor >= 2u)
+		{
+			// Version 4.2
+
+			bindImageTexture = functionUtility.getExtensionFunction<BindImageTexture>("glBindImageTexture");
+
+			drawArraysInstancedBaseInstance =
+				functionUtility.getExtensionFunction<DrawArraysInstancedBaseInstance>(
+					"glDrawArraysInstancedBaseInstance");
+
+			drawElementsInstancedBaseInstance =
+				functionUtility.getExtensionFunction<DrawElementsInstancedBaseInstance>(
+					"glDrawElementsInstancedBaseInstance");
+
+			drawElementsInstancedBaseVertexBaseInstance =
+				functionUtility.getExtensionFunction<DrawElementsInstancedBaseVertexBaseInstance>(
+					"glDrawElementsInstancedBaseVertexBaseInstance");
+
+			drawTransformFeedbackInstanced =
+				functionUtility.getExtensionFunction<DrawTransformFeedbackInstanced>(
+					"glDrawTransformFeedbackInstanced");
+
+			drawTransformFeedbackStreamInstanced =
+				functionUtility.getExtensionFunction<DrawTransformFeedbackStreamInstanced>(
+					"glDrawTransformFeedbackStreamInstanced");
+
+			getActiveAtomicCounterBufferiv =
+				functionUtility.getExtensionFunction<GetActiveAtomicCounterBufferIV>(
+					"glGetActiveAtomicCounterBufferiv");
+
+			getInternalformativ =
+				functionUtility.getExtensionFunction<GetInternalformatIV>("glGetInternalformativ");
+
+			memoryBarrier = functionUtility.getExtensionFunction<MemoryBarrier>("glMemoryBarrier");
+			texStorage1D = functionUtility.getExtensionFunction<TexStorage1D>("glTexStorage1D");
+			texStorage2D = functionUtility.getExtensionFunction<TexStorage2D>("glTexStorage2D");
+			texStorage3D = functionUtility.getExtensionFunction<TexStorage3D>("glTexStorage3D");
+		}
+
+		if(::versionMinor >= 3u)
+		{
+			// Version 4.3
+
+			bindVertexBuffer = functionUtility.getExtensionFunction<BindVertexBuffer>("glBindVertexBuffer");
+			clearBufferData = functionUtility.getExtensionFunction<ClearBufferData>("glClearBufferData");
+
+			clearBufferSubData =
+				functionUtility.getExtensionFunction<ClearBufferSubData>("glClearBufferSubData");
+
+			copyImageSubData = functionUtility.getExtensionFunction<CopyImageSubData>("glCopyImageSubData");
+			dispatchCompute = functionUtility.getExtensionFunction<DispatchCompute>("glDispatchCompute");
+
+			dispatchComputeIndirect =
+				functionUtility.getExtensionFunction<DispatchComputeIndirect>("glDispatchComputeIndirect");
+
+			debugMessageCallback =
+				functionUtility.getExtensionFunction<DebugMessageCallback>("glDebugMessageCallback");
+
+			debugMessageControl =
+				functionUtility.getExtensionFunction<DebugMessageControl>("glDebugMessageControl");
+
+			debugMessageInsert =
+				functionUtility.getExtensionFunction<DebugMessageInsert>("glDebugMessageInsert");
+
+			framebufferParameteri =
+				functionUtility.getExtensionFunction<FramebufferParameterI>("glFramebufferParameteri");
+
+			getDebugMessageLog =
+				functionUtility.getExtensionFunction<GetDebugMessageLog>("glGetDebugMessageLog");
+
+			getFramebufferParameteriv =
+				functionUtility.getExtensionFunction<GetFramebufferParameterIV>(
+					"glGetFramebufferParameteriv");
+
+			getInternalformati64v =
+				functionUtility.getExtensionFunction<GetInternalformatI64V>("glGetInternalformati64v");
+
+			getObjectLabel = functionUtility.getExtensionFunction<GetObjectLabel>("glGetObjectLabel");
+
+			getObjectPtrLabel =
+				functionUtility.getExtensionFunction<GetObjectPtrLabel>("glGetObjectPtrLabel");
+
+			getProgramInterfaceiv =
+				functionUtility.getExtensionFunction<GetProgramInterfaceIV>("glGetProgramInterfaceiv");
+
+			getProgramResourceIndex =
+				functionUtility.getExtensionFunction<GetProgramResourceIndex>("glGetProgramResourceIndex");
+
+			getProgramResourceiv =
+				functionUtility.getExtensionFunction<GetProgramResourceIV>("glGetProgramResourceiv");
+
+			getProgramResourceLocation =
+				functionUtility.getExtensionFunction<GetProgramResourceLocation>(
+					"glGetProgramResourceLocation");
+
+			getProgramResourceLocationIndex =
+				functionUtility.getExtensionFunction<GetProgramResourceLocationIndex>(
+					"glGetProgramResourceLocationIndex");
+
+			getProgramResourceName =
+				functionUtility.getExtensionFunction<GetProgramResourceName>("glGetProgramResourceName");
+
+			invalidateBufferData =
+				functionUtility.getExtensionFunction<InvalidateBufferData>("glInvalidateBufferData");
+
+			invalidateBufferSubData =
+				functionUtility.getExtensionFunction<InvalidateBufferSubData>("glInvalidateBufferSubData");
+
+			invalidateFramebuffer =
+				functionUtility.getExtensionFunction<InvalidateFramebuffer>("glInvalidateFramebuffer");
+
+			invalidateSubFramebuffer =
+				functionUtility.getExtensionFunction<InvalidateSubFramebuffer>("glInvalidateSubFramebuffer");
+
+			invalidateTexImage =
+				functionUtility.getExtensionFunction<InvalidateTexImage>("glInvalidateTexImage");
+
+			invalidateTexSubImage =
+				functionUtility.getExtensionFunction<InvalidateTexSubImage>("glInvalidateTexSubImage");
+
+			multiDrawArraysIndirect =
+				functionUtility.getExtensionFunction<MultiDrawArraysIndirect>("glMultiDrawArraysIndirect");
+
+			multiDrawElementsIndirect =
+				functionUtility.getExtensionFunction<MultiDrawElementsIndirect>(
+					"glMultiDrawElementsIndirect");
+
+			objectLabel = functionUtility.getExtensionFunction<ObjectLabel>("glObjectLabel");
+			objectPtrLabel = functionUtility.getExtensionFunction<ObjectPtrLabel>("glObjectPtrLabel");
+			popDebugGroup = functionUtility.getExtensionFunction<PopDebugGroup>("glPopDebugGroup");
+			pushDebugGroup = functionUtility.getExtensionFunction<PushDebugGroup>("glPushDebugGroup");
+
+			shaderStorageBlockBinding =
+				functionUtility.getExtensionFunction<ShaderStorageBlockBinding>(
+					"glShaderStorageBlockBinding");
+
+			texBufferRange = functionUtility.getExtensionFunction<TexBufferRange>("glTexBufferRange");
+
+			texStorage2DMultisample =
+				functionUtility.getExtensionFunction<TexStorage2DMultisample>("glTexStorage2DMultisample");
+
+			texStorage3DMultisample =
+				functionUtility.getExtensionFunction<TexStorage3DMultisample>("glTexStorage3DMultisample");
+
+			textureView = functionUtility.getExtensionFunction<TextureView>("glTextureView");
+
+			vertexAttribBinding =
+				functionUtility.getExtensionFunction<VertexAttribBinding>("glVertexAttribBinding");
+
+			vertexAttribFormat =
+				functionUtility.getExtensionFunction<VertexAttribFormat>("glVertexAttribFormat");
+
+			vertexAttribIFormat =
+				functionUtility.getExtensionFunction<VertexAttribIFormat>("glVertexAttribIFormat");
+
+			vertexAttribLFormat =
+				functionUtility.getExtensionFunction<VertexAttribLFormat>("glVertexAttribLFormat");
+
+			vertexBindingDivisor =
+				functionUtility.getExtensionFunction<VertexBindingDivisor>("glVertexBindingDivisor");
+		}
+
+		if(::versionMinor >= 4u)
+		{
+			// Version 4.4
+
+			bindBuffersBase = functionUtility.getExtensionFunction<BindBuffersBase>("glBindBuffersBase");
+			bindBuffersRange = functionUtility.getExtensionFunction<BindBuffersRange>("glBindBuffersRange");
+
+			bindImageTextures =
+				functionUtility.getExtensionFunction<BindImageTextures>("glBindImageTextures");
+
+			bindSamplers = functionUtility.getExtensionFunction<BindSamplers>("glBindSamplers");
+			bindTextures = functionUtility.getExtensionFunction<BindTextures>("glBindTextures");
+
+			bindVertexBuffers =
+				functionUtility.getExtensionFunction<BindVertexBuffers>("glBindVertexBuffers");
+
+			bufferStorage = functionUtility.getExtensionFunction<BufferStorage>("glBufferStorage");
+			clearTexImage = functionUtility.getExtensionFunction<ClearTexImage>("glClearTexImage");
+			clearTexSubImage = functionUtility.getExtensionFunction<ClearTexSubImage>("glClearTexSubImage");
+		}
+
+		if(::versionMinor >= 5u)
+		{
+			// Version 4.5
+
+			bindTextureUnit = functionUtility.getExtensionFunction<BindTextureUnit>("glBindTextureUnit");
+
+			blitNamedFramebuffer =
+				functionUtility.getExtensionFunction<BlitNamedFramebuffer>("glBlitNamedFramebuffer");
+
+			checkNamedFramebufferStatus =
+				functionUtility.getExtensionFunction<CheckNamedFramebufferStatus>(
+					"glCheckNamedFramebufferStatus");
+
+			clearNamedBufferData =
+				functionUtility.getExtensionFunction<ClearNamedBufferData>("glClearNamedBufferData");
+
+			clearNamedBufferSubData =
+				functionUtility.getExtensionFunction<ClearNamedBufferSubData>("glClearNamedBufferSubData");
+
+			clearNamedFramebufferfi =
+				functionUtility.getExtensionFunction<ClearNamedFramebufferFI>("glClearNamedFramebufferfi");
+
+			clearNamedFramebufferfv =
+				functionUtility.getExtensionFunction<ClearNamedFramebufferFV>("glClearNamedFramebufferfv");
+
+			clearNamedFramebufferiv =
+				functionUtility.getExtensionFunction<ClearNamedFramebufferIV>("glClearNamedFramebufferiv");
+
+			clearNamedFramebufferuiv =
+				functionUtility.getExtensionFunction<ClearNamedFramebufferUIV>("glClearNamedFramebufferuiv");
+
+			clipControl = functionUtility.getExtensionFunction<ClipControl>("glClipControl");
+
+			compressedTextureSubImage1D =
+				functionUtility.getExtensionFunction<CompressedTextureSubImage1D>(
+					"glCompressedTextureSubImage1D");
+
+			compressedTextureSubImage2D =
+				functionUtility.getExtensionFunction<CompressedTextureSubImage2D>(
+					"glCompressedTextureSubImage2D");
+
+			compressedTextureSubImage3D =
+				functionUtility.getExtensionFunction<CompressedTextureSubImage3D>(
+					"glCompressedTextureSubImage3D");
+
+			copyNamedBufferSubData =
+				functionUtility.getExtensionFunction<CopyNamedBufferSubData>("glCopyNamedBufferSubData");
+
+			copyTextureSubImage1D =
+				functionUtility.getExtensionFunction<CopyTextureSubImage1D>("glCopyTextureSubImage1D");
+
+			copyTextureSubImage2D =
+				functionUtility.getExtensionFunction<CopyTextureSubImage2D>("glCopyTextureSubImage2D");
+
+			copyTextureSubImage3D =
+				functionUtility.getExtensionFunction<CopyTextureSubImage3D>("glCopyTextureSubImage3D");
+
+			createBuffers = functionUtility.getExtensionFunction<CreateBuffers>("glCreateBuffers");
+
+			createFramebuffers =
+				functionUtility.getExtensionFunction<CreateFramebuffers>("glCreateFramebuffers");
+
+			createProgramPipelines =
+				functionUtility.getExtensionFunction<CreateProgramPipelines>("glCreateProgramPipelines");
+
+			createQueries = functionUtility.getExtensionFunction<CreateQueries>("glCreateQueries");
+
+			createRenderbuffers =
+				functionUtility.getExtensionFunction<CreateRenderbuffers>("glCreateRenderbuffers");
+
+			createSamplers = functionUtility.getExtensionFunction<CreateSamplers>("glCreateSamplers");
+			createTextures = functionUtility.getExtensionFunction<CreateTextures>("glCreateTextures");
+
+			createTransformFeedbacks =
+				functionUtility.getExtensionFunction<CreateTransformFeedbacks>("glCreateTransformFeedbacks");
+
+			createVertexArrays =
+				functionUtility.getExtensionFunction<CreateVertexArrays>("glCreateVertexArrays");
+
+			disableVertexArrayAttrib =
+				functionUtility.getExtensionFunction<DisableVertexArrayAttrib>("glDisableVertexArrayAttrib");
+
+			enableVertexArrayAttrib =
+				functionUtility.getExtensionFunction<EnableVertexArrayAttrib>("glEnableVertexArrayAttrib");
+
+			flushMappedNamedBufferRange =
+				functionUtility.getExtensionFunction<FlushMappedNamedBufferRange>(
+					"glFlushMappedNamedBufferRange");
+
+			generateTextureMipmap =
+				functionUtility.getExtensionFunction<GenerateTextureMipmap>("glGenerateTextureMipmap");
+
+			getCompressedTextureImage =
+				functionUtility.getExtensionFunction<GetCompressedTextureImage>(
+					"glGetCompressedTextureImage");
+
+			getCompressedTextureSubImage =
+				functionUtility.getExtensionFunction<GetCompressedTextureSubImage>(
+					"glGetCompressedTextureSubImage");
+
+			getGraphicsResetStatus =
+				functionUtility.getExtensionFunction<GetGraphicsResetStatus>("glGetGraphicsResetStatus");
+
+			getNamedBufferParameteri64v =
+				functionUtility.getExtensionFunction<GetNamedBufferParameterI64V>(
+					"glGetNamedBufferParameteri64v");
+
+			getNamedBufferParameteriv =
+				functionUtility.getExtensionFunction<GetNamedBufferParameterIV>(
+					"glGetNamedBufferParameteriv");
+
+			getNamedBufferPointerv =
+				functionUtility.getExtensionFunction<GetNamedBufferPointerV>("glGetNamedBufferPointerv");
+
+			getNamedBufferSubData =
+				functionUtility.getExtensionFunction<GetNamedBufferSubData>("glGetNamedBufferSubData");
+
+			getNamedFramebufferAttachmentParameteriv =
+				functionUtility.getExtensionFunction<GetNamedFramebufferAttachmentParameterIV>(
+					"glGetNamedFramebufferAttachmentParameteriv");
+
+			getNamedFramebufferParameteriv =
+				functionUtility.getExtensionFunction<GetNamedFramebufferParameterIV>(
+					"glGetNamedFramebufferParameteriv");
+
+			getNamedRenderbufferParameteriv =
+				functionUtility.getExtensionFunction<GetNamedRenderbufferParameterIV>(
+					"glGetNamedRenderbufferParameteriv");
+
+			getnCompressedTexImage =
+				functionUtility.getExtensionFunction<GetnCompressedTexImage>("glGetnCompressedTexImage");
+
+			getnTexImage = functionUtility.getExtensionFunction<GetnTexImage>("glGetnTexImage");
+			getnUniformdv = functionUtility.getExtensionFunction<GetnUniformDV>("glGetnUniformdv");
+			getnUniformfv = functionUtility.getExtensionFunction<GetnUniformFV>("glGetnUniformfv");
+			getnUniformiv = functionUtility.getExtensionFunction<GetnUniformIV>("glGetnUniformiv");
+			getnUniformuiv = functionUtility.getExtensionFunction<GetnUniformUIV>("glGetnUniformuiv");
+
+			getQueryBufferObjecti64v =
+				functionUtility.getExtensionFunction<GetQueryBufferObjectI64V>("glGetQueryBufferObjecti64v");
+
+			getQueryBufferObjectiv =
+				functionUtility.getExtensionFunction<GetQueryBufferObjectIV>("glGetQueryBufferObjectiv");
+
+			getQueryBufferObjectui64v =
+				functionUtility.getExtensionFunction<GetQueryBufferObjectUI64V>(
+					"glGetQueryBufferObjectui64v");
+
+			getQueryBufferObjectuiv =
+				functionUtility.getExtensionFunction<GetQueryBufferObjectUIV>("glGetQueryBufferObjectuiv");
+
+			getTextureImage = functionUtility.getExtensionFunction<GetTextureImage>("glGetTextureImage");
+
+			getTextureLevelParameterfv =
+				functionUtility.getExtensionFunction<GetTextureLevelParameterFV>(
+					"glGetTextureLevelParameterfv");
+
+			getTextureLevelParameteriv =
+				functionUtility.getExtensionFunction<GetTextureLevelParameterIV>(
+					"glGetTextureLevelParameteriv");
+
+			getTextureParameterfv =
+				functionUtility.getExtensionFunction<GetTextureParameterFV>("glGetTextureParameterfv");
+
+			getTextureParameterIiv =
+				functionUtility.getExtensionFunction<GetTextureParameterIIV>("glGetTextureParameterIiv");
+
+			getTextureParameteriv =
+				functionUtility.getExtensionFunction<GetTextureParameterIV>("glGetTextureParameteriv");
+
+			getTextureParameterIuiv =
+				functionUtility.getExtensionFunction<GetTextureParameterIUIV>("glGetTextureParameterIuiv");
+
+			getTextureSubImage =
+				functionUtility.getExtensionFunction<GetTextureSubImage>("glGetTextureSubImage");
+
+			getTransformFeedbacki64_v =
+				functionUtility.getExtensionFunction<GetTransformFeedbackI64_V>(
+					"glGetTransformFeedbacki64_v");
+
+			getTransformFeedbackiv =
+				functionUtility.getExtensionFunction<GetTransformFeedbackIV>("glGetTransformFeedbackiv");
+
+			getTransformFeedbacki_v =
+				functionUtility.getExtensionFunction<GetTransformFeedbackI_V>("glGetTransformFeedbacki_v");
+
+			getVertexArrayIndexed64iv =
+				functionUtility.getExtensionFunction<GetVertexArrayIndexed64IV>(
+					"glGetVertexArrayIndexed64iv");
+
+			getVertexArrayIndexediv =
+				functionUtility.getExtensionFunction<GetVertexArrayIndexedIV>("glGetVertexArrayIndexediv");
+
+			getVertexArrayiv = functionUtility.getExtensionFunction<GetVertexArrayIV>("glGetVertexArrayiv");
+
+			invalidateNamedFramebufferData =
+				functionUtility.getExtensionFunction<InvalidateNamedFramebufferData>(
+					"glInvalidateNamedFramebufferData");
+
+			invalidateNamedFramebufferSubData =
+				functionUtility.getExtensionFunction<InvalidateNamedFramebufferSubData>(
+					"glInvalidateNamedFramebufferSubData");
+
+			mapNamedBuffer = functionUtility.getExtensionFunction<MapNamedBuffer>("glMapNamedBuffer");
+
+			mapNamedBufferRange =
+				functionUtility.getExtensionFunction<MapNamedBufferRange>("glMapNamedBufferRange");
+
+			memoryBarrierByRegion =
+				functionUtility.getExtensionFunction<MemoryBarrierByRegion>("glMemoryBarrierByRegion");
+
+			namedBufferData = functionUtility.getExtensionFunction<NamedBufferData>("glNamedBufferData");
+
+			namedBufferStorage =
+				functionUtility.getExtensionFunction<NamedBufferStorage>("glNamedBufferStorage");
+
+			namedBufferSubData =
+				functionUtility.getExtensionFunction<NamedBufferSubData>("glNamedBufferSubData");
+
+			namedFramebufferDrawBuffer =
+				functionUtility.getExtensionFunction<NamedFramebufferDrawBuffer>(
+					"glNamedFramebufferDrawBuffer");
+
+			namedFramebufferDrawBuffers =
+				functionUtility.getExtensionFunction<NamedFramebufferDrawBuffers>(
+					"glNamedFramebufferDrawBuffers");
+
+			namedFramebufferParameteri =
+				functionUtility.getExtensionFunction<NamedFramebufferParameterI>(
+					"glNamedFramebufferParameteri");
+
+			namedFramebufferReadBuffer =
+				functionUtility.getExtensionFunction<NamedFramebufferReadBuffer>(
+					"glNamedFramebufferReadBuffer");
+
+			namedFramebufferRenderbuffer =
+				functionUtility.getExtensionFunction<NamedFramebufferRenderbuffer>(
+					"glNamedFramebufferRenderbuffer");
+
+			namedFramebufferTexture =
+				functionUtility.getExtensionFunction<NamedFramebufferTexture>("glNamedFramebufferTexture");
+
+			namedFramebufferTextureLayer =
+				functionUtility.getExtensionFunction<NamedFramebufferTextureLayer>(
+					"glNamedFramebufferTextureLayer");
+
+			namedRenderbufferStorage =
+				functionUtility.getExtensionFunction<NamedRenderbufferStorage>("glNamedRenderbufferStorage");
+
+			namedRenderbufferStorageMultisample =
+				functionUtility.getExtensionFunction<NamedRenderbufferStorageMultisample>(
+					"glNamedRenderbufferStorageMultisample");
+
+			readnPixels = functionUtility.getExtensionFunction<ReadnPixels>("glReadnPixels");
+
+			transformFeedbackBufferBase =
+				functionUtility.getExtensionFunction<TransformFeedbackBufferBase>(
+					"glTransformFeedbackBufferBase");
+
+			transformFeedbackBufferRange =
+				functionUtility.getExtensionFunction<TransformFeedbackBufferRange>(
+					"glTransformFeedbackBufferRange");
+
+			textureBarrier = functionUtility.getExtensionFunction<TextureBarrier>("glTextureBarrier");
+			textureBuffer = functionUtility.getExtensionFunction<TextureBuffer>("glTextureBuffer");
+
+			textureBufferRange =
+				functionUtility.getExtensionFunction<TextureBufferRange>("glTextureBufferRange");
+
+			textureParameterf =
+				functionUtility.getExtensionFunction<TextureParameterF>("glTextureParameterf");
+
+			textureParameterfv =
+				functionUtility.getExtensionFunction<TextureParameterFV>("glTextureParameterfv");
+
+			textureParameteri =
+				functionUtility.getExtensionFunction<TextureParameterI>("glTextureParameteri");
+
+			textureParameterIiv =
+				functionUtility.getExtensionFunction<TextureParameterIIV>("glTextureParameterIiv");
+
+			textureParameterIuiv =
+				functionUtility.getExtensionFunction<TextureParameterIUIV>("glTextureParameterIuiv");
+
+			textureParameteriv =
+				functionUtility.getExtensionFunction<TextureParameterIV>("glTextureParameteriv");
+
+			textureStorage1D = functionUtility.getExtensionFunction<TextureStorage1D>("glTextureStorage1D");
+			textureStorage2D = functionUtility.getExtensionFunction<TextureStorage2D>("glTextureStorage2D");
+
+			textureStorage2DMultisample =
+				functionUtility.getExtensionFunction<TextureStorage2DMultisample>(
+					"glTextureStorage2DMultisample");
+
+			textureStorage3D = functionUtility.getExtensionFunction<TextureStorage3D>("glTextureStorage3D");
+
+			textureStorage3DMultisample =
+				functionUtility.getExtensionFunction<TextureStorage3DMultisample>(
+					"glTextureStorage3DMultisample");
+
+			textureSubImage1D =
+				functionUtility.getExtensionFunction<TextureSubImage1D>("glTextureSubImage1D");
+
+			textureSubImage2D =
+				functionUtility.getExtensionFunction<TextureSubImage2D>("glTextureSubImage2D");
+
+			textureSubImage3D =
+				functionUtility.getExtensionFunction<TextureSubImage3D>("glTextureSubImage3D");
+
+			unmapNamedBuffer = functionUtility.getExtensionFunction<UnmapNamedBuffer>("glUnmapNamedBuffer");
+
+			vertexArrayAttribBinding =
+				functionUtility.getExtensionFunction<VertexArrayAttribBinding>("glVertexArrayAttribBinding");
+
+			vertexArrayAttribFormat =
+				functionUtility.getExtensionFunction<VertexArrayAttribFormat>("glVertexArrayAttribFormat");
+
+			vertexArrayAttribIFormat =
+				functionUtility.getExtensionFunction<VertexArrayAttribIFormat>("glVertexArrayAttribIFormat");
+
+			vertexArrayAttribLFormat =
+				functionUtility.getExtensionFunction<VertexArrayAttribLFormat>("glVertexArrayAttribLFormat");
+
+			vertexArrayBindingDivisor =
+				functionUtility.getExtensionFunction<VertexArrayBindingDivisor>(
+					"glVertexArrayBindingDivisor");
+
+			vertexArrayElementBuffer =
+				functionUtility.getExtensionFunction<VertexArrayElementBuffer>("glVertexArrayElementBuffer");
+
+			vertexArrayVertexBuffer =
+				functionUtility.getExtensionFunction<VertexArrayVertexBuffer>("glVertexArrayVertexBuffer");
+
+			vertexArrayVertexBuffers =
+				functionUtility.getExtensionFunction<VertexArrayVertexBuffers>("glVertexArrayVertexBuffers");
+		}
+	}
+}
+
+void OpenGL::initialiseDebugMessaging() const
+{
+	enable(DEBUG_OUTPUT_SYNCHRONOUS);
+	DE_CHECK_ERROR_OPENGL(this);
+	debugMessageControl(DONT_CARE, DEBUG_TYPE_OTHER, DONT_CARE, 0, nullptr, FALSE);
+	DE_CHECK_ERROR_OPENGL(this);
+	debugMessageCallback(::processDebugMessage, nullptr);
+}
 
 ExtensionNameList OpenGL::getExtensionNames() const
 {
@@ -366,1432 +1583,6 @@ static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 		default:
 			return ::DEBUG_MESSAGE_TYPE_NAMES[9];
 	}
-}
-
-static void getStandardFunctions(OpenGL& openGL)
-{
-	// Version 1.2
-
-	openGL.copyTexSubImage3D = GraphicsExtensionHelper::getFunction<OpenGL::CopyTexSubImage3D>("glCopyTexSubImage3D");
-	openGL.drawRangeElements = GraphicsExtensionHelper::getFunction<OpenGL::DrawRangeElements>("glDrawRangeElements");
-	openGL.texImage3D = GraphicsExtensionHelper::getFunction<OpenGL::TexImage3D>("glTexImage3D");
-	openGL.texSubImage3D = GraphicsExtensionHelper::getFunction<OpenGL::TexSubImage3D>("glTexSubImage3D");
-
-	// Version 1.3
-
-	openGL.activeTexture = GraphicsExtensionHelper::getFunction<OpenGL::ActiveTexture>("glActiveTexture");
-
-	openGL.compressedTexImage1D =
-		GraphicsExtensionHelper::getFunction<OpenGL::CompressedTexImage1D>("glCompressedTexImage1D");
-
-	openGL.compressedTexImage2D =
-		GraphicsExtensionHelper::getFunction<OpenGL::CompressedTexImage2D>("glCompressedTexImage2D");
-
-	openGL.compressedTexImage3D =
-		GraphicsExtensionHelper::getFunction<OpenGL::CompressedTexImage3D>("glCompressedTexImage3D");
-
-	openGL.compressedTexSubImage1D =
-		GraphicsExtensionHelper::getFunction<OpenGL::CompressedTexSubImage1D>("glCompressedTexSubImage1D");
-
-	openGL.compressedTexSubImage2D =
-		GraphicsExtensionHelper::getFunction<OpenGL::CompressedTexSubImage2D>("glCompressedTexSubImage2D");
-
-	openGL.compressedTexSubImage3D =
-		GraphicsExtensionHelper::getFunction<OpenGL::CompressedTexSubImage3D>("glCompressedTexSubImage3D");
-
-	openGL.getCompressedTexImage =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetCompressedTexImage>("glGetCompressedTexImage");
-
-	openGL.sampleCoverage = GraphicsExtensionHelper::getFunction<OpenGL::SampleCoverage>("glSampleCoverage");
-
-	// Version 1.4
-
-	openGL.blendColor = GraphicsExtensionHelper::getFunction<OpenGL::BlendColor>("glBlendColor");
-	openGL.blendEquation = GraphicsExtensionHelper::getFunction<OpenGL::BlendEquation>("glBlendEquation");
-	openGL.blendFuncSeparate = GraphicsExtensionHelper::getFunction<OpenGL::BlendFuncSeparate>("glBlendFuncSeparate");
-	openGL.multiDrawArrays = GraphicsExtensionHelper::getFunction<OpenGL::MultiDrawArrays>("glMultiDrawArrays");
-	openGL.multiDrawElements = GraphicsExtensionHelper::getFunction<OpenGL::MultiDrawElements>("glMultiDrawElements");
-	openGL.pointParameterf = GraphicsExtensionHelper::getFunction<OpenGL::PointParameterF>("glPointParameterf");
-	openGL.pointParameterfv = GraphicsExtensionHelper::getFunction<OpenGL::PointParameterFV>("glPointParameterfv");
-	openGL.pointParameteri = GraphicsExtensionHelper::getFunction<OpenGL::PointParameterI>("glPointParameteri");
-	openGL.pointParameteriv = GraphicsExtensionHelper::getFunction<OpenGL::PointParameterIV>("glPointParameteriv");
-
-	// Version 1.5
-
-	openGL.beginQuery = GraphicsExtensionHelper::getFunction<OpenGL::BeginQuery>("glBeginQuery");
-	openGL.bindBuffer = GraphicsExtensionHelper::getFunction<OpenGL::BindBuffer>("glBindBuffer");
-	openGL.bufferData = GraphicsExtensionHelper::getFunction<OpenGL::BufferData>("glBufferData");
-	openGL.bufferSubData = GraphicsExtensionHelper::getFunction<OpenGL::BufferSubData>("glBufferSubData");
-	openGL.deleteBuffers = GraphicsExtensionHelper::getFunction<OpenGL::DeleteBuffers>("glDeleteBuffers");
-	openGL.deleteQueries = GraphicsExtensionHelper::getFunction<OpenGL::DeleteQueries>("glDeleteQueries");
-	openGL.endQuery = GraphicsExtensionHelper::getFunction<OpenGL::EndQuery>("glEndQuery");
-	openGL.genBuffers = GraphicsExtensionHelper::getFunction<OpenGL::GenBuffers>("glGenBuffers");
-	openGL.genQueries = GraphicsExtensionHelper::getFunction<OpenGL::GenQueries>("glGenQueries");
-
-	openGL.getBufferParameteriv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetBufferParameterIV>("glGetBufferParameteriv");
-
-	openGL.getBufferPointerv = GraphicsExtensionHelper::getFunction<OpenGL::GetBufferPointerV>("glGetBufferPointerv");
-	openGL.getBufferSubData = GraphicsExtensionHelper::getFunction<OpenGL::GetBufferSubData>("glGetBufferSubData");
-	openGL.getQueryiv = GraphicsExtensionHelper::getFunction<OpenGL::GetQueryIV>("glGetQueryiv");
-	openGL.getQueryObjectiv = GraphicsExtensionHelper::getFunction<OpenGL::GetQueryObjectIV>("glGetQueryObjectiv");
-	openGL.getQueryObjectuiv = GraphicsExtensionHelper::getFunction<OpenGL::GetQueryObjectUIV>("glGetQueryObjectuiv");
-	openGL.isBuffer = GraphicsExtensionHelper::getFunction<OpenGL::IsBuffer>("glIsBuffer");
-	openGL.isQuery = GraphicsExtensionHelper::getFunction<OpenGL::IsQuery>("glIsQuery");
-	openGL.mapBuffer = GraphicsExtensionHelper::getFunction<OpenGL::MapBuffer>("glMapBuffer");
-	openGL.unmapBuffer = GraphicsExtensionHelper::getFunction<OpenGL::UnmapBuffer>("glUnmapBuffer");
-
-	// Version 2.0
-
-	openGL.attachShader = GraphicsExtensionHelper::getFunction<OpenGL::AttachShader>("glAttachShader");
-
-	openGL.bindAttribLocation =
-		GraphicsExtensionHelper::getFunction<OpenGL::BindAttribLocation>("glBindAttribLocation");
-
-	openGL.blendEquationSeparate =
-		GraphicsExtensionHelper::getFunction<OpenGL::BlendEquationSeparate>("glBlendEquationSeparate");
-
-	openGL.compileShader = GraphicsExtensionHelper::getFunction<OpenGL::CompileShader>("glCompileShader");
-	openGL.createProgram = GraphicsExtensionHelper::getFunction<OpenGL::CreateProgram>("glCreateProgram");
-	openGL.createShader = GraphicsExtensionHelper::getFunction<OpenGL::CreateShader>("glCreateShader");
-	openGL.deleteProgram = GraphicsExtensionHelper::getFunction<OpenGL::DeleteProgram>("glDeleteProgram");
-	openGL.deleteShader = GraphicsExtensionHelper::getFunction<OpenGL::DeleteShader>("glDeleteShader");
-	openGL.detachShader = GraphicsExtensionHelper::getFunction<OpenGL::DetachShader>("glDetachShader");
-
-	openGL.disableVertexAttribArray =
-		GraphicsExtensionHelper::getFunction<OpenGL::DisableVertexAttribArray>("glDisableVertexAttribArray");
-
-	openGL.drawBuffers = GraphicsExtensionHelper::getFunction<OpenGL::DrawBuffers>("glDrawBuffers");
-
-	openGL.enableVertexAttribArray =
-		GraphicsExtensionHelper::getFunction<OpenGL::EnableVertexAttribArray>("glEnableVertexAttribArray");
-
-	openGL.getActiveAttrib = GraphicsExtensionHelper::getFunction<OpenGL::GetActiveAttrib>("glGetActiveAttrib");
-	openGL.getActiveUniform = GraphicsExtensionHelper::getFunction<OpenGL::GetActiveUniform>("glGetActiveUniform");
-
-	openGL.getAttachedShaders =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetAttachedShaders>("glGetAttachedShaders");
-
-	openGL.getAttribLocation = GraphicsExtensionHelper::getFunction<OpenGL::GetAttribLocation>("glGetAttribLocation");
-	openGL.getProgramInfoLog = GraphicsExtensionHelper::getFunction<OpenGL::GetProgramInfoLog>("glGetProgramInfoLog");
-	openGL.getProgramiv = GraphicsExtensionHelper::getFunction<OpenGL::GetProgramIV>("glGetProgramiv");
-	openGL.getShaderInfoLog = GraphicsExtensionHelper::getFunction<OpenGL::GetShaderInfoLog>("glGetShaderInfoLog");
-	openGL.getShaderiv = GraphicsExtensionHelper::getFunction<OpenGL::GetShaderIV>("glGetShaderiv");
-	openGL.getShaderSource = GraphicsExtensionHelper::getFunction<OpenGL::GetShaderSource>("glGetShaderSource");
-	openGL.getUniformfv = GraphicsExtensionHelper::getFunction<OpenGL::GetUniformFV>("glGetUniformfv");
-	openGL.getUniformiv = GraphicsExtensionHelper::getFunction<OpenGL::GetUniformIV>("glGetUniformiv");
-
-	openGL.getUniformLocation =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetUniformLocation>("glGetUniformLocation");
-
-	openGL.getVertexAttribdv = GraphicsExtensionHelper::getFunction<OpenGL::GetVertexAttribDV>("glGetVertexAttribdv");
-	openGL.getVertexAttribfv = GraphicsExtensionHelper::getFunction<OpenGL::GetVertexAttribFV>("glGetVertexAttribfv");
-	openGL.getVertexAttribiv = GraphicsExtensionHelper::getFunction<OpenGL::GetVertexAttribIV>("glGetVertexAttribiv");
-
-	openGL.getVertexAttribPointerv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetVertexAttribPointerV>("glGetVertexAttribPointerv");
-
-	openGL.isProgram = GraphicsExtensionHelper::getFunction<OpenGL::IsProgram>("glIsProgram");
-	openGL.isShader = GraphicsExtensionHelper::getFunction<OpenGL::IsShader>("glIsShader");
-	openGL.linkProgram = GraphicsExtensionHelper::getFunction<OpenGL::LinkProgram>("glLinkProgram");
-	openGL.shaderSource = GraphicsExtensionHelper::getFunction<OpenGL::ShaderSource>("glShaderSource");
-
-	openGL.stencilFuncSeparate =
-		GraphicsExtensionHelper::getFunction<OpenGL::StencilFuncSeparate>("glStencilFuncSeparate");
-
-	openGL.stencilMaskSeparate =
-		GraphicsExtensionHelper::getFunction<OpenGL::StencilMaskSeparate>("glStencilMaskSeparate");
-
-	openGL.stencilOpSeparate = GraphicsExtensionHelper::getFunction<OpenGL::StencilOpSeparate>("glStencilOpSeparate");
-	openGL.uniform1f = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1F>("glUniform1f");
-	openGL.uniform1fv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1FV>("glUniform1fv");
-	openGL.uniform1i = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1I>("glUniform1i");
-	openGL.uniform1iv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1IV>("glUniform1iv");
-	openGL.uniform2f = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2F>("glUniform2f");
-	openGL.uniform2fv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2FV>("glUniform2fv");
-	openGL.uniform2i = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2I>("glUniform2i");
-	openGL.uniform2iv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2IV>("glUniform2iv");
-	openGL.uniform3f = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3F>("glUniform3f");
-	openGL.uniform3fv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3FV>("glUniform3fv");
-	openGL.uniform3i = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3I>("glUniform3i");
-	openGL.uniform3iv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3IV>("glUniform3iv");
-	openGL.uniform4f = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4F>("glUniform4f");
-	openGL.uniform4fv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4FV>("glUniform4fv");
-	openGL.uniform4i = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4I>("glUniform4i");
-	openGL.uniform4iv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4IV>("glUniform4iv");
-	openGL.uniformMatrix2fv = GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2FV>("glUniformMatrix2fv");
-	openGL.uniformMatrix3fv = GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3FV>("glUniformMatrix3fv");
-	openGL.uniformMatrix4fv = GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4FV>("glUniformMatrix4fv");
-	openGL.useProgram = GraphicsExtensionHelper::getFunction<OpenGL::UseProgram>("glUseProgram");
-	openGL.validateProgram = GraphicsExtensionHelper::getFunction<OpenGL::ValidateProgram>("glValidateProgram");
-	openGL.vertexAttrib1d = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib1D>("glVertexAttrib1d");
-	openGL.vertexAttrib1dv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib1DV>("glVertexAttrib1dv");
-	openGL.vertexAttrib1f = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib1F>("glVertexAttrib1f");
-	openGL.vertexAttrib1fv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib1FV>("glVertexAttrib1fv");
-	openGL.vertexAttrib1s = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib1S>("glVertexAttrib1s");
-	openGL.vertexAttrib1sv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib1SV>("glVertexAttrib1sv");
-	openGL.vertexAttrib2d = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib2D>("glVertexAttrib2d");
-	openGL.vertexAttrib2dv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib2DV>("glVertexAttrib2dv");
-	openGL.vertexAttrib2f = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib2F>("glVertexAttrib2f");
-	openGL.vertexAttrib2fv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib2FV>("glVertexAttrib2fv");
-	openGL.vertexAttrib2s = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib2S>("glVertexAttrib2s");
-	openGL.vertexAttrib2sv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib2SV>("glVertexAttrib2sv");
-	openGL.vertexAttrib3d = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib3D>("glVertexAttrib3d");
-	openGL.vertexAttrib3dv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib3DV>("glVertexAttrib3dv");
-	openGL.vertexAttrib3f = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib3F>("glVertexAttrib3f");
-	openGL.vertexAttrib3fv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib3FV>("glVertexAttrib3fv");
-	openGL.vertexAttrib3s = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib3S>("glVertexAttrib3s");
-	openGL.vertexAttrib3sv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib3SV>("glVertexAttrib3sv");
-	openGL.vertexAttrib4bv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4BV>("glVertexAttrib4bv");
-	openGL.vertexAttrib4d = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4D>("glVertexAttrib4d");
-	openGL.vertexAttrib4dv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4DV>("glVertexAttrib4dv");
-	openGL.vertexAttrib4f = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4F>("glVertexAttrib4f");
-	openGL.vertexAttrib4fv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4FV>("glVertexAttrib4fv");
-	openGL.vertexAttrib4iv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4IV>("glVertexAttrib4iv");
-	openGL.vertexAttrib4Nbv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4NBV>("glVertexAttrib4Nbv");
-	openGL.vertexAttrib4Niv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4NIV>("glVertexAttrib4Niv");
-	openGL.vertexAttrib4Nsv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4NSV>("glVertexAttrib4Nsv");
-	openGL.vertexAttrib4Nub = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4NUB>("glVertexAttrib4Nub");
-	openGL.vertexAttrib4Nubv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4NUBV>("glVertexAttrib4Nubv");
-	openGL.vertexAttrib4Nuiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4NUIV>("glVertexAttrib4Nuiv");
-	openGL.vertexAttrib4Nusv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4NUSV>("glVertexAttrib4Nusv");
-	openGL.vertexAttrib4s = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4S>("glVertexAttrib4s");
-	openGL.vertexAttrib4sv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4SV>("glVertexAttrib4sv");
-	openGL.vertexAttrib4ubv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4UBV>("glVertexAttrib4ubv");
-	openGL.vertexAttrib4uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4UIV>("glVertexAttrib4uiv");
-	openGL.vertexAttrib4usv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttrib4USV>("glVertexAttrib4usv");
-
-	openGL.vertexAttribPointer =
-		GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribPointer>("glVertexAttribPointer");
-
-	// Version 2.1
-
-	openGL.uniformMatrix2x3fv =
-		GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2X3FV>("glUniformMatrix2x3fv");
-
-	openGL.uniformMatrix2x4fv =
-		GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2X4FV>("glUniformMatrix2x4fv");
-
-	openGL.uniformMatrix3x2fv =
-		GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3X2FV>("glUniformMatrix3x2fv");
-
-	openGL.uniformMatrix3x4fv =
-		GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3X4FV>("glUniformMatrix3x4fv");
-
-	openGL.uniformMatrix4x2fv =
-		GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4X2FV>("glUniformMatrix4x2fv");
-
-	openGL.uniformMatrix4x3fv =
-		GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4X3FV>("glUniformMatrix4x3fv");
-
-	// Version 3.0
-
-	openGL.beginConditionalRender =
-		GraphicsExtensionHelper::getFunction<OpenGL::BeginConditionalRender>("glBeginConditionalRender");
-
-	openGL.beginTransformFeedback =
-		GraphicsExtensionHelper::getFunction<OpenGL::BeginTransformFeedback>("glBeginTransformFeedback");
-
-	openGL.bindBufferBase = GraphicsExtensionHelper::getFunction<OpenGL::BindBufferBase>("glBindBufferBase");
-	openGL.bindBufferRange = GraphicsExtensionHelper::getFunction<OpenGL::BindBufferRange>("glBindBufferRange");
-
-	openGL.bindFragDataLocation =
-		GraphicsExtensionHelper::getFunction<OpenGL::BindFragDataLocation>("glBindFragDataLocation");
-
-	openGL.bindFramebuffer = GraphicsExtensionHelper::getFunction<OpenGL::BindFramebuffer>("glBindFramebuffer");
-	openGL.bindRenderbuffer = GraphicsExtensionHelper::getFunction<OpenGL::BindRenderbuffer>("glBindRenderbuffer");
-	openGL.bindVertexArray = GraphicsExtensionHelper::getFunction<OpenGL::BindVertexArray>("glBindVertexArray");
-	openGL.blitFramebuffer = GraphicsExtensionHelper::getFunction<OpenGL::BlitFramebuffer>("glBlitFramebuffer");
-
-	openGL.checkFramebufferStatus =
-		GraphicsExtensionHelper::getFunction<OpenGL::CheckFramebufferStatus>("glCheckFramebufferStatus");
-
-	openGL.clampColor = GraphicsExtensionHelper::getFunction<OpenGL::ClampColor>("glClampColor");
-	openGL.clearBufferfi = GraphicsExtensionHelper::getFunction<OpenGL::ClearBufferFI>("glClearBufferfi");
-	openGL.clearBufferfv = GraphicsExtensionHelper::getFunction<OpenGL::ClearBufferFV>("glClearBufferfv");
-	openGL.clearBufferiv = GraphicsExtensionHelper::getFunction<OpenGL::ClearBufferIV>("glClearBufferiv");
-	openGL.clearBufferuiv = GraphicsExtensionHelper::getFunction<OpenGL::ClearBufferUIV>("glClearBufferuiv");
-	openGL.colorMaski = GraphicsExtensionHelper::getFunction<OpenGL::ColorMaskI>("glColorMaski");
-
-	openGL.deleteFramebuffers =
-		GraphicsExtensionHelper::getFunction<OpenGL::DeleteFramebuffers>("glDeleteFramebuffers");
-
-	openGL.deleteRenderbuffers =
-		GraphicsExtensionHelper::getFunction<OpenGL::DeleteRenderbuffers>("glDeleteRenderbuffers");
-
-	openGL.deleteVertexArrays =
-		GraphicsExtensionHelper::getFunction<OpenGL::DeleteVertexArrays>("glDeleteVertexArrays");
-
-	openGL.disablei = GraphicsExtensionHelper::getFunction<OpenGL::DisableI>("glDisablei");
-	openGL.enablei = GraphicsExtensionHelper::getFunction<OpenGL::EnableI>("glEnablei");
-
-	openGL.endConditionalRender =
-		GraphicsExtensionHelper::getFunction<OpenGL::EndConditionalRender>("glEndConditionalRender");
-
-	openGL.endTransformFeedback =
-		GraphicsExtensionHelper::getFunction<OpenGL::EndTransformFeedback>("glEndTransformFeedback");
-
-	openGL.flushMappedBufferRange =
-		GraphicsExtensionHelper::getFunction<OpenGL::FlushMappedBufferRange>("glFlushMappedBufferRange");
-
-	openGL.framebufferRenderbuffer =
-		GraphicsExtensionHelper::getFunction<OpenGL::FramebufferRenderbuffer>("glFramebufferRenderbuffer");
-
-	openGL.framebufferTexture1D =
-		GraphicsExtensionHelper::getFunction<OpenGL::FramebufferTexture1D>("glFramebufferTexture1D");
-
-	openGL.framebufferTexture2D =
-		GraphicsExtensionHelper::getFunction<OpenGL::FramebufferTexture2D>("glFramebufferTexture2D");
-
-	openGL.framebufferTexture3D =
-		GraphicsExtensionHelper::getFunction<OpenGL::FramebufferTexture3D>("glFramebufferTexture3D");
-
-	openGL.framebufferTextureLayer =
-		GraphicsExtensionHelper::getFunction<OpenGL::FramebufferTextureLayer>("glFramebufferTextureLayer");
-
-	openGL.generateMipmap = GraphicsExtensionHelper::getFunction<OpenGL::GenerateMipmap>("glGenerateMipmap");
-	openGL.genFramebuffers = GraphicsExtensionHelper::getFunction<OpenGL::GenFramebuffers>("glGenFramebuffers");
-	openGL.genRenderbuffers = GraphicsExtensionHelper::getFunction<OpenGL::GenRenderbuffers>("glGenRenderbuffers");
-	openGL.genVertexArrays = GraphicsExtensionHelper::getFunction<OpenGL::GenVertexArrays>("glGenVertexArrays");
-	openGL.getBooleani_v = GraphicsExtensionHelper::getFunction<OpenGL::GetBooleanI_V>("glGetBooleani_v");
-
-	openGL.getFragDataLocation =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetFragDataLocation>("glGetFragDataLocation");
-
-	openGL.getFramebufferAttachmentParameteriv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetFramebufferAttachmentParameterIV>(
-			"glGetFramebufferAttachmentParameteriv");
-
-	openGL.getIntegeri_v = GraphicsExtensionHelper::getFunction<OpenGL::GetIntegerI_V>("glGetIntegeri_v");
-
-	openGL.getRenderbufferParameteriv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetRenderbufferParameterIV>("glGetRenderbufferParameteriv");
-
-	openGL.getStringi = GraphicsExtensionHelper::getFunction<OpenGL::GetStringI>("glGetStringi");
-
-	openGL.getTexParameterIiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetTexParameterIIV>("glGetTexParameterIiv");
-
-	openGL.getTexParameterIuiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetTexParameterIUIV>("glGetTexParameterIuiv");
-
-	openGL.getTransformFeedbackVarying =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetTransformFeedbackVarying>("glGetTransformFeedbackVarying");
-
-	openGL.getUniformuiv = GraphicsExtensionHelper::getFunction<OpenGL::GetUniformUIV>("glGetUniformuiv");
-
-	openGL.getVertexAttribIiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetVertexAttribIIV>("glGetVertexAttribIiv");
-
-	openGL.getVertexAttribIuiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetVertexAttribIUIV>("glGetVertexAttribIuiv");
-
-	openGL.isEnabledi = GraphicsExtensionHelper::getFunction<OpenGL::IsEnabledI>("glIsEnabledi");
-	openGL.isFramebuffer = GraphicsExtensionHelper::getFunction<OpenGL::IsFramebuffer>("glIsFramebuffer");
-	openGL.isRenderbuffer = GraphicsExtensionHelper::getFunction<OpenGL::IsRenderbuffer>("glIsRenderbuffer");
-	openGL.isVertexArray = GraphicsExtensionHelper::getFunction<OpenGL::IsVertexArray>("glIsVertexArray");
-	openGL.mapBufferRange = GraphicsExtensionHelper::getFunction<OpenGL::MapBufferRange>("glMapBufferRange");
-
-	openGL.renderbufferStorage =
-		GraphicsExtensionHelper::getFunction<OpenGL::RenderbufferStorage>("glRenderbufferStorage");
-
-	openGL.renderbufferStorageMultisample =
-		GraphicsExtensionHelper::getFunction<OpenGL::RenderbufferStorageMultisample>(
-			"glRenderbufferStorageMultisample");
-
-	openGL.texParameterIiv = GraphicsExtensionHelper::getFunction<OpenGL::TexParameterIIV>("glTexParameterIiv");
-	openGL.texParameterIuiv = GraphicsExtensionHelper::getFunction<OpenGL::TexParameterIUIV>("glTexParameterIuiv");
-
-	openGL.transformFeedbackVaryings =
-		GraphicsExtensionHelper::getFunction<OpenGL::TransformFeedbackVaryings>("glTransformFeedbackVaryings");
-
-	openGL.uniform1ui = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1UI>("glUniform1ui");
-	openGL.uniform1uiv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1UIV>("glUniform1uiv");
-	openGL.uniform2ui = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2UI>("glUniform2ui");
-	openGL.uniform2uiv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2UIV>("glUniform2uiv");
-	openGL.uniform3ui = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3UI>("glUniform3ui");
-	openGL.uniform3uiv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3UIV>("glUniform3uiv");
-	openGL.uniform4ui = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4UI>("glUniform4ui");
-	openGL.uniform4uiv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4UIV>("glUniform4uiv");
-	openGL.vertexAttribI1i = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI1I>("glVertexAttribI1i");
-	openGL.vertexAttribI1iv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI1IV>("glVertexAttribI1iv");
-	openGL.vertexAttribI1ui = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI1UI>("glVertexAttribI1ui");
-	openGL.vertexAttribI1uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI1UIV>("glVertexAttribI1uiv");
-	openGL.vertexAttribI2i = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI2I>("glVertexAttribI2i");
-	openGL.vertexAttribI2iv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI2IV>("glVertexAttribI2iv");
-	openGL.vertexAttribI2ui = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI2UI>("glVertexAttribI2ui");
-	openGL.vertexAttribI2uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI2UIV>("glVertexAttribI2uiv");
-	openGL.vertexAttribI3i = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI3I>("glVertexAttribI3i");
-	openGL.vertexAttribI3iv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI3IV>("glVertexAttribI3iv");
-	openGL.vertexAttribI3ui = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI3UI>("glVertexAttribI3ui");
-	openGL.vertexAttribI3uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI3UIV>("glVertexAttribI3uiv");
-	openGL.vertexAttribI4bv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI4BV>("glVertexAttribI4bv");
-	openGL.vertexAttribI4i = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI4I>("glVertexAttribI4i");
-	openGL.vertexAttribI4iv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI4IV>("glVertexAttribI4iv");
-	openGL.vertexAttribI4sv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI4SV>("glVertexAttribI4sv");
-	openGL.vertexAttribI4ubv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI4UBV>("glVertexAttribI4ubv");
-	openGL.vertexAttribI4ui = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI4UI>("glVertexAttribI4ui");
-	openGL.vertexAttribI4uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI4UIV>("glVertexAttribI4uiv");
-	openGL.vertexAttribI4usv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribI4USV>("glVertexAttribI4usv");
-
-	openGL.vertexAttribIPointer =
-		GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribIPointer>("glVertexAttribIPointer");
-
-	// Version 3.1
-
-	openGL.copyBufferSubData = GraphicsExtensionHelper::getFunction<OpenGL::CopyBufferSubData>("glCopyBufferSubData");
-
-	openGL.drawArraysInstanced =
-		GraphicsExtensionHelper::getFunction<OpenGL::DrawArraysInstanced>("glDrawArraysInstanced");
-
-	openGL.drawElementsInstanced =
-		GraphicsExtensionHelper::getFunction<OpenGL::DrawElementsInstanced>("glDrawElementsInstanced");
-
-	openGL.getActiveUniformBlockiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetActiveUniformBlockIV>("glGetActiveUniformBlockiv");
-
-	openGL.getActiveUniformBlockName =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetActiveUniformBlockName>("glGetActiveUniformBlockName");
-
-	openGL.getActiveUniformName =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetActiveUniformName>("glGetActiveUniformName");
-
-	openGL.getActiveUniformsiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetActiveUniformsIV>("glGetActiveUniformsiv");
-
-	openGL.getUniformBlockIndex =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetUniformBlockIndex>("glGetUniformBlockIndex");
-
-	openGL.getUniformIndices = GraphicsExtensionHelper::getFunction<OpenGL::GetUniformIndices>("glGetUniformIndices");
-
-	openGL.primitiveRestartIndex =
-		GraphicsExtensionHelper::getFunction<OpenGL::PrimitiveRestartIndex>("glPrimitiveRestartIndex");
-
-	openGL.texBuffer = GraphicsExtensionHelper::getFunction<OpenGL::TexBuffer>("glTexBuffer");
-
-	openGL.uniformBlockBinding =
-		GraphicsExtensionHelper::getFunction<OpenGL::UniformBlockBinding>("glUniformBlockBinding");
-
-	// Version 3.2
-
-	openGL.clientWaitSync = GraphicsExtensionHelper::getFunction<OpenGL::ClientWaitSync>("glClientWaitSync");
-	openGL.deleteSync = GraphicsExtensionHelper::getFunction<OpenGL::DeleteSync>("glDeleteSync");
-
-	openGL.drawElementsBaseVertex =
-		GraphicsExtensionHelper::getFunction<OpenGL::DrawElementsBaseVertex>("glDrawElementsBaseVertex");
-
-	openGL.drawElementsInstancedBaseVertex =
-		GraphicsExtensionHelper::getFunction<OpenGL::DrawElementsInstancedBaseVertex>(
-			"glDrawElementsInstancedBaseVertex");
-
-	openGL.drawRangeElementsBaseVertex =
-		GraphicsExtensionHelper::getFunction<OpenGL::DrawRangeElementsBaseVertex>("glDrawRangeElementsBaseVertex");
-
-	openGL.fenceSync = GraphicsExtensionHelper::getFunction<OpenGL::FenceSync>("glFenceSync");
-
-	openGL.framebufferTexture =
-		GraphicsExtensionHelper::getFunction<OpenGL::FramebufferTexture>("glFramebufferTexture");
-
-	openGL.getBufferParameteri64v =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetBufferParameterI64V>("glGetBufferParameteri64v");
-
-	openGL.getInteger64i_v = GraphicsExtensionHelper::getFunction<OpenGL::GetInteger64I_V>("glGetInteger64i_v");
-	openGL.getInteger64v = GraphicsExtensionHelper::getFunction<OpenGL::GetInteger64V>("glGetInteger64v");
-	openGL.getMultisamplefv = GraphicsExtensionHelper::getFunction<OpenGL::GetMultisampleFV>("glGetMultisamplefv");
-	openGL.getSynciv = GraphicsExtensionHelper::getFunction<OpenGL::GetSyncIV>("glGetSynciv");
-	openGL.isSync = GraphicsExtensionHelper::getFunction<OpenGL::IsSync>("glIsSync");
-
-	openGL.multiDrawElementsBaseVertex =
-		GraphicsExtensionHelper::getFunction<OpenGL::MultiDrawElementsBaseVertex>("glMultiDrawElementsBaseVertex");
-
-	openGL.provokingVertex = GraphicsExtensionHelper::getFunction<OpenGL::ProvokingVertex>("glProvokingVertex");
-	openGL.sampleMaski = GraphicsExtensionHelper::getFunction<OpenGL::SampleMaskI>("glSampleMaski");
-
-	openGL.texImage2DMultisample =
-		GraphicsExtensionHelper::getFunction<OpenGL::TexImage2DMultisample>("glTexImage2DMultisample");
-
-	openGL.texImage3DMultisample =
-		GraphicsExtensionHelper::getFunction<OpenGL::TexImage3DMultisample>("glTexImage3DMultisample");
-
-	openGL.waitSync = GraphicsExtensionHelper::getFunction<OpenGL::WaitSync>("glWaitSync");
-
-	// Version 3.3
-
-	openGL.bindFragDataLocationIndexed =
-		GraphicsExtensionHelper::getFunction<OpenGL::BindFragDataLocationIndexed>("glBindFragDataLocationIndexed");
-
-	openGL.bindSampler = GraphicsExtensionHelper::getFunction<OpenGL::BindSampler>("glBindSampler");
-	openGL.deleteSamplers = GraphicsExtensionHelper::getFunction<OpenGL::DeleteSamplers>("glDeleteSamplers");
-	openGL.genSamplers = GraphicsExtensionHelper::getFunction<OpenGL::GenSamplers>("glGenSamplers");
-	openGL.getFragDataIndex = GraphicsExtensionHelper::getFunction<OpenGL::GetFragDataIndex>("glGetFragDataIndex");
-
-	openGL.getQueryObjecti64v =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetQueryObjectI64V>("glGetQueryObjecti64v");
-
-	openGL.getQueryObjectui64v =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetQueryObjectUI64V>("glGetQueryObjectui64v");
-
-	openGL.getSamplerParameterfv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetSamplerParameterFV>("glGetSamplerParameterfv");
-
-	openGL.getSamplerParameterIiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetSamplerParameterIIV>("glGetSamplerParameterIiv");
-
-	openGL.getSamplerParameterIuiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetSamplerParameterIUIV>("glGetSamplerParameterIuiv");
-
-	openGL.getSamplerParameteriv =
-		GraphicsExtensionHelper::getFunction<OpenGL::GetSamplerParameterIV>("glGetSamplerParameteriv");
-
-	openGL.isSampler = GraphicsExtensionHelper::getFunction<OpenGL::IsSampler>("glIsSampler");
-	openGL.queryCounter = GraphicsExtensionHelper::getFunction<OpenGL::QueryCounter>("glQueryCounter");
-	openGL.samplerParameterf = GraphicsExtensionHelper::getFunction<OpenGL::SamplerParameterF>("glSamplerParameterf");
-
-	openGL.samplerParameterfv =
-		GraphicsExtensionHelper::getFunction<OpenGL::SamplerParameterFV>("glSamplerParameterfv");
-
-	openGL.samplerParameteri = GraphicsExtensionHelper::getFunction<OpenGL::SamplerParameterI>("glSamplerParameteri");
-
-	openGL.samplerParameteriv =
-		GraphicsExtensionHelper::getFunction<OpenGL::SamplerParameterIV>("glSamplerParameteriv");
-
-	openGL.samplerParameterIiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::SamplerParameterIIV>("glSamplerParameterIiv");
-
-	openGL.samplerParameterIuiv =
-		GraphicsExtensionHelper::getFunction<OpenGL::SamplerParameterIUIV>("glSamplerParameterIuiv");
-
-	openGL.vertexAttribDivisor =
-		GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribDivisor>("glVertexAttribDivisor");
-
-	openGL.vertexAttribP1ui = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP1UI>("glVertexAttribP1ui");
-	openGL.vertexAttribP1uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP1UIV>("glVertexAttribP1uiv");
-	openGL.vertexAttribP2ui = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP2UI>("glVertexAttribP2ui");
-	openGL.vertexAttribP2uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP2UIV>("glVertexAttribP2uiv");
-	openGL.vertexAttribP3ui = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP3UI>("glVertexAttribP3ui");
-	openGL.vertexAttribP3uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP3UIV>("glVertexAttribP3uiv");
-	openGL.vertexAttribP4ui = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP4UI>("glVertexAttribP4ui");
-	openGL.vertexAttribP4uiv = GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribP4UIV>("glVertexAttribP4uiv");
-
-	if(::versionMajor >= 4u)
-	{
-		// Version 4.0
-
-		openGL.beginQueryIndexed =
-			GraphicsExtensionHelper::getFunction<OpenGL::BeginQueryIndexed>("glBeginQueryIndexed");
-
-		openGL.bindTransformFeedback =
-			GraphicsExtensionHelper::getFunction<OpenGL::BindTransformFeedback>("glBindTransformFeedback");
-
-		openGL.blendEquationi = GraphicsExtensionHelper::getFunction<OpenGL::BlendEquationI>("glBlendEquationi");
-
-		openGL.blendEquationSeparatei =
-			GraphicsExtensionHelper::getFunction<OpenGL::BlendEquationSeparateI>("glBlendEquationSeparatei");
-
-		openGL.blendFunci = GraphicsExtensionHelper::getFunction<OpenGL::BlendFuncI>("glBlendFunci");
-
-		openGL.blendFuncSeparatei =
-			GraphicsExtensionHelper::getFunction<OpenGL::BlendFuncSeparateI>("glBlendFuncSeparatei");
-
-		openGL.deleteTransformFeedbacks =
-			GraphicsExtensionHelper::getFunction<OpenGL::DeleteTransformFeedbacks>("glDeleteTransformFeedbacks");
-
-		openGL.drawArraysIndirect =
-			GraphicsExtensionHelper::getFunction<OpenGL::DrawArraysIndirect>("glDrawArraysIndirect");
-
-		openGL.drawElementsIndirect =
-			GraphicsExtensionHelper::getFunction<OpenGL::DrawElementsIndirect>("glDrawElementsIndirect");
-
-		openGL.drawTransformFeedback =
-			GraphicsExtensionHelper::getFunction<OpenGL::DrawTransformFeedback>("glDrawTransformFeedback");
-
-		openGL.drawTransformFeedbackStream =
-			GraphicsExtensionHelper::getFunction<OpenGL::DrawTransformFeedbackStream>("glDrawTransformFeedbackStream");
-
-		openGL.endQueryIndexed = GraphicsExtensionHelper::getFunction<OpenGL::EndQueryIndexed>("glEndQueryIndexed");
-
-		openGL.genTransformFeedbacks =
-			GraphicsExtensionHelper::getFunction<OpenGL::GenTransformFeedbacks>("glGenTransformFeedbacks");
-
-		openGL.getActiveSubroutineName =
-			GraphicsExtensionHelper::getFunction<OpenGL::GetActiveSubroutineName>("glGetActiveSubroutineName");
-
-		openGL.getActiveSubroutineUniformiv =
-			GraphicsExtensionHelper::getFunction<OpenGL::GetActiveSubroutineUniformIV>(
-				"glGetActiveSubroutineUniformiv");
-
-		openGL.getActiveSubroutineUniformName =
-			GraphicsExtensionHelper::getFunction<OpenGL::GetActiveSubroutineUniformName>(
-				"glGetActiveSubroutineUniformName");
-
-		openGL.getProgramStageiv =
-			GraphicsExtensionHelper::getFunction<OpenGL::GetProgramStageIV>("glGetProgramStageiv");
-
-		openGL.getQueryIndexediv =
-			GraphicsExtensionHelper::getFunction<OpenGL::GetQueryIndexedIV>("glGetQueryIndexediv");
-
-		openGL.getSubroutineIndex =
-			GraphicsExtensionHelper::getFunction<OpenGL::GetSubroutineIndex>("glGetSubroutineIndex");
-
-		openGL.getSubroutineUniformLocation =
-			GraphicsExtensionHelper::getFunction<OpenGL::GetSubroutineUniformLocation>(
-				"glGetSubroutineUniformLocation");
-
-		openGL.getUniformdv = GraphicsExtensionHelper::getFunction<OpenGL::GetUniformDV>("glGetUniformdv");
-
-		openGL.getUniformSubroutineuiv =
-			GraphicsExtensionHelper::getFunction<OpenGL::GetUniformSubroutineUIV>("glGetUniformSubroutineuiv");
-
-		openGL.isTransformFeedback =
-			GraphicsExtensionHelper::getFunction<OpenGL::IsTransformFeedback>("glIsTransformFeedback");
-
-		openGL.minSampleShading = GraphicsExtensionHelper::getFunction<OpenGL::MinSampleShading>("glMinSampleShading");
-		openGL.patchParameterfv = GraphicsExtensionHelper::getFunction<OpenGL::PatchParameterFV>("glPatchParameterfv");
-		openGL.patchParameteri = GraphicsExtensionHelper::getFunction<OpenGL::PatchParameterI>("glPatchParameteri");
-
-		openGL.pauseTransformFeedback =
-			GraphicsExtensionHelper::getFunction<OpenGL::PauseTransformFeedback>("glPauseTransformFeedback");
-
-		openGL.resumeTransformFeedback =
-			GraphicsExtensionHelper::getFunction<OpenGL::ResumeTransformFeedback>("glResumeTransformFeedback");
-
-		openGL.uniform1d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1D>("glUniform1d");
-		openGL.uniform1dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform1DV>("glUniform1dv");
-		openGL.uniform2d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2D>("glUniform2d");
-		openGL.uniform2dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform2DV>("glUniform2dv");
-		openGL.uniform3d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3D>("glUniform3d");
-		openGL.uniform3dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform3DV>("glUniform3dv");
-		openGL.uniform4d = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4D>("glUniform4d");
-		openGL.uniform4dv = GraphicsExtensionHelper::getFunction<OpenGL::Uniform4DV>("glUniform4dv");
-		openGL.uniformMatrix2dv = GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2DV>("glUniformMatrix2dv");
-
-		openGL.uniformMatrix2x3dv =
-			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2X3DV>("glUniformMatrix2x3dv");
-
-		openGL.uniformMatrix2x4dv =
-			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix2X4DV>("glUniformMatrix2x4dv");
-
-		openGL.uniformMatrix3dv = GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3DV>("glUniformMatrix3dv");
-
-		openGL.uniformMatrix3x2dv =
-			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3X2DV>("glUniformMatrix3x2dv");
-
-		openGL.uniformMatrix3x4dv =
-			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix3X4DV>("glUniformMatrix3x4dv");
-
-		openGL.uniformMatrix4dv = GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4DV>("glUniformMatrix4dv");
-
-		openGL.uniformMatrix4x2dv =
-			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4X2DV>("glUniformMatrix4x2dv");
-
-		openGL.uniformMatrix4x3dv =
-			GraphicsExtensionHelper::getFunction<OpenGL::UniformMatrix4X3DV>("glUniformMatrix4x3dv");
-
-		openGL.uniformSubroutinesuiv =
-			GraphicsExtensionHelper::getFunction<OpenGL::UniformSubroutineSUIV>("glUniformSubroutinesuiv");
-
-		if(::versionMinor >= 1u)
-		{
-			// Version 4.1
-
-			openGL.activeShaderProgram =
-				GraphicsExtensionHelper::getFunction<OpenGL::ActiveShaderProgram>("glActiveShaderProgram");
-
-			openGL.bindProgramPipeline =
-				GraphicsExtensionHelper::getFunction<OpenGL::BindProgramPipeline>("glBindProgramPipeline");
-
-			openGL.clearDepthf = GraphicsExtensionHelper::getFunction<OpenGL::ClearDepthF>("glClearDepthf");
-
-			openGL.createShaderProgramv =
-				GraphicsExtensionHelper::getFunction<OpenGL::CreateShaderProgramV>("glCreateShaderProgramv");
-
-			openGL.deleteProgramPipelines =
-				GraphicsExtensionHelper::getFunction<OpenGL::DeleteProgramPipelines>("glDeleteProgramPipelines");
-
-			openGL.depthRangeArrayv =
-				GraphicsExtensionHelper::getFunction<OpenGL::DepthRangeArrayV>("glDepthRangeArrayv");
-
-			openGL.depthRangef = GraphicsExtensionHelper::getFunction<OpenGL::DepthRangeF>("glDepthRangef");
-
-			openGL.depthRangeIndexed =
-				GraphicsExtensionHelper::getFunction<OpenGL::DepthRangeIndexed>("glDepthRangeIndexed");
-
-			openGL.genProgramPipelines =
-				GraphicsExtensionHelper::getFunction<OpenGL::GenProgramPipelines>("glGenProgramPipelines");
-
-			openGL.getDoublei_v = GraphicsExtensionHelper::getFunction<OpenGL::GetDoubleI_V>("glGetDoublei_v");
-			openGL.getFloati_v = GraphicsExtensionHelper::getFunction<OpenGL::GetFloatI_V>("glGetFloati_v");
-
-			openGL.getProgramBinary =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramBinary>("glGetProgramBinary");
-
-			openGL.getProgramPipelineInfoLog =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramPipelineInfoLog>("glGetProgramPipelineInfoLog");
-
-			openGL.getProgramPipelineiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramPipelineIV>("glGetProgramPipelineiv");
-
-			openGL.getShaderPrecisionFormat =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetShaderPrecisionFormat>("glGetShaderPrecisionFormat");
-
-			openGL.getVertexAttribLdv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetVertexAttribLDV>("glGetVertexAttribLdv");
-
-			openGL.isProgramPipeline =
-				GraphicsExtensionHelper::getFunction<OpenGL::IsProgramPipeline>("glIsProgramPipeline");
-
-			openGL.programBinary =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramBinary>("glProgramBinary");
-
-			openGL.programParameteri =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramParameterI>("glProgramParameteri");
-
-			openGL.programUniform1d =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform1D>("glProgramUniform1d");
-
-			openGL.programUniform1dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform1DV>("glProgramUniform1dv");
-
-			openGL.programUniform1f =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform1F>("glProgramUniform1f");
-
-			openGL.programUniform1fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform1FV>("glProgramUniform1fv");
-
-			openGL.programUniform1i =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform1I>("glProgramUniform1i");
-
-			openGL.programUniform1iv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform1IV>("glProgramUniform1iv");
-
-			openGL.programUniform1ui =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform1UI>("glProgramUniform1ui");
-
-			openGL.programUniform1uiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform1UIV>("glProgramUniform1uiv");
-
-			openGL.programUniform2d =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform2D>("glProgramUniform2d");
-
-			openGL.programUniform2dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform2DV>("glProgramUniform2dv");
-
-			openGL.programUniform2f =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform2F>("glProgramUniform2f");
-
-			openGL.programUniform2fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform2FV>("glProgramUniform2fv");
-
-			openGL.programUniform2i =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform2I>("glProgramUniform2i");
-
-			openGL.programUniform2iv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform2IV>("glProgramUniform2iv");
-
-			openGL.programUniform2ui =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform2UI>("glProgramUniform2ui");
-
-			openGL.programUniform2uiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform2UIV>("glProgramUniform2uiv");
-
-			openGL.programUniform3d =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform3D>("glProgramUniform3d");
-
-			openGL.programUniform3dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform3DV>("glProgramUniform3dv");
-
-			openGL.programUniform3f =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform3F>("glProgramUniform3f");
-
-			openGL.programUniform3fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform3FV>("glProgramUniform3fv");
-
-			openGL.programUniform3i =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform3I>("glProgramUniform3i");
-
-			openGL.programUniform3iv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform3IV>("glProgramUniform3iv");
-
-			openGL.programUniform3ui =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform3UI>("glProgramUniform3ui");
-
-			openGL.programUniform3uiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform3UIV>("glProgramUniform3uiv");
-
-			openGL.programUniform4d =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform4D>("glProgramUniform4d");
-
-			openGL.programUniform4dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform4DV>("glProgramUniform4dv");
-
-			openGL.programUniform4f =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform4F>("glProgramUniform4f");
-
-			openGL.programUniform4fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform4FV>("glProgramUniform4fv");
-
-			openGL.programUniform4i =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform4I>("glProgramUniform4i");
-
-			openGL.programUniform4iv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform4IV>("glProgramUniform4iv");
-
-			openGL.programUniform4ui =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform4UI>("glProgramUniform4ui");
-
-			openGL.programUniform4uiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniform4UIV>("glProgramUniform4uiv");
-
-			openGL.programUniformMatrix2dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix2DV>("glProgramUniformMatrix2dv");
-
-			openGL.programUniformMatrix2fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix2FV>("glProgramUniformMatrix2fv");
-
-			openGL.programUniformMatrix2x3dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix2X3DV>("glProgramUniformMatrix2x3dv");
-
-			openGL.programUniformMatrix2x3fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix2X3FV>("glProgramUniformMatrix2x3fv");
-
-			openGL.programUniformMatrix2x4dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix2X4DV>("glProgramUniformMatrix2x4dv");
-
-			openGL.programUniformMatrix2x4fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix2X4FV>("glProgramUniformMatrix2x4fv");
-
-			openGL.programUniformMatrix3dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix3DV>("glProgramUniformMatrix3dv");
-
-			openGL.programUniformMatrix3fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix3FV>("glProgramUniformMatrix3fv");
-
-			openGL.programUniformMatrix3x2dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix3X2DV>("glProgramUniformMatrix3x2dv");
-
-			openGL.programUniformMatrix3x2fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix3X2FV>("glProgramUniformMatrix3x2fv");
-
-			openGL.programUniformMatrix3x4dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix3X4DV>("glProgramUniformMatrix3x4dv");
-
-			openGL.programUniformMatrix3x4fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix3X4FV>("glProgramUniformMatrix3x4fv");
-
-			openGL.programUniformMatrix4dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix4DV>("glProgramUniformMatrix4dv");
-
-			openGL.programUniformMatrix4fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix4FV>("glProgramUniformMatrix4fv");
-
-			openGL.programUniformMatrix4x2dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix4X2DV>("glProgramUniformMatrix4x2dv");
-
-			openGL.programUniformMatrix4x2fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix4X2FV>("glProgramUniformMatrix4x2fv");
-
-			openGL.programUniformMatrix4x3dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix4X3DV>("glProgramUniformMatrix4x3dv");
-
-			openGL.programUniformMatrix4x3fv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ProgramUniformMatrix4X3FV>("glProgramUniformMatrix4x3fv");
-
-			openGL.releaseShaderCompiler =
-				GraphicsExtensionHelper::getFunction<OpenGL::ReleaseShaderCompiler>("glReleaseShaderCompiler");
-
-			openGL.shaderBinary = GraphicsExtensionHelper::getFunction<OpenGL::ShaderBinary>("glShaderBinary");
-			openGL.scissorArrayv = GraphicsExtensionHelper::getFunction<OpenGL::ScissorArrayV>("glScissorArrayv");
-			openGL.scissorIndexed = GraphicsExtensionHelper::getFunction<OpenGL::ScissorIndexed>("glScissorIndexed");
-
-			openGL.scissorIndexedv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ScissorIndexedV>("glScissorIndexedv");
-
-			openGL.useProgramStages =
-				GraphicsExtensionHelper::getFunction<OpenGL::UseProgramStages>("glUseProgramStages");
-
-			openGL.validateProgramPipeline =
-				GraphicsExtensionHelper::getFunction<OpenGL::ValidateProgramPipeline>("glValidateProgramPipeline");
-
-			openGL.vertexAttribL1d =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribL1D>("glVertexAttribL1d");
-
-			openGL.vertexAttribL1dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribL1DV>("glVertexAttribL1dv");
-
-			openGL.vertexAttribL2d =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribL2D>("glVertexAttribL2d");
-
-			openGL.vertexAttribL2dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribL2DV>("glVertexAttribL2dv");
-
-			openGL.vertexAttribL3d =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribL3D>("glVertexAttribL3d");
-
-			openGL.vertexAttribL3dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribL3DV>("glVertexAttribL3dv");
-
-			openGL.vertexAttribL4d =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribL4D>("glVertexAttribL4d");
-
-			openGL.vertexAttribL4dv =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribL4DV>("glVertexAttribL4dv");
-
-			openGL.vertexAttribLPointer =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribLPointer>("glVertexAttribLPointer");
-
-			openGL.viewportArrayv = GraphicsExtensionHelper::getFunction<OpenGL::ViewportArrayV>("glViewportArrayv");
-
-			openGL.viewportIndexedf =
-				GraphicsExtensionHelper::getFunction<OpenGL::ViewportIndexedF>("glViewportIndexedf");
-
-			openGL.viewportIndexedfv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ViewportIndexedFV>("glViewportIndexedfv");
-		}
-
-		if(::versionMinor >= 2u)
-		{
-			// Version 4.2
-
-			openGL.bindImageTexture =
-				GraphicsExtensionHelper::getFunction<OpenGL::BindImageTexture>("glBindImageTexture");
-
-			openGL.drawArraysInstancedBaseInstance =
-				GraphicsExtensionHelper::getFunction<OpenGL::DrawArraysInstancedBaseInstance>(
-					"glDrawArraysInstancedBaseInstance");
-
-			openGL.drawElementsInstancedBaseInstance =
-				GraphicsExtensionHelper::getFunction<OpenGL::DrawElementsInstancedBaseInstance>(
-					"glDrawElementsInstancedBaseInstance");
-
-			openGL.drawElementsInstancedBaseVertexBaseInstance =
-				GraphicsExtensionHelper::getFunction<OpenGL::DrawElementsInstancedBaseVertexBaseInstance>(
-					"glDrawElementsInstancedBaseVertexBaseInstance");
-
-			openGL.drawTransformFeedbackInstanced =
-				GraphicsExtensionHelper::getFunction<OpenGL::DrawTransformFeedbackInstanced>(
-					"glDrawTransformFeedbackInstanced");
-
-			openGL.drawTransformFeedbackStreamInstanced =
-				GraphicsExtensionHelper::getFunction<OpenGL::DrawTransformFeedbackStreamInstanced>(
-					"glDrawTransformFeedbackStreamInstanced");
-
-			openGL.getActiveAtomicCounterBufferiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetActiveAtomicCounterBufferIV>(
-					"glGetActiveAtomicCounterBufferiv");
-
-			openGL.getInternalformativ =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetInternalformatIV>("glGetInternalformativ");
-
-			openGL.memoryBarrier = GraphicsExtensionHelper::getFunction<OpenGL::MemoryBarrier>("glMemoryBarrier");
-			openGL.texStorage1D = GraphicsExtensionHelper::getFunction<OpenGL::TexStorage1D>("glTexStorage1D");
-			openGL.texStorage2D = GraphicsExtensionHelper::getFunction<OpenGL::TexStorage2D>("glTexStorage2D");
-			openGL.texStorage3D = GraphicsExtensionHelper::getFunction<OpenGL::TexStorage3D>("glTexStorage3D");
-		}
-
-		if(::versionMinor >= 3u)
-		{
-			// Version 4.3
-
-			openGL.bindVertexBuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::BindVertexBuffer>("glBindVertexBuffer");
-
-			openGL.clearBufferData =
-				GraphicsExtensionHelper::getFunction<OpenGL::ClearBufferData>("glClearBufferData");
-
-			openGL.clearBufferSubData =
-				GraphicsExtensionHelper::getFunction<OpenGL::ClearBufferSubData>("glClearBufferSubData");
-
-			openGL.copyImageSubData =
-				GraphicsExtensionHelper::getFunction<OpenGL::CopyImageSubData>("glCopyImageSubData");
-
-			openGL.dispatchCompute =
-				GraphicsExtensionHelper::getFunction<OpenGL::DispatchCompute>("glDispatchCompute");
-
-			openGL.dispatchComputeIndirect =
-				GraphicsExtensionHelper::getFunction<OpenGL::DispatchComputeIndirect>("glDispatchComputeIndirect");
-
-			openGL.debugMessageCallback =
-				GraphicsExtensionHelper::getFunction<OpenGL::DebugMessageCallback>("glDebugMessageCallback");
-
-			openGL.debugMessageControl =
-				GraphicsExtensionHelper::getFunction<OpenGL::DebugMessageControl>("glDebugMessageControl");
-
-			openGL.debugMessageInsert =
-				GraphicsExtensionHelper::getFunction<OpenGL::DebugMessageInsert>("glDebugMessageInsert");
-
-			openGL.framebufferParameteri =
-				GraphicsExtensionHelper::getFunction<OpenGL::FramebufferParameterI>("glFramebufferParameteri");
-
-			openGL.getDebugMessageLog =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetDebugMessageLog>("glGetDebugMessageLog");
-
-			openGL.getFramebufferParameteriv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetFramebufferParameterIV>("glGetFramebufferParameteriv");
-
-			openGL.getInternalformati64v =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetInternalformatI64V>("glGetInternalformati64v");
-
-			openGL.getObjectLabel = GraphicsExtensionHelper::getFunction<OpenGL::GetObjectLabel>("glGetObjectLabel");
-
-			openGL.getObjectPtrLabel =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetObjectPtrLabel>("glGetObjectPtrLabel");
-
-			openGL.getProgramInterfaceiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramInterfaceIV>("glGetProgramInterfaceiv");
-
-			openGL.getProgramResourceIndex =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramResourceIndex>("glGetProgramResourceIndex");
-
-			openGL.getProgramResourceiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramResourceIV>("glGetProgramResourceiv");
-
-			openGL.getProgramResourceLocation =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramResourceLocation>(
-					"glGetProgramResourceLocation");
-
-			openGL.getProgramResourceLocationIndex =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramResourceLocationIndex>(
-					"glGetProgramResourceLocationIndex");
-
-			openGL.getProgramResourceName =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetProgramResourceName>("glGetProgramResourceName");
-
-			openGL.invalidateBufferData =
-				GraphicsExtensionHelper::getFunction<OpenGL::InvalidateBufferData>("glInvalidateBufferData");
-
-			openGL.invalidateBufferSubData =
-				GraphicsExtensionHelper::getFunction<OpenGL::InvalidateBufferSubData>("glInvalidateBufferSubData");
-
-			openGL.invalidateFramebuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::InvalidateFramebuffer>("glInvalidateFramebuffer");
-
-			openGL.invalidateSubFramebuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::InvalidateSubFramebuffer>("glInvalidateSubFramebuffer");
-
-			openGL.invalidateTexImage =
-				GraphicsExtensionHelper::getFunction<OpenGL::InvalidateTexImage>("glInvalidateTexImage");
-
-			openGL.invalidateTexSubImage =
-				GraphicsExtensionHelper::getFunction<OpenGL::InvalidateTexSubImage>("glInvalidateTexSubImage");
-
-			openGL.multiDrawArraysIndirect =
-				GraphicsExtensionHelper::getFunction<OpenGL::MultiDrawArraysIndirect>("glMultiDrawArraysIndirect");
-
-			openGL.multiDrawElementsIndirect =
-				GraphicsExtensionHelper::getFunction<OpenGL::MultiDrawElementsIndirect>("glMultiDrawElementsIndirect");
-
-			openGL.objectLabel = GraphicsExtensionHelper::getFunction<OpenGL::ObjectLabel>("glObjectLabel");
-			openGL.objectPtrLabel = GraphicsExtensionHelper::getFunction<OpenGL::ObjectPtrLabel>("glObjectPtrLabel");
-			openGL.popDebugGroup = GraphicsExtensionHelper::getFunction<OpenGL::PopDebugGroup>("glPopDebugGroup");
-			openGL.pushDebugGroup = GraphicsExtensionHelper::getFunction<OpenGL::PushDebugGroup>("glPushDebugGroup");
-
-			openGL.shaderStorageBlockBinding =
-				GraphicsExtensionHelper::getFunction<OpenGL::ShaderStorageBlockBinding>("glShaderStorageBlockBinding");
-
-			openGL.texBufferRange = GraphicsExtensionHelper::getFunction<OpenGL::TexBufferRange>("glTexBufferRange");
-
-			openGL.texStorage2DMultisample =
-				GraphicsExtensionHelper::getFunction<OpenGL::TexStorage2DMultisample>("glTexStorage2DMultisample");
-
-			openGL.texStorage3DMultisample =
-				GraphicsExtensionHelper::getFunction<OpenGL::TexStorage3DMultisample>("glTexStorage3DMultisample");
-
-			openGL.textureView = GraphicsExtensionHelper::getFunction<OpenGL::TextureView>("glTextureView");
-
-			openGL.vertexAttribBinding =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribBinding>("glVertexAttribBinding");
-
-			openGL.vertexAttribFormat =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribFormat>("glVertexAttribFormat");
-
-			openGL.vertexAttribIFormat =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribIFormat>("glVertexAttribIFormat");
-
-			openGL.vertexAttribLFormat =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexAttribLFormat>("glVertexAttribLFormat");
-
-			openGL.vertexBindingDivisor =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexBindingDivisor>("glVertexBindingDivisor");
-		}
-
-		if(::versionMinor >= 4u)
-		{
-			// Version 4.4
-
-			openGL.bindBuffersBase =
-				GraphicsExtensionHelper::getFunction<OpenGL::BindBuffersBase>("glBindBuffersBase");
-
-			openGL.bindBuffersRange =
-				GraphicsExtensionHelper::getFunction<OpenGL::BindBuffersRange>("glBindBuffersRange");
-
-			openGL.bindImageTextures =
-				GraphicsExtensionHelper::getFunction<OpenGL::BindImageTextures>("glBindImageTextures");
-
-			openGL.bindSamplers = GraphicsExtensionHelper::getFunction<OpenGL::BindSamplers>("glBindSamplers");
-			openGL.bindTextures = GraphicsExtensionHelper::getFunction<OpenGL::BindTextures>("glBindTextures");
-
-			openGL.bindVertexBuffers =
-				GraphicsExtensionHelper::getFunction<OpenGL::BindVertexBuffers>("glBindVertexBuffers");
-
-			openGL.bufferStorage = GraphicsExtensionHelper::getFunction<OpenGL::BufferStorage>("glBufferStorage");
-			openGL.clearTexImage = GraphicsExtensionHelper::getFunction<OpenGL::ClearTexImage>("glClearTexImage");
-
-			openGL.clearTexSubImage =
-				GraphicsExtensionHelper::getFunction<OpenGL::ClearTexSubImage>("glClearTexSubImage");
-		}
-
-		if(::versionMinor >= 5u)
-		{
-			// Version 4.5
-
-			openGL.bindTextureUnit =
-				GraphicsExtensionHelper::getFunction<OpenGL::BindTextureUnit>("glBindTextureUnit");
-
-			openGL.blitNamedFramebuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::BlitNamedFramebuffer>("glBlitNamedFramebuffer");
-
-			openGL.checkNamedFramebufferStatus =
-				GraphicsExtensionHelper::getFunction<OpenGL::CheckNamedFramebufferStatus>(
-					"glCheckNamedFramebufferStatus");
-
-			openGL.clearNamedBufferData =
-				GraphicsExtensionHelper::getFunction<OpenGL::ClearNamedBufferData>("glClearNamedBufferData");
-
-			openGL.clearNamedBufferSubData =
-				GraphicsExtensionHelper::getFunction<OpenGL::ClearNamedBufferSubData>("glClearNamedBufferSubData");
-
-			openGL.clearNamedFramebufferfi =
-				GraphicsExtensionHelper::getFunction<OpenGL::ClearNamedFramebufferFI>("glClearNamedFramebufferfi");
-
-			openGL.clearNamedFramebufferfv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ClearNamedFramebufferFV>("glClearNamedFramebufferfv");
-
-			openGL.clearNamedFramebufferiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ClearNamedFramebufferIV>("glClearNamedFramebufferiv");
-
-			openGL.clearNamedFramebufferuiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::ClearNamedFramebufferUIV>("glClearNamedFramebufferuiv");
-
-			openGL.clipControl = GraphicsExtensionHelper::getFunction<OpenGL::ClipControl>("glClipControl");
-
-			openGL.compressedTextureSubImage1D =
-				GraphicsExtensionHelper::getFunction<OpenGL::CompressedTextureSubImage1D>(
-					"glCompressedTextureSubImage1D");
-
-			openGL.compressedTextureSubImage2D =
-				GraphicsExtensionHelper::getFunction<OpenGL::CompressedTextureSubImage2D>(
-					"glCompressedTextureSubImage2D");
-
-			openGL.compressedTextureSubImage3D =
-				GraphicsExtensionHelper::getFunction<OpenGL::CompressedTextureSubImage3D>(
-					"glCompressedTextureSubImage3D");
-
-			openGL.copyNamedBufferSubData =
-				GraphicsExtensionHelper::getFunction<OpenGL::CopyNamedBufferSubData>("glCopyNamedBufferSubData");
-
-			openGL.copyTextureSubImage1D =
-				GraphicsExtensionHelper::getFunction<OpenGL::CopyTextureSubImage1D>("glCopyTextureSubImage1D");
-
-			openGL.copyTextureSubImage2D =
-				GraphicsExtensionHelper::getFunction<OpenGL::CopyTextureSubImage2D>("glCopyTextureSubImage2D");
-
-			openGL.copyTextureSubImage3D =
-				GraphicsExtensionHelper::getFunction<OpenGL::CopyTextureSubImage3D>("glCopyTextureSubImage3D");
-
-			openGL.createBuffers = GraphicsExtensionHelper::getFunction<OpenGL::CreateBuffers>("glCreateBuffers");
-
-			openGL.createFramebuffers =
-				GraphicsExtensionHelper::getFunction<OpenGL::CreateFramebuffers>("glCreateFramebuffers");
-
-			openGL.createProgramPipelines =
-				GraphicsExtensionHelper::getFunction<OpenGL::CreateProgramPipelines>("glCreateProgramPipelines");
-
-			openGL.createQueries = GraphicsExtensionHelper::getFunction<OpenGL::CreateQueries>("glCreateQueries");
-
-			openGL.createRenderbuffers =
-				GraphicsExtensionHelper::getFunction<OpenGL::CreateRenderbuffers>("glCreateRenderbuffers");
-
-			openGL.createSamplers = GraphicsExtensionHelper::getFunction<OpenGL::CreateSamplers>("glCreateSamplers");
-			openGL.createTextures = GraphicsExtensionHelper::getFunction<OpenGL::CreateTextures>("glCreateTextures");
-
-			openGL.createTransformFeedbacks =
-				GraphicsExtensionHelper::getFunction<OpenGL::CreateTransformFeedbacks>("glCreateTransformFeedbacks");
-
-			openGL.createVertexArrays =
-				GraphicsExtensionHelper::getFunction<OpenGL::CreateVertexArrays>("glCreateVertexArrays");
-
-			openGL.disableVertexArrayAttrib =
-				GraphicsExtensionHelper::getFunction<OpenGL::DisableVertexArrayAttrib>("glDisableVertexArrayAttrib");
-
-			openGL.enableVertexArrayAttrib =
-				GraphicsExtensionHelper::getFunction<OpenGL::EnableVertexArrayAttrib>("glEnableVertexArrayAttrib");
-
-			openGL.flushMappedNamedBufferRange =
-				GraphicsExtensionHelper::getFunction<OpenGL::FlushMappedNamedBufferRange>(
-					"glFlushMappedNamedBufferRange");
-
-			openGL.generateTextureMipmap =
-				GraphicsExtensionHelper::getFunction<OpenGL::GenerateTextureMipmap>("glGenerateTextureMipmap");
-
-			openGL.getCompressedTextureImage =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetCompressedTextureImage>("glGetCompressedTextureImage");
-
-			openGL.getCompressedTextureSubImage =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetCompressedTextureSubImage>(
-					"glGetCompressedTextureSubImage");
-
-			openGL.getGraphicsResetStatus =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetGraphicsResetStatus>("glGetGraphicsResetStatus");
-
-			openGL.getNamedBufferParameteri64v =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetNamedBufferParameterI64V>(
-					"glGetNamedBufferParameteri64v");
-
-			openGL.getNamedBufferParameteriv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetNamedBufferParameterIV>("glGetNamedBufferParameteriv");
-
-			openGL.getNamedBufferPointerv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetNamedBufferPointerV>("glGetNamedBufferPointerv");
-
-			openGL.getNamedBufferSubData =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetNamedBufferSubData>("glGetNamedBufferSubData");
-
-			openGL.getNamedFramebufferAttachmentParameteriv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetNamedFramebufferAttachmentParameterIV>(
-					"glGetNamedFramebufferAttachmentParameteriv");
-
-			openGL.getNamedFramebufferParameteriv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetNamedFramebufferParameterIV>(
-					"glGetNamedFramebufferParameteriv");
-
-			openGL.getNamedRenderbufferParameteriv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetNamedRenderbufferParameterIV>(
-					"glGetNamedRenderbufferParameteriv");
-
-			openGL.getnCompressedTexImage =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetnCompressedTexImage>("glGetnCompressedTexImage");
-
-			openGL.getnTexImage = GraphicsExtensionHelper::getFunction<OpenGL::GetnTexImage>("glGetnTexImage");
-			openGL.getnUniformdv = GraphicsExtensionHelper::getFunction<OpenGL::GetnUniformDV>("glGetnUniformdv");
-			openGL.getnUniformfv = GraphicsExtensionHelper::getFunction<OpenGL::GetnUniformFV>("glGetnUniformfv");
-			openGL.getnUniformiv = GraphicsExtensionHelper::getFunction<OpenGL::GetnUniformIV>("glGetnUniformiv");
-			openGL.getnUniformuiv = GraphicsExtensionHelper::getFunction<OpenGL::GetnUniformUIV>("glGetnUniformuiv");
-
-			openGL.getQueryBufferObjecti64v =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetQueryBufferObjectI64V>("glGetQueryBufferObjecti64v");
-
-			openGL.getQueryBufferObjectiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetQueryBufferObjectIV>("glGetQueryBufferObjectiv");
-
-			openGL.getQueryBufferObjectui64v =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetQueryBufferObjectUI64V>("glGetQueryBufferObjectui64v");
-
-			openGL.getQueryBufferObjectuiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetQueryBufferObjectUIV>("glGetQueryBufferObjectuiv");
-
-			openGL.getTextureImage =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTextureImage>("glGetTextureImage");
-
-			openGL.getTextureLevelParameterfv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTextureLevelParameterFV>(
-					"glGetTextureLevelParameterfv");
-
-			openGL.getTextureLevelParameteriv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTextureLevelParameterIV>(
-					"glGetTextureLevelParameteriv");
-
-			openGL.getTextureParameterfv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTextureParameterFV>("glGetTextureParameterfv");
-
-			openGL.getTextureParameterIiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTextureParameterIIV>("glGetTextureParameterIiv");
-
-			openGL.getTextureParameteriv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTextureParameterIV>("glGetTextureParameteriv");
-
-			openGL.getTextureParameterIuiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTextureParameterIUIV>("glGetTextureParameterIuiv");
-
-			openGL.getTextureSubImage =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTextureSubImage>("glGetTextureSubImage");
-
-			openGL.getTransformFeedbacki64_v =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTransformFeedbackI64_V>("glGetTransformFeedbacki64_v");
-
-			openGL.getTransformFeedbackiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTransformFeedbackIV>("glGetTransformFeedbackiv");
-
-			openGL.getTransformFeedbacki_v =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetTransformFeedbackI_V>("glGetTransformFeedbacki_v");
-
-			openGL.getVertexArrayIndexed64iv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetVertexArrayIndexed64IV>("glGetVertexArrayIndexed64iv");
-
-			openGL.getVertexArrayIndexediv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetVertexArrayIndexedIV>("glGetVertexArrayIndexediv");
-
-			openGL.getVertexArrayiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::GetVertexArrayIV>("glGetVertexArrayiv");
-
-			openGL.invalidateNamedFramebufferData =
-				GraphicsExtensionHelper::getFunction<OpenGL::InvalidateNamedFramebufferData>(
-					"glInvalidateNamedFramebufferData");
-
-			openGL.invalidateNamedFramebufferSubData =
-				GraphicsExtensionHelper::getFunction<OpenGL::InvalidateNamedFramebufferSubData>(
-					"glInvalidateNamedFramebufferSubData");
-
-			openGL.mapNamedBuffer = GraphicsExtensionHelper::getFunction<OpenGL::MapNamedBuffer>("glMapNamedBuffer");
-
-			openGL.mapNamedBufferRange =
-				GraphicsExtensionHelper::getFunction<OpenGL::MapNamedBufferRange>("glMapNamedBufferRange");
-
-			openGL.memoryBarrierByRegion =
-				GraphicsExtensionHelper::getFunction<OpenGL::MemoryBarrierByRegion>("glMemoryBarrierByRegion");
-
-			openGL.namedBufferData =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedBufferData>("glNamedBufferData");
-
-			openGL.namedBufferStorage =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedBufferStorage>("glNamedBufferStorage");
-
-			openGL.namedBufferSubData =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedBufferSubData>("glNamedBufferSubData");
-
-			openGL.namedFramebufferDrawBuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedFramebufferDrawBuffer>(
-					"glNamedFramebufferDrawBuffer");
-
-			openGL.namedFramebufferDrawBuffers =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedFramebufferDrawBuffers>(
-					"glNamedFramebufferDrawBuffers");
-
-			openGL.namedFramebufferParameteri =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedFramebufferParameterI>(
-					"glNamedFramebufferParameteri");
-
-			openGL.namedFramebufferReadBuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedFramebufferReadBuffer>(
-					"glNamedFramebufferReadBuffer");
-
-			openGL.namedFramebufferRenderbuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedFramebufferRenderbuffer>(
-					"glNamedFramebufferRenderbuffer");
-
-			openGL.namedFramebufferTexture =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedFramebufferTexture>("glNamedFramebufferTexture");
-
-			openGL.namedFramebufferTextureLayer =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedFramebufferTextureLayer>(
-					"glNamedFramebufferTextureLayer");
-
-			openGL.namedRenderbufferStorage =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedRenderbufferStorage>("glNamedRenderbufferStorage");
-
-			openGL.namedRenderbufferStorageMultisample =
-				GraphicsExtensionHelper::getFunction<OpenGL::NamedRenderbufferStorageMultisample>(
-					"glNamedRenderbufferStorageMultisample");
-
-			openGL.readnPixels = GraphicsExtensionHelper::getFunction<OpenGL::ReadnPixels>("glReadnPixels");
-
-			openGL.transformFeedbackBufferBase =
-				GraphicsExtensionHelper::getFunction<OpenGL::TransformFeedbackBufferBase>(
-					"glTransformFeedbackBufferBase");
-
-			openGL.transformFeedbackBufferRange =
-				GraphicsExtensionHelper::getFunction<OpenGL::TransformFeedbackBufferRange>(
-					"glTransformFeedbackBufferRange");
-
-			openGL.textureBarrier = GraphicsExtensionHelper::getFunction<OpenGL::TextureBarrier>("glTextureBarrier");
-			openGL.textureBuffer = GraphicsExtensionHelper::getFunction<OpenGL::TextureBuffer>("glTextureBuffer");
-
-			openGL.textureBufferRange =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureBufferRange>("glTextureBufferRange");
-
-			openGL.textureParameterf =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureParameterF>("glTextureParameterf");
-
-			openGL.textureParameterfv =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureParameterFV>("glTextureParameterfv");
-
-			openGL.textureParameteri =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureParameterI>("glTextureParameteri");
-
-			openGL.textureParameterIiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureParameterIIV>("glTextureParameterIiv");
-
-			openGL.textureParameterIuiv =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureParameterIUIV>("glTextureParameterIuiv");
-
-			openGL.textureParameteriv =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureParameterIV>("glTextureParameteriv");
-
-			openGL.textureStorage1D =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureStorage1D>("glTextureStorage1D");
-
-			openGL.textureStorage2D =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureStorage2D>("glTextureStorage2D");
-
-			openGL.textureStorage2DMultisample =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureStorage2DMultisample>(
-					"glTextureStorage2DMultisample");
-
-			openGL.textureStorage3D =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureStorage3D>("glTextureStorage3D");
-
-			openGL.textureStorage3DMultisample =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureStorage3DMultisample>(
-					"glTextureStorage3DMultisample");
-
-			openGL.textureSubImage1D =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureSubImage1D>("glTextureSubImage1D");
-
-			openGL.textureSubImage2D =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureSubImage2D>("glTextureSubImage2D");
-
-			openGL.textureSubImage3D =
-				GraphicsExtensionHelper::getFunction<OpenGL::TextureSubImage3D>("glTextureSubImage3D");
-
-			openGL.unmapNamedBuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::UnmapNamedBuffer>("glUnmapNamedBuffer");
-
-			openGL.vertexArrayAttribBinding =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexArrayAttribBinding>("glVertexArrayAttribBinding");
-
-			openGL.vertexArrayAttribFormat =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexArrayAttribFormat>("glVertexArrayAttribFormat");
-
-			openGL.vertexArrayAttribIFormat =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexArrayAttribIFormat>("glVertexArrayAttribIFormat");
-
-			openGL.vertexArrayAttribLFormat =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexArrayAttribLFormat>("glVertexArrayAttribLFormat");
-
-			openGL.vertexArrayBindingDivisor =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexArrayBindingDivisor>("glVertexArrayBindingDivisor");
-
-			openGL.vertexArrayElementBuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexArrayElementBuffer>("glVertexArrayElementBuffer");
-
-			openGL.vertexArrayVertexBuffer =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexArrayVertexBuffer>("glVertexArrayVertexBuffer");
-
-			openGL.vertexArrayVertexBuffers =
-				GraphicsExtensionHelper::getFunction<OpenGL::VertexArrayVertexBuffers>("glVertexArrayVertexBuffers");
-		}
-	}
-}
-
-static void initialiseDebugMessaging(OpenGL& openGL)
-{
-	openGL.enable(OpenGL::DEBUG_OUTPUT_SYNCHRONOUS);
-	DE_CHECK_ERROR_OPENGL(&openGL);
-
-	openGL.debugMessageControl(OpenGL::DONT_CARE, OpenGL::DEBUG_TYPE_OTHER, OpenGL::DONT_CARE, 0, nullptr,
-		OpenGL::FALSE);
-
-	DE_CHECK_ERROR_OPENGL(&openGL);
-	openGL.debugMessageCallback(::processDebugMessage, nullptr);
 }
 
 static void initialiseMajorVersion(const String8& versionString)

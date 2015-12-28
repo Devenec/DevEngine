@@ -45,7 +45,6 @@ namespace Graphics
 	class Shader;
 	class VertexBufferState;
 	class Viewport;
-	class Window;
 
 	class GraphicsDevice final
 	{
@@ -85,8 +84,6 @@ namespace Graphics
 
 		const Viewport& viewport() const;
 
-		inline Window* window() const;
-
 		GraphicsDevice& operator =(const GraphicsDevice& graphicsDevice) = delete;
 		GraphicsDevice& operator =(GraphicsDevice&& graphicsDevice) = delete;
 
@@ -101,13 +98,10 @@ namespace Graphics
 
 		GraphicsResourceList _resources;
 		Implementation* _implementation;
-		Window* _window;
 
-		GraphicsDevice(Implementation* implementation, Window* window);
+		GraphicsDevice(Implementation* implementation);
 		~GraphicsDevice();
 
 		void destroyResources() const;
 	};
-
-#include "inline/GraphicsDevice.inl"
 }

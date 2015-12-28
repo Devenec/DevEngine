@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <functional>
 #include <core/List.h>
 #include <core/Singleton.h>
 #include <core/Types.h>
@@ -27,21 +28,28 @@
 namespace Graphics
 {
 	class GraphicsDevice;
+	class Window;
 
 	class GraphicsDeviceManager final : public Core::Singleton<GraphicsDeviceManager>
 	{
 	public:
 
-		GraphicsDeviceManager();
+		using WindowCreationHandler = std::function<void(Window*)>;
+
+		GraphicsDeviceManager(WindowCreationHandler windowCreationHandler);
 
 		GraphicsDeviceManager(const GraphicsDeviceManager& graphicsDeviceManager) = delete;
 		GraphicsDeviceManager(GraphicsDeviceManager&& graphicsDeviceManager) = delete;
 
 		~GraphicsDeviceManager();
 
-		GraphicsDevice* createWindowAndDevice(const Uint32 windowWidth, const Uint32 windowHeight);
+		GraphicsDevice* createDevice(Window* window);
 
-		void destroyWindowAndDevice(GraphicsDevice* device);
+		void createWindow(const Uint32 windowWidth, const Uint32 windowHeight);
+
+		void destroyDevice(GraphicsDevice* device);
+
+		void destroyWindow(Window* window);
 
 		void processWindowMessages() const;
 
@@ -51,10 +59,15 @@ namespace Graphics
 	private:
 
 		class Implementation;
-		
+
 		using GraphicsDeviceList = Core::List<GraphicsDevice*>;
+		using WindowList		 = Core::List<Window*>;
 
 		GraphicsDeviceList _devices;
+		WindowList _windows;
 		Implementation* _implementation;
+
+		void destroyDevices();
+		void destroyWindows();
 	};
 }

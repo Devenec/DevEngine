@@ -20,16 +20,12 @@
 
 #pragma once
 
-#include <X11/Xlib.h>
-#include <X11/extensions/Xrandr.h>
-
-#undef Bool
-
 #include <core/ConfigInternal.h>
 #include <core/Singleton.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
-#include <platform/glx/GLXTypes.h>
+#include <platform/glx/GLX.h>
+#include <platform/x/XInclude.h>
 
 #if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 	#define DE_ERROR_X(errorCode) \
@@ -52,15 +48,20 @@ namespace Platform
 
 		~X();
 
-		GLXContext createGraphicsContext(GLXFBConfig configHandle, const Int32* attributes, const Bool isDirect) const;
+		inline Atom createAtom(const Char8* name) const;
+
+		GLX::Context createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes, const Bool isDirect)
+			const;
 
 		Window createWindow(const Window parentWindowHandle, const Int32 x, const Int32 y, const Uint32 width,
 			const Uint32 height, XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask)
 			const;
 
-		void destroyGraphicsContext(GLXContext contextHandle) const;
+		inline void destroyGraphicsContext(GLX::Context contextHandle) const;
 
 		inline void destroyWindow(const Window windowHandle) const;
+
+		void destroyWindowUserData(const Window windowHandle) const;
 
 		inline Int32 getDefaultGraphicsAdapterIndex() const;
 
@@ -75,13 +76,15 @@ namespace Platform
 
 		inline XRRScreenSize* getGraphicsAdapterResolutions(const Uint32 adapterIndex, Uint32& resolutionCount) const;
 
-		Int32 getGraphicsConfigAttribute(GLXFBConfig configHandle, const Int32 attributeName) const;
+		Int32 getGraphicsConfigAttribute(GLX::FBConfig configHandle, const Int32 attributeName) const;
 
-		GLXFBConfig* getGraphicsConfigs(const Int32* attributes, Uint32& configCount) const;
+		GLX::FBConfig* getGraphicsConfigs(const Int32* attributes, Uint32& configCount) const;
 
-		XVisualInfo* getGraphicsConfigVisualInfo(GLXFBConfig configHandle) const;
+		XVisualInfo* getGraphicsConfigVisualInfo(GLX::FBConfig configHandle) const;
 
 		inline Window getRootWindowHandle(const Uint32 graphicsAdapterIndex) const;
+
+		Void* getWindowUserData(const Window windowHandle) const;
 
 		inline Bool hasPendingEvents() const;
 
@@ -91,16 +94,23 @@ namespace Platform
 
 		Bool isGLXSupported(Uint32& versionMajor, Uint32& versionMinor) const;
 
-		Bool isGraphicsContextDirect(GLXContext contextHandle) const;
+		inline Bool isGraphicsContextDirect(GLX::Context contextHandle) const;
 
-		void makeGraphicsContextCurrent(GLXDrawable drawableHandle, GLXContext contextHandle) const;
+		void makeGraphicsContextCurrent(GLX::Drawable drawableHandle, GLX::Context contextHandle) const;
+
+		inline void mapWindow(Window windowHandle) const;
 
 		XEvent popEvent() const;
 
 		void setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
 			const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const;
 
-		void swapBuffers(GLXDrawable drawableHandle) const;
+		void setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms, const Uint32 protocolAtomCount)
+			const;
+
+		void setWindowUserData(const Window windowHandle, Void* data) const;
+
+		inline void swapBuffers(GLX::Drawable drawableHandle) const;
 
 		X& operator =(const X& x) = delete;
 		X& operator =(X&& x) = delete;
@@ -108,6 +118,7 @@ namespace Platform
 	private:
 
 		Display* _connection;
+		XContext _windowUserDataContext;
 
 		void checkConnection() const;
 		void checkXRandRSupport() const;

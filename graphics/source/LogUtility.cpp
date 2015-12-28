@@ -71,14 +71,13 @@ void Graphics::logGraphicsAdapters(const GraphicsAdapterList& adapters)
 	defaultLog << Log::Flush();
 }
 
-// TODO: uncomment
-/*void Graphics::logGraphicsDeviceCreation(GraphicsDevice* device)
+void Graphics::logGraphicsDeviceCreation(GraphicsDevice* device)
 {
 	const Viewport& viewport = device->viewport();
 
-	defaultLog << LogLevel::Info << "Created graphics device:\n\nFramebuffer dimensions: " <<
+	defaultLog << LogLevel::Info << "Created a graphics device:\n\nFramebuffer dimensions: " <<
 		viewport.bounds().width << " x " << viewport.bounds().height << '\n' << Log::Flush();
-}*/
+}
 
 void Graphics::logGraphicsExtensions(const Char8* description, const ExtensionNameList& extensionNames)
 {
@@ -99,7 +98,7 @@ void Graphics::logGraphicsExtensions(const Char8* description, const ExtensionNa
 
 void Graphics::logWindowCreation()
 {
-	defaultLog << LogLevel::Info << "Created window" << Log::Flush();
+	defaultLog << LogLevel::Info << "Created a window" << Log::Flush();
 }
 
 

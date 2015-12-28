@@ -83,7 +83,7 @@ public:
 	{
 		HWND windowHandle = ::createWindow(width, height);
 		Window* window = DE_NEW(Window)(windowHandle);
-		setWindowUserDataPointer(windowHandle, window->_implementation);
+		setWindowUserData(windowHandle, window->_implementation);
 
 		return window;
 	}
@@ -108,7 +108,7 @@ private:
 		::registerWindowClass(windowClassInfo);
 	}
 
-	void setWindowUserDataPointer(HWND windowHandle, Window::Implementation* windowImplementation)
+	void setWindowUserData(HWND windowHandle, Window::Implementation* windowImplementation)
 	{
 		SetLastError(0u);
 
@@ -117,7 +117,7 @@ private:
 
 		if(result == 0 && getWindowsErrorCode() != 0u)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the user data pointer of a window." <<
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the user data of a window." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x0);
@@ -140,17 +140,17 @@ private:
 	static LRESULT CALLBACK processMessage(HWND windowHandle, const Uint32 message, const WPARAM wParam,
 		const LPARAM lParam)
 	{
-		Window::Implementation* windowImpl =
+		Window::Implementation* windowImplementation =
 			reinterpret_cast<Window::Implementation*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
 
 		switch(message)
 		{
 			case WM_CLOSE:
-				windowImpl->close();
+				windowImplementation->close();
 				break;
 
 			case WM_SETCURSOR:
-				if(windowImpl->shouldHideCursor(LOWORD(lParam) == HTCLIENT))
+				if(windowImplementation->shouldHideCursor(LOWORD(lParam) == HTCLIENT))
 					return 1;
 
 			default:

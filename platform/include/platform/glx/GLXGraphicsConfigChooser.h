@@ -46,7 +46,9 @@ namespace Platform
 
 		~GraphicsConfigChooser() = default;
 
-		GLXFBConfig chooseConfig(Graphics::GraphicsConfig& chosenConfig) const;
+		GLX::FBConfig chooseConfig() const;
+
+		Graphics::GraphicsConfig getConfig(GLX::FBConfig configHandle) const;
 
 		GraphicsConfigChooser& operator =(const GraphicsConfigChooser& graphicsConfigChooser) = delete;
 		GraphicsConfigChooser& operator =(GraphicsConfigChooser&& graphicsConfigChooser) = delete;
@@ -59,11 +61,11 @@ namespace Platform
 
 		X& _x;
 
-		GLXFBConfig* getConfigs(Uint32& configCount) const;
+		GLX::FBConfig* getConfigs(Uint32& configCount) const;
 
-		GLXFBConfig chooseBestConfig(GLXFBConfig* configHandles, const Uint32 configCount,
+		GLX::FBConfig chooseBestConfig(GLX::FBConfig* configHandles, const Uint32 configCount,
 			ConfigAttributeList& configAttributes) const;
 
-		ConfigAttributeList getConfigAttributes(GLXFBConfig configHandle) const;
+		ConfigAttributeList getConfigAttributes(GLX::FBConfig configHandle) const;
 	};
 }

@@ -1,5 +1,5 @@
 /**
- * @file platform/GraphicsExtensionHelper.h
+ * @file platform/glx/GLXGraphicsContext.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -21,32 +21,35 @@
 #pragma once
 
 #include <core/Types.h>
+#include <platform/GraphicsContext.h>
+#include <platform/glx/GLX.h>
+#include <platform/x/X.h>
 
 namespace Platform
 {
-	class GraphicsExtensionHelper
+	class GraphicsContext::Implementation final
 	{
 	public:
 
-		GraphicsExtensionHelper() = delete;
+		Implementation(const Window windowHandle, GLX::FBConfig configHandle);
 
-		GraphicsExtensionHelper(const GraphicsExtensionHelper& graphicsExtensionHelper) = delete;
-		GraphicsExtensionHelper(GraphicsExtensionHelper&& graphicsExtensionHelper) = delete;
+		Implementation(const Implementation& implementation) = delete;
+		Implementation(Implementation&& implementation) = delete;
 
-		~GraphicsExtensionHelper() = delete;
+		~Implementation();
 
-		GraphicsExtensionHelper& operator =(const GraphicsExtensionHelper& graphicsExtensionHelper) = delete;
-		GraphicsExtensionHelper& operator =(GraphicsExtensionHelper&& graphicsExtensionHelper) = delete;
+		void makeCurrent() const;
 
-		template<typename T>
-		static inline T getFunction(const Char8* name);
+		void makeNonCurrent() const;
+
+		void swapBuffers() const;
+
+		Implementation& operator =(const Implementation& implementation) = delete;
+		Implementation& operator =(Implementation&& implementation) = delete;
 
 	private:
 
-		using Function = void (*)();
-
-		static Function getFunctionInternal(const Char8* name);
+		GLX::Context _graphicsContextHandle;
+		Window _windowHandle;
 	};
-
-#include "inline/GraphicsExtensionHelper.inl"
 }

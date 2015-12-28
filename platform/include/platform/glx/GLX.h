@@ -45,8 +45,7 @@
 #include <core/Singleton.h>
 #include <core/Types.h>
 #include <graphics/LogUtility.h>
-#include <platform/glx/GLXTypes.h>
-#include <platform/x/X.h>
+#include <platform/x/XInclude.h>
 
 namespace Platform
 {
@@ -56,11 +55,16 @@ namespace Platform
 
 		// Version 1.0
 
-		using DestroyContext = void (*)(Display* dpy, GLXContext ctx);
-		using IsDirect = Int32 (*)(Display* dpy, GLXContext ctx);
+		struct ContextStruct;
+		using Context = ContextStruct*;
+
+		using Drawable = XID;
+
+		using DestroyContext = void (*)(Display* dpy, Context ctx);
+		using IsDirect = Int32 (*)(Display* dpy, Context ctx);
 		using QueryExtension = Int32 (*)(Display* dpy, Int32* errorb, Int32* event);
 		using QueryVersion = Int32 (*)(Display* dpy, Int32* maj, Int32* min);
-		using SwapBuffers = void (*)(Display* dpy, GLXDrawable drawable);
+		using SwapBuffers = void (*)(Display* dpy, Drawable drawable);
 
 		// Version 1.1
 
@@ -68,10 +72,13 @@ namespace Platform
 
 		// Version 1.3
 
-		using ChooseFBConfig = GLXFBConfig* (*)(Display* dpy, Int32 screen, const Int32* attrib_list, Int32* nelements);
-		using GetFBConfigAttrib = Int32 (*)(Display* dpy, GLXFBConfig config, Int32 attribute, Int32* value);
-		using GetVisualFromFBConfig = XVisualInfo* (*)(Display* dpy, GLXFBConfig config);
-		using MakeContextCurrent = Int32 (*)(Display* dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
+		struct FBConfigStruct;
+		using FBConfig = FBConfigStruct*;
+
+		using ChooseFBConfig = FBConfig* (*)(Display* dpy, Int32 screen, const Int32* attrib_list, Int32* nelements);
+		using GetFBConfigAttrib = Int32 (*)(Display* dpy, FBConfig config, Int32 attribute, Int32* value);
+		using GetVisualFromFBConfig = XVisualInfo* (*)(Display* dpy, FBConfig config);
+		using MakeContextCurrent = Int32 (*)(Display* dpy, Drawable draw, Drawable read, Context ctx);
 
 		// version 1.4
 
@@ -81,8 +88,8 @@ namespace Platform
 
 		// GLX_ARB_create_context
 
-		using CreateContextAttribsARB = GLXContext (*)(Display* dpy, GLXFBConfig config, GLXContext share_context,
-			Int32 direct, const Int32* attrib_list);
+		using CreateContextAttribsARB = Context (*)(Display* dpy, FBConfig config, Context share_context, Int32 direct,
+			const Int32* attrib_list);
 
 
 		// Version 1.0
@@ -218,17 +225,17 @@ namespace Platform
 		Void* _libraryHandle;
 
 		void loadLibrary();
-		void loadStandardFunctions() const;
+		void getStandardFunctions() const;
 		void checkSupport() const;
 		void getExtensionFunctions() const;
-		void checkExtensions() const;
+		void checkExtensionSupport() const;
 		Graphics::ExtensionNameList getExtensionNames() const;
-		void unloadFunctions() const;
+		void clearFunctions() const;
 		void unloadLibrary() const;
-		Void* loadFunctionInternal(const Char8* name) const;
+		Void* getStandardFunctionInternal(const Char8* name) const;
 
 		template<typename T>
-		inline T loadFunction(const Char8* name) const;
+		inline T getStandardFunction(const Char8* name) const;
 	};
 
 #include "inline/GLX.inl"

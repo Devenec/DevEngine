@@ -21,9 +21,10 @@
 #include <dlfcn.h>
 #include <core/Error.h>
 #include <core/Log.h>
-#include <platform/GraphicsExtensionHelper.h>
+#include <platform/GraphicsFunctionUtility.h>
 #include <platform/Utility.h>
 #include <platform/glx/GLX.h>
+#include <platform/x/X.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -33,8 +34,8 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG				   = "[Platform::GLX]";
 static const Char8* LIBRARY_FILENAME			   = "libGL.so";
-static const Int32 MIN_SUPPORTED_GLX_VERSION_MAJOR = 1;
-static const Int32 MIN_SUPPORTED_GLX_VERSION_MINOR = 4;
+static const Int32 MIN_SUPPORTED_VERSION_MAJOR = 1;
+static const Int32 MIN_SUPPORTED_VERSION_MINOR = 4;
 
 
 // Public
@@ -71,16 +72,16 @@ GLX::GLX()
 	: _libraryHandle(nullptr)
 {
 	loadLibrary();
-	loadStandardFunctions();
+	getStandardFunctions();
 	checkSupport();
 	getExtensionFunctions();
-	checkExtensions();
+	checkExtensionSupport();
 	logGraphicsExtensions("graphics context", getExtensionNames());
 }
 
 GLX::~GLX()
 {
-	unloadFunctions();
+	clearFunctions();
 	//unloadLibrary(); // TODO: unloading the library causes XCloseDisplay() to crash at X.cpp, find out why
 }
 
@@ -99,30 +100,30 @@ void GLX::loadLibrary()
 	}
 }
 
-void GLX::loadStandardFunctions() const
+void GLX::getStandardFunctions() const
 {
 	// Version 1.0
 
-	destroyContext = loadFunction<DestroyContext>("glXDestroyContext");
-	isDirect = loadFunction<IsDirect>("glXIsDirect");
-	queryExtension = loadFunction<QueryExtension>("glXQueryExtension");
-	queryVersion = loadFunction<QueryVersion>("glXQueryVersion");
-	swapBuffers = loadFunction<SwapBuffers>("glXSwapBuffers");
+	destroyContext = getStandardFunction<DestroyContext>("glXDestroyContext");
+	isDirect = getStandardFunction<IsDirect>("glXIsDirect");
+	queryExtension = getStandardFunction<QueryExtension>("glXQueryExtension");
+	queryVersion = getStandardFunction<QueryVersion>("glXQueryVersion");
+	swapBuffers = getStandardFunction<SwapBuffers>("glXSwapBuffers");
 
 	// Version 1.1
 
-	queryExtensionsString = loadFunction<QueryExtensionsString>("glXQueryExtensionsString");
+	queryExtensionsString = getStandardFunction<QueryExtensionsString>("glXQueryExtensionsString");
 
 	// Version 1.3
 
-	chooseFBConfig = loadFunction<ChooseFBConfig>("glXChooseFBConfig");
-	getFBConfigAttrib = loadFunction<GetFBConfigAttrib>("glXGetFBConfigAttrib");
-	getVisualFromFBConfig = loadFunction<GetVisualFromFBConfig>("glXGetVisualFromFBConfig");
-	makeContextCurrent = loadFunction<MakeContextCurrent>("glXMakeContextCurrent");
+	chooseFBConfig = getStandardFunction<ChooseFBConfig>("glXChooseFBConfig");
+	getFBConfigAttrib = getStandardFunction<GetFBConfigAttrib>("glXGetFBConfigAttrib");
+	getVisualFromFBConfig = getStandardFunction<GetVisualFromFBConfig>("glXGetVisualFromFBConfig");
+	makeContextCurrent = getStandardFunction<MakeContextCurrent>("glXMakeContextCurrent");
 
 	// Version 1.4
 
-	getProcAddress = loadFunction<GLX::GetProcAddress>("glXGetProcAddress");
+	getProcAddress = getStandardFunction<GLX::GetProcAddress>("glXGetProcAddress");
 }
 
 void GLX::checkSupport() const
@@ -133,11 +134,11 @@ void GLX::checkSupport() const
 
 	if(isSupported)
 	{
-		if(isVersionLess(versionMajor, versionMinor, MIN_SUPPORTED_GLX_VERSION_MAJOR, MIN_SUPPORTED_GLX_VERSION_MINOR))
+		if(isVersionLess(versionMajor, versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR, ::MIN_SUPPORTED_VERSION_MINOR))
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " GLX version " << versionMajor << '.' << versionMinor <<
-				" is not supported. The minimum supported version is " << MIN_SUPPORTED_GLX_VERSION_MAJOR << '.' <<
-				MIN_SUPPORTED_GLX_VERSION_MINOR << '.' << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " GLX version " << versionMajor << '.' <<
+				versionMinor << " is not supported. The minimum supported version is " <<
+				::MIN_SUPPORTED_VERSION_MAJOR << '.' << ::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
 
 			DE_ERROR(0x0);
 		}
@@ -156,13 +157,15 @@ void GLX::checkSupport() const
 
 void GLX::getExtensionFunctions() const
 {
+	GraphicsFunctionUtility functionUtility;
+
 	// GLX_ARB_create_context
 
 	createContextAttribsARB =
-		GraphicsExtensionHelper::getFunction<CreateContextAttribsARB>("glXCreateContextAttribsARB");
+		functionUtility.getExtensionFunction<CreateContextAttribsARB>("glXCreateContextAttribsARB");
 }
 
-void GLX::checkExtensions() const
+void GLX::checkExtensionSupport() const
 {
 	// TODO: implement
 }
@@ -187,7 +190,7 @@ ExtensionNameList GLX::getExtensionNames() const
 	return extensionNames;
 }
 
-void GLX::unloadFunctions() const
+void GLX::clearFunctions() const
 {
 	createContextAttribsARB = nullptr;
 	getProcAddress = nullptr;
@@ -216,7 +219,7 @@ void GLX::unloadLibrary() const
 	}
 }
 
-Void* GLX::loadFunctionInternal(const Char8* name) const
+Void* GLX::getStandardFunctionInternal(const Char8* name) const
 {
 	Void* functionPointer = dlsym(_libraryHandle, name);
 
@@ -229,16 +232,4 @@ Void* GLX::loadFunctionInternal(const Char8* name) const
 	}
 
 	return functionPointer;
-}
-
-
-// Platform::GraphicsExtensionHelper
-
-// Private
-
-// Static
-
-GraphicsExtensionHelper::Function GraphicsExtensionHelper::getFunctionInternal(const Char8* name)
-{
-	return GLX::getProcAddress(reinterpret_cast<const Uint8*>(name));
 }

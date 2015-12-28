@@ -3373,10 +3373,6 @@ namespace Platform
 		VertexArrayVertexBuffers vertexArrayVertexBuffers = nullptr;
 
 
-		static const Uint32 MIN_SUPPORTED_VERSION_MAJOR;
-
-		static const Uint32 MIN_SUPPORTED_VERSION_MINOR;
-
 		OpenGL();
 
 		OpenGL(const OpenGL& openGL) = delete;
@@ -3391,12 +3387,13 @@ namespace Platform
 
 		void logInfo() const;
 
-		static void initialiseVersion(Uint32& major, Uint32& minor);
-
 	private:
 
 		using ExtensionNameList = Core::Vector<Core::String8>;
 
+		void checkSupport();
+		void getStandardFunctions();
+		void initialiseDebugMessaging() const;
 		ExtensionNameList getExtensionNames() const;
 	};
 }

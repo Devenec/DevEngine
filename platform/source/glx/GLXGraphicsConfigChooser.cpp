@@ -50,18 +50,23 @@ static Bool isConfigLess(const ConfigAttributeList& configAttributesA, const Con
 GraphicsConfigChooser::GraphicsConfigChooser()
 	: _x(X::instance()) { }
 
-GLXFBConfig GraphicsConfigChooser::chooseConfig(GraphicsConfig& chosenConfig) const
+GLX::FBConfig GraphicsConfigChooser::chooseConfig() const
 {
 	Uint32 configCount = 0;
-	GLXFBConfig* configHandles = getConfigs(configCount);
+	GLX::FBConfig* configHandles = getConfigs(configCount);
 	ConfigAttributeList configAttributes;
-	GLXFBConfig bestConfigHandle = chooseBestConfig(configHandles, configCount, configAttributes);
-
-	chosenConfig = GraphicsConfig(configAttributes[4], configAttributes[3], configAttributes[1],
-		configAttributes[0], configAttributes[2], configAttributes[5]);
-
+	GLX::FBConfig bestConfigHandle = chooseBestConfig(configHandles, configCount, configAttributes);
 	XFree(configHandles);
+
 	return bestConfigHandle;
+}
+
+GraphicsConfig GraphicsConfigChooser::getConfig(GLX::FBConfig configHandle) const
+{
+	ConfigAttributeList configAttributes = getConfigAttributes(configHandle);
+
+	return GraphicsConfig(configAttributes[4], configAttributes[3], configAttributes[1], configAttributes[0],
+		configAttributes[2], configAttributes[5]);
 }
 
 // Private
@@ -76,9 +81,9 @@ const ConfigAttributeList GraphicsConfigChooser::CONFIG_ATTRIBUTE_IDS
 	GLX::STENCIL_SIZE
 }};
 
-GLXFBConfig* GraphicsConfigChooser::getConfigs(Uint32& configCount) const
+GLX::FBConfig* GraphicsConfigChooser::getConfigs(Uint32& configCount) const
 {
-	GLXFBConfig* configHandles = _x.getGraphicsConfigs(::REQUIRED_CONFIG_ATTRIBUTES.data(), configCount);
+	GLX::FBConfig* configHandles = _x.getGraphicsConfigs(::REQUIRED_CONFIG_ATTRIBUTES.data(), configCount);
 
 	if(configCount == 0)
 	{
@@ -89,10 +94,10 @@ GLXFBConfig* GraphicsConfigChooser::getConfigs(Uint32& configCount) const
 	return configHandles;
 }
 
-GLXFBConfig GraphicsConfigChooser::chooseBestConfig(GLXFBConfig* configHandles, const Uint32 configCount,
+GLX::FBConfig GraphicsConfigChooser::chooseBestConfig(GLX::FBConfig* configHandles, const Uint32 configCount,
 	ConfigAttributeList& configAttributes) const
 {
-	GLXFBConfig bestConfigHandle = configHandles[0u];
+	GLX::FBConfig bestConfigHandle = configHandles[0u];
 	configAttributes = getConfigAttributes(bestConfigHandle);
 
 	for(Uint32 i = 1u; i < configCount; ++i)
@@ -109,7 +114,7 @@ GLXFBConfig GraphicsConfigChooser::chooseBestConfig(GLXFBConfig* configHandles, 
 	return bestConfigHandle;
 }
 
-ConfigAttributeList GraphicsConfigChooser::getConfigAttributes(GLXFBConfig configHandle) const
+ConfigAttributeList GraphicsConfigChooser::getConfigAttributes(GLX::FBConfig configHandle) const
 {
 	ConfigAttributeList attributes;
 

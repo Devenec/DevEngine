@@ -253,9 +253,8 @@ void GraphicsDevice::swapBuffers() const
 
 // Private
 
-GraphicsDevice::GraphicsDevice(Implementation* implementation, Window* window)
-	: _implementation(implementation),
-	  _window(window) { }
+GraphicsDevice::GraphicsDevice(Implementation* implementation)
+	: _implementation(implementation) { }
 
 GraphicsDevice::~GraphicsDevice()
 {

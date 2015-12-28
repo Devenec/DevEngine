@@ -41,7 +41,8 @@ static void setErrorHandlers();
 // Public
 
 X::X()
-	: _connection(XOpenDisplay(nullptr))
+	: _connection(XOpenDisplay(nullptr)),
+	  _windowUserDataContext(XUniqueContext())
 {
 	checkConnection();
 	::setErrorHandlers();
@@ -53,14 +54,17 @@ X::~X()
 	XCloseDisplay(_connection);
 }
 
-//
-
-#include <platform/glx/GLX.h>
-
-GLXContext X::createGraphicsContext(GLXFBConfig configHandle, const Int32* attributes, const Bool isDirect) const
+GLX::Context X::createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes, const Bool isDirect) const
 {
-	// TODO: implement
-	return nullptr;
+	GLX::Context contextHandle = GLX::createContextAttribsARB(_connection, configHandle, nullptr, isDirect, attributes);
+
+	if(contextHandle == nullptr)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to create a graphics context." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
+
+	return contextHandle;
 }
 
 Window X::createWindow(const Window parentWindowHandle, const Int32 x, const Int32 y, const Uint32 width,
@@ -72,9 +76,17 @@ Window X::createWindow(const Window parentWindowHandle, const Int32 x, const Int
 		InputOutput, visualInfo->visual, attributeMask, &attributes);
 }
 
-void X::destroyGraphicsContext(GLXContext contextHandle) const
+void X::destroyWindowUserData(const Window windowHandle) const
 {
-	// TODO: implement
+	const Int32 result = XDeleteContext(_connection, windowHandle, _windowUserDataContext);
+
+	if(result != 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to destroy the user data of a window." <<
+			Log::Flush();
+
+		DE_ERROR_X(0x0);
+	}
 }
 
 const Char8* X::getExtensionNameString() const
@@ -99,7 +111,7 @@ XRRScreenConfiguration* X::getGraphicsAdapterConfig(const Uint32 adapterIndex) c
 	return config;
 }
 
-Int32 X::getGraphicsConfigAttribute(GLXFBConfig configHandle, const Int32 attributeName) const
+Int32 X::getGraphicsConfigAttribute(GLX::FBConfig configHandle, const Int32 attributeName) const
 {
 	Int32 value = 0;
 	const Int32 result = GLX::getFBConfigAttrib(_connection, configHandle, attributeName, &value);
@@ -113,11 +125,11 @@ Int32 X::getGraphicsConfigAttribute(GLXFBConfig configHandle, const Int32 attrib
 	return value;
 }
 
-GLXFBConfig* X::getGraphicsConfigs(const Int32* attributes, Uint32& configCount) const
+GLX::FBConfig* X::getGraphicsConfigs(const Int32* attributes, Uint32& configCount) const
 {
 	const Int32 screen = XDefaultScreen(_connection);
 
-	GLXFBConfig* configHandles = GLX::chooseFBConfig(_connection, screen, attributes,
+	GLX::FBConfig* configHandles = GLX::chooseFBConfig(_connection, screen, attributes,
 		reinterpret_cast<Int32*>(&configCount));
 
 	if(configHandles == nullptr)
@@ -129,7 +141,7 @@ GLXFBConfig* X::getGraphicsConfigs(const Int32* attributes, Uint32& configCount)
 	return configHandles;
 }
 
-XVisualInfo* X::getGraphicsConfigVisualInfo(GLXFBConfig configHandle) const
+XVisualInfo* X::getGraphicsConfigVisualInfo(GLX::FBConfig configHandle) const
 {
 	XVisualInfo* visualInfo = GLX::getVisualFromFBConfig(_connection, configHandle);
 
@@ -142,6 +154,20 @@ XVisualInfo* X::getGraphicsConfigVisualInfo(GLXFBConfig configHandle) const
 	}
 
 	return visualInfo;
+}
+
+Void* X::getWindowUserData(const Window windowHandle) const
+{
+	Char8* data = nullptr;
+	const Int32 result = XFindContext(_connection, windowHandle, _windowUserDataContext, &data);
+
+	if(result != 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to get the user data of a window." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
+
+	return data;
 }
 
 void X::invokeError(const Uint32 errorCode) const
@@ -182,15 +208,17 @@ Bool X::isGLXSupported(Uint32& versionMajor, Uint32& versionMinor) const
 	}
 }
 
-Bool X::isGraphicsContextDirect(GLXContext contextHandle) const
+void X::makeGraphicsContextCurrent(GLX::Drawable drawableHandle, GLX::Context contextHandle) const
 {
-	// TODO: implement
-	return false;
-}
+	const Int32 result = GLX::makeContextCurrent(_connection, drawableHandle, drawableHandle, contextHandle);
 
-void X::makeGraphicsContextCurrent(GLXDrawable drawableHandle, GLXContext contextHandle) const
-{
-	// TODO: implement
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to make a graphics context current." <<
+			Log::Flush();
+
+		DE_ERROR_X(0x0);
+	}
 }
 
 XEvent X::popEvent() const
@@ -214,9 +242,28 @@ void X::setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Draw
 	}
 }
 
-void X::swapBuffers(GLXDrawable drawableHandle) const
+void X::setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms, const Uint32 protocolAtomCount) const
 {
-	// TODO: implement
+	const Int32 result = XSetWMProtocols(_connection, windowHandle, protocolAtoms, protocolAtomCount);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the message protocols of a window." <<
+			Log::Flush();
+
+		DE_ERROR_X(0x0);
+	}
+}
+
+void X::setWindowUserData(const Window windowHandle, Void* data) const
+{
+	const Int32 result = XSaveContext(_connection, windowHandle, _windowUserDataContext, static_cast<Char8*>(data));
+
+	if(result != 0)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the user data of a window." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
 }
 
 // Private

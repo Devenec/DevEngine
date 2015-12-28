@@ -20,6 +20,16 @@
 
 // Public
 
+Atom X::createAtom(const Char8* name) const
+{
+	return XInternAtom(_connection, name, False);
+}
+
+void X::destroyGraphicsContext(GLX::Context contextHandle) const
+{
+	GLX::destroyContext(_connection, contextHandle);
+}
+
 void X::destroyWindow(const Window windowHandle) const
 {
 	XDestroyWindow(_connection, windowHandle);
@@ -54,4 +64,19 @@ Window X::getRootWindowHandle(const Uint32 graphicsAdapterIndex) const
 Bool X::hasPendingEvents() const
 {
 	return XPending(_connection) > 0;
+}
+
+Bool X::isGraphicsContextDirect(GLX::Context contextHandle) const
+{
+	return GLX::isDirect(_connection, contextHandle) != 0;
+}
+
+void X::mapWindow(Window windowHandle) const
+{
+	XMapWindow(_connection, windowHandle);
+}
+
+void X::swapBuffers(GLX::Drawable drawableHandle) const
+{
+	GLX::swapBuffers(_connection, drawableHandle);
 }

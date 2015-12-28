@@ -1,5 +1,5 @@
 /**
- * @file platform/inline/GraphicsExtensionHelper.inl
+ * @file platform/glx/GLXGraphicsFunctionUtility.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,12 +18,26 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <platform/GraphicsFunctionUtility.h>
+#include <platform/glx/GLX.h>
+
+using namespace Platform;
+
 // Public
 
-// Static
+GraphicsFunctionUtility::GraphicsFunctionUtility()
+	: _implementation(nullptr) { }
 
-template<typename T>
-T GraphicsExtensionHelper::getFunction(const Char8* name)
+GraphicsFunctionUtility::~GraphicsFunctionUtility() { }
+
+// Private
+
+GraphicsFunctionUtility::Function GraphicsFunctionUtility::getExtensionFunctionInternal(const Char8* name) const
 {
-	return reinterpret_cast<T>(getFunctionInternal(name));
+	return GLX::getProcAddress(reinterpret_cast<const Uint8*>(name));
+}
+
+GraphicsFunctionUtility::Function GraphicsFunctionUtility::getStandardFunctionInternal(const Char8* name) const
+{
+	return getExtensionFunctionInternal(name);
 }

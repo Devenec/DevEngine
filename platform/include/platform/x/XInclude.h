@@ -1,5 +1,5 @@
 /**
- * @file platform/glx/inline/GLX.inl
+ * @file platform/x/XInclude.h
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,10 +18,11 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Private
+#pragma once
 
-template<typename T>
-T GLX::getStandardFunction(const Char8* name) const
-{
-	return reinterpret_cast<T>(getStandardFunctionInternal(name));
-}
+#include <X11/Xlib.h>
+#include <X11/Xresource.h>
+#include <X11/Xutil.h>
+#include <X11/extensions/Xrandr.h>
+
+#undef Bool

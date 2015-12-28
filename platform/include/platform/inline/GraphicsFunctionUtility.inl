@@ -1,5 +1,5 @@
 /**
- * @file graphics/inline/GraphicsDevice.inl
+ * @file platform/inline/GraphicsFunctionUtility.inl
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -20,7 +20,14 @@
 
 // Public
 
-Window* GraphicsDevice::window() const
+template<typename T>
+T GraphicsFunctionUtility::getExtensionFunction(const Char8* name) const
 {
-	return _window;
+	return reinterpret_cast<T>(getExtensionFunctionInternal(name));
+}
+
+template<typename T>
+T GraphicsFunctionUtility::getStandardFunction(const Char8* name) const
+{
+	return reinterpret_cast<T>(getStandardFunctionInternal(name));
 }

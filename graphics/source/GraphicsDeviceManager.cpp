@@ -1,5 +1,5 @@
 /**
- * @file platform/glx/inline/GLX.inl
+ * @file graphics/GraphicsDeviceManager.cpp
  *
  * DevEngine
  * Copyright 2015 Eetu 'Devenec' Oinasmaa
@@ -18,10 +18,16 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Memory.h>
+#include <graphics/GraphicsDevice.h>
+#include <graphics/GraphicsDeviceManager.h>
+
+using namespace Graphics;
+
 // Private
 
-template<typename T>
-T GLX::getStandardFunction(const Char8* name) const
+void GraphicsDeviceManager::destroyDevices()
 {
-	return reinterpret_cast<T>(getStandardFunctionInternal(name));
+	for(GraphicsDeviceList::const_iterator i = _devices.begin(), end = _devices.end(); i != end; ++i)
+		DE_DELETE(*i, GraphicsDevice);
 }
