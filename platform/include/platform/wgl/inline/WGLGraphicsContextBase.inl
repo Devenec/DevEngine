@@ -2,7 +2,7 @@
  * @file platform/wgl/inline/WGLGraphicsContextBase.inl
  *
  * DevEngine
- * Copyright 2015 Eetu 'Devenec' Oinasmaa
+ * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
  *
  * DevEngine is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,7 +1,7 @@
 ## DevEngine
 
 A 3D game development framework  
-Version 0.0.1
+Version 0.0.2
 
 
 ### About
@@ -79,7 +79,7 @@ need to be rebuilt and some time is saved.
 
 ### Copyright & License
 
-Copyright 2015 Eetu 'Devenec' Oinasmaa  
+Copyright 2015-2016 Eetu 'Devenec' Oinasmaa  
 Licensed under GNU General Public License.
 
 The third party source code may be licensed under different licenses, as
