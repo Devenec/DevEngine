@@ -164,7 +164,7 @@ void OpenGL::getStandardFunctions()
 	getError = functionUtility.getStandardFunction<GetError>("glGetError");
 	getFloatv = functionUtility.getStandardFunction<GetFloatV>("glGetFloatv");
 	getIntegerv = functionUtility.getStandardFunction<GetIntegerV>("glGetIntegerv");
-	//getString = functionUtility.getStandardFunction<GetString>("glGetString");
+	// getString is initialised in OpenGL::checkSupport()
 	getTexImage = functionUtility.getStandardFunction<GetTexImage>("glGetTexImage");
 
 	getTexLevelParameterfv =

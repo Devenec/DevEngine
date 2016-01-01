@@ -19,6 +19,7 @@
  */
 
 #include <core/Array.h>
+#include <core/Log.h>
 #include <core/Memory.h>
 #include <platform/glx/GLXGraphicsContext.h>
 
@@ -26,6 +27,8 @@ using namespace Core;
 using namespace Platform;
 
 // External
+
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsContext - GLX]";
 
 static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 {{
@@ -42,8 +45,12 @@ static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 // Public
 
 GraphicsContext::Implementation::Implementation(const Window windowHandle, GLX::FBConfig configHandle)
-	: _graphicsContextHandle(X::instance().createGraphicsContext(configHandle, ::CONTEXT_ATTRIBUTES.data(), true)),
-	  _windowHandle(windowHandle) { }
+	: _graphicsContextHandle(nullptr),
+	  _windowHandle(windowHandle)
+{
+	_graphicsContextHandle = X::instance().createGraphicsContext(configHandle, ::CONTEXT_ATTRIBUTES.data(), true);
+	checkContext();
+}
 
 GraphicsContext::Implementation::~Implementation()
 {
@@ -63,6 +70,14 @@ void GraphicsContext::Implementation::makeNonCurrent() const
 void GraphicsContext::Implementation::swapBuffers() const
 {
 	X::instance().swapBuffers(_windowHandle);
+}
+
+// Private
+
+void GraphicsContext::Implementation::checkContext() const
+{
+	if(!X::instance().isGraphicsContextDirect(_graphicsContextHandle))
+		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << " The graphics context is not direct." << Log::Flush();
 }
 
 

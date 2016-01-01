@@ -40,7 +40,7 @@ Uint32 GraphicsBuffer::Implementation::handle() const
 	return _bufferHandle;
 }
 
-Byte* GraphicsBuffer::Implementation::mapData() const
+Uint8* GraphicsBuffer::Implementation::mapData() const
 {
 	return mapData(_size, 0u);
 }

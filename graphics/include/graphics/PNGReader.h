@@ -33,7 +33,7 @@ namespace Graphics
 {
 	enum class ImageFormat;
 
-	using ByteData = Core::Vector<Byte>;
+	using ByteData = Core::Vector<Uint8>;
 
 	class PNGReader final
 	{

@@ -20,7 +20,6 @@
 
 #include <core/Types.h>
 
-static_assert(sizeof(Byte) == 1, "The size of Byte is incorrect.");
 static_assert(sizeof(Int8) == 1, "The size of Int8 is incorrect.");
 static_assert(sizeof(Uint8) == 1, "The size of Uint8 is incorrect.");
 static_assert(sizeof(Int16) == 2, "The size of Int16 is incorrect.");

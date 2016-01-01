@@ -67,6 +67,27 @@ GLX::Context X::createGraphicsContext(GLX::FBConfig configHandle, const Int32* a
 	return contextHandle;
 }
 
+Cursor X::createHiddenPointer(const Window windowHandle) const
+{
+	const Char8 data[] { 0 };
+	const Pixmap pixmap = XCreateBitmapFromData(_connection, windowHandle, data, 1u, 1u);
+
+	if(pixmap == None)
+	{
+		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed create a pixmap." << Log::Flush();
+		DE_ERROR_X(0x0);
+	}
+
+	XColor foregroundColour;
+	XColor backgroundColour;
+
+	const Cursor pointerHandle = XCreatePixmapCursor(_connection, pixmap, pixmap, &foregroundColour, &backgroundColour,
+		0u, 0u);
+
+	XFreePixmap(_connection, pixmap);
+	return pointerHandle;
+}
+
 Window X::createWindow(const Window parentWindowHandle, const Int32 x, const Int32 y, const Uint32 width,
 	const Uint32 height, XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask) const
 {
@@ -74,6 +95,12 @@ Window X::createWindow(const Window parentWindowHandle, const Int32 x, const Int
 
 	return XCreateWindow(_connection, parentWindowHandle, x, y, width, height, 0u, visualInfo->depth,
 		InputOutput, visualInfo->visual, attributeMask, &attributes);
+}
+
+void X::destroyWindowProperty(const Window windowHandle, const Char8* propertyName) const
+{
+	const Atom propertyAtom = createAtom(propertyName);
+	XDeleteProperty(_connection, windowHandle, propertyAtom);
 }
 
 void X::destroyWindowUserData(const Window windowHandle) const
@@ -156,6 +183,12 @@ XVisualInfo* X::getGraphicsConfigVisualInfo(GLX::FBConfig configHandle) const
 	return visualInfo;
 }
 
+Rectangle X::getWindowRectangle(const Window windowHandle) const
+{
+	const XWindowAttributes windowAttributes = getWindowAttributes(windowHandle);
+	return Rectangle(windowAttributes.x, windowAttributes.y, windowAttributes.width, windowAttributes.height);
+}
+
 Void* X::getWindowUserData(const Window windowHandle) const
 {
 	Char8* data = nullptr;
@@ -232,14 +265,33 @@ XEvent X::popEvent() const
 void X::setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
 	const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const
 {
-	const Int32 result = XRRSetScreenConfigAndRate(_connection, graphicsAdapterConfig, rootWindowHandle, resolutionIndex,
-		RR_Rotate_0, static_cast<Int16>(refreshRate), timestamp);
+	const Int32 result = XRRSetScreenConfigAndRate(_connection, graphicsAdapterConfig, rootWindowHandle,
+		resolutionIndex, RR_Rotate_0, static_cast<Int16>(refreshRate), timestamp);
 
 	if(result == 0)
 	{
 		defaultLog << LogLevel::Error << COMPONENT_TAG << " Failed to set the display mode." << Log::Flush();
 		DE_ERROR_X(0x0);
 	}
+}
+
+void X::setFullscreen(const Window windowHandle, const Bool isFullscreen) const
+{
+	const Atom fullscreenAtom = createAtom("_NET_WM_STATE_FULLSCREEN");
+	const Uint32 dataElementCount = isFullscreen ? 1u : 0u;
+
+	setWindowProperty(windowHandle, "_NET_WM_STATE", "ATOM", reinterpret_cast<const Uint8*>(&fullscreenAtom),
+		32u, dataElementCount);
+
+	const XWindowAttributes windowAttributes = getWindowAttributes(windowHandle);
+	XEvent event = XEvent();
+	event.type = ClientMessage;
+	event.xclient.data.l[0] = isFullscreen ? 1 : 0;
+	event.xclient.data.l[1] = fullscreenAtom;
+	event.xclient.format = 32;
+	event.xclient.message_type = createAtom("_NET_WM_STATE");
+	event.xclient.window = windowHandle;
+	sendEvent(windowAttributes.root, event, SubstructureNotifyMask);
 }
 
 void X::setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms, const Uint32 protocolAtomCount) const
@@ -253,6 +305,23 @@ void X::setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms
 
 		DE_ERROR_X(0x0);
 	}
+}
+
+void X::setWindowProperty(const Window windowHandle, const Char8* propertyName, const Char8* typeName,
+	const Uint8* data, const Uint32 dataElementBitSize, const Uint32 dataElementCount) const
+{
+	const Atom propertyAtom = createAtom(propertyName);
+	const Atom typeAtom = createAtom(typeName);
+
+	XChangeProperty(_connection, windowHandle, propertyAtom, typeAtom, dataElementBitSize, PropModeReplace, data,
+		dataElementCount);
+}
+
+void X::setWindowTitle(const Window windowHandle, const String8& title) const
+{
+	const Uint8* titleData = reinterpret_cast<const Uint8*>(title.c_str());
+	setWindowProperty(windowHandle, "_NET_WM_NAME", "UTF8_STRING", titleData, 8u, title.length() + 1u);
+	setWindowProperty(windowHandle, "WM_NAME", "UTF8_STRING", titleData, 8u, title.length() + 1u);
 }
 
 void X::setWindowUserData(const Window windowHandle, Void* data) const
@@ -313,6 +382,35 @@ void X::checkXRandRSupport() const
 			defaultLog << LogLevel::Info << "Using XRandR version " << versionMajor << '.' << versionMinor << '.' <<
 				Log::Flush();
 		}
+	}
+}
+
+XWindowAttributes X::getWindowAttributes(const Window windowHandle) const
+{
+	XWindowAttributes windowAttributes;
+	const Int32 result = XGetWindowAttributes(_connection, windowHandle, &windowAttributes);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the attributes of a window." <<
+			Log::Flush();
+
+		DE_ERROR_X(0x0);
+	}
+
+	return windowAttributes;
+}
+
+void X::sendEvent(const Window windowHandle, XEvent& event, const Int32 eventMask) const
+{
+	const Int32 result = XSendEvent(_connection, windowHandle, False, eventMask, &event);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the attributes of a window." <<
+			Log::Flush();
+
+		DE_ERROR_X(0x0);
 	}
 }
 

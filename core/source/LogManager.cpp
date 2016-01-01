@@ -28,7 +28,7 @@ using namespace Core;
 
 // External
 
-static Array<Byte, sizeof(Log)> defaultLogMemory;
+static Array<Uint8, sizeof(Log)> defaultLogMemory;
 
 
 // Core

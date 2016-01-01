@@ -27,7 +27,7 @@
 
 namespace Graphics
 {
-	using ByteData = Core::Vector<Byte>;
+	using ByteData = Core::Vector<Uint8>;
 
 	class Image final : public Content::ContentBase
 	{

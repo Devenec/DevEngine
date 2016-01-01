@@ -138,7 +138,7 @@ namespace Core
 		 * @return
 		 *   The number of bytes read
 		 */
-		Uint32 read(Byte* buffer, const Uint32 size) const;
+		Uint32 read(Uint8* buffer, const Uint32 size) const;
 
 		/**
 		 * Sets the position of the file pointer.
@@ -181,7 +181,7 @@ namespace Core
 		 * @return
 		 *   The number of bytes written
 		 */
-		Uint32 write(const Byte* data, const Uint32 size) const;
+		Uint32 write(const Uint8* data, const Uint32 size) const;
 
 		FileStream& operator =(const FileStream& fileStream) = delete;
 		FileStream& operator =(FileStream&& fileStream) = delete;

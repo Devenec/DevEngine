@@ -55,11 +55,11 @@ namespace Graphics
 
 		inline Uint32 handle() const;
 
-		inline Byte* mapData() const;
+		inline Uint8* mapData() const;
 
-		Byte* mapData(const Uint32 size, const Uint32 offset) const;
+		Uint8* mapData(const Uint32 size, const Uint32 offset) const;
 
-		void setData(const Byte* data, const Uint32 size, const Uint32 offset) const;
+		void setData(const Uint8* data, const Uint32 size, const Uint32 offset) const;
 
 		Implementation& operator =(const Implementation& implementation) = delete;
 		Implementation& operator =(Implementation&& implementation) = delete;

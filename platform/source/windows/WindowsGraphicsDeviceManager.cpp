@@ -54,7 +54,7 @@ static RECT createWindowRectangle(const Uint32 width, const Uint32 height);
 static void deregisterWindowClass();
 static void destroyWindow(HWND windowHandle);
 static void initialiseWGL();
-static HCURSOR loadCursor();
+static HCURSOR loadPointer();
 static void processMessages();
 static void registerWindowClass(const WNDCLASSEX& windowClassInfo);
 
@@ -128,7 +128,7 @@ private:
 	{
 		WNDCLASSEXW windowClassInfo = WNDCLASSEXW();
 		windowClassInfo.cbSize = sizeof(WNDCLASSEXW);
-		windowClassInfo.hCursor = ::loadCursor();
+		windowClassInfo.hCursor = ::loadPointer();
 		windowClassInfo.hInstance = GetModuleHandleW(nullptr);
 		windowClassInfo.lpfnWndProc = processMessage;
 		windowClassInfo.lpszClassName = ::WINDOW_CLASS_NAME;
@@ -150,7 +150,7 @@ private:
 				break;
 
 			case WM_SETCURSOR:
-				if(windowImplementation->shouldHideCursor(LOWORD(lParam) == HTCLIENT))
+				if(windowImplementation->shouldHidePointer(LOWORD(lParam) == HTCLIENT))
 					return 1;
 
 			default:
@@ -288,14 +288,14 @@ static void initialiseWGL()
 	::destroyWindow(temporaryWindowHandle);
 }
 
-static HCURSOR loadCursor()
+static HCURSOR loadPointer()
 {
-	HANDLE cursorHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
+	HANDLE pointerHandle = LoadImageW(nullptr, MAKEINTRESOURCEW(OCR_NORMAL), IMAGE_CURSOR, 0, 0, LR_SHARED);
 
-	if(cursorHandle == nullptr)
+	if(pointerHandle == nullptr)
 		return nullptr;
 	else
-		return static_cast<HCURSOR>(cursorHandle);
+		return static_cast<HCURSOR>(pointerHandle);
 }
 
 static void processMessages()

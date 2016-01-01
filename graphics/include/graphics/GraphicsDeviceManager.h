@@ -34,9 +34,9 @@ namespace Graphics
 	{
 	public:
 
-		using WindowCreationHandler = std::function<void(Window*)>;
+		using WindowCreatedHandler = std::function<void(Window*)>;
 
-		GraphicsDeviceManager(WindowCreationHandler windowCreationHandler);
+		GraphicsDeviceManager(WindowCreatedHandler windowCreatedHandler);
 
 		GraphicsDeviceManager(const GraphicsDeviceManager& graphicsDeviceManager) = delete;
 		GraphicsDeviceManager(GraphicsDeviceManager&& graphicsDeviceManager) = delete;
@@ -66,6 +66,7 @@ namespace Graphics
 		GraphicsDeviceList _devices;
 		WindowList _windows;
 		Implementation* _implementation;
+		WindowCreatedHandler _windowCreatedHandler;
 
 		void destroyDevices();
 		void destroyWindows();

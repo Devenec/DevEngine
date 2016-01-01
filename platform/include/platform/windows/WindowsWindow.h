@@ -48,7 +48,7 @@ namespace Graphics
 
 		Core::Rectangle rectangle() const;
 
-		inline void setCursorVisibility(const Bool isCursorVisible);
+		inline void setPointerVisibility(const Bool isPointerVisible);
 
 		void setFullscreen(const Bool isFullscreen);
 
@@ -60,7 +60,7 @@ namespace Graphics
 
 		inline Bool shouldClose() const;
 
-		Bool shouldHideCursor(const Bool isCursorInClientArea) const;
+		Bool shouldHidePointer(const Bool isPointerInClientArea) const;
 
 		inline void show() const;
 
@@ -72,7 +72,7 @@ namespace Graphics
 		Core::Rectangle _rectangle;
 		Platform::Icon _icon;
 		HWND _windowHandle;
-		Bool _isCursorVisible;
+		Bool _isPointerVisible;
 		Bool _isFullscreen;
 		Bool _isOpen;
 

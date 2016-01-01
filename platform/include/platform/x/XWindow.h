@@ -35,7 +35,7 @@ namespace Graphics
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
 
-		~Implementation() = default;
+		~Implementation();
 
 		inline void close();
 
@@ -47,19 +47,17 @@ namespace Graphics
 
 		Core::Rectangle rectangle() const;
 
-		inline void setCursorVisibility(const Bool isCursorVisible);
+		inline void setPointerVisibility(const Bool isPointerVisible);
 
 		void setFullscreen(const Bool isFullscreen);
 
 		void setIcon(const Image* image);
 
-		void setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle);
+		void setRectangle(const Core::Rectangle& rectangle);
 
 		void setTitle(const Core::String8& title) const;
 
 		inline Bool shouldClose() const;
-
-		Bool shouldHideCursor(const Bool isCursorInClientArea) const;
 
 		inline void show() const;
 
@@ -68,17 +66,11 @@ namespace Graphics
 
 	private:
 
-		//Core::Rectangle _rectangle;
-		//Platform::Icon _icon;
+		Core::Rectangle _rectangle;
+		Cursor _hiddenPointerHandle;
 		::Window _windowHandle;
-		Bool _isCursorVisible;
 		Bool _isFullscreen;
 		Bool _isOpen;
-
-		//Core::Rectangle getRectangle() const;
-		//void setFullscreenStyle(const Bool isFullscreen) const;
-		//Core::Rectangle getFullscreenRectangle() const;
-		//RECT getMonitorRectangle() const;
 	};
 
 #include "inline/XWindow.inl"

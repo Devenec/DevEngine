@@ -18,8 +18,9 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-//#include <core/Log.h>
 #include <core/Memory.h>
+#include <core/Vector.h>
+#include <graphics/Image.h>
 #include <platform/x/XWindow.h>
 
 using namespace Core;
@@ -28,7 +29,7 @@ using namespace Platform;
 
 // External
 
-//static const Char8* COMPONENT_TAG = "[Graphics::Window - X]";
+static Vector<Uint32> createIconData(const Image* image);
 
 
 // Implementation
@@ -36,161 +37,64 @@ using namespace Platform;
 // Public
 
 Graphics::Window::Implementation::Implementation(const ::Window windowHandle)
-	: _windowHandle(windowHandle),
-	  _isCursorVisible(true),
+	: _rectangle(X::instance().getWindowRectangle(windowHandle)),
+	  _hiddenPointerHandle(X::instance().createHiddenPointer(windowHandle)),
+	  _windowHandle(windowHandle),
 	  _isFullscreen(false),
-	  _isOpen(true)
-{
-	// TODO: implement?
+	  _isOpen(true) { }
 
-	//_rectangle = getRectangle();
+Graphics::Window::Implementation::~Implementation()
+{
+	setPointerVisibility(true);
+	X::instance().destroyPointer(_hiddenPointerHandle);
 }
 
 Rectangle Graphics::Window::Implementation::rectangle() const
 {
-	// TODO: implement
-
-	/*if(_isFullscreen)
-		return getRectangle();
+	if(_isFullscreen)
+		return X::instance().getWindowRectangle(_windowHandle);
 	else
-		return _rectangle;*/
-
-	return Rectangle();
+		return _rectangle;
 }
 
 void Graphics::Window::Implementation::setFullscreen(const Bool isFullscreen)
 {
-	// TODO: implement
-
-	/*if(isFullscreen != _isFullscreen)
+	if(isFullscreen != _isFullscreen)
 	{
-		setFullscreenStyle(isFullscreen);
-
-		if(isFullscreen)
-			setRectangle(getFullscreenRectangle(), isFullscreen);
-		else
-			setRectangle(_rectangle, isFullscreen);
-
+		X::instance().setFullscreen(_windowHandle, isFullscreen);
 		_isFullscreen = isFullscreen;
-	}*/
+	}
 }
 
 void Graphics::Window::Implementation::setIcon(const Image* image)
 {
-	// TODO: implement
+	const Char8* iconPropertyName = "_NET_WM_ICON";
 
-	/*if(image == nullptr)
-		_icon = Icon();
+	if(image == nullptr)
+	{
+		X::instance().destroyWindowProperty(_windowHandle, iconPropertyName);
+	}
 	else
-		_icon = Icon(image);
+	{
+		const Vector<Uint32> iconData = ::createIconData(image);
 
-	SendMessageW(_windowHandle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));*/
+		X::instance().setWindowProperty(_windowHandle, iconPropertyName, "CARDINAL",
+			reinterpret_cast<const Uint8*>(iconData.data()), 32u, iconData.size());
+	}
 }
 
-void Graphics::Window::Implementation::setRectangle(const Rectangle& rectangle, const Bool isFullscreenRectangle)
+void Graphics::Window::Implementation::setRectangle(const Rectangle& rectangle)
 {
-	// TODO: implement
+	X::instance().setWindowRectangle(_windowHandle, rectangle);
 
-	/*const Int32 result = SetWindowPos(_windowHandle, HWND_TOP, rectangle.x, rectangle.y, rectangle.width,
-		rectangle.height, SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the window rectangle." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0);
-	}
-
-	if(!isFullscreenRectangle)
-		_rectangle = rectangle;*/
+	if(!_isFullscreen)
+		_rectangle = rectangle;
 }
 
 void Graphics::Window::Implementation::setTitle(const String8& title) const
 {
-	// TODO: implement
-
-	/*const String16 title16 = toString16(title);
-	const Int32 result = SetWindowTextW(_windowHandle, title16.c_str());
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the window title." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0);
-	}*/
+	X::instance().setWindowTitle(_windowHandle, title.c_str());
 }
-
-Bool Graphics::Window::Implementation::shouldHideCursor(const Bool isCursorInClientArea) const
-{
-	// TODO: implement
-
-	//if(!_isCursorVisible && isCursorInClientArea)
-	//{
-	//	SetCursor(nullptr);
-	//	return true;
-	//}
-
-	return false;
-}
-
-// Private
-
-/*Rectangle Window::Implementation::getRectangle() const
-{
-	RECT rectangle;
-	const Int32 result = GetWindowRect(_windowHandle, &rectangle);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the window rectangle." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0);
-	}
-
-	return Rectangle(rectangle.left, rectangle.top, rectangle.right - rectangle.left, rectangle.bottom - rectangle.top);
-}
-
-void Window::Implementation::setFullscreenStyle(const Bool isFullscreen) const
-{
-	const Int32 style = GetWindowLongPtrW(_windowHandle, GWL_STYLE);
-	Int32 newStyle = style;
-
-	if(isFullscreen)
-		newStyle &= ~WS_CAPTION;
-	else
-		newStyle |= WS_CAPTION;
-
-	const Int32 result = SetWindowLongPtrW(_windowHandle, GWL_STYLE, newStyle);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the window style." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0);
-	}
-}
-
-Rectangle Window::Implementation::getFullscreenRectangle() const
-{
-	const RECT monitorRectangle = getMonitorRectangle();
-
-	return Rectangle(monitorRectangle.left, monitorRectangle.top, monitorRectangle.right - monitorRectangle.left,
-		monitorRectangle.bottom - monitorRectangle.top);
-}
-
-RECT Window::Implementation::getMonitorRectangle() const
-{
-	HMONITOR monitorHandle = MonitorFromWindow(_windowHandle, MONITOR_DEFAULTTONEAREST);
-	MONITORINFO monitorInfo;
-	monitorInfo.cbSize = sizeof(MONITORINFO);
-	const Int32 result = GetMonitorInfoW(monitorHandle, &monitorInfo);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get info about the monitor of the window." <<
-			Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0);
-	}
-
-	return monitorInfo.rcMonitor;
-}*/
 
 
 // Graphics::Window
@@ -212,9 +116,9 @@ Rectangle Graphics::Window::rectangle() const
 	return _implementation->rectangle();
 }
 
-void Graphics::Window::setCursorVisibility(const Bool isCursorVisible) const
+void Graphics::Window::setPointerVisibility(const Bool isPointerVisible) const
 {
-	_implementation->setCursorVisibility(isCursorVisible);
+	_implementation->setPointerVisibility(isPointerVisible);
 }
 
 void Graphics::Window::setFullscreen(const Bool isFullscreen) const
@@ -229,8 +133,7 @@ void Graphics::Window::setIcon(const Image* image) const
 
 void Graphics::Window::setRectangle(const Rectangle& rectangle) const
 {
-	if(!_implementation->isFullscreen())
-		_implementation->setRectangle(rectangle, false);
+	_implementation->setRectangle(rectangle);
 }
 
 void Graphics::Window::setTitle(const String8& title) const
@@ -256,4 +159,29 @@ Graphics::Window::Window(WindowHandle windowHandle)
 Graphics::Window::~Window()
 {
 	DE_DELETE(_implementation, Implementation);
+}
+
+
+// External
+
+static Vector<Uint32> createIconData(const Image* image)
+{
+	const Uint32 elementCount = image->width() * image->height();
+	const ByteData& imageData = image->data();
+	Vector<Uint32> iconData(elementCount + 2u, 0u);
+	iconData[0] = image->width();
+	iconData[1] = image->height();
+
+	for(Uint32 i = 0u; i < elementCount; ++i)
+	{
+		const Uint32 pixelIndex = 4u * i;
+
+		iconData[i + 2] =
+			static_cast<Uint32>(imageData[pixelIndex + 3]) << 24 |
+			static_cast<Uint32>(imageData[pixelIndex])	   << 16 |
+			static_cast<Uint32>(imageData[pixelIndex + 1]) << 8	 |
+			static_cast<Uint32>(imageData[pixelIndex + 2]);
+	}
+
+	return iconData;
 }

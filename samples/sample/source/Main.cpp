@@ -129,13 +129,12 @@ private:
 
 	void initialise()
 	{
-		//_window->setTitle("DevEngine - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
-		//Image* image = contentManager.load<Image>("assets/icon.png");
-		//_window->setIcon(image);
-		//_window->show();
+		Image* image = _contentManager.load<Image>("samples/sample/assets/icon.png");
+		_window->setIcon(image);
+		_window->setTitle("DevEngine Sample - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
+		_window->show();
 
 		_graphicsDevice = _graphicsDeviceManager.createDevice(_window);
-
 		Shader* vertexShader = _graphicsDevice->createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
 		Shader* fragmentShader = _graphicsDevice->createShader(ShaderType::Fragment, FRAGMENT_SHADER_SOURCE);
 		_effect = _graphicsDevice->createEffect();
@@ -176,9 +175,12 @@ private:
 		};
 
 		_vertexBuffer = _graphicsDevice->createBuffer(BufferBinding::Vertex, sizeof(Float32) * VERTEX_DATA.size());
-		_vertexBuffer->setData(reinterpret_cast<const Byte*>(VERTEX_DATA.data()), sizeof(Float32) * VERTEX_DATA.size());
+
+		_vertexBuffer->setData(reinterpret_cast<const Uint8*>(VERTEX_DATA.data()),
+			sizeof(Float32) * VERTEX_DATA.size());
+
 		_indexBuffer = _graphicsDevice->createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
-		_indexBuffer->setData(reinterpret_cast<const Byte*>(INDEX_DATA.data()), sizeof(Uint8) * INDEX_DATA.size());
+		_indexBuffer->setData(reinterpret_cast<const Uint8*>(INDEX_DATA.data()), sizeof(Uint8) * INDEX_DATA.size());
 		_vertexBufferState = _graphicsDevice->createVertexBufferState();
 
 		VertexElementList vertexElements
@@ -205,8 +207,10 @@ private:
 			0.0f,		  0.0f,		  -2.0f * near * far / (far - near),  0.0f
 		);
 
-		_uniformBuffer = _graphicsDevice->createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32), AccessMode::Write);
-		_uniformBuffer->setData(reinterpret_cast<const Byte*>(projectionTransform.data()), sizeof(Matrix4));
+		_uniformBuffer = _graphicsDevice->createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32),
+			AccessMode::Write);
+
+		_uniformBuffer->setData(reinterpret_cast<const Uint8*>(projectionTransform.data()), sizeof(Matrix4));
 		_uniformBuffer->bindIndexed(0u);
 	}
 
@@ -223,7 +227,10 @@ private:
 			_graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
 			rotation += 0.01f;
 			worldTransform = Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
-			_uniformBuffer->setData(reinterpret_cast<const Byte*>(worldTransform.data()), sizeof(Matrix4), sizeof(Matrix4));
+
+			_uniformBuffer->setData(reinterpret_cast<const Uint8*>(worldTransform.data()), sizeof(Matrix4),
+				sizeof(Matrix4));
+
 			_graphicsDevice->draw(PrimitiveType::TriangleStrip, 4u);
 			_graphicsDevice->swapBuffers();
 		}

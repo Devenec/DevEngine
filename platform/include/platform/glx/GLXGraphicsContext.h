@@ -51,5 +51,7 @@ namespace Platform
 
 		GLX::Context _graphicsContextHandle;
 		Window _windowHandle;
+
+		void checkContext() const;
 	};
 }

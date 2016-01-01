@@ -21,6 +21,7 @@
 #include <cstdio>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <core/Error.h>
 #include <core/FileStream.h>
 #include <core/Log.h>
 #include <core/Memory.h>
@@ -45,7 +46,7 @@ class FileStream::Implementation final
 public:
 
 	Implementation()
-		: _handle(nullptr),
+		: _fileHandle(nullptr),
 		  _previousAction(PreviousAction::None) { }
 
 	Implementation(const Implementation& implementation) = delete;
@@ -60,14 +61,15 @@ public:
 	{
 		if(isOpen())
 		{
-			const Int32 result = std::fclose(_handle);
+			const Int32 result = std::fclose(_fileHandle);
 
 			if(result != 0)
 			{
 				defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to close the file." << Log::Flush();
-				//DE_ERROR_WINDOWS(0x0);
+				DE_ERROR(0x0);
 			}
 
+			_fileHandle = nullptr;
 			_openMode = OpenMode();
 		}
 	}
@@ -80,7 +82,7 @@ public:
 
 	Bool isOpen() const
 	{
-		return _handle != nullptr;
+		return _fileHandle != nullptr;
 	}
 
 	void open(const String8& filepath, const OpenMode& openMode)
@@ -89,25 +91,25 @@ public:
 		DE_ASSERT(!isOpen());
 
 		const Int32 fileDescriptorAccessMode = ::getFileDescriptorAccessMode(openMode);
-		const Int32 fileDescriptor = ::open(filepath.c_str(), fileDescriptorAccessMode, CREATION_PERMISSIONS);
+		const Int32 fileDescriptor = ::open(filepath.c_str(), fileDescriptorAccessMode, ::CREATION_PERMISSIONS);
 
 		if(fileDescriptor == -1)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
-			//DE_ERROR_WINDOWS(0x0);
+			DE_ERROR(0x0);
 		}
 
 		const char* handleAccessMode = ::getFileHandleAccessMode(openMode);
-		_handle = ::fdopen(fileDescriptor, handleAccessMode);
+		_fileHandle = ::fdopen(fileDescriptor, handleAccessMode);
 
-		if(_handle == nullptr)
+		if(_fileHandle == nullptr)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
-			//DE_ERROR_WINDOWS(0x0);
+			DE_ERROR(0x0);
 		}
 
 		_openMode = openMode;
@@ -117,20 +119,20 @@ public:
 	Int64 position() const
 	{
 		DE_ASSERT(isOpen());
-		const Int64 result = std::ftell(_handle);
+		const Int64 result = std::ftell(_fileHandle);
 
 		if(result == -1)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the file pointer position." <<
 				Log::Flush();
 
-			//DE_ERROR_WINDOWS(0x0);
+			DE_ERROR(0x0);
 		}
 
 		return result;
 	}
 
-	Uint32 read(Byte* buffer, const Uint32 size)
+	Uint32 read(Uint8* buffer, const Uint32 size)
 	{
 		DE_ASSERT(buffer != nullptr);
 		DE_ASSERT(isOpen());
@@ -138,13 +140,13 @@ public:
 		if(_previousAction == PreviousAction::Write)
 			seek(SeekPosition::Current, 0);
 
-		const Uint32 bytesRead = std::fread(buffer, 1u, size, _handle);
-		const Int32 result = std::ferror(_handle);
+		const Uint32 bytesRead = std::fread(buffer, 1u, size, _fileHandle);
+		const Int32 result = std::ferror(_fileHandle);
 
 		if(result != 0)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to read the file." << Log::Flush();
-			//DE_ERROR_WINDOWS(0x0);
+			DE_ERROR(0x0);
 		}
 
 		_previousAction = PreviousAction::Read;
@@ -155,12 +157,12 @@ public:
 	{
 		DE_ASSERT(isOpen());
 		const Int32 origin = ::getSeekOrigin(position);
-		const Int32 result = std::fseek(_handle, offset, origin);
+		const Int32 result = std::fseek(_fileHandle, offset, origin);
 
 		if(result != 0)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to seek the file." << Log::Flush();
-			//DE_ERROR_WINDOWS(0x0);
+			DE_ERROR(0x0);
 		}
 
 		_previousAction = PreviousAction::None;
@@ -172,7 +174,7 @@ public:
 		return _size;
 	}
 
-	Uint32 write(const Byte* data, const Uint32 size)
+	Uint32 write(const Uint8* data, const Uint32 size)
 	{
 		DE_ASSERT(data != nullptr);
 		DE_ASSERT(isOpen());
@@ -180,13 +182,13 @@ public:
 		if(_previousAction == PreviousAction::Read)
 			seek(SeekPosition::Current, 0);
 
-		const Uint32 bytesWritten = std::fwrite(data, 1u, size, _handle);
-		const Int32 result = std::ferror(_handle);
+		const Uint32 bytesWritten = std::fwrite(data, 1u, size, _fileHandle);
+		const Int32 result = std::ferror(_fileHandle);
 
 		if(result != 0)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to write to the file." << Log::Flush();
-			//DE_ERROR_WINDOWS(0x0);
+			DE_ERROR(0x0);
 		}
 
 		_previousAction = PreviousAction::Write;
@@ -205,7 +207,7 @@ private:
 		Write
 	};
 
-	std::FILE* _handle;
+	std::FILE* _fileHandle;
 	Int64 _size;
 	PreviousAction _previousAction;
 	OpenMode _openMode;
@@ -262,7 +264,7 @@ Int64 FileStream::position() const
 	return _implementation->position();
 }
 
-Uint32 FileStream::read(Byte* buffer, const Uint32 size) const
+Uint32 FileStream::read(Uint8* buffer, const Uint32 size) const
 {
 	return _implementation->read(buffer, size);
 }
@@ -277,7 +279,7 @@ Int64 FileStream::size() const
 	return _implementation->size();
 }
 
-Uint32 FileStream::write(const Byte* data, const Uint32 size) const
+Uint32 FileStream::write(const Uint8* data, const Uint32 size) const
 {
 	return _implementation->write(data, size);
 }

@@ -86,7 +86,7 @@ void GraphicsBuffer::Implementation::demapData() const
 	// TODO: restore old binding?
 }
 
-Byte* GraphicsBuffer::Implementation::mapData(const Uint32 size, const Uint32 bufferOffset) const
+Uint8* GraphicsBuffer::Implementation::mapData(const Uint32 size, const Uint32 bufferOffset) const
 {
 	bind();
 	Void* pointer = _openGL->mapBufferRange(_binding, bufferOffset, size, _flags);
@@ -99,13 +99,13 @@ Byte* GraphicsBuffer::Implementation::mapData(const Uint32 size, const Uint32 bu
 	}
 
 	debind(); // TODO: restore old binding?
-	return static_cast<Byte*>(pointer);
+	return static_cast<Uint8*>(pointer);
 }
 
-void GraphicsBuffer::Implementation::setData(const Byte* data, const Uint32 size, const Uint32 bufferOffset) const
+void GraphicsBuffer::Implementation::setData(const Uint8* data, const Uint32 size, const Uint32 bufferOffset) const
 {
 	DE_ASSERT(data != nullptr);
-	Byte* mappedData = mapData(size, bufferOffset);
+	Uint8* mappedData = mapData(size, bufferOffset);
 	std::copy(data, data + size, mappedData);
 	demapData(); // TODO: restore old binding?
 }
@@ -171,12 +171,12 @@ void GraphicsBuffer::demapData() const
 	_implementation->demapData();
 }
 
-Byte* GraphicsBuffer::mapData(const Uint32 size, const Uint32 bufferOffset) const
+Uint8* GraphicsBuffer::mapData(const Uint32 size, const Uint32 bufferOffset) const
 {
 	return _implementation->mapData(size, bufferOffset);
 }
 
-void GraphicsBuffer::setData(const Byte* data, const Uint32 dataSize, const Uint32 bufferOffset) const
+void GraphicsBuffer::setData(const Uint8* data, const Uint32 dataSize, const Uint32 bufferOffset) const
 {
 	_implementation->setData(data, dataSize, bufferOffset);
 }

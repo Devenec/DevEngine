@@ -32,9 +32,7 @@ void Graphics::Window::Implementation::close()
 
 void Graphics::Window::Implementation::hide() const
 {
-	// TODO: implement
-
-	//ShowWindow(_windowHandle, SW_HIDE);
+	Platform::X::instance().hideWindow(_windowHandle);
 }
 
 Bool Graphics::Window::Implementation::isFullscreen() const
@@ -42,9 +40,10 @@ Bool Graphics::Window::Implementation::isFullscreen() const
 	return _isFullscreen;
 }
 
-void Graphics::Window::Implementation::setCursorVisibility(const Bool isCursorVisible)
+void Graphics::Window::Implementation::setPointerVisibility(const Bool isPointerVisible)
 {
-	_isCursorVisible = isCursorVisible;
+	const Cursor pointerHandle = isPointerVisible ? None : _hiddenPointerHandle;
+	Platform::X::instance().setPointer(_windowHandle, pointerHandle);
 }
 
 Bool Graphics::Window::Implementation::shouldClose() const
@@ -54,7 +53,5 @@ Bool Graphics::Window::Implementation::shouldClose() const
 
 void Graphics::Window::Implementation::show() const
 {
-	// TODO: implement
-
-	//ShowWindow(_windowHandle, SW_SHOW);
+	Platform::X::instance().showWindow(_windowHandle);
 }

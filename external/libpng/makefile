@@ -5,7 +5,7 @@
 # Target settings
 
 TARGET_LANGUAGE		 = c
-TARGET_NAME			 = libpng
+TARGET_NAME			 = png
 TARGET_OUTPUT_TYPE	 = static
 
 

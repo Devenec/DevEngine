@@ -40,9 +40,9 @@ Bool Window::Implementation::isFullscreen() const
 	return _isFullscreen;
 }
 
-void Window::Implementation::setCursorVisibility(const Bool isCursorVisible)
+void Window::Implementation::setPointerVisibility(const Bool isPointerVisible)
 {
-	_isCursorVisible = isCursorVisible;
+	_isPointerVisible = isPointerVisible;
 }
 
 Bool Window::Implementation::shouldClose() const

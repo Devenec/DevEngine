@@ -28,11 +28,6 @@
 using Bool = bool;
 
 /**
- * 8-bit byte
- */
-using Byte = unsigned char;
-
-/**
  * Signed 8-bit integer
  */
 using Int8 = signed char;

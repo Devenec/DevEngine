@@ -38,7 +38,7 @@ static Void* allocateMemory(png_struct* pngStructure, Uint32 size);
 static void deallocateMemory(png_struct* pngStructure, Void* pointer);
 static void handleError(png_struct* pngStructure, const Char8* message);
 static void handleWarning(png_struct* pngStructure, const Char8* message);
-static void readData(png_struct* pngStructure, Byte* buffer, Uint32 size);
+static void readData(png_struct* pngStructure, Uint8* buffer, Uint32 size);
 
 
 // Public
@@ -88,7 +88,7 @@ ByteData PNGReader::readImage(FileStream& fileStream)
 	const Uint32 rowByteCount = png_get_rowbytes(_pngStructure, _pngInfo);
 	ByteData data(height * rowByteCount);
 	data.shrink_to_fit();
-	Byte** rows = png_get_rows(_pngStructure, _pngInfo);
+	Uint8** rows = png_get_rows(_pngStructure, _pngInfo);
 
 	for(Uint32 i = 0u; i < height; ++i)
 		std::copy(rows[i], rows[i] + rowByteCount, data.data() + i * rowByteCount);
@@ -123,7 +123,7 @@ void PNGReader::initialiseInfo()
 
 void PNGReader::validateSignature(FileStream& fileStream)
 {
-	Byte signature[8];
+	Uint8 signature[8];
 	fileStream.read(signature, sizeof(signature));
 	const Int32 result = png_sig_cmp(signature, 0u, sizeof(signature));
 
@@ -166,7 +166,7 @@ static void handleWarning(png_struct* pngStructure, const Char8* message)
 	defaultLog << LogLevel::Warning << ::COMPONENT_TAG << " PNG warning: " << message << '.' << Log::Flush();
 }
 
-static void readData(png_struct* pngStructure, Byte* buffer, Uint32 size)
+static void readData(png_struct* pngStructure, Uint8* buffer, Uint32 size)
 {
 	FileStream* fileStream = static_cast<FileStream*>(png_get_io_ptr(pngStructure));
 

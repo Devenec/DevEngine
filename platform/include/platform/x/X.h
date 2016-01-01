@@ -21,7 +21,9 @@
 #pragma once
 
 #include <core/ConfigInternal.h>
+#include <core/Rectangle.h>
 #include <core/Singleton.h>
+#include <core/String.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
 #include <platform/glx/GLX.h>
@@ -53,13 +55,19 @@ namespace Platform
 		GLX::Context createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes, const Bool isDirect)
 			const;
 
+		Cursor createHiddenPointer(const Window windowHandle) const;
+
 		Window createWindow(const Window parentWindowHandle, const Int32 x, const Int32 y, const Uint32 width,
 			const Uint32 height, XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask)
 			const;
 
 		inline void destroyGraphicsContext(GLX::Context contextHandle) const;
 
+		inline void destroyPointer(const Cursor pointerHandle) const;
+
 		inline void destroyWindow(const Window windowHandle) const;
+
+		void destroyWindowProperty(const Window windowHandle, const Char8* propertyName) const;
 
 		void destroyWindowUserData(const Window windowHandle) const;
 
@@ -84,9 +92,15 @@ namespace Platform
 
 		inline Window getRootWindowHandle(const Uint32 graphicsAdapterIndex) const;
 
+		Core::Rectangle getWindowRectangle(const Window windowHandle) const;
+
+		inline void setWindowRectangle(const Window windowHandle, const Core::Rectangle& rectangle) const;
+
 		Void* getWindowUserData(const Window windowHandle) const;
 
 		inline Bool hasPendingEvents() const;
+
+		inline void hideWindow(const Window windowHandle) const;
 
 		void invokeError(const Uint32 errorCode) const;
 
@@ -98,17 +112,26 @@ namespace Platform
 
 		void makeGraphicsContextCurrent(GLX::Drawable drawableHandle, GLX::Context contextHandle) const;
 
-		inline void mapWindow(Window windowHandle) const;
-
 		XEvent popEvent() const;
 
 		void setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
 			const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const;
 
+		void setFullscreen(const Window windowHandle, const Bool isFullscreen) const;
+
+		inline void setPointer(const Window windowHandle, const Cursor pointerHandle) const;
+
 		void setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms, const Uint32 protocolAtomCount)
 			const;
 
+		void setWindowProperty(const Window windowHandle, const Char8* propertyName, const Char8* typeName,
+			const Uint8* data, const Uint32 dataElementBitSize, const Uint32 dataElementCount) const;
+
+		void setWindowTitle(const Window windowHandle, const Core::String8& title) const;
+
 		void setWindowUserData(const Window windowHandle, Void* data) const;
+
+		inline void showWindow(const Window windowHandle) const;
 
 		inline void swapBuffers(GLX::Drawable drawableHandle) const;
 
@@ -118,10 +141,12 @@ namespace Platform
 	private:
 
 		Display* _connection;
-		XContext _windowUserDataContext;
+		Int32 _windowUserDataContext;
 
 		void checkConnection() const;
 		void checkXRandRSupport() const;
+		XWindowAttributes getWindowAttributes(const Window windowHandle) const;
+		void sendEvent(const Window windowHandle, XEvent& event, const Int32 eventMask) const;
 	};
 
 #include "inline/X.inl"

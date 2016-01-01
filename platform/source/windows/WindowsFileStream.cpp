@@ -42,7 +42,7 @@ class FileStream::Implementation final
 public:
 
 	Implementation()
-		: _handle(nullptr),
+		: _fileHandle(nullptr),
 		  _openMode() { }
 
 	Implementation(const Implementation& implementation) = delete;
@@ -60,7 +60,7 @@ public:
 			if((_openMode & OpenMode::Write) == OpenMode::Write)
 				flushBuffer();
 
-			const Int32 result = CloseHandle(_handle);
+			const Int32 result = CloseHandle(_fileHandle);
 
 			if(result == 0)
 			{
@@ -68,7 +68,7 @@ public:
 				DE_ERROR_WINDOWS(0x0);
 			}
 
-			_handle = nullptr;
+			_fileHandle = nullptr;
 			_openMode = OpenMode();
 		}
 	}
@@ -81,7 +81,7 @@ public:
 
 	Bool isOpen() const
 	{
-		return _handle != nullptr;
+		return _fileHandle != nullptr;
 	}
 
 	void open(const String8& filepath, const OpenMode& openMode)
@@ -93,10 +93,10 @@ public:
 		const Uint32 accessMode = ::getAccessMode(openMode);
 		const Uint32 creationMode = ::getCreationMode(openMode);
 
-		_handle = CreateFileW(filepath16.c_str(), accessMode, FILE_SHARE_READ, nullptr, creationMode,
+		_fileHandle = CreateFileW(filepath16.c_str(), accessMode, FILE_SHARE_READ, nullptr, creationMode,
 			FILE_ATTRIBUTE_NORMAL, nullptr);
 
-		if(_handle == INVALID_HANDLE_VALUE)
+		if(_fileHandle == INVALID_HANDLE_VALUE)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
 				Log::Flush();
@@ -113,7 +113,7 @@ public:
 		DE_ASSERT(isOpen());
 		const LARGE_INTEGER offset = ::createLargeInteger();
 		LARGE_INTEGER position;
-		const Int32 result = SetFilePointerEx(_handle, offset, &position, FILE_CURRENT);
+		const Int32 result = SetFilePointerEx(_fileHandle, offset, &position, FILE_CURRENT);
 
 		if(result == 0)
 		{
@@ -126,13 +126,13 @@ public:
 		return position.QuadPart;
 	}
 
-	Uint32 read(Byte* buffer, const Uint32 size) const
+	Uint32 read(Uint8* buffer, const Uint32 size) const
 	{
 		DE_ASSERT(buffer != nullptr);
 		DE_ASSERT(isOpen());
 
 		unsigned long bytesRead;
-		const Int32 result = ReadFile(_handle, buffer, size, &bytesRead, nullptr);
+		const Int32 result = ReadFile(_fileHandle, buffer, size, &bytesRead, nullptr);
 
 		if(result == 0)
 		{
@@ -147,7 +147,7 @@ public:
 	{
 		DE_ASSERT(isOpen());
 		const LARGE_INTEGER seekOffset = ::createLargeInteger(offset);
-		const Int32 result = SetFilePointerEx(_handle, seekOffset, nullptr, static_cast<Int32>(position));
+		const Int32 result = SetFilePointerEx(_fileHandle, seekOffset, nullptr, static_cast<Int32>(position));
 
 		if(result == 0)
 		{
@@ -160,7 +160,7 @@ public:
 	{
 		DE_ASSERT(isOpen());
 		LARGE_INTEGER size;
-		const Int32 result = GetFileSizeEx(_handle, &size);
+		const Int32 result = GetFileSizeEx(_fileHandle, &size);
 
 		if(result == 0)
 		{
@@ -171,13 +171,13 @@ public:
 		return size.QuadPart;
 	}
 
-	Uint32 write(const Byte* data, const Uint32 size) const
+	Uint32 write(const Uint8* data, const Uint32 size) const
 	{
 		DE_ASSERT(data != nullptr);
 		DE_ASSERT(isOpen());
 
 		unsigned long bytesWritten;
-		const Int32 result = WriteFile(_handle, data, size, &bytesWritten, nullptr);
+		const Int32 result = WriteFile(_fileHandle, data, size, &bytesWritten, nullptr);
 
 		if(result == 0)
 		{
@@ -193,12 +193,12 @@ public:
 
 private:
 
-	HANDLE _handle;
+	HANDLE _fileHandle;
 	OpenMode _openMode;
 
 	void flushBuffer() const
 	{
-		const Int32 result = FlushFileBuffers(_handle);
+		const Int32 result = FlushFileBuffers(_fileHandle);
 
 		if(result == 0)
 		{
@@ -252,7 +252,7 @@ Int64 FileStream::position() const
 	return _implementation->position();
 }
 
-Uint32 FileStream::read(Byte* buffer, const Uint32 size) const
+Uint32 FileStream::read(Uint8* buffer, const Uint32 size) const
 {
 	return _implementation->read(buffer, size);
 }
@@ -267,7 +267,7 @@ Int64 FileStream::size() const
 	return _implementation->size();
 }
 
-Uint32 FileStream::write(const Byte* data, const Uint32 size) const
+Uint32 FileStream::write(const Uint8* data, const Uint32 size) const
 {
 	return _implementation->write(data, size);
 }

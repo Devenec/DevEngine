@@ -37,7 +37,7 @@ static const Char8* COMPONENT_TAG = "[Graphics::Window - Windows]";
 
 Window::Implementation::Implementation(HWND windowHandle)
 	: _windowHandle(windowHandle),
-	  _isCursorVisible(true),
+	  _isPointerVisible(true),
 	  _isFullscreen(false),
 	  _isOpen(true)
 {
@@ -76,7 +76,7 @@ void Window::Implementation::setIcon(const Image* image)
 
 	SendMessageW(_windowHandle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));
 }
-	
+
 void Window::Implementation::setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle)
 {
 	const Int32 result = SetWindowPos(_windowHandle, HWND_TOP, rectangle.x, rectangle.y, rectangle.width,
@@ -104,9 +104,9 @@ void Window::Implementation::setTitle(const String8& title) const
 	}
 }
 
-Bool Window::Implementation::shouldHideCursor(const Bool isCursorInClientArea) const
+Bool Window::Implementation::shouldHidePointer(const Bool isPointerInClientArea) const
 {
-	if(!_isCursorVisible && isCursorInClientArea)
+	if(!_isPointerVisible && isPointerInClientArea)
 	{
 		SetCursor(nullptr);
 		return true;
@@ -197,9 +197,9 @@ Core::Rectangle Window::rectangle() const
 	return _implementation->rectangle();
 }
 
-void Window::setCursorVisibility(const Bool isCursorVisible) const
+void Window::setPointerVisibility(const Bool isPointerVisible) const
 {
-	_implementation->setCursorVisibility(isCursorVisible);
+	_implementation->setPointerVisibility(isPointerVisible);
 }
 
 void Window::setFullscreen(const Bool isFullscreen) const

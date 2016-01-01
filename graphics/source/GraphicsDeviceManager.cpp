@@ -24,6 +24,8 @@
 
 using namespace Graphics;
 
+// Some functions are defined in platform/*/*GraphicsDeviceManager.cpp
+
 // Private
 
 void GraphicsDeviceManager::destroyDevices()

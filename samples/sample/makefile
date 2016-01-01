@@ -36,7 +36,9 @@ LIBRARY_PREREQUISITES = \
 	content \
 	core \
 	graphics \
-	platform
+	platform \
+	png \
+	z
 
 STATIC_LIBRARIES = \
 	content \
@@ -46,6 +48,8 @@ STATIC_LIBRARIES = \
 	graphics \
 	core \
 	platform \
+	png \
+	z \
 	dl \
 	X11 \
 	Xrandr

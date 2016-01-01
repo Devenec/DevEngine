@@ -16,6 +16,7 @@ include $(MAKE_DIRECTORY)/linux-$(TARGET_CONFIGURATION).mk
 
 INCLUDE_DIRECTORIES = \
 	include \
+	../content/include \
 	../core/include \
 	../graphics/include
 

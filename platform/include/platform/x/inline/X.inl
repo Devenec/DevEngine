@@ -30,6 +30,11 @@ void X::destroyGraphicsContext(GLX::Context contextHandle) const
 	GLX::destroyContext(_connection, contextHandle);
 }
 
+void X::destroyPointer(const Cursor pointerHandle) const
+{
+	XFreeCursor(_connection, pointerHandle);
+}
+
 void X::destroyWindow(const Window windowHandle) const
 {
 	XDestroyWindow(_connection, windowHandle);
@@ -66,12 +71,27 @@ Bool X::hasPendingEvents() const
 	return XPending(_connection) > 0;
 }
 
+void X::hideWindow(const Window windowHandle) const
+{
+	XUnmapWindow(_connection, windowHandle);
+}
+
 Bool X::isGraphicsContextDirect(GLX::Context contextHandle) const
 {
 	return GLX::isDirect(_connection, contextHandle) != 0;
 }
 
-void X::mapWindow(Window windowHandle) const
+void X::setPointer(const Window windowHandle, const Cursor pointerHandle) const
+{
+	XDefineCursor(_connection, windowHandle, pointerHandle);
+}
+
+void X::setWindowRectangle(const Window windowHandle, const Core::Rectangle& rectangle) const
+{
+	XMoveResizeWindow(_connection, windowHandle, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+}
+
+void X::showWindow(const Window windowHandle) const
 {
 	XMapWindow(_connection, windowHandle);
 }

@@ -47,11 +47,10 @@ T* ContentManager::load(const Core::String8& filepath)
 template<typename T>
 T* ContentManager::loadContent(const Core::String8& filepath)
 {
-	ContentLoader<T>* contentLoader = ContentLoader<T>::createLoader();
 	Core::FileStream fileStream(filepath);
+	ContentLoader<T>* contentLoader = ContentLoader<T>::createLoader();
 	T* content = contentLoader->load(fileStream);
 	_loadedContent[filepath] = content;
-	fileStream.close();
 	DE_DELETE(contentLoader, ContentLoader<T>);
 
 	return content;

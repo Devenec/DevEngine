@@ -39,6 +39,8 @@ using namespace Platform;
 
 // External
 
+static const Char8* WINDOW_DEFAULT_TITLE = "DevEngine Application";
+
 static GLX::FBConfig chooseGraphicsConfig();
 static GraphicsConfig getGraphicsConfig(GLX::FBConfig configHandle);
 
@@ -49,10 +51,9 @@ class GraphicsDeviceManager::Implementation final
 {
 public:
 
-	Implementation(WindowCreationHandler windowCreationHandler)
+	Implementation()
 		: _destroyMessageAtom(0u),
 		  _graphicsConfigHandle(::chooseGraphicsConfig()),
-		  _windowCreationHandler(windowCreationHandler),
 		  _x(X::instance())
 	{
 		_destroyMessageAtom = _x.createAtom("WM_DELETE_WINDOW");
@@ -65,7 +66,7 @@ public:
 
 	GraphicsDevice* createDeviceObject(Window* window) const
 	{
-		::Window windowHandle = reinterpret_cast<::Window>(window->handle());
+		const ::Window windowHandle = reinterpret_cast<::Window>(window->handle());
 		GraphicsContext* graphicsContext = createGraphicsContext(windowHandle);
 		GraphicsDevice::Implementation* implementation = DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
 		GraphicsDevice* device = DE_NEW(GraphicsDevice)(implementation);
@@ -79,10 +80,10 @@ public:
 
 	Graphics::Window* createWindowObject(const Uint32 width, const Uint32 height)
 	{
-		::Window windowHandle = createWindow(width, height);
+		const ::Window windowHandle = createWindow(width, height);
 		Graphics::Window* window = DE_NEW(Graphics::Window)(reinterpret_cast<WindowHandle>(windowHandle));
-		_x.setWindowUserData(windowHandle, window);
-		_x.mapWindow(windowHandle);
+		_x.setWindowTitle(windowHandle, ::WINDOW_DEFAULT_TITLE);
+		_x.setWindowUserData(windowHandle, window->_implementation);
 
 		return window;
 	}
@@ -91,7 +92,7 @@ public:
 	{
 		using Graphics::Window;
 
-		::Window windowHandle = reinterpret_cast<::Window>(window->handle());
+		const ::Window windowHandle = reinterpret_cast<::Window>(window->handle());
 		_x.destroyWindowUserData(windowHandle);
 		DE_DELETE(window, Window);
 		_x.destroyWindow(windowHandle);
@@ -107,12 +108,8 @@ public:
 			{
 				case ClientMessage:
 					if(event.xclient.data.l[0] == _destroyMessageAtom)
-						getWindow(event.xclient.window)->_implementation->close();
+						getWindow(event.xclient.window)->close();
 
-					break;
-
-				case MapNotify:
-					_windowCreationHandler(getWindow(event.xmap.window));
 					break;
 
 				default:
@@ -129,7 +126,6 @@ private:
 	Atom _destroyMessageAtom;
 	GLX _glX;
 	GLX::FBConfig _graphicsConfigHandle;
-	WindowCreationHandler _windowCreationHandler;
 	X& _x;
 
 	GraphicsContext* createGraphicsContext(::Window windowHandle) const
@@ -143,12 +139,12 @@ private:
 	::Window createWindow(const Uint32 width, const Uint32 height)
 	{
 		XVisualInfo* visualInfo = _x.getGraphicsConfigVisualInfo(_graphicsConfigHandle);
-		::Window rootWindowHandle = _x.getRootWindowHandle(visualInfo->screen);
+		const ::Window rootWindowHandle = _x.getRootWindowHandle(visualInfo->screen);
 		Int32 windowAttributeMask = 0;
 		XSetWindowAttributes windowAttributes = createWindowAttributes(windowAttributeMask);
 
-		::Window windowHandle = _x.createWindow(rootWindowHandle, 0, 0, width, height, visualInfo, windowAttributes,
-			windowAttributeMask);
+		const ::Window windowHandle = _x.createWindow(rootWindowHandle, 0, 0, width, height, visualInfo,
+			windowAttributes, windowAttributeMask);
 
 		XFree(visualInfo);
 		_x.setWindowMessageProtocols(windowHandle, &_destroyMessageAtom, 1u);
@@ -156,17 +152,16 @@ private:
 		return windowHandle;
 	}
 
-	Graphics::Window* getWindow(::Window windowHandle) const
+	Graphics::Window::Implementation* getWindow(::Window windowHandle) const
 	{
-		return static_cast<Graphics::Window*>(_x.getWindowUserData(windowHandle));
+		return static_cast<Graphics::Window::Implementation*>(_x.getWindowUserData(windowHandle));
 	}
 
 	XSetWindowAttributes createWindowAttributes(Int32& attributeMask) const
 	{
 		XSetWindowAttributes attributes;
 		attributes.border_pixel = 0u;
-		attributes.event_mask = StructureNotifyMask;
-		attributeMask = CWBorderPixel | CWColormap | CWEventMask;
+		attributeMask = CWBorderPixel | CWColormap;
 
 		return attributes;
 	}
@@ -177,8 +172,9 @@ private:
 
 // Public
 
-GraphicsDeviceManager::GraphicsDeviceManager(WindowCreationHandler windowCreationHandler)
-	: _implementation(DE_NEW(Implementation)(windowCreationHandler)) { }
+GraphicsDeviceManager::GraphicsDeviceManager(WindowCreatedHandler windowCreatedHandler)
+	: _implementation(DE_NEW(Implementation)()),
+	  _windowCreatedHandler(windowCreatedHandler) { }
 
 GraphicsDeviceManager::~GraphicsDeviceManager()
 {
@@ -200,6 +196,7 @@ void GraphicsDeviceManager::createWindow(const Uint32 windowWidth, const Uint32 
 	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
 	logWindowCreation();
 	_windows.push_back(window);
+	_windowCreatedHandler(window);
 }
 
 void GraphicsDeviceManager::destroyDevice(GraphicsDevice* device)

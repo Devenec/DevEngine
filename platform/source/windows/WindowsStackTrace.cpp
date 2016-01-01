@@ -89,7 +89,7 @@ public:
 
 private:
 
-	Array<Byte, sizeof(SYMBOL_INFOW) + (::MAX_FUNCTION_NAME_LENGTH - 1u) * sizeof(Char16)> _symbolInfoMemory;
+	Array<Uint8, sizeof(SYMBOL_INFOW) + (::MAX_FUNCTION_NAME_LENGTH - 1u) * sizeof(Char16)> _symbolInfoMemory;
 	IMAGEHLP_LINEW64 _sourceInfo;
 	Vector<Void*> _symbolAddresses;
 	HANDLE _processHandle;

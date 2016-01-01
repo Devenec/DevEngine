@@ -37,16 +37,16 @@ static const Char8* COMPONENT_TAG = "[Platform::Icon - Windows]";
 
 static void checkImageFormat(const ImageFormat& format);
 static BITMAPV5HEADER createBitmapHeader(const Image* image);
-static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer);
+static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Uint8*& dataBuffer);
 static ICONINFO createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
 static HBITMAP createMaskBitmap(const Image* image);
 static void destroyBitmap(HBITMAP bitmapHandle);
 static HDC getDeviceContext();
 static Uint32 getImageBitDepth(const ImageFormat& imageFormat);
 static void releaseDeviceContext(HDC deviceContextHandle);
-static void setBitmapData(const Image* image, Byte* dataBuffer);
-static void setColourBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha);
-static void setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha);
+static void setBitmapData(const Image* image, Uint8* dataBuffer);
+static void setColourBitmapData(const Image* image, Uint8* dataBuffer, const Bool hasAlpha);
+static void setGreyBitmapData(const Image* image, Uint8* dataBuffer, const Bool hasAlpha);
 
 
 // Public
@@ -60,7 +60,7 @@ Icon::Icon(const Image* image)
 	DE_ASSERT(image != nullptr);
 	checkImageFormat(image->format());
 	BITMAPV5HEADER bitmapHeader = ::createBitmapHeader(image);
-	Byte* bitmapDataBuffer;
+	Uint8* bitmapDataBuffer;
 	HBITMAP colourBitmapHandle = ::createColourBitmap(bitmapHeader, bitmapDataBuffer);
 	::setBitmapData(image, bitmapDataBuffer);
 	HBITMAP maskBitmapHandle = ::createMaskBitmap(image);
@@ -134,6 +134,7 @@ static BITMAPV5HEADER createBitmapHeader(const Image* image)
 	bitmapHeader.bV5AlphaMask = 0xFF000000;
 	bitmapHeader.bV5BitCount = static_cast<Uint16>(::getImageBitDepth(image->format()));
 	bitmapHeader.bV5BlueMask = 0x000000FF;
+	bitmapHeader.bV5Compression = bitmapHeader.bV5BitCount == 24u ? BI_RGB : BI_BITFIELDS;
 	bitmapHeader.bV5CSType = LCS_WINDOWS_COLOR_SPACE;
 	bitmapHeader.bV5GreenMask = 0x0000FF00;
 	bitmapHeader.bV5Height = -static_cast<Int32>(image->height());
@@ -142,15 +143,10 @@ static BITMAPV5HEADER createBitmapHeader(const Image* image)
 	bitmapHeader.bV5Size = sizeof(BITMAPV5HEADER);
 	bitmapHeader.bV5Width = image->width();
 
-	if(bitmapHeader.bV5BitCount == 24u)
-		bitmapHeader.bV5Compression = BI_RGB;
-	else
-		bitmapHeader.bV5Compression = BI_BITFIELDS;
-
 	return bitmapHeader;
 }
 
-static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Byte*& dataBuffer)
+static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Uint8*& dataBuffer)
 {
 	HDC deviceContextHandle = ::getDeviceContext();
 
@@ -242,7 +238,7 @@ static void releaseDeviceContext(HDC deviceContextHandle)
 	}
 }
 
-static void setBitmapData(const Image* image, Byte* dataBuffer)
+static void setBitmapData(const Image* image, Uint8* dataBuffer)
 {
 	const ImageFormat imageFormat = image->format();
 
@@ -263,7 +259,7 @@ static void setBitmapData(const Image* image, Byte* dataBuffer)
 	}
 }
 
-static void setColourBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha)
+static void setColourBitmapData(const Image* image, Uint8* dataBuffer, const Bool hasAlpha)
 {
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 componentCount = hasAlpha ? 4u : 3u;
@@ -280,7 +276,7 @@ static void setColourBitmapData(const Image* image, Byte* dataBuffer, const Bool
 	}
 }
 
-static void setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool hasAlpha)
+static void setGreyBitmapData(const Image* image, Uint8* dataBuffer, const Bool hasAlpha)
 {
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 sourceComponentCount = hasAlpha ? 2u : 1u;
@@ -289,7 +285,7 @@ static void setGreyBitmapData(const Image* image, Byte* dataBuffer, const Bool h
 
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{
-		const Byte greyComponent = imageData[sourceComponentCount * i];
+		const Uint8 greyComponent = imageData[sourceComponentCount * i];
 		dataBuffer[destinationComponentCount * i] = greyComponent;
 		dataBuffer[destinationComponentCount * i + 1u] = greyComponent;
 		dataBuffer[destinationComponentCount * i + 2u] = greyComponent;

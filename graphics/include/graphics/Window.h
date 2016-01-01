@@ -47,7 +47,7 @@ namespace Graphics
 
 		Core::Rectangle rectangle() const;
 
-		void setCursorVisibility(const Bool isCursorVisible) const;
+		void setPointerVisibility(const Bool isPointerVisible) const;
 
 		void setFullscreen(const Bool isFullscreen) const;
 

@@ -125,7 +125,7 @@ void LogBuffer::flushMainBuffer()
 	_flushFunction(_mainBuffer);
 
 	if(_fileStream.isOpen())
-		_fileStream.write(reinterpret_cast<const Byte*>(_mainBuffer.c_str()), _mainBuffer.length());
+		_fileStream.write(reinterpret_cast<const Uint8*>(_mainBuffer.c_str()), _mainBuffer.length());
 
 	_mainBuffer.clear();
 }
