@@ -41,6 +41,7 @@
 	#define DE_COMPILER_VERSION _MSC_VER
 
 	#if DE_COMPILER_VERSION < DE_COMPILER_VERSION_MIN_MSVC
+		// TODO: clamp line
 		#error The compiler version is not supported. The minimum supported version is DE_COMPILER_VERSION_MIN_MSVC.
 	#endif
 #else

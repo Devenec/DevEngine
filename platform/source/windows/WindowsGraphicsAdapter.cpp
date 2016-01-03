@@ -40,8 +40,8 @@ static DEVMODEW createDisplayModeInfo(const DisplayMode& mode);
 
 // Public
 
-GraphicsAdapter::Implementation::Implementation(const String16& name, const DisplayModeList& supportedDisplayModes,
-	const Uint32 currentDisplayModeIndex)
+GraphicsAdapter::Implementation::Implementation(const String16& name,
+	const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex)
 	: _name(name),
 	  _supportedDisplayModes(supportedDisplayModes),
 	  _currentDisplayModeIndex(currentDisplayModeIndex),
@@ -55,8 +55,8 @@ GraphicsAdapter::Implementation::~Implementation()
 
 void GraphicsAdapter::Implementation::setDisplayMode(const DisplayMode& mode)
 {
-	DisplayModeList::const_iterator iterator = std::find(_supportedDisplayModes.begin(),
-		_supportedDisplayModes.end(), mode);
+	DisplayModeList::const_iterator iterator =
+		std::find(_supportedDisplayModes.begin(), _supportedDisplayModes.end(), mode);
 
 	DE_ASSERT(iterator != _supportedDisplayModes.end());
 	DEVMODEW displayModeInfo = ::createDisplayModeInfo(mode);
@@ -73,7 +73,8 @@ void GraphicsAdapter::Implementation::changeDisplayMode(DEVMODEW* displayModeInf
 	if(result != DISP_CHANGE_SUCCESSFUL)
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
-			"Failed to change the display mode, ChangeDisplaySettingsEx returned " << result << '.' << Log::Flush();
+			"Failed to change the display mode, ChangeDisplaySettingsEx returned " << result << '.' <<
+			Log::Flush();
 
 		DE_ERROR(0x0);
 	}

@@ -89,8 +89,8 @@ public:
 		_indexBuffer = buffer;
 	}
 
-	void setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements, const Uint32 stride,
-		const Uint32 offset) const
+	void setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements,
+		const Uint32 stride, const Uint32 offset) const
 	{
 		DE_ASSERT(buffer->_implementation->binding() == static_cast<Uint32>(BufferBinding::Vertex));
 		Uint32 bufferHandle = 0u;
@@ -121,11 +121,13 @@ private:
 		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
-	void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride, const Uint32 bufferOffset) const
+	void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride,
+		const Uint32 bufferOffset) const
 	{
 		Uint32 elementOffset = bufferOffset;
 
-		for(VertexElementList::const_iterator i = vertexElements.begin(), end = vertexElements.end(); i != end; ++i)
+		for(VertexElementList::const_iterator i = vertexElements.begin(), end = vertexElements.end();
+			i != end; ++i)
 		{
 			if(i->offset != VertexElement::AFTER_PREVIOUS)
 				elementOffset += i->offset;
@@ -135,7 +137,8 @@ private:
 		}
 	}
 
-	void setVertexElementFormat(const VertexElement& element, const Uint32 elementOffset, const Uint32 stride) const
+	void setVertexElementFormat(const VertexElement& element, const Uint32 elementOffset, const Uint32 stride)
+		const
 	{
 		Bool normalise;
 		const Uint32 componentCount = ::getVertexElementComponentCount(element, normalise);
@@ -143,7 +146,10 @@ private:
 		_openGL->enableVertexAttribArray(element.index);
 		DE_CHECK_ERROR_OPENGL(_openGL);
 		const Void* bufferOffset = reinterpret_cast<Void*>(elementOffset);
-		_openGL->vertexAttribPointer(element.index, componentCount, elementType, normalise, stride, bufferOffset);
+
+		_openGL->vertexAttribPointer(element.index, componentCount, elementType, normalise, stride,
+			bufferOffset);
+
 		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 };

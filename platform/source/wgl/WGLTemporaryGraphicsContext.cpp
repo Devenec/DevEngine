@@ -75,7 +75,9 @@ Int32 TemporaryGraphicsContext::choosePixelFormat(const PIXELFORMATDESCRIPTOR& p
 
 	if(pixelFormatIndex == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to choose a pixel format." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to choose a pixel format." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -86,13 +88,14 @@ void TemporaryGraphicsContext::checkPixelFormat(const Int32 pixelFormatIndex) co
 {
 	PIXELFORMATDESCRIPTOR pixelFormatDescriptor;
 
-	const Int32 result = DescribePixelFormat(_deviceContextHandle, pixelFormatIndex, sizeof(PIXELFORMATDESCRIPTOR),
-		&pixelFormatDescriptor);
+	const Int32 result =
+		DescribePixelFormat(_deviceContextHandle, pixelFormatIndex, sizeof(PIXELFORMATDESCRIPTOR),
+			&pixelFormatDescriptor);
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the description of a pixel format." <<
-			Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
+			"Failed to get the description of a pixel format." << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}
@@ -118,8 +121,8 @@ static void checkOpenGLVersion()
 	if(isVersionLess(major, minor, OpenGL::MIN_SUPPORTED_VERSION_MAJOR, OpenGL::MIN_SUPPORTED_VERSION_MINOR))
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "The OpenGL version " << major << '.' << minor <<
-			" is not supported. The minimum supported version is " << OpenGL::MIN_SUPPORTED_VERSION_MAJOR << '.' <<
-			OpenGL::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
+			" is not supported. The minimum supported version is " << OpenGL::MIN_SUPPORTED_VERSION_MAJOR <<
+			'.' << OpenGL::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}

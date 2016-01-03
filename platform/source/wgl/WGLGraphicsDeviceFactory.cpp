@@ -48,9 +48,6 @@ static const PixelFormatRequiredAttributeList PIXEL_FORMAT_REQUIRED_ATTRIBUTES
 	0
 }};
 
-static Bool isPixelFormatAccelerationLess(const PixelFormatAttributeList& formatAttributesA,
-	const PixelFormatAttributeList& formatAttributesB);
-
 static Bool isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
 	const PixelFormatAttributeList& formatAttributesB);
 
@@ -96,13 +93,15 @@ Int32 GraphicsDeviceFactory::chooseGraphicsConfig(GraphicsConfig& chosenConfig) 
 	PixelFormatAttributeList pixelFormatAttributes;
 	const Int32 pixelFormatIndex = chooseBestPixelFormat(pixelFormatIndices, pixelFormatAttributes);
 
-	chosenConfig = GraphicsConfig(pixelFormatAttributes[5], pixelFormatAttributes[4], pixelFormatAttributes[2],
-		pixelFormatAttributes[1], pixelFormatAttributes[3], pixelFormatAttributes[6]);
+	chosenConfig =
+		GraphicsConfig(pixelFormatAttributes[5], pixelFormatAttributes[4], pixelFormatAttributes[2],
+			pixelFormatAttributes[1], pixelFormatAttributes[3], pixelFormatAttributes[6]);
 
 	return pixelFormatIndex;
 }
 
-GraphicsContext* GraphicsDeviceFactory::createGraphicsContext(WindowHandle windowHandle, const Int32 pixelFormatIndex) const
+GraphicsContext* GraphicsDeviceFactory::createGraphicsContext(WindowHandle windowHandle,
+	const Int32 pixelFormatIndex) const
 {
 	GraphicsContext::Implementation* implementation =
 		DE_NEW(GraphicsContext::Implementation)(windowHandle, pixelFormatIndex);
@@ -110,7 +109,8 @@ GraphicsContext* GraphicsDeviceFactory::createGraphicsContext(WindowHandle windo
 	return DE_NEW(GraphicsContext)(implementation);
 }
 
-GraphicsDevice* GraphicsDeviceFactory::createDeviceObject(Window* window, GraphicsContext* graphicsContext) const
+GraphicsDevice* GraphicsDeviceFactory::createDeviceObject(Window* window, GraphicsContext* graphicsContext)
+	const
 {
 	GraphicsDevice::Implementation* implementation = DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
 	return DE_NEW(GraphicsDevice)(implementation, window);
@@ -120,7 +120,9 @@ Uint32 GraphicsDeviceFactory::getPixelFormatCount() const
 {
 	const Int32 attributeName = WGL::NUMBER_PIXEL_FORMATS_ARB;
 	Int32 formatCount;
-	const Int32 result = WGL::getPixelFormatAttribivARB(_deviceContextHandle, 0, 0, 1u, &attributeName, &formatCount);
+
+	const Int32 result =
+		WGL::getPixelFormatAttribivARB(_deviceContextHandle, 0, 0, 1u, &attributeName, &formatCount);
 
 	if(result == 0)
 	{
@@ -133,23 +135,28 @@ Uint32 GraphicsDeviceFactory::getPixelFormatCount() const
 	return formatCount;
 }
 
-GraphicsDeviceFactory::PixelFormatIndexList GraphicsDeviceFactory::getPixelFormatIndices(const Uint32 formatCount)
-	const
+GraphicsDeviceFactory::PixelFormatIndexList GraphicsDeviceFactory::getPixelFormatIndices(
+	const Uint32 formatCount) const
 {
 	PixelFormatIndexList formatIndices(formatCount);
 	Uint32 matchingFormatCount;
 
-	const Int32 result = WGL::choosePixelFormatARB(_deviceContextHandle, ::PIXEL_FORMAT_REQUIRED_ATTRIBUTES.data(),
-		nullptr, formatCount, formatIndices.data(), &matchingFormatCount);
+	const Int32 result =
+		WGL::choosePixelFormatARB(_deviceContextHandle, ::PIXEL_FORMAT_REQUIRED_ATTRIBUTES.data(), nullptr,
+			formatCount, formatIndices.data(), &matchingFormatCount);
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get matching configurations." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get matching configurations." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 	else if(matchingFormatCount == 0u)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found."
+			<< Log::Flush();
+
 		DE_ERROR(0x0);
 	}
 
@@ -163,7 +170,8 @@ Int32 GraphicsDeviceFactory::chooseBestPixelFormat(const PixelFormatIndexList& f
 	Int32 bestFormatIndex = formatIndices.front();
 	formatAttributes = getPixelFormatAttributes(bestFormatIndex);
 
-	for(PixelFormatIndexList::const_iterator i = formatIndices.begin() + 1u, end = formatIndices.end(); i != end; ++i)
+	for(PixelFormatIndexList::const_iterator i = formatIndices.begin() + 1u, end = formatIndices.end();
+		i != end; ++i)
 	{
 		const PixelFormatAttributeList compareFormatAttributes = getPixelFormatAttributes(*i);
 
@@ -181,12 +189,15 @@ PixelFormatAttributeList GraphicsDeviceFactory::getPixelFormatAttributes(const I
 {
 	PixelFormatAttributeList attributes;
 
-	const Int32 result = WGL::getPixelFormatAttribivARB(_deviceContextHandle, formatIndex, 0, attributes.size(),
-		PIXEL_FORMAT_ATTRIBUTE_IDS.data(), attributes.data());
+	const Int32 result =
+		WGL::getPixelFormatAttribivARB(_deviceContextHandle, formatIndex, 0, attributes.size(),
+			PIXEL_FORMAT_ATTRIBUTE_IDS.data(), attributes.data());
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get configuration attributes." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get configuration attributes." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -196,19 +207,12 @@ PixelFormatAttributeList GraphicsDeviceFactory::getPixelFormatAttributes(const I
 
 // External
 
-static Bool isPixelFormatAccelerationLess(const PixelFormatAttributeList& formatAttributesA,
-	const PixelFormatAttributeList& formatAttributesB)
-{
-	return formatAttributesA[0] == WGL::NO_ACCELERATION_ARB ||
-		(formatAttributesA[0] == WGL::GENERIC_ACCELERATION_ARB && formatAttributesB[0] == WGL::FULL_ACCELERATION_ARB);
-}
-
 static Bool isPixelFormatLess(const PixelFormatAttributeList& formatAttributesA,
 	const PixelFormatAttributeList& formatAttributesB)
 {
-	if(formatAttributesA[0] != formatAttributesB[0])
+	if(formatAttributesA[0] < formatAttributesB[0])
 	{
-		return ::isPixelFormatAccelerationLess(formatAttributesA, formatAttributesB);
+		return true;
 	}
 	else
 	{

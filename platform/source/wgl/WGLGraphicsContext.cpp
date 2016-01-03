@@ -57,7 +57,8 @@ GraphicsContext::Implementation::Implementation(WindowHandle windowHandle, const
 
 void GraphicsContext::Implementation::initialise()
 {
-	_graphicsContextHandle = WGL::createContextAttribsARB(_deviceContextHandle, nullptr, ::CONTEXT_ATTRIBUTES.data());
+	_graphicsContextHandle =
+		WGL::createContextAttribsARB(_deviceContextHandle, nullptr, ::CONTEXT_ATTRIBUTES.data());
 
 	if(_graphicsContextHandle == nullptr)
 	{

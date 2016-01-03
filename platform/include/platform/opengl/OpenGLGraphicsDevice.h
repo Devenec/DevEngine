@@ -43,22 +43,24 @@ namespace Graphics
 		~Implementation();
 
 		void clear(const Colour& colour) const;
-		
-		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size, const AccessMode& accessMode)
-			const;
+
+		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size,
+			const AccessMode& accessMode) const;
 
 		Effect* createEffect() const;
 
-		IndexBuffer* createIndexBuffer(const Uint32 size, const IndexType& indexType, const AccessMode& accessMode)
-			const;
+		IndexBuffer* createIndexBuffer(const Uint32 size, const IndexType& indexType,
+			const AccessMode& accessMode) const;
 
 		Shader* createShader(const ShaderType& type, const Core::String8& source) const;
 
 		VertexBufferState* createVertexBufferState() const;
 
-		void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount, const Uint32 vertexOffset) const;
+		void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount, const Uint32 vertexOffset)
+			const;
 
-		void drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset) const;
+		void drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount,
+			const Uint32 indexOffset) const;
 
 		void logInfo() const;
 

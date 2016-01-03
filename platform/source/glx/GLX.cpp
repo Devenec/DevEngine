@@ -134,7 +134,8 @@ void GLX::checkSupport() const
 
 	if(isSupported)
 	{
-		if(isVersionLess(versionMajor, versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR, ::MIN_SUPPORTED_VERSION_MINOR))
+		if(isVersionLess(versionMajor, versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR,
+			::MIN_SUPPORTED_VERSION_MINOR))
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "GLX version " << versionMajor << '.' <<
 				versionMinor << " is not supported. The minimum supported version is " <<
@@ -144,8 +145,8 @@ void GLX::checkSupport() const
 		}
 		else
 		{
-			defaultLog << LogLevel::Info << "Using GLX version " << versionMajor << '.' << versionMinor << '.' <<
-				Log::Flush();
+			defaultLog << LogLevel::Info << "Using GLX version " << versionMajor << '.' << versionMinor <<
+				'.' << Log::Flush();
 		}
 	}
 	else
@@ -182,7 +183,9 @@ ExtensionNameList GLX::getExtensionNames() const
 
 		while((spacePosition = extensionNamesString.find(' ', currentPosition)) != String8::npos)
 		{
-			extensionNames.push_back(extensionNamesString.substr(currentPosition, spacePosition - currentPosition));
+			extensionNames.push_back(extensionNamesString.substr(currentPosition,
+				spacePosition - currentPosition));
+
 			currentPosition = spacePosition + 1u;
 		}
 	}
@@ -212,8 +215,8 @@ void GLX::unloadLibrary() const
 
 	if(result != 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to unload " << ::LIBRARY_FILENAME << ": " <<
-			dlerror() << '.' << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to unload " << ::LIBRARY_FILENAME <<
+			": " << dlerror() << '.' << Log::Flush();
 
 		DE_ERROR(0x0);
 	}
@@ -225,8 +228,8 @@ Void* GLX::getStandardFunctionInternal(const Char8* name) const
 
 	if(functionPointer == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to load a standard function '" << name << "': " <<
-			dlerror() << '.' << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to load a standard function '" << name <<
+			"': " << dlerror() << '.' << Log::Flush();
 
 		DE_ERROR(0x0);
 	}

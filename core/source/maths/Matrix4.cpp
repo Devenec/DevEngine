@@ -41,7 +41,8 @@ Matrix4::Matrix4(const Float32 e00, const Float32 e01, const Float32 e02, const 
 	: _columns { Vector4(e00, e01, e02, e03), Vector4(e10, e11, e12, e13), Vector4(e20, e21, e22, e23),
 		  Vector4(e30, e31, e32, e33) } { }
 
-Matrix4::Matrix4(const Vector4& column0, const Vector4& column1, const Vector4& column2, const Vector4& column3)
+Matrix4::Matrix4(const Vector4& column0, const Vector4& column1, const Vector4& column2,
+	const Vector4& column3)
 	: _columns { column0, column1, column2, column3 } { }
 
 Float32 Matrix4::determinant() const
@@ -131,17 +132,21 @@ Matrix4& Matrix4::operator *=(const Matrix4& matrix)
 	const Vector4 row2(_columns[0][2], _columns[1][2], _columns[2][2], _columns[3][2]);
 	const Vector4 row3(_columns[0][3], _columns[1][3], _columns[2][3], _columns[3][3]);
 
-	_columns[0] = Vector4(Vector4::dot(row0, matrix._columns[0]), Vector4::dot(row1, matrix._columns[0]),
-		Vector4::dot(row2, matrix._columns[0]), Vector4::dot(row3, matrix._columns[0]));
+	_columns[0] =
+		Vector4(Vector4::dot(row0, matrix._columns[0]), Vector4::dot(row1, matrix._columns[0]),
+			Vector4::dot(row2, matrix._columns[0]), Vector4::dot(row3, matrix._columns[0]));
 
-	_columns[1] = Vector4(Vector4::dot(row0, matrix._columns[1]), Vector4::dot(row1, matrix._columns[1]),
-		Vector4::dot(row2, matrix._columns[1]), Vector4::dot(row3, matrix._columns[1]));
+	_columns[1] =
+		Vector4(Vector4::dot(row0, matrix._columns[1]), Vector4::dot(row1, matrix._columns[1]),
+			Vector4::dot(row2, matrix._columns[1]), Vector4::dot(row3, matrix._columns[1]));
 
-	_columns[2] = Vector4(Vector4::dot(row0, matrix._columns[2]), Vector4::dot(row1, matrix._columns[2]),
-		Vector4::dot(row2, matrix._columns[2]), Vector4::dot(row3, matrix._columns[2]));
+	_columns[2] =
+		Vector4(Vector4::dot(row0, matrix._columns[2]), Vector4::dot(row1, matrix._columns[2]),
+			Vector4::dot(row2, matrix._columns[2]), Vector4::dot(row3, matrix._columns[2]));
 
-	_columns[3] = Vector4(Vector4::dot(row0, matrix._columns[3]), Vector4::dot(row1, matrix._columns[3]),
-		Vector4::dot(row2, matrix._columns[3]), Vector4::dot(row3, matrix._columns[3]));
+	_columns[3] =
+		Vector4(Vector4::dot(row0, matrix._columns[3]), Vector4::dot(row1, matrix._columns[3]),
+			Vector4::dot(row2, matrix._columns[3]), Vector4::dot(row3, matrix._columns[3]));
 
 	return *this;
 }
@@ -214,7 +219,7 @@ Matrix4 Matrix4::createRotationY(const Angle& angle)
 	return Matrix4
 	(
 		angleCosine, 0.0f, -angleSine,	 0.0f,
-		0.0f,		 1.0f,	0.0f,		 0.0f,		
+		0.0f,		 1.0f,	0.0f,		 0.0f,
 		angleSine,	 0.0f,	angleCosine, 0.0f,
 		0.0f,		 0.0f,	0.0f,		 1.0f
 	);
@@ -229,7 +234,7 @@ Matrix4 Matrix4::createRotationZ(const Angle& angle)
 	(
 		 angleCosine, angleSine,   0.0f, 0.0f,
 		-angleSine,	  angleCosine, 0.0f, 0.0f,
-		 0.0f,		  0.0f,		   1.0f, 0.0f,		
+		 0.0f,		  0.0f,		   1.0f, 0.0f,
 		 0.0f,		  0.0f,		   0.0f, 1.0f
 	);
 }

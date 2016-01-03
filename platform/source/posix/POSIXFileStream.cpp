@@ -65,7 +65,9 @@ public:
 
 			if(result != 0)
 			{
-				defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to close the file." << Log::Flush();
+				defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to close the file." <<
+					Log::Flush();
+
 				DE_ERROR(0x0);
 			}
 
@@ -87,11 +89,14 @@ public:
 
 	void open(const String8& filepath, const OpenMode& openMode)
 	{
-		DE_ASSERT((openMode & OpenMode::Read) == OpenMode::Read || (openMode & OpenMode::Write) == OpenMode::Write);
-		DE_ASSERT(!isOpen());
+		DE_ASSERT((openMode & OpenMode::Read) == OpenMode::Read ||
+			(openMode & OpenMode::Write) == OpenMode::Write);
 
+		DE_ASSERT(!isOpen());
 		const Int32 fileDescriptorAccessMode = ::getFileDescriptorAccessMode(openMode);
-		const Int32 fileDescriptor = ::open(filepath.c_str(), fileDescriptorAccessMode, ::CREATION_PERMISSIONS);
+
+		const Int32 fileDescriptor =
+			::open(filepath.c_str(), fileDescriptorAccessMode, ::CREATION_PERMISSIONS);
 
 		if(fileDescriptor == -1)
 		{
@@ -187,7 +192,9 @@ public:
 
 		if(result != 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to write to the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to write to the file." <<
+				Log::Flush();
+
 			DE_ERROR(0x0);
 		}
 

@@ -30,8 +30,8 @@ namespace Graphics
 
 		GraphicsConfig();
 
-		GraphicsConfig(const Uint32 redDepth, const Uint32 greenDepth, const Uint32 blueDepth, const Uint32 alphaDepth,
-			const Uint32 depthBufferDepth, const Uint32 stencilBufferDepth);
+		GraphicsConfig(const Uint32 redDepth, const Uint32 greenDepth, const Uint32 blueDepth,
+			const Uint32 alphaDepth, const Uint32 depthBufferDepth, const Uint32 stencilBufferDepth);
 
 		GraphicsConfig(const GraphicsConfig& graphicsConfig) = default;
 		GraphicsConfig(GraphicsConfig&& graphicsConfig) = default;

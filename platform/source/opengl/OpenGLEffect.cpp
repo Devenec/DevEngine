@@ -50,7 +50,9 @@ public:
 
 		if(_programHandle == 0u)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the program." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the program." <<
+				Log::Flush();
+
 			DE_ERROR(0x0);
 		}
 	}
@@ -130,7 +132,8 @@ private:
 			_openGL->getAttachedShaders(_programHandle, shaderCount, nullptr, shaderHandles.data());
 			DE_CHECK_ERROR_OPENGL(_openGL);
 
-			for(Vector<Uint32>::const_iterator i = shaderHandles.begin(), end = shaderHandles.end(); i != end; ++i)
+			for(Vector<Uint32>::const_iterator i = shaderHandles.begin(), end = shaderHandles.end(); i != end;
+				++i)
 			{
 				_openGL->detachShader(_programHandle, *i);
 				DE_CHECK_ERROR_OPENGL(_openGL);

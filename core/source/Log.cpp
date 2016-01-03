@@ -75,7 +75,10 @@ Log& Log::operator <<(const Int32 integer)
 		else
 		{
 			Char8 buffer[12];
-			const Uint32 characterCount = toString("%d", buffer, sizeof(buffer), static_cast<Uint32>(integer));
+
+			const Uint32 characterCount =
+				toString("%d", buffer, sizeof(buffer), static_cast<Uint32>(integer));
+
 			_streamBuffer.appendCharacters(buffer, characterCount);
 		}
 	}
@@ -95,7 +98,10 @@ Log& Log::operator <<(const Int64 integer)
 		else
 		{
 			Char8 buffer[22];
-			const Uint32 characterCount = toString("%lld", buffer, sizeof(buffer), static_cast<Uint64>(integer));
+
+			const Uint32 characterCount =
+				toString("%lld", buffer, sizeof(buffer), static_cast<Uint64>(integer));
+
 			_streamBuffer.appendCharacters(buffer, characterCount);
 		}
 	}
@@ -128,7 +134,10 @@ Log& Log::operator <<(const Void* pointer)
 	if(_streamLevel >= _filterLevel)
 	{
 		Char8 buffer[19];
-		const Uint32 characterCount = toString("0x%X", buffer, sizeof(buffer), reinterpret_cast<Uint64>(pointer));
+
+		const Uint32 characterCount =
+			toString("0x%X", buffer, sizeof(buffer), reinterpret_cast<Uint64>(pointer));
+
 		_streamBuffer.appendCharacters(buffer, characterCount);
 	}
 
@@ -146,7 +155,7 @@ Log& Log::operator <<(const Flush& flush)
 Log& Log::operator <<(const LogLevel& streamLevel)
 {
 	_streamLevel = streamLevel;
-	
+
 	if(streamLevel >= _filterLevel)
 		appendStreamLevel(_streamLevel);
 

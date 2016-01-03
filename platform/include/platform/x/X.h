@@ -52,8 +52,8 @@ namespace Platform
 
 		inline Atom createAtom(const Char8* name) const;
 
-		GLX::Context createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes, const Bool isDirect)
-			const;
+		GLX::Context createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes,
+			const Bool isDirect) const;
 
 		Cursor createHiddenPointer(const Window windowHandle) const;
 
@@ -79,7 +79,8 @@ namespace Platform
 		inline Int16* getGraphicsAdapterRefreshRates(const Uint32 adapterIndex, const Uint32 resolutionIndex,
 			Uint32& rateCount) const;
 
-		inline XRRScreenSize* getGraphicsAdapterResolutions(const Uint32 adapterIndex, Uint32& resolutionCount) const;
+		inline XRRScreenSize* getGraphicsAdapterResolutions(const Uint32 adapterIndex,
+			Uint32& resolutionCount) const;
 
 		Int32 getGraphicsConfigAttribute(GLX::FBConfig configHandle, const Int32 attributeName) const;
 
@@ -99,7 +100,8 @@ namespace Platform
 
 		void invokeError(const Uint32 errorCode) const;
 
-		void invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function) const;
+		void invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
+			const;
 
 		Bool isGLXSupported(Uint32& versionMajor, Uint32& versionMinor) const;
 
@@ -116,8 +118,8 @@ namespace Platform
 
 		void setWindowFullscreen(const Window windowHandle, const Bool isFullscreen) const;
 
-		void setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms, const Uint32 protocolAtomCount)
-			const;
+		void setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms,
+			const Uint32 protocolAtomCount) const;
 
 		inline void setWindowPointer(const Window windowHandle, const Cursor pointerHandle) const;
 

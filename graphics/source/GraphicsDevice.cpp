@@ -38,6 +38,9 @@ void GraphicsDevice::destroyResource(GraphicsResource* resource)
 
 void GraphicsDevice::destroyResources() const
 {
-	for(GraphicsResourceList::const_reverse_iterator i = _resources.rbegin(), end = _resources.rend(); i != end; ++i)
+	for(GraphicsResourceList::const_reverse_iterator i = _resources.rbegin(), end = _resources.rend();
+		i != end; ++i)
+	{
 		DE_DELETE(*i, GraphicsResource);
+	}
 }

@@ -36,7 +36,8 @@ static const Char8* COMPONENT_TAG = "[Memory::AllocationPolicy] ";
 
 // Static
 
-Void* AllocationPolicy::allocate(const Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
+Void* AllocationPolicy::allocate(const Uint32 size, const Char8* file, const Uint32 line,
+	const Char8* function)
 {
 	DE_ASSERT(size > 0u);
 	Void* pointer = std::malloc(size);

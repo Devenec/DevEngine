@@ -73,8 +73,9 @@ namespace Debug
 				  size(size) { }
 		};
 
-		using AllocationRecordMap = Core::Map<Void*, AllocationRecord, std::hash<Void*>, std::equal_to<Void*>,
-			std::allocator<std::pair<Void* const, AllocationRecord>>>;
+		using AllocationRecordMap =
+			Core::Map<Void*, AllocationRecord, std::hash<Void*>, std::equal_to<Void*>,
+				std::allocator<std::pair<Void* const, AllocationRecord>>>;
 
 		AllocationRecordMap _allocationRecords;
 		Bool _isInitialised;

@@ -33,7 +33,8 @@ using namespace Platform;
 // Public
 
 GraphicsAdapter::Implementation::Implementation(const Uint32 adapterIndex, const String8& name,
-	const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex, XRRScreenConfiguration* config)
+	const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex,
+	XRRScreenConfiguration* config)
 	: _name(name),
 	  _supportedDisplayModes(supportedDisplayModes),
 	  _config(config),

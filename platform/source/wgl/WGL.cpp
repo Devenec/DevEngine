@@ -94,8 +94,8 @@ static void checkExtensions()
 {
 	if(WGL::getExtensionsStringARB == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Graphics context extensions are not supported." <<
-			Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
+			"Graphics context extensions are not supported." << Log::Flush();
 
 		DE_ERROR(0x0);
 	}
@@ -137,7 +137,9 @@ static ExtensionNameList getExtensionNames(const GraphicsContextBase& graphicsCo
 
 		while((spacePosition = extensionNamesString.find(' ', currentPosition)) != String8::npos)
 		{
-			extensionNames.push_back(extensionNamesString.substr(currentPosition, spacePosition - currentPosition));
+			extensionNames.push_back(extensionNamesString.substr(currentPosition,
+				spacePosition - currentPosition));
+
 			currentPosition = spacePosition + 1u;
 		}
 	}

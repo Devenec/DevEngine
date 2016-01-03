@@ -145,7 +145,9 @@ void GraphicsDevice::Implementation::initialiseViewport()
 	Int32 viewportValues[4];
 	_openGL->getIntegerv(OpenGL::VIEWPORT, viewportValues);
 	DE_CHECK_ERROR_OPENGL(_openGL);
-	_viewport.setBounds(Rectangle(viewportValues[0], viewportValues[1], viewportValues[2], viewportValues[3]));
+
+	_viewport.setBounds(Rectangle(viewportValues[0], viewportValues[1], viewportValues[2],
+		viewportValues[3]));
 }
 
 void GraphicsDevice::Implementation::initialiseDrawing() const

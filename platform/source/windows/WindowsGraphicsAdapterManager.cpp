@@ -35,7 +35,10 @@ using namespace Graphics;
 
 static DISPLAY_DEVICEW createAdapterInfo();
 static DEVMODEW createDisplayModeInfo();
-static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo);
+
+static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex,
+	DEVMODEW& modeInfo);
+
 static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes);
 
 static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
@@ -102,7 +105,9 @@ private:
 		DisplayModeList displayModes;
 		const Uint32 currentDisplayModeIndex = ::getAdapterDisplayModes(adapterInfo.DeviceName, displayModes);
 
-		return DE_NEW(GraphicsAdapter::Implementation)(adapterInfo.DeviceName, displayModes, currentDisplayModeIndex);
+		return
+			DE_NEW(GraphicsAdapter::Implementation)(adapterInfo.DeviceName, displayModes,
+				currentDisplayModeIndex);
 	}
 };
 
@@ -146,7 +151,8 @@ static DEVMODEW createDisplayModeInfo()
 	return displayModeInfo;
 }
 
-static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo)
+static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex,
+	DEVMODEW& modeInfo)
 {
 	const Int32 result = EnumDisplaySettingsW(adapterName, modeIndex, &modeInfo);
 

@@ -52,7 +52,8 @@ public:
 		if(maxEntryCount > Numeric<Uint16>::maximum())
 		{
 			defaultLog << LogLevel::Warning << ::COMPONENT_TAG <<
-				"maxEntryCount is too large and is clamped to Core::Numeric<Uint16>::maximum()." << Log::Flush();
+				"maxEntryCount is too large and is clamped to Core::Numeric<Uint16>::maximum()." <<
+				Log::Flush();
 
 			_maxEntryCount = Numeric<Uint16>::maximum();
 		}
@@ -69,8 +70,8 @@ public:
 
 	StackEntryList generate(const Uint32 stackFrameOffset)
 	{
-		const Uint32 entryCount = RtlCaptureStackBackTrace(stackFrameOffset, _maxEntryCount, _symbolAddresses.data(),
-			nullptr);
+		const Uint32 entryCount =
+			RtlCaptureStackBackTrace(stackFrameOffset, _maxEntryCount, _symbolAddresses.data(), nullptr);
 
 		StackEntryList entries;
 
@@ -98,7 +99,9 @@ private:
 
 	void initialiseSymbolHandler() const
 	{
-		SymSetOptions(SYMOPT_DEFERRED_LOADS | SYMOPT_FAIL_CRITICAL_ERRORS | SYMOPT_LOAD_LINES | SYMOPT_UNDNAME);
+		SymSetOptions(
+			SYMOPT_DEFERRED_LOADS | SYMOPT_FAIL_CRITICAL_ERRORS | SYMOPT_LOAD_LINES | SYMOPT_UNDNAME);
+
 		const Int32 result = SymInitialize(_processHandle, nullptr, TRUE);
 		DE_ASSERT_WINDOWS(result != 0);
 	}

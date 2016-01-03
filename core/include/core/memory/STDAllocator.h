@@ -71,14 +71,16 @@ namespace Memory
 		const STDAllocator<U, AllocationPolicy>& stdAllocatorB);
 
 	template<typename T, typename U, typename AllocationPolicy, typename OtherAllocator>
-	inline Bool operator ==(const STDAllocator<T, AllocationPolicy>& stdAllocator, const OtherAllocator& allocator);
+	inline Bool operator ==(const STDAllocator<T, AllocationPolicy>& stdAllocator,
+		const OtherAllocator& allocator);
 
 	template<typename T, typename U, typename AllocationPolicy>
 	inline Bool operator !=(const STDAllocator<T, AllocationPolicy>& stdAllocatorA,
 		const STDAllocator<U, AllocationPolicy>& stdAllocatorB);
 
 	template<typename T, typename U, typename AllocationPolicy, typename OtherAllocator>
-	inline Bool operator !=(const STDAllocator<T, AllocationPolicy>& stdAllocator, const OtherAllocator& allocator);
+	inline Bool operator !=(const STDAllocator<T, AllocationPolicy>& stdAllocator,
+		const OtherAllocator& allocator);
 
 #include "inline/STDAllocator.inl"
 }

@@ -68,7 +68,10 @@ public:
 	{
 		const ::Window windowHandle = reinterpret_cast<::Window>(window->handle());
 		GraphicsContext* graphicsContext = createGraphicsContext(windowHandle);
-		GraphicsDevice::Implementation* implementation = DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
+
+		GraphicsDevice::Implementation* implementation =
+			DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
+
 		GraphicsDevice* device = DE_NEW(GraphicsDevice)(implementation);
 		GraphicsConfig graphicsConfig = getGraphicsConfig(_graphicsConfigHandle);
 		logChosenGraphicsConfig(graphicsConfig);
@@ -142,8 +145,8 @@ private:
 		Int32 windowAttributeMask = 0;
 		XSetWindowAttributes windowAttributes = createWindowAttributes(windowAttributeMask);
 
-		const ::Window windowHandle = _x.createWindow(0, 0, width, height, visualInfo, windowAttributes,
-			windowAttributeMask);
+		const ::Window windowHandle =
+			_x.createWindow(0, 0, width, height, visualInfo, windowAttributes, windowAttributeMask);
 
 		XFree(visualInfo);
 		_x.setWindowMessageProtocols(windowHandle, &_destroyMessageAtom, 1u);

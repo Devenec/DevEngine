@@ -67,15 +67,15 @@ void AllocationTracker::initialise()
 	defaultLog << LogLevel::Debug << "AllocationTracker initialised." << Log::Flush();
 }
 
-void AllocationTracker::registerAllocation(Void* pointer, const Uint32 size, const Char8* file, const Uint32 line,
-	const Char8* function)
+void AllocationTracker::registerAllocation(Void* pointer, const Uint32 size, const Char8* file,
+	const Uint32 line, const Char8* function)
 {
 	if(_isInitialised)
 	{
 		DE_ASSERT(pointer != nullptr);
 
-		const std::pair<AllocationRecordMap::const_iterator, Bool> result = _allocationRecords.emplace(pointer,
-			AllocationRecord(size, file, line, function));
+		const std::pair<AllocationRecordMap::const_iterator, Bool> result =
+			_allocationRecords.emplace(pointer, AllocationRecord(size, file, line, function));
 
 		DE_ASSERT(result.second);
 	}
@@ -90,8 +90,8 @@ void AllocationTracker::checkForMemoryLeaks() const
 		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << _allocationRecords.size() <<
 			" memory leak(s) detected:\n\n";
 
-		for(AllocationRecordMap::const_iterator i = _allocationRecords.begin(), end = _allocationRecords.end();
-			i != end; ++i)
+		for(AllocationRecordMap::const_iterator i = _allocationRecords.begin(),
+			end = _allocationRecords.end(); i != end; ++i)
 		{
 			logAllocationRecord(i->first, i->second);
 		}
@@ -102,10 +102,11 @@ void AllocationTracker::checkForMemoryLeaks() const
 	DE_ASSERT(_allocationRecords.size() == 0u);
 }
 
-void AllocationTracker::logAllocationRecord(const Void* address, const AllocationRecord& allocationRecord) const
+void AllocationTracker::logAllocationRecord(const Void* address, const AllocationRecord& allocationRecord)
+	const
 {
-	defaultLog << StreamFormat::Hexadecimal << address << StreamFormat::Decimal << " (" << allocationRecord.size <<
-		" bytes) at ";
+	defaultLog << StreamFormat::Hexadecimal << address << StreamFormat::Decimal << " (" <<
+		allocationRecord.size << " bytes) at ";
 
 	if(allocationRecord.file == nullptr)
 		defaultLog << "unknown file";

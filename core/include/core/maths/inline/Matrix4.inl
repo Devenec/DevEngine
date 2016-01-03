@@ -92,8 +92,9 @@ Matrix4 operator /(Matrix4 matrix, const Float32 scalar)
 
 Bool operator ==(const Matrix4& matrixA, const Matrix4& matrixB)
 {
-	return matrixA[0] == matrixB[0] && matrixA[1] == matrixB[1] && matrixA[2] == matrixB[2] &&
-		matrixA[3] == matrixB[3];
+	return
+		matrixA[0] == matrixB[0] && matrixA[1] == matrixB[1] &&
+		matrixA[2] == matrixB[2] && matrixA[3] == matrixB[3];
 }
 
 Bool operator !=(const Matrix4& matrixA, const Matrix4& matrixB)

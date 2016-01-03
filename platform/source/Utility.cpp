@@ -22,7 +22,8 @@
 
 // Platform
 
-Bool Platform::isVersionLess(const Uint32 majorA, const Uint32 minorA, const Uint32 majorB, const Uint32 minorB)
+Bool Platform::isVersionLess(const Uint32 majorA, const Uint32 minorA, const Uint32 majorB,
+	const Uint32 minorB)
 {
 	if(majorA < majorB)
 		return true;

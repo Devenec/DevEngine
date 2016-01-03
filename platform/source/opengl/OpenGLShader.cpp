@@ -51,8 +51,8 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType);
 
 // Public
 
-Shader::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type,
-	const Core::String8& source)
+Shader::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle,
+	const ShaderType& type, const Core::String8& source)
 	: _openGL(static_cast<OpenGL*>(graphicsInterfaceHandle)),
 	  _shaderHandle(0u)
 {

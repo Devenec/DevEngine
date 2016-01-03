@@ -78,7 +78,9 @@ void GraphicsBuffer::Implementation::demapData() const
 
 	if(result == 0u)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to demap the buffer data." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to demap the buffer data." <<
+			Log::Flush();
+
 		DE_ERROR(0x0);
 	}
 
@@ -102,7 +104,8 @@ Uint8* GraphicsBuffer::Implementation::mapData(const Uint32 size, const Uint32 b
 	return static_cast<Uint8*>(data);
 }
 
-void GraphicsBuffer::Implementation::setData(const Uint8* data, const Uint32 size, const Uint32 bufferOffset) const
+void GraphicsBuffer::Implementation::setData(const Uint8* data, const Uint32 size, const Uint32 bufferOffset)
+	const
 {
 	DE_ASSERT(data != nullptr);
 	Uint8* mappedData = mapData(size, bufferOffset);

@@ -174,13 +174,18 @@ private:
 			 3u, 2u, 1u,
 		};
 
-		_vertexBuffer = _graphicsDevice->createBuffer(BufferBinding::Vertex, sizeof(Float32) * VERTEX_DATA.size());
+		_vertexBuffer =
+			_graphicsDevice->createBuffer(BufferBinding::Vertex, sizeof(Float32) * VERTEX_DATA.size());
 
 		_vertexBuffer->setData(reinterpret_cast<const Uint8*>(VERTEX_DATA.data()),
 			sizeof(Float32) * VERTEX_DATA.size());
 
-		_indexBuffer = _graphicsDevice->createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
-		_indexBuffer->setData(reinterpret_cast<const Uint8*>(INDEX_DATA.data()), sizeof(Uint8) * INDEX_DATA.size());
+		_indexBuffer =
+			_graphicsDevice->createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
+
+		_indexBuffer->setData(reinterpret_cast<const Uint8*>(INDEX_DATA.data()),
+			sizeof(Uint8) * INDEX_DATA.size());
+
 		_vertexBufferState = _graphicsDevice->createVertexBufferState();
 
 		VertexElementList vertexElements
@@ -207,8 +212,8 @@ private:
 			0.0f,		  0.0f,		  -2.0f * near * far / (far - near),  0.0f
 		);
 
-		_uniformBuffer = _graphicsDevice->createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32),
-			AccessMode::Write);
+		_uniformBuffer =
+			_graphicsDevice->createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32), AccessMode::Write);
 
 		_uniformBuffer->setData(reinterpret_cast<const Uint8*>(projectionTransform.data()), sizeof(Matrix4));
 		_uniformBuffer->bindIndexed(0u);
@@ -226,7 +231,9 @@ private:
 			_graphicsDeviceManager.processWindowMessages();
 			_graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
 			rotation += 0.01f;
-			worldTransform = Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
+
+			worldTransform =
+				Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
 
 			_uniformBuffer->setData(reinterpret_cast<const Uint8*>(worldTransform.data()), sizeof(Matrix4),
 				sizeof(Matrix4));

@@ -98,9 +98,16 @@ namespace Platform
 		using GetFloatV = void (DE_CALL_OPENGL*)(Enum pname, Float32* data);
 		using GetIntegerV = void (DE_CALL_OPENGL*)(Enum pname, Int32* data);
 		using GetString = const Uint8* (DE_CALL_OPENGL*)(Enum name);
-		using GetTexImage = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum format, Enum type, Void* pixels);
-		using GetTexLevelParameterFV = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum pname, Float32* params);
-		using GetTexLevelParameterIV = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum pname, Int32* params);
+
+		using GetTexImage =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum format, Enum type, Void* pixels);
+
+		using GetTexLevelParameterFV =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum pname, Float32* params);
+
+		using GetTexLevelParameterIV =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum pname, Int32* params);
+
 		using GetTexParameterFV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Float32* params);
 		using GetTexParameterIV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Int32* params);
 		using Hint = void (DE_CALL_OPENGL*)(Enum target, Enum mode);
@@ -113,19 +120,22 @@ namespace Platform
 		using PolygonMode = void (DE_CALL_OPENGL*)(Enum face, Enum mode);
 		using ReadBuffer = void (DE_CALL_OPENGL*)(Enum src);
 
-		using ReadPixels = void (DE_CALL_OPENGL*)(Int32 x, Int32 y, Sizei width, Sizei height, Enum format, Enum type,
-			Void* pixels);
+		using ReadPixels =
+			void (DE_CALL_OPENGL*)(Int32 x, Int32 y, Sizei width, Sizei height, Enum format, Enum type,
+				Void* pixels);
 
 		using Scissor = void (DE_CALL_OPENGL*)(Int32 x, Int32 y, Sizei width, Sizei height);
 		using StencilFunc = void (DE_CALL_OPENGL*)(Enum func, Int32 ref, Uint32 mask);
 		using StencilMask = void (DE_CALL_OPENGL*)(Uint32 mask);
 		using StencilOp = void (DE_CALL_OPENGL*)(Enum fail, Enum zfail, Enum zpass);
 
-		using TexImage1D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 internalformat, Sizei width,
-			Int32 border, Enum format, Enum type, const Void* pixels);
+		using TexImage1D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 internalformat, Sizei width, Int32 border,
+				Enum format, Enum type, const Void* pixels);
 
-		using TexImage2D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 internalformat, Sizei width,
-			Sizei height, Int32 border, Enum format, Enum type, const Void* pixels);
+		using TexImage2D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 internalformat, Sizei width, Sizei height,
+				Int32 border, Enum format, Enum type, const Void* pixels);
 
 		using TexParameterF = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Float32 param);
 		using TexParameterFV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, const Float32* params);
@@ -137,17 +147,20 @@ namespace Platform
 
 		using BindTexture = void (DE_CALL_OPENGL*)(Enum target, Uint32 texture);
 
-		using CopyTexImage1D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Int32 x, Int32 y,
-			Sizei width, Int32 border);
+		using CopyTexImage1D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Int32 x, Int32 y,
+				Sizei width, Int32 border);
 
-		using CopyTexImage2D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Int32 x, Int32 y,
-			Sizei width, Sizei height, Int32 border);
+		using CopyTexImage2D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Int32 x, Int32 y,
+				Sizei width, Sizei height, Int32 border);
 
-		using CopyTexSubImage1D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 x, Int32 y,
-			Sizei width);
+		using CopyTexSubImage1D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 x, Int32 y, Sizei width);
 
-		using CopyTexSubImage2D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 x, Int32 y, Sizei width, Sizei height);
+		using CopyTexSubImage2D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset, Int32 x, Int32 y,
+				Sizei width, Sizei height);
 
 		using DeleteTextures = void (DE_CALL_OPENGL*)(Sizei n, const Uint32* textures);
 		using DrawArrays = void (DE_CALL_OPENGL*)(Enum mode, Int32 first, Sizei count);
@@ -157,47 +170,59 @@ namespace Platform
 		using IsTexture = Boolean (DE_CALL_OPENGL*)(Uint32 texture);
 		using PolygonOffset = void (DE_CALL_OPENGL*)(Float32 factor, Float32 units);
 
-		using TexSubImage1D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Sizei width, Enum format,
-			Enum type, const Void* pixels);
+		using TexSubImage1D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Sizei width, Enum format,
+				Enum type, const Void* pixels);
 
-		using TexSubImage2D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset,
-			Sizei width, Sizei height, Enum format, Enum type, const Void* pixels);
+		using TexSubImage2D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset, Sizei width,
+				Sizei height, Enum format, Enum type, const Void* pixels);
 
 		// Version 1.2
 
-		using CopyTexSubImage3D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 zoffset, Int32 x, Int32 y, Sizei width, Sizei height);
+		using CopyTexSubImage3D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Int32 x, Int32 y, Sizei width, Sizei height);
 
-		using DrawRangeElements = void (DE_CALL_OPENGL*)(Enum mode, Uint32 start, Uint32 end, Sizei count, Enum type,
-			const Void* indices);
+		using DrawRangeElements =
+			void (DE_CALL_OPENGL*)(Enum mode, Uint32 start, Uint32 end, Sizei count, Enum type,
+				const Void* indices);
 
-		using TexImage3D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 internalformat, Sizei width,
-			Sizei height, Sizei depth, Int32 border, Enum format, Enum type, const Void* pixels);
+		using TexImage3D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 internalformat, Sizei width, Sizei height,
+				Sizei depth, Int32 border, Enum format, Enum type, const Void* pixels);
 
-		using TexSubImage3D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 zoffset, Sizei width, Sizei height, Sizei depth, Enum format, Enum type, const Void* pixels);
+		using TexSubImage3D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Sizei width, Sizei height, Sizei depth, Enum format, Enum type, const Void* pixels);
 
 		// Version 1.3
 
 		using ActiveTexture = void (DE_CALL_OPENGL*)(Enum texture);
 
-		using CompressedTexImage1D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Sizei width,
-			Int32 border, Sizei imageSize, const Void* data);
+		using CompressedTexImage1D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Sizei width, Int32 border,
+				Sizei imageSize, const Void* data);
 
-		using CompressedTexImage2D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Sizei width,
-			Sizei height, Int32 border, Sizei imageSize, const Void* data);
+		using CompressedTexImage2D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Sizei width, Sizei height,
+				Int32 border, Sizei imageSize, const Void* data);
 
-		using CompressedTexImage3D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Sizei width,
-			Sizei height, Sizei depth, Int32 border, Sizei imageSize, const Void* data);
+		using CompressedTexImage3D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum internalformat, Sizei width, Sizei height,
+				Sizei depth, Int32 border, Sizei imageSize, const Void* data);
 
-		using CompressedTexSubImage1D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Sizei width,
-			Enum format, Sizei imageSize, const Void* data);
+		using CompressedTexSubImage1D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Sizei width, Enum format,
+				Sizei imageSize, const Void* data);
 
-		using CompressedTexSubImage2D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset,
-			Sizei width, Sizei height, Enum format, Sizei imageSize, const Void* data);
+		using CompressedTexSubImage2D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset, Sizei width,
+				Sizei height, Enum format, Sizei imageSize, const Void* data);
 
-		using CompressedTexSubImage3D = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 zoffset, Sizei width, Sizei height, Sizei depth, Enum format, Sizei imageSize, const Void* data);
+		using CompressedTexSubImage3D =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Sizei width, Sizei height, Sizei depth, Enum format, Sizei imageSize, const Void* data);
 
 		using GetCompressedTexImage = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Void* img);
 		using SampleCoverage = void (DE_CALL_OPENGL*)(Float32 value, Boolean invert);
@@ -207,14 +232,15 @@ namespace Platform
 		using BlendColor = void (DE_CALL_OPENGL*)(Float32 red, Float32 green, Float32 blue, Float32 alpha);
 		using BlendEquation = void (DE_CALL_OPENGL*)(Enum mode);
 
-		using BlendFuncSeparate = void (DE_CALL_OPENGL*)(Enum sfactorRGB, Enum dfactorRGB, Enum sfactorAlpha,
-			Enum dfactorAlpha);
+		using BlendFuncSeparate =
+			void (DE_CALL_OPENGL*)(Enum sfactorRGB, Enum dfactorRGB, Enum sfactorAlpha, Enum dfactorAlpha);
 
-		using MultiDrawArrays = void (DE_CALL_OPENGL*)(Enum mode, const Int32* first, const Sizei* count,
-			Sizei drawcount);
+		using MultiDrawArrays =
+			void (DE_CALL_OPENGL*)(Enum mode, const Int32* first, const Sizei* count, Sizei drawcount);
 
-		using MultiDrawElements = void (DE_CALL_OPENGL*)(Enum mode, const Sizei* count, Enum type,
-			const Void* const* indices, Sizei drawcount);
+		using MultiDrawElements =
+			void (DE_CALL_OPENGL*)(Enum mode, const Sizei* count, Enum type, const Void* const* indices,
+				Sizei drawcount);
 
 		using PointParameterF = void (DE_CALL_OPENGL*)(Enum pname, Float32 param);
 		using PointParameterFV = void (DE_CALL_OPENGL*)(Enum pname, const Float32* params);
@@ -229,7 +255,10 @@ namespace Platform
 		using BeginQuery = void (DE_CALL_OPENGL*)(Enum target, Uint32 id);
 		using BindBuffer = void (DE_CALL_OPENGL*)(Enum target, Uint32 buffer);
 		using BufferData = void (DE_CALL_OPENGL*)(Enum target, Sizeiptr size, const Void* data, Enum usage);
-		using BufferSubData = void (DE_CALL_OPENGL*)(Enum target, Intptr offset, Sizeiptr size, const Void* data);
+
+		using BufferSubData =
+			void (DE_CALL_OPENGL*)(Enum target, Intptr offset, Sizeiptr size, const Void* data);
+
 		using DeleteBuffers = void (DE_CALL_OPENGL*)(Sizei n, const Uint32* buffers);
 		using DeleteQueries = void (DE_CALL_OPENGL*)(Sizei n, const Uint32* ids);
 		using EndQuery = void (DE_CALL_OPENGL*)(Enum target);
@@ -237,7 +266,10 @@ namespace Platform
 		using GenQueries = void (DE_CALL_OPENGL*)(Sizei n, Uint32* ids);
 		using GetBufferParameterIV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Int32* params);
 		using GetBufferPointerV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Void** params);
-		using GetBufferSubData = void (DE_CALL_OPENGL*)(Enum target, Intptr offset, Sizeiptr size, Void* data);
+
+		using GetBufferSubData =
+			void (DE_CALL_OPENGL*)(Enum target, Intptr offset, Sizeiptr size, Void* data);
+
 		using GetQueryIV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Int32* params);
 		using GetQueryObjectIV = void (DE_CALL_OPENGL*)(Uint32 id, Enum pname, Int32* params);
 		using GetQueryObjectUIV = void (DE_CALL_OPENGL*)(Uint32 id, Enum pname, Uint32* params);
@@ -261,21 +293,32 @@ namespace Platform
 		using DrawBuffers = void (DE_CALL_OPENGL*)(Sizei n, const Enum* bufs);
 		using EnableVertexAttribArray = void (DE_CALL_OPENGL*)(Uint32 index);
 
-		using GetActiveAttrib = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 index, Sizei bufSize, Sizei* length,
-			Int32* size, Enum* type, Char8* name);
+		using GetActiveAttrib =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 index, Sizei bufSize, Sizei* length, Int32* size,
+				Enum* type, Char8* name);
 
-		using GetActiveUniform = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 index, Sizei bufSize, Sizei* length,
-			Int32* size, Enum* type, Char8* name);
+		using GetActiveUniform =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 index, Sizei bufSize, Sizei* length, Int32* size,
+				Enum* type, Char8* name);
 
-		using GetAttachedShaders = void (DE_CALL_OPENGL*)(Uint32 program, Sizei maxCount, Sizei* count,
-			Uint32* shaders);
+		using GetAttachedShaders =
+			void (DE_CALL_OPENGL*)(Uint32 program, Sizei maxCount, Sizei* count, Uint32* shaders);
 
 		using GetAttribLocation = Int32 (DE_CALL_OPENGL*)(Uint32 program, const Char8* name);
-		using GetProgramInfoLog = void (DE_CALL_OPENGL*)(Uint32 program, Sizei bufSize, Sizei* length, Char8* infoLog);
+
+		using GetProgramInfoLog =
+			void (DE_CALL_OPENGL*)(Uint32 program, Sizei bufSize, Sizei* length, Char8* infoLog);
+
 		using GetProgramIV = void (DE_CALL_OPENGL*)(Uint32 program, Enum pname, Int32* params);
-		using GetShaderInfoLog = void (DE_CALL_OPENGL*)(Uint32 shader, Sizei bufSize, Sizei* length, Char8* infoLog);
+
+		using GetShaderInfoLog =
+			void (DE_CALL_OPENGL*)(Uint32 shader, Sizei bufSize, Sizei* length, Char8* infoLog);
+
 		using GetShaderIV = void (DE_CALL_OPENGL*)(Uint32 shader, Enum pname, Int32* params);
-		using GetShaderSource = void (DE_CALL_OPENGL*)(Uint32 shader, Sizei bufSize, Sizei* length, Char8* source);
+
+		using GetShaderSource =
+			void (DE_CALL_OPENGL*)(Uint32 shader, Sizei bufSize, Sizei* length, Char8* source);
+
 		using GetUniformFV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float32* params);
 		using GetUniformIV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Int32* params);
 		using GetUniformLocation = Int32 (DE_CALL_OPENGL*)(Uint32 program, const Char8* name);
@@ -287,8 +330,9 @@ namespace Platform
 		using IsShader = Boolean (DE_CALL_OPENGL*)(Uint32 shader);
 		using LinkProgram = void (DE_CALL_OPENGL*)(Uint32 program);
 
-		using ShaderSource = void (DE_CALL_OPENGL*)(Uint32 shader, Sizei count, const Char8* const* string,
-			const Int32* length);
+		using ShaderSource =
+			void (DE_CALL_OPENGL*)(Uint32 shader, Sizei count, const Char8* const* string,
+				const Int32* length);
 
 		using StencilFuncSeparate = void (DE_CALL_OPENGL*)(Enum face, Enum func, Int32 ref, Uint32 mask);
 		using StencilMaskSeparate = void (DE_CALL_OPENGL*)(Enum face, Uint32 mask);
@@ -305,19 +349,22 @@ namespace Platform
 		using Uniform3FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, const Float32* value);
 		using Uniform3I = void (DE_CALL_OPENGL*)(Int32 location, Int32 v0, Int32 v1, Int32 v2);
 		using Uniform3IV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, const Int32* value);
-		using Uniform4F = void (DE_CALL_OPENGL*)(Int32 location, Float32 v0, Float32 v1, Float32 v2, Float32 v3);
+
+		using Uniform4F =
+			void (DE_CALL_OPENGL*)(Int32 location, Float32 v0, Float32 v1, Float32 v2, Float32 v3);
+
 		using Uniform4FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, const Float32* value);
 		using Uniform4I = void (DE_CALL_OPENGL*)(Int32 location, Int32 v0, Int32 v1, Int32 v2, Int32 v3);
 		using Uniform4IV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, const Int32* value);
 
-		using UniformMatrix2FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float32* value);
+		using UniformMatrix2FV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float32* value);
 
-		using UniformMatrix3FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float32* value);
+		using UniformMatrix3FV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float32* value);
 
-		using UniformMatrix4FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float32* value);
+		using UniformMatrix4FV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float32* value);
 
 		using UseProgram = void (DE_CALL_OPENGL*)(Uint32 program);
 		using ValidateProgram = void (DE_CALL_OPENGL*)(Uint32 program);
@@ -340,9 +387,15 @@ namespace Platform
 		using VertexAttrib3S = void (DE_CALL_OPENGL*)(Uint32 index, Int16 x, Int16 y, Int16 z);
 		using VertexAttrib3SV = void (DE_CALL_OPENGL*)(Uint32 index, const Int16* v);
 		using VertexAttrib4BV = void (DE_CALL_OPENGL*)(Uint32 index, const Int8* v);
-		using VertexAttrib4D = void (DE_CALL_OPENGL*)(Uint32 index, Float64 x, Float64 y, Float64 z, Float64 w);
+
+		using VertexAttrib4D =
+			void (DE_CALL_OPENGL*)(Uint32 index, Float64 x, Float64 y, Float64 z, Float64 w);
+
 		using VertexAttrib4DV = void (DE_CALL_OPENGL*)(Uint32 index, const Float64* v);
-		using VertexAttrib4F = void (DE_CALL_OPENGL*)(Uint32 index, Float32 x, Float32 y, Float32 z, Float32 w);
+
+		using VertexAttrib4F =
+			void (DE_CALL_OPENGL*)(Uint32 index, Float32 x, Float32 y, Float32 z, Float32 w);
+
 		using VertexAttrib4FV = void (DE_CALL_OPENGL*)(Uint32 index, const Float32* v);
 		using VertexAttrib4IV = void (DE_CALL_OPENGL*)(Uint32 index, const Int32* v);
 		using VertexAttrib4NBV = void (DE_CALL_OPENGL*)(Uint32 index, const Int8* v);
@@ -358,28 +411,29 @@ namespace Platform
 		using VertexAttrib4UIV = void (DE_CALL_OPENGL*)(Uint32 index, const Uint32* v);
 		using VertexAttrib4USV = void (DE_CALL_OPENGL*)(Uint32 index, const Uint16* v);
 
-		using VertexAttribPointer = void (DE_CALL_OPENGL*)(Uint32 index, Int32 size, Enum type, Boolean normalized,
-			Sizei stride, const Void* pointer);
+		using VertexAttribPointer =
+			void (DE_CALL_OPENGL*)(Uint32 index, Int32 size, Enum type, Boolean normalized, Sizei stride,
+				const Void* pointer);
 
 		// Version 2.1
 
-		using UniformMatrix2X3FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float32* value);
+		using UniformMatrix2X3FV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float32* value);
 
-		using UniformMatrix2X4FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float32* value);
+		using UniformMatrix2X4FV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float32* value);
 
-		using UniformMatrix3X2FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float32* value);
+		using UniformMatrix3X2FV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float32* value);
 
-		using UniformMatrix3X4FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float32* value);
+		using UniformMatrix3X4FV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float32* value);
 
-		using UniformMatrix4X2FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float32* value);
+		using UniformMatrix4X2FV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float32* value);
 
-		using UniformMatrix4X3FV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float32* value);
+		using UniformMatrix4X3FV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float32* value);
 
 		// Version 3.0
 
@@ -389,20 +443,24 @@ namespace Platform
 		using BeginTransformFeedback = void (DE_CALL_OPENGL*)(Enum primitiveMode);
 		using BindBufferBase = void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Uint32 buffer);
 
-		using BindBufferRange = void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Uint32 buffer, Intptr offset,
-			Sizeiptr size);
+		using BindBufferRange =
+			void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Uint32 buffer, Intptr offset, Sizeiptr size);
 
 		using BindFragDataLocation = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 color, const Char8* name);
 		using BindFramebuffer = void (DE_CALL_OPENGL*)(Enum target, Uint32 framebuffer);
 		using BindRenderbuffer = void (DE_CALL_OPENGL*)(Enum target, Uint32 renderbuffer);
 		using BindVertexArray = void (DE_CALL_OPENGL*)(Uint32 array);
 
-		using BlitFramebuffer = void (DE_CALL_OPENGL*)(Int32 srcX0, Int32 srcY0, Int32 srcX1, Int32 srcY1, Int32 dstX0,
-			Int32 dstY0, Int32 dstX1, Int32 dstY1, Bitfield mask, Enum filter);
+		using BlitFramebuffer =
+			void (DE_CALL_OPENGL*)(Int32 srcX0, Int32 srcY0, Int32 srcX1, Int32 srcY1, Int32 dstX0,
+				Int32 dstY0, Int32 dstX1, Int32 dstY1, Bitfield mask, Enum filter);
 
 		using CheckFramebufferStatus = Enum (DE_CALL_OPENGL*)(Enum target);
 		using ClampColor = void (DE_CALL_OPENGL*)(Enum target, Enum clamp);
-		using ClearBufferFI = void (DE_CALL_OPENGL*)(Enum buffer, Int32 drawbuffer, Float32 depth, Int32 stencil);
+
+		using ClearBufferFI =
+			void (DE_CALL_OPENGL*)(Enum buffer, Int32 drawbuffer, Float32 depth, Int32 stencil);
+
 		using ClearBufferFV = void (DE_CALL_OPENGL*)(Enum buffer, Int32 drawbuffer, const Float32* value);
 		using ClearBufferIV = void (DE_CALL_OPENGL*)(Enum buffer, Int32 drawbuffer, const Int32* value);
 		using ClearBufferUIV = void (DE_CALL_OPENGL*)(Enum buffer, Int32 drawbuffer, const Uint32* value);
@@ -416,20 +474,22 @@ namespace Platform
 		using EndTransformFeedback = void (DE_CALL_OPENGL*)();
 		using FlushMappedBufferRange = void (DE_CALL_OPENGL*)(Enum target, Intptr offset, Sizeiptr length);
 
-		using FramebufferRenderbuffer = void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum renderbuffertarget,
-			Uint32 renderbuffer);
+		using FramebufferRenderbuffer =
+			void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum renderbuffertarget,
+				Uint32 renderbuffer);
 
-		using FramebufferTexture1D = void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum textarget,
-			Uint32 texture, Int32 level);
+		using FramebufferTexture1D =
+			void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum textarget, Uint32 texture, Int32 level);
 
-		using FramebufferTexture2D = void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum textarget,
-			Uint32 texture, Int32 level);
+		using FramebufferTexture2D =
+			void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum textarget, Uint32 texture, Int32 level);
 
-		using FramebufferTexture3D = void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum textarget,
-			Uint32 texture, Int32 level, Int32 zoffset);
+		using FramebufferTexture3D =
+			void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum textarget, Uint32 texture, Int32 level,
+				Int32 zoffset);
 
-		using FramebufferTextureLayer = void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Uint32 texture,
-			Int32 level, Int32 layer);
+		using FramebufferTextureLayer =
+			void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Uint32 texture, Int32 level, Int32 layer);
 
 		using GenerateMipmap = void (DE_CALL_OPENGL*)(Enum target);
 		using GenFramebuffers = void (DE_CALL_OPENGL*)(Sizei n, Uint32* framebuffers);
@@ -438,8 +498,8 @@ namespace Platform
 		using GetBooleanI_V = void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Boolean* data);
 		using GetFragDataLocation = Int32 (DE_CALL_OPENGL*)(Uint32 program, const Char8* name);
 
-		using GetFramebufferAttachmentParameterIV = void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum pname,
-			Int32* params);
+		using GetFramebufferAttachmentParameterIV =
+			void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Enum pname, Int32* params);
 
 		using GetIntegerI_V = void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Int32* data);
 		using GetRenderbufferParameterIV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Int32* params);
@@ -447,8 +507,9 @@ namespace Platform
 		using GetTexParameterIIV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Int32* params);
 		using GetTexParameterIUIV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Uint32* params);
 
-		using GetTransformFeedbackVarying = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 index, Sizei bufSize,
-			Sizei* length, Sizei* size, Enum* type, Char8* name);
+		using GetTransformFeedbackVarying =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 index, Sizei bufSize, Sizei* length, Sizei* size,
+				Enum* type, Char8* name);
 
 		using GetUniformUIV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Uint32* params);
 		using GetVertexAttribIIV = void (DE_CALL_OPENGL*)(Uint32 index, Enum pname, Int32* params);
@@ -457,19 +518,23 @@ namespace Platform
 		using IsFramebuffer = Boolean (DE_CALL_OPENGL*)(Uint32 framebuffer);
 		using IsRenderbuffer = Boolean (DE_CALL_OPENGL*)(Uint32 renderbuffer);
 		using IsVertexArray = Boolean (DE_CALL_OPENGL*)(Uint32 array);
-		using MapBufferRange = Void* (DE_CALL_OPENGL*)(Enum target, Intptr offset, Sizeiptr length, Bitfield access);
 
-		using RenderbufferStorage = void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Sizei width,
-			Sizei height);
+		using MapBufferRange =
+			Void* (DE_CALL_OPENGL*)(Enum target, Intptr offset, Sizeiptr length, Bitfield access);
 
-		using RenderbufferStorageMultisample = void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat,
-			Sizei width, Sizei height);
+		using RenderbufferStorage =
+			void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Sizei width, Sizei height);
+
+		using RenderbufferStorageMultisample =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat, Sizei width,
+				Sizei height);
 
 		using TexParameterIIV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, const Int32* params);
 		using TexParameterIUIV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, const Uint32* params);
 
-		using TransformFeedbackVaryings = void (DE_CALL_OPENGL*)(Uint32 program, Sizei count,
-			const Char8* const* varyings, Enum bufferMode);
+		using TransformFeedbackVaryings =
+			void (DE_CALL_OPENGL*)(Uint32 program, Sizei count, const Char8* const* varyings,
+				Enum bufferMode);
 
 		using Uniform1UI = void (DE_CALL_OPENGL*)(Int32 location, Uint32 v0);
 		using Uniform1UIV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, const Uint32* value);
@@ -500,41 +565,48 @@ namespace Platform
 		using VertexAttribI4UIV = void (DE_CALL_OPENGL*)(Uint32 index, const Uint32* v);
 		using VertexAttribI4USV = void (DE_CALL_OPENGL*)(Uint32 index, const Uint16* v);
 
-		using VertexAttribIPointer = void (DE_CALL_OPENGL*)(Uint32 index, Int32 size, Enum type, Sizei stride,
-			const Void* pointer);
+		using VertexAttribIPointer =
+			void (DE_CALL_OPENGL*)(Uint32 index, Int32 size, Enum type, Sizei stride, const Void* pointer);
 
 		// Version 3.1
 
-		using CopyBufferSubData = void (DE_CALL_OPENGL*)(Enum readTarget, Enum writeTarget, Intptr readOffset,
-			Intptr writeOffset, Sizeiptr size);
+		using CopyBufferSubData =
+			void (DE_CALL_OPENGL*)(Enum readTarget, Enum writeTarget, Intptr readOffset, Intptr writeOffset,
+				Sizeiptr size);
 
-		using DrawArraysInstanced = void (DE_CALL_OPENGL*)(Enum mode, Int32 first, Sizei count, Sizei instancecount);
+		using DrawArraysInstanced =
+			void (DE_CALL_OPENGL*)(Enum mode, Int32 first, Sizei count, Sizei instancecount);
 
-		using DrawElementsInstanced = void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type, const Void* indices,
-			Sizei instancecount);
+		using DrawElementsInstanced =
+			void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type, const Void* indices,
+				Sizei instancecount);
 
-		using GetActiveUniformBlockIV = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 uniformBlockIndex, Enum pname,
-			Int32* params);
+		using GetActiveUniformBlockIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 uniformBlockIndex, Enum pname, Int32* params);
 
-		using GetActiveUniformBlockName = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 uniformBlockIndex,
-			Sizei bufSize, Sizei* length, Char8* uniformBlockName);
+		using GetActiveUniformBlockName =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 uniformBlockIndex, Sizei bufSize, Sizei* length,
+				Char8* uniformBlockName);
 
-		using GetActiveUniformName = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 uniformIndex, Sizei bufSize,
-			Sizei* length, Char8* uniformName);
+		using GetActiveUniformName =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 uniformIndex, Sizei bufSize, Sizei* length,
+				Char8* uniformName);
 
-		using GetActiveUniformsIV = void (DE_CALL_OPENGL*)(Uint32 program, Sizei uniformCount,
-			const Uint32* uniformIndices, Enum pname, Int32* params);
+		using GetActiveUniformsIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Sizei uniformCount, const Uint32* uniformIndices,
+				Enum pname, Int32* params);
 
 		using GetUniformBlockIndex = Uint32 (DE_CALL_OPENGL*)(Uint32 program, const Char8* uniformBlockName);
 
-		using GetUniformIndices = void (DE_CALL_OPENGL*)(Uint32 program, Sizei uniformCount,
-			const Char8* const* uniformNames, Uint32* uniformIndices);
+		using GetUniformIndices =
+			void (DE_CALL_OPENGL*)(Uint32 program, Sizei uniformCount, const Char8* const* uniformNames,
+				Uint32* uniformIndices);
 
 		using PrimitiveRestartIndex = void (DE_CALL_OPENGL*)(Uint32 index);
 		using TexBuffer = void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Uint32 buffer);
 
-		using UniformBlockBinding = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 uniformBlockIndex,
-			Uint32 uniformBlockBinding);
+		using UniformBlockBinding =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 uniformBlockIndex, Uint32 uniformBlockBinding);
 
 		// Version 3.2
 
@@ -544,42 +616,53 @@ namespace Platform
 		using ClientWaitSync = Enum (DE_CALL_OPENGL*)(Sync sync, Bitfield flags, Uint64 timeout);
 		using DeleteSync = void (DE_CALL_OPENGL*)(Sync sync);
 
-		using DrawElementsBaseVertex = void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type, const Void* indices,
-			Int32 basevertex);
+		using DrawElementsBaseVertex =
+			void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type, const Void* indices, Int32 basevertex);
 
-		using DrawElementsInstancedBaseVertex = void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type,
-			const Void* indices, Sizei instancecount, Int32 basevertex);
+		using DrawElementsInstancedBaseVertex =
+			void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type, const Void* indices,
+				Sizei instancecount, Int32 basevertex);
 
-		using DrawRangeElementsBaseVertex = void (DE_CALL_OPENGL*)(Enum mode, Uint32 start, Uint32 end, Sizei count,
-			Enum type, const Void* indices, Int32 basevertex);
+		using DrawRangeElementsBaseVertex =
+			void (DE_CALL_OPENGL*)(Enum mode, Uint32 start, Uint32 end, Sizei count, Enum type,
+				const Void* indices, Int32 basevertex);
 
 		using FenceSync = Sync (DE_CALL_OPENGL*)(Enum condition, Bitfield flags);
-		using FramebufferTexture = void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Uint32 texture, Int32 level);
+
+		using FramebufferTexture =
+			void (DE_CALL_OPENGL*)(Enum target, Enum attachment, Uint32 texture, Int32 level);
+
 		using GetBufferParameterI64V = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Int64* params);
 		using GetInteger64I_V = void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Int64* data);
 		using GetInteger64V = void (DE_CALL_OPENGL*)(Enum pname, Int64* data);
 		using GetMultisampleFV = void (DE_CALL_OPENGL*)(Enum pname, Uint32 index, Float32* val);
-		using GetSyncIV = void (DE_CALL_OPENGL*)(Sync sync, Enum pname, Sizei bufSize, Sizei* length, Int32* values);
+
+		using GetSyncIV =
+			void (DE_CALL_OPENGL*)(Sync sync, Enum pname, Sizei bufSize, Sizei* length, Int32* values);
+
 		using IsSync = Boolean (DE_CALL_OPENGL*)(Sync sync);
 
-		using MultiDrawElementsBaseVertex = void (DE_CALL_OPENGL*)(Enum mode, const Sizei* count, Enum type,
-			const Void* const* indices, Sizei drawcount, const Int32* basevertex);
+		using MultiDrawElementsBaseVertex =
+			void (DE_CALL_OPENGL*)(Enum mode, const Sizei* count, Enum type, const Void* const* indices,
+				Sizei drawcount, const Int32* basevertex);
 
 		using ProvokingVertex = void (DE_CALL_OPENGL*)(Enum mode);
 		using SampleMaskI = void (DE_CALL_OPENGL*)(Uint32 maskNumber, Bitfield mask);
 
-		using TexImage2DMultisample = void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat,
-			Sizei width, Sizei height, Boolean fixedsamplelocations);
+		using TexImage2DMultisample =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat, Sizei width, Sizei height,
+				Boolean fixedsamplelocations);
 
-		using TexImage3DMultisample = void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat,
-			Sizei width, Sizei height, Sizei depth, Boolean fixedsamplelocations);
+		using TexImage3DMultisample =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat, Sizei width, Sizei height,
+				Sizei depth, Boolean fixedsamplelocations);
 
 		using WaitSync = void (DE_CALL_OPENGL*)(Sync sync, Bitfield flags, Uint64 timeout);
 
 		// Version 3.3
 
-		using BindFragDataLocationIndexed = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 colorNumber, Uint32 index,
-			const Char8* name);
+		using BindFragDataLocationIndexed =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 colorNumber, Uint32 index, const Char8* name);
 
 		using BindSampler = void (DE_CALL_OPENGL*)(Uint32 unit, Uint32 sampler);
 		using DeleteSamplers = void (DE_CALL_OPENGL*)(Sizei count, const Uint32* samplers);
@@ -600,25 +683,30 @@ namespace Platform
 		using SamplerParameterIIV = void (DE_CALL_OPENGL*)(Uint32 sampler, Enum pname, const Int32* param);
 		using SamplerParameterIUIV = void (DE_CALL_OPENGL*)(Uint32 sampler, Enum pname, const Uint32* param);
 		using VertexAttribDivisor = void (DE_CALL_OPENGL*)(Uint32 index, Uint32 divisor);
-		using VertexAttribP1UI = void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, Uint32 value);
 
-		using VertexAttribP1UIV = void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized,
-			const Uint32* value);
+		using VertexAttribP1UI =
+			void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, Uint32 value);
 
-		using VertexAttribP2UI = void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, Uint32 value);
+		using VertexAttribP1UIV =
+			void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, const Uint32* value);
 
-		using VertexAttribP2UIV = void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized,
-			const Uint32* value);
+		using VertexAttribP2UI =
+			void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, Uint32 value);
 
-		using VertexAttribP3UI = void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, Uint32 value);
+		using VertexAttribP2UIV =
+			void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, const Uint32* value);
 
-		using VertexAttribP3UIV = void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized,
-			const Uint32* value);
+		using VertexAttribP3UI =
+			void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, Uint32 value);
 
-		using VertexAttribP4UI = void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, Uint32 value);
+		using VertexAttribP3UIV =
+			void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, const Uint32* value);
 
-		using VertexAttribP4UIV = void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized,
-			const Uint32* value);
+		using VertexAttribP4UI =
+			void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, Uint32 value);
+
+		using VertexAttribP4UIV =
+			void (DE_CALL_OPENGL*)(Uint32 index, Enum type, Boolean normalized, const Uint32* value);
 
 		// Version 4.0
 
@@ -628,8 +716,8 @@ namespace Platform
 		using BlendEquationSeparateI = void (DE_CALL_OPENGL*)(Uint32 buf, Enum modeRGB, Enum modeAlpha);
 		using BlendFuncI = void (DE_CALL_OPENGL*)(Uint32 buf, Enum src, Enum dst);
 
-		using BlendFuncSeparateI = void (DE_CALL_OPENGL*)(Uint32 buf, Enum srcRGB, Enum dstRGB, Enum srcAlpha,
-			Enum dstAlpha);
+		using BlendFuncSeparateI =
+			void (DE_CALL_OPENGL*)(Uint32 buf, Enum srcRGB, Enum dstRGB, Enum srcAlpha, Enum dstAlpha);
 
 		using DeleteTransformFeedbacks = void (DE_CALL_OPENGL*)(Sizei n, const Uint32* ids);
 		using DrawArraysIndirect = void (DE_CALL_OPENGL*)(Enum mode, const Void* indirect);
@@ -639,24 +727,35 @@ namespace Platform
 		using EndQueryIndexed = void (DE_CALL_OPENGL*)(Enum target, Uint32 index);
 		using GenTransformFeedbacks = void (DE_CALL_OPENGL*)(Sizei n, Uint32* ids);
 
-		using GetActiveSubroutineName = void (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, Uint32 index,
-			Sizei bufsize, Sizei* length, Char8* name);
+		using GetActiveSubroutineName =
+			void (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, Uint32 index, Sizei bufsize,
+				Sizei* length, Char8* name);
 
-		using GetActiveSubroutineUniformIV = void (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, Uint32 index,
-			Enum pname, Int32* values);
+		using GetActiveSubroutineUniformIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, Uint32 index, Enum pname, Int32* values);
 
-		using GetActiveSubroutineUniformName = void (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, Uint32 index,
-			Sizei bufsize, Sizei* length, Char8* name);
+		using GetActiveSubroutineUniformName =
+			void (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, Uint32 index, Sizei bufsize,
+				Sizei* length, Char8* name);
 
-		using GetProgramStageIV = void (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, Enum pname, Int32* values);
-		using GetQueryIndexedIV = void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Enum pname, Int32* params);
-		using GetSubroutineIndex = Uint32 (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, const Char8* name);
+		using GetProgramStageIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, Enum pname, Int32* values);
 
-		using GetSubroutineUniformLocation = Int32 (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype,
-			const Char8* name);
+		using GetQueryIndexedIV =
+			void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Enum pname, Int32* params);
 
-		using GetUniformDV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float64* params);
-		using GetUniformSubroutineUIV = void (DE_CALL_OPENGL*)(Enum shadertype, Int32 location, Uint32* params);
+		using GetSubroutineIndex =
+			Uint32 (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, const Char8* name);
+
+		using GetSubroutineUniformLocation =
+			Int32 (DE_CALL_OPENGL*)(Uint32 program, Enum shadertype, const Char8* name);
+
+		using GetUniformDV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float64* params);
+
+		using GetUniformSubroutineUIV =
+			void (DE_CALL_OPENGL*)(Enum shadertype, Int32 location, Uint32* params);
+
 		using IsTransformFeedback = Boolean (DE_CALL_OPENGL*)(Uint32 id);
 		using MinSampleShading = void (DE_CALL_OPENGL*)(Float32 value);
 		using PatchParameterFV = void (DE_CALL_OPENGL*)(Enum pname, const Float32* values);
@@ -672,42 +771,45 @@ namespace Platform
 		using Uniform4D = void (DE_CALL_OPENGL*)(Int32 location, Float64 x, Float64 y, Float64 z, Float64 w);
 		using Uniform4DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, const Float64* value);
 
-		using UniformMatrix2DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float64* value);
+		using UniformMatrix2DV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float64* value);
 
-		using UniformMatrix2X3DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float64* value);
+		using UniformMatrix2X3DV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float64* value);
 
-		using UniformMatrix2X4DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float64* value);
+		using UniformMatrix2X4DV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float64* value);
 
-		using UniformMatrix3DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float64* value);
+		using UniformMatrix3DV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float64* value);
 
-		using UniformMatrix3X2DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float64* value);
+		using UniformMatrix3X2DV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float64* value);
 
-		using UniformMatrix3X4DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float64* value);
+		using UniformMatrix3X4DV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float64* value);
 
-		using UniformMatrix4DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float64* value);
+		using UniformMatrix4DV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float64* value);
 
-		using UniformMatrix4X2DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float64* value);
+		using UniformMatrix4X2DV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float64* value);
 
-		using UniformMatrix4X3DV = void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose,
-			const Float64* value);
+		using UniformMatrix4X3DV =
+			void (DE_CALL_OPENGL*)(Int32 location, Sizei count, Boolean transpose, const Float64* value);
 
-		using UniformSubroutineSUIV = void (DE_CALL_OPENGL*)(Enum shadertype, Sizei count,
-			const Uint32* indices);
+		using UniformSubroutineSUIV =
+			void (DE_CALL_OPENGL*)(Enum shadertype, Sizei count, const Uint32* indices);
 
 		// Version 4.1
 
 		using ActiveShaderProgram = void (DE_CALL_OPENGL*)(Uint32 pipeline, Uint32 program);
 		using BindProgramPipeline = void (DE_CALL_OPENGL*)(Uint32 pipeline);
 		using ClearDepthF = void (DE_CALL_OPENGL*)(Float32 d);
-		using CreateShaderProgramV = Uint32 (DE_CALL_OPENGL*)(Enum type, Sizei count, const Char8* const* strings);
+
+		using CreateShaderProgramV =
+			Uint32 (DE_CALL_OPENGL*)(Enum type, Sizei count, const Char8* const* strings);
+
 		using DeleteProgramPipelines = void (DE_CALL_OPENGL*)(Sizei n, const Uint32* pipelines);
 		using DepthRangeArrayV = void (DE_CALL_OPENGL*)(Uint32 first, Sizei count, const Float64* v);
 		using DepthRangeF = void (DE_CALL_OPENGL*)(Float32 n, Float32 f);
@@ -716,175 +818,201 @@ namespace Platform
 		using GetDoubleI_V = void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Float64* data);
 		using GetFloatI_V = void (DE_CALL_OPENGL*)(Enum target, Uint32 index, Float32* data);
 
-		using GetProgramBinary = void (DE_CALL_OPENGL*)(Uint32 program, Sizei bufSize, Sizei* length,
-			Enum* binaryFormat, Void* binary);
+		using GetProgramBinary =
+			void (DE_CALL_OPENGL*)(Uint32 program, Sizei bufSize, Sizei* length, Enum* binaryFormat,
+				Void* binary);
 
-		using GetProgramPipelineInfoLog = void (DE_CALL_OPENGL*)(Uint32 pipeline, Sizei bufSize, Sizei* length,
-			Char8* infoLog);
+		using GetProgramPipelineInfoLog =
+			void (DE_CALL_OPENGL*)(Uint32 pipeline, Sizei bufSize, Sizei* length, Char8* infoLog);
 
 		using GetProgramPipelineIV = void (DE_CALL_OPENGL*)(Uint32 pipeline, Enum pname, Int32* params);
 
-		using GetShaderPrecisionFormat = void (DE_CALL_OPENGL*)(Enum shadertype, Enum precisiontype, Int32* range,
-			Int32* precision);
+		using GetShaderPrecisionFormat = void
+			(DE_CALL_OPENGL*)(Enum shadertype, Enum precisiontype, Int32* range, Int32* precision);
 
 		using GetVertexAttribLDV = void (DE_CALL_OPENGL*)(Uint32 index, Enum pname, Float64* params);
 		using IsProgramPipeline = Boolean (DE_CALL_OPENGL*)(Uint32 pipeline);
 
-		using ProgramBinary = void (DE_CALL_OPENGL*)(Uint32 program, Enum binaryFormat, const Void* binary,
-			Sizei length);
+		using ProgramBinary =
+			void (DE_CALL_OPENGL*)(Uint32 program, Enum binaryFormat, const Void* binary, Sizei length);
 
 		using ProgramParameterI = void (DE_CALL_OPENGL*)(Uint32 program, Enum pname, Int32 value);
 		using ProgramUniform1D = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float64 v0);
 
-		using ProgramUniform1DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Float64* value);
+		using ProgramUniform1DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Float64* value);
 
 		using ProgramUniform1F = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float32 v0);
 
-		using ProgramUniform1FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Float32* value);
+		using ProgramUniform1FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Float32* value);
 
 		using ProgramUniform1I = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Int32 v0);
 
-		using ProgramUniform1IV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Int32* value);
+		using ProgramUniform1IV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Int32* value);
 
 		using ProgramUniform1UI = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Uint32 v0);
 
-		using ProgramUniform1UIV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Uint32* value);
+		using ProgramUniform1UIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Uint32* value);
 
-		using ProgramUniform2D = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float64 v0, Float64 v1);
+		using ProgramUniform2D =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float64 v0, Float64 v1);
 
-		using ProgramUniform2DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Float64* value);
+		using ProgramUniform2DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Float64* value);
 
-		using ProgramUniform2F = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float32 v0, Float32 v1);
+		using ProgramUniform2F =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float32 v0, Float32 v1);
 
-		using ProgramUniform2FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Float32* value);
+		using ProgramUniform2FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Float32* value);
 
 		using ProgramUniform2I = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Int32 v0, Int32 v1);
 
-		using ProgramUniform2IV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Int32* value);
+		using ProgramUniform2IV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Int32* value);
 
-		using ProgramUniform2UI = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Uint32 v0, Uint32 v1);
+		using ProgramUniform2UI =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Uint32 v0, Uint32 v1);
 
-		using ProgramUniform2UIV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Uint32* value);
+		using ProgramUniform2UIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Uint32* value);
 
-		using ProgramUniform3D = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float64 v0, Float64 v1,
-			Float64 v2);
+		using ProgramUniform3D =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float64 v0, Float64 v1, Float64 v2);
 
-		using ProgramUniform3DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Float64* value);
+		using ProgramUniform3DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Float64* value);
 
-		using ProgramUniform3F = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float32 v0, Float32 v1,
-			Float32 v2);
+		using ProgramUniform3F =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float32 v0, Float32 v1, Float32 v2);
 
-		using ProgramUniform3FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Float32* value);
+		using ProgramUniform3FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Float32* value);
 
-		using ProgramUniform3I = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Int32 v0, Int32 v1,
-			Int32 v2);
+		using ProgramUniform3I =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Int32 v0, Int32 v1, Int32 v2);
 
-		using ProgramUniform3IV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Int32* value);
+		using ProgramUniform3IV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Int32* value);
 
-		using ProgramUniform3UI = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Uint32 v0, Uint32 v1,
-			Uint32 v2);
+		using ProgramUniform3UI =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Uint32 v0, Uint32 v1, Uint32 v2);
 
-		using ProgramUniform3UIV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Uint32* value);
+		using ProgramUniform3UIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Uint32* value);
 
-		using ProgramUniform4D = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float64 v0, Float64 v1,
-			Float64 v2, Float64 v3);
+		using ProgramUniform4D =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float64 v0, Float64 v1, Float64 v2,
+				Float64 v3);
 
-		using ProgramUniform4DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Float64* value);
+		using ProgramUniform4DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Float64* value);
 
-		using ProgramUniform4F = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float32 v0, Float32 v1,
-			Float32 v2, Float32 v3);
+		using ProgramUniform4F =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Float32 v0, Float32 v1, Float32 v2,
+				Float32 v3);
 
-		using ProgramUniform4FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Float32* value);
+		using ProgramUniform4FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Float32* value);
 
-		using ProgramUniform4I = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Int32 v0, Int32 v1, Int32 v2,
-			Int32 v3);
+		using ProgramUniform4I =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Int32 v0, Int32 v1, Int32 v2, Int32 v3);
 
-		using ProgramUniform4IV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Int32* value);
+		using ProgramUniform4IV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Int32* value);
 
-		using ProgramUniform4UI = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Uint32 v0, Uint32 v1,
-			Uint32 v2, Uint32 v3);
+		using ProgramUniform4UI =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Uint32 v0, Uint32 v1, Uint32 v2,
+				Uint32 v3);
 
-		using ProgramUniform4UIV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			const Uint32* value);
+		using ProgramUniform4UIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, const Uint32* value);
 
-		using ProgramUniformMatrix2DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float64* value);
+		using ProgramUniformMatrix2DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float64* value);
 
-		using ProgramUniformMatrix2FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float32* value);
+		using ProgramUniformMatrix2FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float32* value);
 
-		using ProgramUniformMatrix2X3DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float64* value);
+		using ProgramUniformMatrix2X3DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float64* value);
 
-		using ProgramUniformMatrix2X3FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float32* value);
+		using ProgramUniformMatrix2X3FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float32* value);
 
-		using ProgramUniformMatrix2X4DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float64* value);
+		using ProgramUniformMatrix2X4DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float64* value);
 
-		using ProgramUniformMatrix2X4FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float32* value);
+		using ProgramUniformMatrix2X4FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float32* value);
 
-		using ProgramUniformMatrix3DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float64* value);
+		using ProgramUniformMatrix3DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float64* value);
 
-		using ProgramUniformMatrix3FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float32* value);
+		using ProgramUniformMatrix3FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float32* value);
 
-		using ProgramUniformMatrix3X2DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float64* value);
+		using ProgramUniformMatrix3X2DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float64* value);
 
-		using ProgramUniformMatrix3X2FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float32* value);
+		using ProgramUniformMatrix3X2FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float32* value);
 
-		using ProgramUniformMatrix3X4DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float64* value);
+		using ProgramUniformMatrix3X4DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float64* value);
 
-		using ProgramUniformMatrix3X4FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float32* value);
+		using ProgramUniformMatrix3X4FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float32* value);
 
-		using ProgramUniformMatrix4DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float64* value);
+		using ProgramUniformMatrix4DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float64* value);
 
-		using ProgramUniformMatrix4FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float32* value);
+		using ProgramUniformMatrix4FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float32* value);
 
-		using ProgramUniformMatrix4X2DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float64* value);
+		using ProgramUniformMatrix4X2DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float64* value);
 
-		using ProgramUniformMatrix4X2FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float32* value);
+		using ProgramUniformMatrix4X2FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float32* value);
 
-		using ProgramUniformMatrix4X3DV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float64* value);
+		using ProgramUniformMatrix4X3DV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float64* value);
 
-		using ProgramUniformMatrix4X3FV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count,
-			Boolean transpose, const Float32* value);
+		using ProgramUniformMatrix4X3FV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei count, Boolean transpose,
+				const Float32* value);
 
 		using ReleaseShaderCompiler = void (DE_CALL_OPENGL*)();
 
-		using ShaderBinary = void (DE_CALL_OPENGL*)(Sizei count, const Uint32* shaders, Enum binaryformat,
-			const Void* binary, Sizei length);
+		using ShaderBinary =
+			void (DE_CALL_OPENGL*)(Sizei count, const Uint32* shaders, Enum binaryformat, const Void* binary,
+				Sizei length);
 
 		using ScissorArrayV = void (DE_CALL_OPENGL*)(Uint32 first, Sizei count, const Int32* v);
 
-		using ScissorIndexed = void (DE_CALL_OPENGL*)(Uint32 index, Int32 left, Int32 bottom, Sizei width,
-			Sizei height);
+		using ScissorIndexed =
+			void (DE_CALL_OPENGL*)(Uint32 index, Int32 left, Int32 bottom, Sizei width, Sizei height);
 
 		using ScissorIndexedV = void (DE_CALL_OPENGL*)(Uint32 index, const Int32* v);
 		using UseProgramStages = void (DE_CALL_OPENGL*)(Uint32 pipeline, Bitfield stages, Uint32 program);
@@ -895,238 +1023,289 @@ namespace Platform
 		using VertexAttribL2DV = void (DE_CALL_OPENGL*)(Uint32 index, const Float64* v);
 		using VertexAttribL3D = void (DE_CALL_OPENGL*)(Uint32 index, Float64 x, Float64 y, Float64 z);
 		using VertexAttribL3DV = void (DE_CALL_OPENGL*)(Uint32 index, const Float64* v);
-		using VertexAttribL4D = void (DE_CALL_OPENGL*)(Uint32 index, Float64 x, Float64 y, Float64 z, Float64 w);
+
+		using VertexAttribL4D =
+			void (DE_CALL_OPENGL*)(Uint32 index, Float64 x, Float64 y, Float64 z, Float64 w);
+
 		using VertexAttribL4DV = void (DE_CALL_OPENGL*)(Uint32 index, const Float64* v);
 
-		using VertexAttribLPointer = void (DE_CALL_OPENGL*)(Uint32 index, Int32 size, Enum type, Sizei stride,
-			const Void* pointer);
+		using VertexAttribLPointer =
+			void (DE_CALL_OPENGL*)(Uint32 index, Int32 size, Enum type, Sizei stride, const Void* pointer);
 
 		using ViewportArrayV = void (DE_CALL_OPENGL*)(Uint32 first, Sizei count, const Float32* v);
-		using ViewportIndexedF = void (DE_CALL_OPENGL*)(Uint32 index, Float32 x, Float32 y, Float32 w, Float32 h);
+
+		using ViewportIndexedF =
+			void (DE_CALL_OPENGL*)(Uint32 index, Float32 x, Float32 y, Float32 w, Float32 h);
+
 		using ViewportIndexedFV = void (DE_CALL_OPENGL*)(Uint32 index, const Float32* v);
 
 		// Version 4.2
 
-		using BindImageTexture = void (DE_CALL_OPENGL*)(Uint32 unit, Uint32 texture, Int32 level, Boolean layered,
-			Int32 layer, Enum access, Enum format);
+		using BindImageTexture =
+			void (DE_CALL_OPENGL*)(Uint32 unit, Uint32 texture, Int32 level, Boolean layered, Int32 layer,
+				Enum access, Enum format);
 
-		using DrawArraysInstancedBaseInstance = void (DE_CALL_OPENGL*)(Enum mode, Int32 first, Sizei count,
-			Sizei instancecount, Uint32 baseinstance);
+		using DrawArraysInstancedBaseInstance =
+			void (DE_CALL_OPENGL*)(Enum mode, Int32 first, Sizei count, Sizei instancecount,
+				Uint32 baseinstance);
 
-		using DrawElementsInstancedBaseInstance = void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type,
-			const Void* indices, Sizei instancecount, Uint32 baseinstance);
+		using DrawElementsInstancedBaseInstance =
+			void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type, const Void* indices,
+				Sizei instancecount, Uint32 baseinstance);
 
-		using DrawElementsInstancedBaseVertexBaseInstance = void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type,
-			const Void* indices, Sizei instancecount, Int32 basevertex, Uint32 baseinstance);
+		using DrawElementsInstancedBaseVertexBaseInstance =
+			void (DE_CALL_OPENGL*)(Enum mode, Sizei count, Enum type, const Void* indices,
+				Sizei instancecount, Int32 basevertex, Uint32 baseinstance);
 
-		using DrawTransformFeedbackInstanced = void (DE_CALL_OPENGL*)(Enum mode, Uint32 id, Sizei instancecount);
+		using DrawTransformFeedbackInstanced =
+			void (DE_CALL_OPENGL*)(Enum mode, Uint32 id, Sizei instancecount);
 
-		using DrawTransformFeedbackStreamInstanced = void (DE_CALL_OPENGL*)(Enum mode, Uint32 id, Uint32 stream,
-			Sizei instancecount);
+		using DrawTransformFeedbackStreamInstanced =
+			void (DE_CALL_OPENGL*)(Enum mode, Uint32 id, Uint32 stream, Sizei instancecount);
 
-		using GetActiveAtomicCounterBufferIV = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 bufferIndex, Enum pname,
-			Int32* params);
+		using GetActiveAtomicCounterBufferIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 bufferIndex, Enum pname, Int32* params);
 
-		using GetInternalformatIV = void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Enum pname, Sizei bufSize,
-			Int32* params);
+		using GetInternalformatIV =
+			void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Enum pname, Sizei bufSize,
+				Int32* params);
 
 		using MemoryBarrier = void (DE_CALL_OPENGL*)(Bitfield barriers);
-		using TexStorage1D = void (DE_CALL_OPENGL*)(Enum target, Sizei levels, Enum internalformat, Sizei width);
 
-		using TexStorage2D = void (DE_CALL_OPENGL*)(Enum target, Sizei levels, Enum internalformat, Sizei width,
-			Sizei height);
+		using TexStorage1D =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei levels, Enum internalformat, Sizei width);
 
-		using TexStorage3D = void (DE_CALL_OPENGL*)(Enum target, Sizei levels, Enum internalformat, Sizei width,
-			Sizei height, Sizei depth);
+		using TexStorage2D =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei levels, Enum internalformat, Sizei width, Sizei height);
+
+		using TexStorage3D =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei levels, Enum internalformat, Sizei width, Sizei height,
+				Sizei depth);
 
 		// Version 4.3
 
-		using DebugFunction = void (DE_CALL_OPENGL*)(Enum source, Enum type, Uint32 id, Enum severity, Sizei length,
-			const Char8* message, const Void* userParam);
+		using DebugFunction =
+			void (DE_CALL_OPENGL*)(Enum source, Enum type, Uint32 id, Enum severity, Sizei length,
+				const Char8* message, const Void* userParam);
 
-		using BindVertexBuffer = void (DE_CALL_OPENGL*)(Uint32 bindingindex, Uint32 buffer, Intptr offset,
-			Sizei stride);
+		using BindVertexBuffer =
+			void (DE_CALL_OPENGL*)(Uint32 bindingindex, Uint32 buffer, Intptr offset, Sizei stride);
 
-		using ClearBufferData = void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Enum format, Enum type,
-			const Void* data);
+		using ClearBufferData =
+			void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Enum format, Enum type,
+				const Void* data);
 
-		using ClearBufferSubData = void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Intptr offset,
-			Sizeiptr size, Enum format, Enum type, const Void* data);
+		using ClearBufferSubData =
+			void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Intptr offset, Sizeiptr size,
+				Enum format, Enum type, const Void* data);
 
-		using CopyImageSubData = void (DE_CALL_OPENGL*)(Uint32 srcName, Enum srcTarget, Int32 srcLevel, Int32 srcX,
-			Int32 srcY, Int32 srcZ, Uint32 dstName, Enum dstTarget, Int32 dstLevel, Int32 dstX, Int32 dstY, Int32 dstZ,
-			Sizei srcWidth, Sizei srcHeight, Sizei srcDepth);
+		using CopyImageSubData =
+			void (DE_CALL_OPENGL*)(Uint32 srcName, Enum srcTarget, Int32 srcLevel, Int32 srcX, Int32 srcY,
+				Int32 srcZ, Uint32 dstName, Enum dstTarget, Int32 dstLevel, Int32 dstX, Int32 dstY,
+				Int32 dstZ, Sizei srcWidth, Sizei srcHeight, Sizei srcDepth);
 
-		using DispatchCompute = void (DE_CALL_OPENGL*)(Uint32 num_groups_x, Uint32 num_groups_y, Uint32 num_groups_z);
+		using DispatchCompute =
+			void (DE_CALL_OPENGL*)(Uint32 num_groups_x, Uint32 num_groups_y, Uint32 num_groups_z);
+
 		using DispatchComputeIndirect = void (DE_CALL_OPENGL*)(Intptr indirect);
-
 		using DebugMessageCallback = void (DE_CALL_OPENGL*)(DebugFunction callback, const Void* userParam);
 
-		using DebugMessageControl = void (DE_CALL_OPENGL*)(Enum source, Enum type, Enum severity, Sizei count,
-			const Uint32* ids, Boolean enabled);
+		using DebugMessageControl =
+			void (DE_CALL_OPENGL*)(Enum source, Enum type, Enum severity, Sizei count, const Uint32* ids,
+				Boolean enabled);
 
-		using DebugMessageInsert = void (DE_CALL_OPENGL*)(Enum source, Enum type, Uint32 id, Enum severity,
-			Sizei length, const Char8* buf);
+		using DebugMessageInsert =
+			void (DE_CALL_OPENGL*)(Enum source, Enum type, Uint32 id, Enum severity, Sizei length,
+				const Char8* buf);
 
 		using FramebufferParameterI = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Int32 param);
 
-		using GetDebugMessageLog = Uint32(DE_CALL_OPENGL*)(Uint32 count, Sizei bufSize, Enum* sources, Enum* types,
-			Uint32* ids, Enum* severities, Sizei* lengths, Char8* messageLog);
+		using GetDebugMessageLog =
+			Uint32(DE_CALL_OPENGL*)(Uint32 count, Sizei bufSize, Enum* sources, Enum* types, Uint32* ids,
+				Enum* severities, Sizei* lengths, Char8* messageLog);
 
 		using GetFramebufferParameterIV = void (DE_CALL_OPENGL*)(Enum target, Enum pname, Int32* params);
 
-		using GetInternalformatI64V = void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Enum pname,
-			Sizei bufSize, Int64* params);
+		using GetInternalformatI64V =
+			void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Enum pname, Sizei bufSize,
+				Int64* params);
 
-		using GetObjectLabel = void (DE_CALL_OPENGL*)(Enum identifier, Uint32 name, Sizei bufSize, Sizei* length,
-			Char8* label);
+		using GetObjectLabel =
+			void (DE_CALL_OPENGL*)(Enum identifier, Uint32 name, Sizei bufSize, Sizei* length, Char8* label);
 
-		using GetObjectPtrLabel = void (DE_CALL_OPENGL*)(const Void* ptr, Sizei bufSize, Sizei* length, Char8* label);
+		using GetObjectPtrLabel =
+			void (DE_CALL_OPENGL*)(const Void* ptr, Sizei bufSize, Sizei* length, Char8* label);
 
-		using GetProgramInterfaceIV = void (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface, Enum pname,
-			Int32* params);
+		using GetProgramInterfaceIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface, Enum pname, Int32* params);
 
-		using GetProgramResourceIndex = Uint32 (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface,
-			const Char8* name);
+		using GetProgramResourceIndex =
+			Uint32 (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface, const Char8* name);
 
-		using GetProgramResourceIV = void (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface, Uint32 index,
-			Sizei propCount, const Enum* props, Sizei bufSize, Sizei* length, Int32* params);
+		using GetProgramResourceIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface, Uint32 index, Sizei propCount,
+				const Enum* props, Sizei bufSize, Sizei* length, Int32* params);
 
-		using GetProgramResourceLocation = Int32 (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface,
-			const Char8* name);
+		using GetProgramResourceLocation =
+			Int32 (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface, const Char8* name);
 
-		using GetProgramResourceLocationIndex = Int32 (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface,
-			const Char8* name);
+		using GetProgramResourceLocationIndex =
+			Int32 (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface, const Char8* name);
 
-		using GetProgramResourceName = void (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface, Uint32 index,
-			Sizei bufSize, Sizei* length, Char8* name);
+		using GetProgramResourceName =
+			void (DE_CALL_OPENGL*)(Uint32 program, Enum programInterface, Uint32 index, Sizei bufSize,
+				Sizei* length, Char8* name);
 
 		using InvalidateBufferData = void (DE_CALL_OPENGL*)(Uint32 buffer);
 		using InvalidateBufferSubData = void (DE_CALL_OPENGL*)(Uint32 buffer, Intptr offset, Sizeiptr length);
 
-		using InvalidateFramebuffer = void (DE_CALL_OPENGL*)(Enum target, Sizei numAttachments,
-			const Enum* attachments);
+		using InvalidateFramebuffer =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei numAttachments, const Enum* attachments);
 
-		using InvalidateSubFramebuffer = void (DE_CALL_OPENGL*)(Enum target, Sizei numAttachments,
-			const Enum* attachments, Int32 x, Int32 y, Sizei width, Sizei height);
+		using InvalidateSubFramebuffer =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei numAttachments, const Enum* attachments, Int32 x,
+				Int32 y, Sizei width, Sizei height);
 
 		using InvalidateTexImage = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level);
 
-		using InvalidateTexSubImage = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 zoffset, Sizei width, Sizei height, Sizei depth);
+		using InvalidateTexSubImage =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Sizei width, Sizei height, Sizei depth);
 
-		using MultiDrawArraysIndirect = void (DE_CALL_OPENGL*)(Enum mode, const Void* indirect, Sizei drawcount,
-			Sizei stride);
+		using MultiDrawArraysIndirect =
+			void (DE_CALL_OPENGL*)(Enum mode, const Void* indirect, Sizei drawcount, Sizei stride);
 
-		using MultiDrawElementsIndirect = void (DE_CALL_OPENGL*)(Enum mode, Enum type, const Void* indirect,
-			Sizei drawcount, Sizei stride);
+		using MultiDrawElementsIndirect =
+			void (DE_CALL_OPENGL*)(Enum mode, Enum type, const Void* indirect, Sizei drawcount, Sizei stride);
 
-		using ObjectLabel = void (DE_CALL_OPENGL*)(Enum identifier, Uint32 name, Sizei length, const Char8* label);
+		using ObjectLabel =
+			void (DE_CALL_OPENGL*)(Enum identifier, Uint32 name, Sizei length, const Char8* label);
+
 		using ObjectPtrLabel = void (DE_CALL_OPENGL*)(const Void* ptr, Sizei length, const Char8* label);
 		using PopDebugGroup = void (DE_CALL_OPENGL*)();
-		using PushDebugGroup = void (DE_CALL_OPENGL*)(Enum source, Uint32 id, Sizei length, const Char8* message);
 
-		using ShaderStorageBlockBinding = void (DE_CALL_OPENGL*)(Uint32 program, Uint32 storageBlockIndex,
-			Uint32 storageBlockBinding);
+		using PushDebugGroup =
+			void (DE_CALL_OPENGL*)(Enum source, Uint32 id, Sizei length, const Char8* message);
 
-		using TexBufferRange = void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Uint32 buffer, Intptr offset,
-			Sizeiptr size);
+		using ShaderStorageBlockBinding =
+			void (DE_CALL_OPENGL*)(Uint32 program, Uint32 storageBlockIndex, Uint32 storageBlockBinding);
 
-		using TexStorage2DMultisample = void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat,
-			Sizei width, Sizei height, Boolean fixedsamplelocations);
+		using TexBufferRange =
+			void (DE_CALL_OPENGL*)(Enum target, Enum internalformat, Uint32 buffer, Intptr offset,
+				Sizeiptr size);
 
-		using TexStorage3DMultisample = void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat,
-			Sizei width, Sizei height, Sizei depth, Boolean fixedsamplelocations);
+		using TexStorage2DMultisample =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat, Sizei width, Sizei height,
+				Boolean fixedsamplelocations);
 
-		using TextureView = void (DE_CALL_OPENGL*)(Uint32 texture, Enum target, Uint32 origtexture,
-			Enum internalformat, Uint32 minlevel, Uint32 numlevels, Uint32 minlayer, Uint32 numlayers);
+		using TexStorage3DMultisample =
+			void (DE_CALL_OPENGL*)(Enum target, Sizei samples, Enum internalformat, Sizei width, Sizei height,
+				Sizei depth, Boolean fixedsamplelocations);
+
+		using TextureView =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Enum target, Uint32 origtexture, Enum internalformat,
+				Uint32 minlevel, Uint32 numlevels, Uint32 minlayer, Uint32 numlayers);
 
 		using VertexAttribBinding = void (DE_CALL_OPENGL*)(Uint32 attribindex, Uint32 bindingindex);
 
-		using VertexAttribFormat = void (DE_CALL_OPENGL*)(Uint32 attribindex, Int32 size, Enum type,
-			Boolean normalized, Uint32 relativeoffset);
+		using VertexAttribFormat =
+			void (DE_CALL_OPENGL*)(Uint32 attribindex, Int32 size, Enum type, Boolean normalized,
+				Uint32 relativeoffset);
 
-		using VertexAttribIFormat = void (DE_CALL_OPENGL*)(Uint32 attribindex, Int32 size, Enum type,
-			Uint32 relativeoffset);
+		using VertexAttribIFormat =
+			void (DE_CALL_OPENGL*)(Uint32 attribindex, Int32 size, Enum type, Uint32 relativeoffset);
 
-		using VertexAttribLFormat = void (DE_CALL_OPENGL*)(Uint32 attribindex, Int32 size, Enum type,
-			Uint32 relativeoffset);
+		using VertexAttribLFormat =
+			void (DE_CALL_OPENGL*)(Uint32 attribindex, Int32 size, Enum type, Uint32 relativeoffset);
 
 		using VertexBindingDivisor = void (DE_CALL_OPENGL*)(Uint32 bindingindex, Uint32 divisor);
 
 		// Version 4.4
 
-		using BindBuffersBase = void (DE_CALL_OPENGL*)(Enum target, Uint32 first, Sizei count, const Uint32* buffers);
+		using BindBuffersBase =
+			void (DE_CALL_OPENGL*)(Enum target, Uint32 first, Sizei count, const Uint32* buffers);
 
-		using BindBuffersRange = void (DE_CALL_OPENGL*)(Enum target, Uint32 first, Sizei count, const Uint32* buffers,
-			const Intptr* offsets, const Sizeiptr* sizes);
+		using BindBuffersRange =
+			void (DE_CALL_OPENGL*)(Enum target, Uint32 first, Sizei count, const Uint32* buffers,
+				const Intptr* offsets, const Sizeiptr* sizes);
 
 		using BindImageTextures = void (DE_CALL_OPENGL*)(Uint32 first, Sizei count, const Uint32* textures);
 		using BindSamplers = void (DE_CALL_OPENGL*)(Uint32 first, Sizei count, const Uint32* samplers);
 		using BindTextures = void (DE_CALL_OPENGL*)(Uint32 first, Sizei count, const Uint32* textures);
 
-		using BindVertexBuffers = void (DE_CALL_OPENGL*)(Uint32 first, Sizei count, const Uint32* buffers,
-			const Intptr* offsets, const Sizei* strides);
+		using BindVertexBuffers =
+			void (DE_CALL_OPENGL*)(Uint32 first, Sizei count, const Uint32* buffers, const Intptr* offsets,
+				const Sizei* strides);
 
-		using BufferStorage = void (DE_CALL_OPENGL*)(Enum target, Sizeiptr size, const Void* data, Bitfield flags);
+		using BufferStorage =
+			void (DE_CALL_OPENGL*)(Enum target, Sizeiptr size, const Void* data, Bitfield flags);
 
-		using ClearTexImage = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Enum format, Enum type,
-			const Void* data);
+		using ClearTexImage =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Enum format, Enum type, const Void* data);
 
-		using ClearTexSubImage = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 zoffset, Sizei width, Sizei height, Sizei depth, Enum format, Enum type, const Void* data);
+		using ClearTexSubImage =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Sizei width, Sizei height, Sizei depth, Enum format, Enum type, const Void* data);
 
 		// Version 4.5
 
 		using BindTextureUnit = void (DE_CALL_OPENGL*)(Uint32 unit, Uint32 texture);
 
-		using BlitNamedFramebuffer = void (DE_CALL_OPENGL*)(Uint32 readFramebuffer, Uint32 drawFramebuffer,
-			Int32 srcX0, Int32 srcY0, Int32 srcX1, Int32 srcY1, Int32 dstX0, Int32 dstY0, Int32 dstX1, Int32 dstY1,
-			Bitfield mask, Enum filter);
+		using BlitNamedFramebuffer =
+			void (DE_CALL_OPENGL*)(Uint32 readFramebuffer, Uint32 drawFramebuffer, Int32 srcX0, Int32 srcY0,
+				Int32 srcX1, Int32 srcY1, Int32 dstX0, Int32 dstY0, Int32 dstX1, Int32 dstY1, Bitfield mask,
+				Enum filter);
 
 		using CheckNamedFramebufferStatus = Enum (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum target);
 
-		using ClearNamedBufferData = void (DE_CALL_OPENGL*)(Uint32 buffer, Enum internalformat, Enum format, Enum type,
-			const Void* data);
+		using ClearNamedBufferData =
+			void (DE_CALL_OPENGL*)(Uint32 buffer, Enum internalformat, Enum format, Enum type,
+				const Void* data);
 
-		using ClearNamedBufferSubData = void (DE_CALL_OPENGL*)(Uint32 buffer, Enum internalformat, Intptr offset,
-			Sizeiptr size, Enum format, Enum type, const Void* data);
+		using ClearNamedBufferSubData =
+			void (DE_CALL_OPENGL*)(Uint32 buffer, Enum internalformat, Intptr offset, Sizeiptr size,
+				Enum format, Enum type, const Void* data);
 
-		using ClearNamedFramebufferFI = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum buffer, const Float32 depth,
-			Int32 stencil);
+		using ClearNamedFramebufferFI =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum buffer, const Float32 depth, Int32 stencil);
 
-		using ClearNamedFramebufferFV = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum buffer, Int32 drawbuffer,
-			const Float32* value);
+		using ClearNamedFramebufferFV =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum buffer, Int32 drawbuffer, const Float32* value);
 
-		using ClearNamedFramebufferIV = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum buffer, Int32 drawbuffer,
-			const Int32* value);
+		using ClearNamedFramebufferIV =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum buffer, Int32 drawbuffer, const Int32* value);
 
-		using ClearNamedFramebufferUIV = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum buffer, Int32 drawbuffer,
-			const Uint32* value);
+		using ClearNamedFramebufferUIV =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum buffer, Int32 drawbuffer, const Uint32* value);
 
 		using ClipControl = void (DE_CALL_OPENGL*)(Enum origin, Enum depth);
 
-		using CompressedTextureSubImage1D = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset,
-			Sizei width, Enum format, Sizei imageSize, const Void* data);
+		using CompressedTextureSubImage1D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Sizei width, Enum format,
+				Sizei imageSize, const Void* data);
 
-		using CompressedTextureSubImage2D = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset,
-			Int32 yoffset, Sizei width, Sizei height, Enum format, Sizei imageSize, const Void* data);
+		using CompressedTextureSubImage2D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Sizei width,
+				Sizei height, Enum format, Sizei imageSize, const Void* data);
 
-		using CompressedTextureSubImage3D = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset,
-			Int32 yoffset, Int32 zoffset, Sizei width, Sizei height, Sizei depth, Enum format, Sizei imageSize,
-			const Void* data);
+		using CompressedTextureSubImage3D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Sizei width, Sizei height, Sizei depth, Enum format, Sizei imageSize, const Void* data);
 
-		using CopyNamedBufferSubData = void (DE_CALL_OPENGL*)(Uint32 readBuffer, Uint32 writeBuffer, Intptr readOffset,
-			Intptr writeOffset, Sizeiptr size);
+		using CopyNamedBufferSubData =
+			void (DE_CALL_OPENGL*)(Uint32 readBuffer, Uint32 writeBuffer, Intptr readOffset,
+				Intptr writeOffset, Sizeiptr size);
 
-		using CopyTextureSubImage1D = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 x,
-			Int32 y, Sizei width);
+		using CopyTextureSubImage1D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 x, Int32 y, Sizei width);
 
-		using CopyTextureSubImage2D = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 x, Int32 y, Sizei width, Sizei height);
+		using CopyTextureSubImage2D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Int32 x,
+				Int32 y, Sizei width, Sizei height);
 
-		using CopyTextureSubImage3D = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 zoffset, Int32 x, Int32 y, Sizei width, Sizei height);
+		using CopyTextureSubImage3D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Int32 x, Int32 y, Sizei width, Sizei height);
 
 		using CreateBuffers = void (DE_CALL_OPENGL*)(Sizei n, Uint32* buffers);
 		using CreateFramebuffers = void (DE_CALL_OPENGL*)(Sizei n, Uint32* framebuffers);
@@ -1139,118 +1318,168 @@ namespace Platform
 		using CreateVertexArrays = void (DE_CALL_OPENGL*)(Sizei n, Uint32* arrays);
 		using DisableVertexArrayAttrib = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 index);
 		using EnableVertexArrayAttrib = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 index);
-		using FlushMappedNamedBufferRange = void (DE_CALL_OPENGL*)(Uint32 buffer, Intptr offset, Sizeiptr length);
+
+		using FlushMappedNamedBufferRange =
+			void (DE_CALL_OPENGL*)(Uint32 buffer, Intptr offset, Sizeiptr length);
+
 		using GenerateTextureMipmap = void (DE_CALL_OPENGL*)(Uint32 texture);
 
-		using GetCompressedTextureImage = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Sizei bufSize,
-			Void* pixels);
+		using GetCompressedTextureImage =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Sizei bufSize, Void* pixels);
 
-		using GetCompressedTextureSubImage = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset,
-			Int32 yoffset, Int32 zoffset, Sizei width, Sizei height, Sizei depth, Sizei bufSize, Void* pixels);
+		using GetCompressedTextureSubImage =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Sizei width, Sizei height, Sizei depth, Sizei bufSize, Void* pixels);
 
 		using GetGraphicsResetStatus = Enum (DE_CALL_OPENGL*)();
 		using GetNamedBufferParameterI64V = void (DE_CALL_OPENGL*)(Uint32 buffer, Enum pname, Int64* params);
 		using GetNamedBufferParameterIV = void (DE_CALL_OPENGL*)(Uint32 buffer, Enum pname, Int32* params);
 		using GetNamedBufferPointerV = void (DE_CALL_OPENGL*)(Uint32 buffer, Enum pname, Void** params);
-		using GetNamedBufferSubData = void (DE_CALL_OPENGL*)(Uint32 buffer, Intptr offset, Sizeiptr size, Void* data);
 
-		using GetNamedFramebufferAttachmentParameterIV = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum attachment,
-			Enum pname, Int32* params);
+		using GetNamedBufferSubData =
+			void (DE_CALL_OPENGL*)(Uint32 buffer, Intptr offset, Sizeiptr size, Void* data);
 
-		using GetNamedFramebufferParameterIV = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum pname, Int32* param);
-		using GetNamedRenderbufferParameterIV = void (DE_CALL_OPENGL*)(Uint32 renderbuffer, Enum pname, Int32* params);
-		using GetnCompressedTexImage = void (DE_CALL_OPENGL*)(Enum target, Int32 lod, Sizei bufSize, Void* pixels);
+		using GetNamedFramebufferAttachmentParameterIV =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum attachment, Enum pname, Int32* params);
 
-		using GetnTexImage = void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum format, Enum type, Sizei bufSize,
-			Void* pixels);
+		using GetNamedFramebufferParameterIV =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum pname, Int32* param);
 
-		using GetnUniformDV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei bufSize, Float64* params);
-		using GetnUniformFV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei bufSize, Float32* params);
-		using GetnUniformIV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei bufSize, Int32* params);
-		using GetnUniformUIV = void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei bufSize, Uint32* params);
-		using GetQueryBufferObjectI64V = void (DE_CALL_OPENGL*)(Uint32 id, Uint32 buffer, Enum pname, Intptr offset);
-		using GetQueryBufferObjectIV = void (DE_CALL_OPENGL*)(Uint32 id, Uint32 buffer, Enum pname, Intptr offset);
-		using GetQueryBufferObjectUI64V = void (DE_CALL_OPENGL*)(Uint32 id, Uint32 buffer, Enum pname, Intptr offset);
-		using GetQueryBufferObjectUIV = void (DE_CALL_OPENGL*)(Uint32 id, Uint32 buffer, Enum pname, Intptr offset);
+		using GetNamedRenderbufferParameterIV =
+			void (DE_CALL_OPENGL*)(Uint32 renderbuffer, Enum pname, Int32* params);
 
-		using GetTextureImage = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Enum format, Enum type,
-			Sizei bufSize, Void* pixels);
+		using GetnCompressedTexImage =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 lod, Sizei bufSize, Void* pixels);
 
-		using GetTextureLevelParameterFV = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Enum pname,
-			Float32* params);
+		using GetnTexImage =
+			void (DE_CALL_OPENGL*)(Enum target, Int32 level, Enum format, Enum type, Sizei bufSize,
+				Void* pixels);
 
-		using GetTextureLevelParameterIV = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Enum pname,
-			Int32* params);
+		using GetnUniformDV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei bufSize, Float64* params);
+
+		using GetnUniformFV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei bufSize, Float32* params);
+
+		using GetnUniformIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei bufSize, Int32* params);
+
+		using GetnUniformUIV =
+			void (DE_CALL_OPENGL*)(Uint32 program, Int32 location, Sizei bufSize, Uint32* params);
+
+		using GetQueryBufferObjectI64V =
+			void (DE_CALL_OPENGL*)(Uint32 id, Uint32 buffer, Enum pname, Intptr offset);
+
+		using GetQueryBufferObjectIV =
+			void (DE_CALL_OPENGL*)(Uint32 id, Uint32 buffer, Enum pname, Intptr offset);
+
+		using GetQueryBufferObjectUI64V =
+			void (DE_CALL_OPENGL*)(Uint32 id, Uint32 buffer, Enum pname, Intptr offset);
+
+		using GetQueryBufferObjectUIV =
+			void (DE_CALL_OPENGL*)(Uint32 id, Uint32 buffer, Enum pname, Intptr offset);
+
+		using GetTextureImage =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Enum format, Enum type, Sizei bufSize,
+				Void* pixels);
+
+		using GetTextureLevelParameterFV =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Enum pname, Float32* params);
+
+		using GetTextureLevelParameterIV =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Enum pname, Int32* params);
 
 		using GetTextureParameterFV = void (DE_CALL_OPENGL*)(Uint32 texture, Enum pname, Float32* params);
 		using GetTextureParameterIIV = void (DE_CALL_OPENGL*)(Uint32 texture, Enum pname, Int32* params);
 		using GetTextureParameterIV = void (DE_CALL_OPENGL*)(Uint32 texture, Enum pname, Int32* params);
 		using GetTextureParameterIUIV = void (DE_CALL_OPENGL*)(Uint32 texture, Enum pname, Uint32* params);
 
-		using GetTextureSubImage = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 zoffset, Sizei width, Sizei height, Sizei depth, Enum format, Enum type, Sizei bufSize,
-			Void* pixels);
+		using GetTextureSubImage =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Sizei width, Sizei height, Sizei depth, Enum format, Enum type, Sizei bufSize, Void* pixels);
 
-		using GetTransformFeedbackI64_V = void (DE_CALL_OPENGL*)(Uint32 xfb, Enum pname, Uint32 index, Int64* param);
+		using GetTransformFeedbackI64_V =
+			void (DE_CALL_OPENGL*)(Uint32 xfb, Enum pname, Uint32 index, Int64* param);
+
 		using GetTransformFeedbackIV = void (DE_CALL_OPENGL*)(Uint32 xfb, Enum pname, Int32* param);
-		using GetTransformFeedbackI_V = void (DE_CALL_OPENGL*)(Uint32 xfb, Enum pname, Uint32 index, Int32* param);
-		using GetVertexArrayIndexed64IV = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 index, Enum pname, Int64* param);
-		using GetVertexArrayIndexedIV = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 index, Enum pname, Int32* param);
+
+		using GetTransformFeedbackI_V =
+			void (DE_CALL_OPENGL*)(Uint32 xfb, Enum pname, Uint32 index, Int32* param);
+
+		using GetVertexArrayIndexed64IV =
+			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 index, Enum pname, Int64* param);
+
+		using GetVertexArrayIndexedIV =
+			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 index, Enum pname, Int32* param);
+
 		using GetVertexArrayIV = void (DE_CALL_OPENGL*)(Uint32 vaobj, Enum pname, Int32* param);
 
-		using InvalidateNamedFramebufferData = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Sizei numAttachments,
-			const Enum* attachments);
+		using InvalidateNamedFramebufferData =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Sizei numAttachments, const Enum* attachments);
 
-		using InvalidateNamedFramebufferSubData = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Sizei numAttachments,
-			const Enum* attachments, Int32 x, Int32 y, Sizei width, Sizei height);
+		using InvalidateNamedFramebufferSubData =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Sizei numAttachments, const Enum* attachments, Int32 x,
+				Int32 y, Sizei width, Sizei height);
 
 		using MapNamedBuffer = Void* (DE_CALL_OPENGL*)(Uint32 buffer, Enum access);
 
-		using MapNamedBufferRange = Void* (DE_CALL_OPENGL*)(Uint32 buffer, Intptr offset, Sizeiptr length,
-			Bitfield access);
+		using MapNamedBufferRange =
+			Void* (DE_CALL_OPENGL*)(Uint32 buffer, Intptr offset, Sizeiptr length, Bitfield access);
 
 		using MemoryBarrierByRegion = void (DE_CALL_OPENGL*)(Bitfield barriers);
-		using NamedBufferData = void (DE_CALL_OPENGL*)(Uint32 buffer, Sizeiptr size, const Void* data, Enum usage);
 
-		using NamedBufferStorage = void (DE_CALL_OPENGL*)(Uint32 buffer, Sizeiptr size, const Void* data,
-			Bitfield flags);
+		using NamedBufferData =
+			void (DE_CALL_OPENGL*)(Uint32 buffer, Sizeiptr size, const Void* data, Enum usage);
 
-		using NamedBufferSubData = void (DE_CALL_OPENGL*)(Uint32 buffer, Intptr offset, Sizeiptr size,
-			const Void* data);
+		using NamedBufferStorage =
+			void (DE_CALL_OPENGL*)(Uint32 buffer, Sizeiptr size, const Void* data, Bitfield flags);
+
+		using NamedBufferSubData =
+			void (DE_CALL_OPENGL*)(Uint32 buffer, Intptr offset, Sizeiptr size, const Void* data);
 
 		using NamedFramebufferDrawBuffer = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum buf);
-		using NamedFramebufferDrawBuffers = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Sizei n, const Enum* bufs);
-		using NamedFramebufferParameterI = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum pname, Int32 param);
+
+		using NamedFramebufferDrawBuffers =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Sizei n, const Enum* bufs);
+
+		using NamedFramebufferParameterI =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum pname, Int32 param);
+
 		using NamedFramebufferReadBuffer = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum src);
 
-		using NamedFramebufferRenderbuffer = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum attachment,
-			Enum renderbuffertarget, Uint32 renderbuffer);
+		using NamedFramebufferRenderbuffer =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum attachment, Enum renderbuffertarget,
+				Uint32 renderbuffer);
 
-		using NamedFramebufferTexture = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum attachment, Uint32 texture,
-			Int32 level);
+		using NamedFramebufferTexture =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum attachment, Uint32 texture, Int32 level);
 
-		using NamedFramebufferTextureLayer = void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum attachment,
-			Uint32 texture, Int32 level, Int32 layer);
+		using NamedFramebufferTextureLayer =
+			void (DE_CALL_OPENGL*)(Uint32 framebuffer, Enum attachment, Uint32 texture, Int32 level,
+				Int32 layer);
 
-		using NamedRenderbufferStorage = void (DE_CALL_OPENGL*)(Uint32 renderbuffer, Enum internalformat, Sizei width,
-			Sizei height);
+		using NamedRenderbufferStorage =
+			void (DE_CALL_OPENGL*)(Uint32 renderbuffer, Enum internalformat, Sizei width, Sizei height);
 
-		using NamedRenderbufferStorageMultisample = void (DE_CALL_OPENGL*)(Uint32 renderbuffer, Sizei samples,
-			Enum internalformat, Sizei width, Sizei height);
+		using NamedRenderbufferStorageMultisample =
+			void (DE_CALL_OPENGL*)(Uint32 renderbuffer, Sizei samples, Enum internalformat, Sizei width,
+				Sizei height);
 
-		using ReadnPixels = void (DE_CALL_OPENGL*)(Int32 x, Int32 y, Sizei width, Sizei height, Enum format, Enum type,
-			Sizei bufSize, Void* data);
+		using ReadnPixels =
+			void (DE_CALL_OPENGL*)(Int32 x, Int32 y, Sizei width, Sizei height, Enum format, Enum type,
+				Sizei bufSize, Void* data);
 
 		using TransformFeedbackBufferBase = void (DE_CALL_OPENGL*)(Uint32 xfb, Uint32 index, Uint32 buffer);
 
-		using TransformFeedbackBufferRange = void (DE_CALL_OPENGL*)(Uint32 xfb, Uint32 index, Uint32 buffer,
-			Intptr offset, Sizeiptr size);
+		using TransformFeedbackBufferRange =
+			void (DE_CALL_OPENGL*)(Uint32 xfb, Uint32 index, Uint32 buffer, Intptr offset, Sizeiptr size);
 
 		using TextureBarrier = void (DE_CALL_OPENGL*)();
 		using TextureBuffer = void (DE_CALL_OPENGL*)(Uint32 texture, Enum internalformat, Uint32 buffer);
 
-		using TextureBufferRange = void (DE_CALL_OPENGL*)(Uint32 texture, Enum internalformat, Uint32 buffer,
-			Intptr offset, Sizeiptr size);
+		using TextureBufferRange =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Enum internalformat, Uint32 buffer, Intptr offset,
+				Sizeiptr size);
 
 		using TextureParameterF = void (DE_CALL_OPENGL*)(Uint32 texture, Enum pname, Float32 param);
 		using TextureParameterFV = void (DE_CALL_OPENGL*)(Uint32 texture, Enum pname, const Float32* param);
@@ -1259,50 +1488,66 @@ namespace Platform
 		using TextureParameterIUIV = void (DE_CALL_OPENGL*)(Uint32 texture, Enum pname, const Uint32* params);
 		using TextureParameterIV = void (DE_CALL_OPENGL*)(Uint32 texture, Enum pname, const Int32* param);
 
-		using TextureStorage1D = void (DE_CALL_OPENGL*)(Uint32 texture, Sizei levels, Enum internalformat,
-			Sizei width);
+		using TextureStorage1D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Sizei levels, Enum internalformat, Sizei width);
 
-		using TextureStorage2D = void (DE_CALL_OPENGL*)(Uint32 texture, Sizei levels, Enum internalformat, Sizei width,
-			Sizei height);
+		using TextureStorage2D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Sizei levels, Enum internalformat, Sizei width,
+				Sizei height);
 
-		using TextureStorage2DMultisample = void (DE_CALL_OPENGL*)(Uint32 texture, Sizei samples, Enum internalformat,
-			Sizei width, Sizei height, Boolean fixedsamplelocations);
+		using TextureStorage2DMultisample =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Sizei samples, Enum internalformat, Sizei width,
+				Sizei height, Boolean fixedsamplelocations);
 
-		using TextureStorage3D = void (DE_CALL_OPENGL*)(Uint32 texture, Sizei levels, Enum internalformat, Sizei width,
-			Sizei height, Sizei depth);
+		using TextureStorage3D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Sizei levels, Enum internalformat, Sizei width,
+				Sizei height, Sizei depth);
 
-		using TextureStorage3DMultisample = void (DE_CALL_OPENGL*)(Uint32 texture, Sizei samples, Enum internalformat,
-			Sizei width, Sizei height, Sizei depth, Boolean fixedsamplelocations);
+		using TextureStorage3DMultisample =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Sizei samples, Enum internalformat, Sizei width,
+				Sizei height, Sizei depth, Boolean fixedsamplelocations);
 
-		using TextureSubImage1D = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Sizei width,
-			Enum format, Enum type, const Void* pixels);
+		using TextureSubImage1D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Sizei width, Enum format,
+				Enum type, const Void* pixels);
 
-		using TextureSubImage2D = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset,
-			Sizei width, Sizei height, Enum format, Enum type, const Void* pixels);
+		using TextureSubImage2D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Sizei width,
+				Sizei height, Enum format, Enum type, const Void* pixels);
 
-		using TextureSubImage3D = void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset,
-			Int32 zoffset, Sizei width, Sizei height, Sizei depth, Enum format, Enum type, const Void* pixels);
+		using TextureSubImage3D =
+			void (DE_CALL_OPENGL*)(Uint32 texture, Int32 level, Int32 xoffset, Int32 yoffset, Int32 zoffset,
+				Sizei width, Sizei height, Sizei depth, Enum format, Enum type, const Void* pixels);
 
 		using UnmapNamedBuffer = Boolean (DE_CALL_OPENGL*)(Uint32 buffer);
-		using VertexArrayAttribBinding = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 attribindex, Uint32 bindingindex);
 
-		using VertexArrayAttribFormat = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 attribindex, Int32 size, Enum type,
-			Boolean normalized, Uint32 relativeoffset);
+		using VertexArrayAttribBinding =
+			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 attribindex, Uint32 bindingindex);
 
-		using VertexArrayAttribIFormat = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 attribindex, Int32 size,
-			Enum type, Uint32 relativeoffset);
+		using VertexArrayAttribFormat =
+			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 attribindex, Int32 size, Enum type,
+				Boolean normalized, Uint32 relativeoffset);
 
-		using VertexArrayAttribLFormat = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 attribindex, Int32 size,
-			Enum type, Uint32 relativeoffset);
+		using VertexArrayAttribIFormat =
+			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 attribindex, Int32 size, Enum type,
+				Uint32 relativeoffset);
 
-		using VertexArrayBindingDivisor = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 bindingindex, Uint32 divisor);
+		using VertexArrayAttribLFormat =
+			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 attribindex, Int32 size, Enum type,
+				Uint32 relativeoffset);
+
+		using VertexArrayBindingDivisor =
+			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 bindingindex, Uint32 divisor);
+
 		using VertexArrayElementBuffer = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 buffer);
 
-		using VertexArrayVertexBuffer = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 bindingindex, Uint32 buffer,
-			Intptr offset, Sizei stride);
+		using VertexArrayVertexBuffer =
+			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 bindingindex, Uint32 buffer, Intptr offset,
+				Sizei stride);
 
-		using VertexArrayVertexBuffers = void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 first, Sizei count,
-			const Uint32* buffers, const Intptr* offsets, const Sizei* strides);
+		using VertexArrayVertexBuffers =
+			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 first, Sizei count, const Uint32* buffers,
+				const Intptr* offsets, const Sizei* strides);
 
 
 		// Version 1.0

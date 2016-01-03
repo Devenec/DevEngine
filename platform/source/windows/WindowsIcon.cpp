@@ -123,7 +123,9 @@ static void checkImageFormat(const ImageFormat& format)
 			break;
 
 		default:
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "The image format is invalid." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "The image format is invalid." <<
+				Log::Flush();
+
 			DE_ERROR(0x0);
 	}
 }
@@ -149,13 +151,17 @@ static BITMAPV5HEADER createBitmapHeader(const Image* image)
 static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Uint8*& dataBuffer)
 {
 	HDC deviceContextHandle = ::getDeviceContext();
+	const BITMAPINFO* bitmapInfo = reinterpret_cast<const BITMAPINFO*>(&bitmapHeader);
 
-	HBITMAP bitmapHandle = CreateDIBSection(deviceContextHandle, reinterpret_cast<const BITMAPINFO*>(&bitmapHeader),
-		DIB_RGB_COLORS, reinterpret_cast<Void**>(&dataBuffer), nullptr, 0u);
+	HBITMAP bitmapHandle =
+		CreateDIBSection(deviceContextHandle, bitmapInfo, DIB_RGB_COLORS,
+			reinterpret_cast<Void**>(&dataBuffer), nullptr, 0u);
 
 	if(bitmapHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the colour bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the colour bitmap." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -179,7 +185,9 @@ static HBITMAP createMaskBitmap(const Image* image)
 
 	if(bitmapHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the mask bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the mask bitmap." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -233,7 +241,9 @@ static void releaseDeviceContext(HDC deviceContextHandle)
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to release the device context." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to release the device context." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -267,7 +277,7 @@ static void setColourBitmapData(const Image* image, Uint8* dataBuffer, const Boo
 
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{
-		dataBuffer[componentCount * i] = imageData[componentCount * i + 2u];
+		dataBuffer[componentCount * i]		= imageData[componentCount * i + 2u];
 		dataBuffer[componentCount * i + 1u] = imageData[componentCount * i + 1u];
 		dataBuffer[componentCount * i + 2u] = imageData[componentCount * i];
 
@@ -286,7 +296,7 @@ static void setGreyBitmapData(const Image* image, Uint8* dataBuffer, const Bool 
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{
 		const Uint8 greyComponent = imageData[sourceComponentCount * i];
-		dataBuffer[destinationComponentCount * i] = greyComponent;
+		dataBuffer[destinationComponentCount * i]	   = greyComponent;
 		dataBuffer[destinationComponentCount * i + 1u] = greyComponent;
 		dataBuffer[destinationComponentCount * i + 2u] = greyComponent;
 

@@ -100,12 +100,15 @@ ByteData PNGReader::readImage(FileStream& fileStream)
 
 void PNGReader::initialiseStructure()
 {
-	_pngStructure = png_create_read_struct_2(PNG_LIBPNG_VER_STRING, nullptr, ::handleError, ::handleWarning, nullptr,
-		::allocateMemory, ::deallocateMemory);
+	_pngStructure =
+		png_create_read_struct_2(PNG_LIBPNG_VER_STRING, nullptr, ::handleError, ::handleWarning, nullptr,
+			::allocateMemory, ::deallocateMemory);
 
 	if(_pngStructure == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise the PNG structure." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise the PNG structure." <<
+			Log::Flush();
+
 		DE_ERROR(0x0);
 	}
 }
@@ -116,7 +119,9 @@ void PNGReader::initialiseInfo()
 
 	if(_pngInfo == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise the PNG info." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise the PNG info." <<
+			Log::Flush();
+
 		DE_ERROR(0x0);
 	}
 }

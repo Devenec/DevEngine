@@ -33,8 +33,8 @@ namespace Graphics
 	{
 	public:
 
-		Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding, const Uint32 size,
-			const AccessMode& accessMode);
+		Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
+			const Uint32 size, const AccessMode& accessMode);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;

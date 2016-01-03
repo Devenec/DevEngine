@@ -30,7 +30,8 @@ namespace Graphics
 
 		DisplayMode();
 
-		DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 refreshRate);
+		DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth,
+			const Uint32 refreshRate);
 
 		DisplayMode(const DisplayMode& displayMode) = default;
 

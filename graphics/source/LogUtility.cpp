@@ -37,23 +37,22 @@ using namespace Maths;
 template<typename T>
 using LogElementFunction = std::function<void(const T&, const Bool)>;
 
+static void logGraphicsAdapterDisplayMode(const DisplayMode& mode, const Bool insertSeparator);
+static void logGraphicsExtensionName(const String8& name, const Bool insertSeparator);
+
 template<typename T>
 static void logElementsInColumns(const Vector<T>& elements, const Uint32 columnCount,
 	LogElementFunction<T> logElementFunction);
-
-static void logGraphicsAdapterDisplayMode(const DisplayMode& mode, const Bool insertSeparator);
-
-static void logGraphicsExtensionName(const String8& name, const Bool insertSeparator);
 
 
 // Graphics
 
 void Graphics::logChosenGraphicsConfig(const GraphicsConfig& config)
 {
-	defaultLog << LogLevel::Info << "Chosen graphics configuration:\n\nColour buffer (RGBA): " << config.redDepth() <<
-		' ' << config.greenDepth() << ' ' << config.blueDepth() << ' ' << config.alphaDepth() <<
-		" bits\nDepth buffer:         " << config.depthBufferDepth() << " bits\nStencil buffer:       " <<
-		config.stencilBufferDepth() << " bits\n" << Log::Flush();
+	defaultLog << LogLevel::Info << "Chosen graphics configuration:\n\nColour buffer (RGBA): " <<
+		config.redDepth() << ' ' << config.greenDepth() << ' ' << config.blueDepth() << ' ' <<
+		config.alphaDepth() << " bits\nDepth buffer:         " << config.depthBufferDepth() <<
+		" bits\nStencil buffer:       " << config.stencilBufferDepth() << " bits\n" << Log::Flush();
 }
 
 void Graphics::logGraphicsAdapters(const GraphicsAdapterList& adapters)
@@ -65,7 +64,9 @@ void Graphics::logGraphicsAdapters(const GraphicsAdapterList& adapters)
 		defaultLog << '\n' << (*i)->name() << " (current: ";
 		::logGraphicsAdapterDisplayMode((*i)->currentDisplayMode(), false);
 		defaultLog << ")\n";
-		::logElementsInColumns<DisplayMode>((*i)->supportedDisplayModes(), 3u, ::logGraphicsAdapterDisplayMode);
+
+		::logElementsInColumns<DisplayMode>((*i)->supportedDisplayModes(), 3u,
+			::logGraphicsAdapterDisplayMode);
 	}
 
 	defaultLog << Log::Flush();
@@ -104,22 +105,6 @@ void Graphics::logWindowCreation()
 
 // External
 
-template<typename T>
-static void logElementsInColumns(const Vector<T>& elements, const Uint32 columnCount,
-	LogElementFunction<T> logElementFunction)
-{
-	const Uint32 elementCount = elements.size();
-	const Uint32 rowCount = static_cast<Uint32>(ceiling(static_cast<Float32>(elementCount) / columnCount));
-
-	for(Uint32 i = 0u; i < rowCount; ++i)
-	{
-		for(Uint32 j = i; j <= rowCount * columnCount + i && j < elementCount; j += rowCount)
-			logElementFunction(elements[j], j < rowCount * columnCount + i);
-
-		defaultLog << '\n';
-	}
-}
-
 static void logGraphicsAdapterDisplayMode(const DisplayMode& mode, const Bool insertSeparator)
 {
 	if(mode.width() < 1000u)
@@ -152,4 +137,20 @@ static void logGraphicsExtensionName(const String8& name, const Bool insertSepar
 
 	if(insertSeparator)
 		defaultLog << String8(50u - name.length() + 4u, ' ');
+}
+
+template<typename T>
+static void logElementsInColumns(const Vector<T>& elements, const Uint32 columnCount,
+	LogElementFunction<T> logElementFunction)
+{
+	const Uint32 elementCount = elements.size();
+	const Uint32 rowCount = static_cast<Uint32>(ceiling(static_cast<Float32>(elementCount) / columnCount));
+
+	for(Uint32 i = 0u; i < rowCount; ++i)
+	{
+		for(Uint32 j = i; j <= rowCount * columnCount + i && j < elementCount; j += rowCount)
+			logElementFunction(elements[j], j < rowCount * columnCount + i);
+
+		defaultLog << '\n';
+	}
 }

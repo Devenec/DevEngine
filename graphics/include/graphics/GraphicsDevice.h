@@ -69,7 +69,8 @@ namespace Graphics
 
 		void destroyResource(GraphicsResource* resource);
 
-		void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount, const Uint32 vertexOffset = 0u) const;
+		void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount,
+			const Uint32 vertexOffset = 0u) const;
 
 		void drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount,
 			const Uint32 indexOffset = 0u) const;

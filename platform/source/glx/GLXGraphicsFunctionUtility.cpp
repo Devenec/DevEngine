@@ -40,7 +40,8 @@ GraphicsFunctionUtility::~GraphicsFunctionUtility() { }
 
 // Private
 
-GraphicsFunctionUtility::Function GraphicsFunctionUtility::getExtensionFunctionInternal(const Char8* name) const
+GraphicsFunctionUtility::Function GraphicsFunctionUtility::getExtensionFunctionInternal(const Char8* name)
+	const
 {
 	Function function = GLX::getProcAddress(reinterpret_cast<const Uint8*>(name));
 
@@ -53,7 +54,8 @@ GraphicsFunctionUtility::Function GraphicsFunctionUtility::getExtensionFunctionI
 	return function;
 }
 
-GraphicsFunctionUtility::Function GraphicsFunctionUtility::getStandardFunctionInternal(const Char8* name) const
+GraphicsFunctionUtility::Function GraphicsFunctionUtility::getStandardFunctionInternal(const Char8* name)
+	const
 {
 	return getExtensionFunctionInternal(name);
 }

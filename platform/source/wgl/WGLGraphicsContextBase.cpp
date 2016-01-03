@@ -40,7 +40,9 @@ void GraphicsContextBase::makeCurrent() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to make the context current." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to make the context current." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -51,7 +53,9 @@ void GraphicsContextBase::makeNonCurrent() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to make the context non-current." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to make the context non-current." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 }

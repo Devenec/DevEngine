@@ -42,7 +42,8 @@ namespace Maths
 			const Float32 e20, const Float32 e21, const Float32 e22, const Float32 e23,
 			const Float32 e30, const Float32 e31, const Float32 e32, const Float32 e33);
 
-		Matrix4(const Vector4& column0, const Vector4& column1, const Vector4& column2, const Vector4& column3);
+		Matrix4(const Vector4& column0, const Vector4& column1, const Vector4& column2,
+			const Vector4& column3);
 
 		Matrix4(const Matrix4& matrix) = default;
 

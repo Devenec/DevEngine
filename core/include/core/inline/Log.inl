@@ -99,7 +99,9 @@ StreamFormat operator &(StreamFormat streamFormatA, const StreamFormat& streamFo
 
 StreamFormat& operator &=(StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
 {
-	streamFormatA = static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) & static_cast<Int32>(streamFormatB));
+	streamFormatA =
+		static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) & static_cast<Int32>(streamFormatB));
+
 	return streamFormatA;
 }
 
@@ -111,6 +113,8 @@ StreamFormat operator |(StreamFormat streamFormatA, const StreamFormat& streamFo
 
 StreamFormat& operator |=(StreamFormat& streamFormatA, const StreamFormat& streamFormatB)
 {
-	streamFormatA = static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) | static_cast<Int32>(streamFormatB));
+	streamFormatA =
+		static_cast<StreamFormat>(static_cast<Int32>(streamFormatA) | static_cast<Int32>(streamFormatB));
+
 	return streamFormatA;
 }

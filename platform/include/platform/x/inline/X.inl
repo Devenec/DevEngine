@@ -50,8 +50,8 @@ Uint32 X::getGraphicsAdapterCount() const
 	return XScreenCount(_connection);
 }
 
-Int16* X::getGraphicsAdapterRefreshRates(const Uint32 adapterIndex, const Uint32 resolutionIndex, Uint32& rateCount)
-	const
+Int16* X::getGraphicsAdapterRefreshRates(const Uint32 adapterIndex, const Uint32 resolutionIndex,
+	Uint32& rateCount) const
 {
 	return XRRRates(_connection, adapterIndex, resolutionIndex, reinterpret_cast<Int32*>(&rateCount));
 }

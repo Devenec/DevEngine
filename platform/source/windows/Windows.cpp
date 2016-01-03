@@ -62,8 +62,8 @@ Uint32 Platform::getWindowsErrorCode()
 
 void Platform::invokeWindowsError(const Uint32 errorCode)
 {
-	defaultLog << LogLevel::Error << "Windows error occurred with code " << StreamFormat::Hexadecimal << errorCode <<
-		StreamFormat::Decimal << '-' << getWindowsErrorCode() << '.' << Log::Flush();
+	defaultLog << LogLevel::Error << "Windows error occurred with code " << StreamFormat::Hexadecimal <<
+		errorCode << StreamFormat::Decimal << '-' << getWindowsErrorCode() << '.' << Log::Flush();
 
 	DE_DEBUGGER_BREAK();
 	std::abort();

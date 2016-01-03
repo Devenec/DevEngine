@@ -84,11 +84,12 @@ private:
 		const Uint32 currentRefreshRate = XRRConfigCurrentRate(adapterConfig);
 		DisplayModeList displayModes;
 
-		const Uint32 currentDisplayModeIndex = getAdapterDisplayModes(adapterIndex, displayModes, currentResolutionIndex,
-			currentRefreshRate);
+		const Uint32 currentDisplayModeIndex =
+			getAdapterDisplayModes(adapterIndex, displayModes, currentResolutionIndex, currentRefreshRate);
 
-		return DE_NEW(GraphicsAdapter::Implementation)(adapterIndex, ::getAdapterName(adapterIndex), displayModes,
-			currentDisplayModeIndex, adapterConfig);
+		return
+			DE_NEW(GraphicsAdapter::Implementation)(adapterIndex, ::getAdapterName(adapterIndex),
+				displayModes, currentDisplayModeIndex, adapterConfig);
 	}
 
 	void createAdapter(GraphicsAdapter::Implementation* adapterImplementation)
@@ -97,8 +98,8 @@ private:
 		_adapters.push_back(adapter);
 	}
 
-	Uint32 getAdapterDisplayModes(const Int32 adapterIndex, DisplayModeList& modes, const Uint32 currentResolutionIndex,
-		const Uint32 currentRefreshRate) const
+	Uint32 getAdapterDisplayModes(const Int32 adapterIndex, DisplayModeList& modes,
+		const Uint32 currentResolutionIndex, const Uint32 currentRefreshRate) const
 	{
 		X& x = X::instance();
 		Uint32 resolutionCount;

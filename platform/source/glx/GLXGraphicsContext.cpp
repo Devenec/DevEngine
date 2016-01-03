@@ -48,7 +48,9 @@ GraphicsContext::Implementation::Implementation(const Window windowHandle, GLX::
 	: _graphicsContextHandle(nullptr),
 	  _windowHandle(windowHandle)
 {
-	_graphicsContextHandle = X::instance().createGraphicsContext(configHandle, ::CONTEXT_ATTRIBUTES.data(), true);
+	_graphicsContextHandle =
+		X::instance().createGraphicsContext(configHandle, ::CONTEXT_ATTRIBUTES.data(), true);
+
 	checkContext();
 }
 
@@ -77,7 +79,10 @@ void GraphicsContext::Implementation::swapBuffers() const
 void GraphicsContext::Implementation::checkContext() const
 {
 	if(!X::instance().isGraphicsContextDirect(_graphicsContextHandle))
-		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "The graphics context is not direct." << Log::Flush();
+	{
+		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "The graphics context is not direct." <<
+			Log::Flush();
+	}
 }
 
 

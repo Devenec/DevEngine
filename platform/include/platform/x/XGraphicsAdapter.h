@@ -60,7 +60,8 @@ namespace Graphics
 		Uint32 _currentDisplayModeIndex;
 		Uint32 _initialDisplayModeIndex;
 
-		DisplayModeList::const_iterator findDisplayMode(const DisplayMode& mode, Uint32& resolutionIndex) const;
+		DisplayModeList::const_iterator findDisplayMode(const DisplayMode& mode, Uint32& resolutionIndex)
+			const;
 	};
 
 #include "inline/XGraphicsAdapter.inl"

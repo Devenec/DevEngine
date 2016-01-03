@@ -30,7 +30,8 @@ DisplayMode::DisplayMode()
 	  _refreshRate(0u),
 	  _width(0u) { }
 
-DisplayMode::DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth, const Uint32 refreshRate)
+DisplayMode::DisplayMode(const Uint32 width, const Uint32 height, const Uint32 colourDepth,
+	const Uint32 refreshRate)
 	: _colourDepth(colourDepth),
 	  _height(height),
 	  _refreshRate(refreshRate),

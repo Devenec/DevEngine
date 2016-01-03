@@ -177,7 +177,8 @@ GraphicsDeviceManager::~GraphicsDeviceManager()
 	DE_DELETE(_implementation, Implementation);
 }
 
-GraphicsDevice* GraphicsDeviceManager::createWindowAndDevice(const Uint32 windowWidth, const Uint32 windowHeight)
+GraphicsDevice* GraphicsDeviceManager::createWindowAndDevice(const Uint32 windowWidth,
+	const Uint32 windowHeight)
 {
 	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
 	logWindowCreation();
@@ -215,9 +216,10 @@ static HWND createWindow(const Uint32 width, const Uint32 height)
 	const Int32 windowWidth = windowRectangle.right - windowRectangle.left;
 	const Int32 windowHeight = windowRectangle.bottom - windowRectangle.top;
 
-	HWND windowHandle = CreateWindowExW(0u, ::WINDOW_CLASS_NAME, ::WINDOW_DEFAULT_TITLE, ::WINDOW_STYLE,
-		windowRectangle.left, windowRectangle.top, windowWidth, windowHeight, nullptr, nullptr,
-		GetModuleHandleW(nullptr), nullptr);
+	HWND windowHandle =
+		CreateWindowExW(0u, ::WINDOW_CLASS_NAME, ::WINDOW_DEFAULT_TITLE, ::WINDOW_STYLE, windowRectangle.left,
+			windowRectangle.top, windowWidth, windowHeight, nullptr, nullptr, GetModuleHandleW(nullptr),
+			nullptr);
 
 	if(windowHandle == nullptr)
 	{
@@ -315,7 +317,9 @@ static void registerWindowClass(const WNDCLASSEX& windowClassInfo)
 
 	if(result == 0u)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to register the window class." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to register the window class." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 }

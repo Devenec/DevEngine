@@ -42,7 +42,8 @@ static const RequiredConfigAttributeList REQUIRED_CONFIG_ATTRIBUTES
 	0
 }};
 
-static Bool isConfigLess(const ConfigAttributeList& configAttributesA, const ConfigAttributeList& configAttributesB);
+static Bool isConfigLess(const ConfigAttributeList& configAttributesA,
+	const ConfigAttributeList& configAttributesB);
 
 
 // Public
@@ -65,8 +66,9 @@ GraphicsConfig GraphicsConfigChooser::getConfig(GLX::FBConfig configHandle) cons
 {
 	ConfigAttributeList configAttributes = getConfigAttributes(configHandle);
 
-	return GraphicsConfig(configAttributes[4], configAttributes[3], configAttributes[1], configAttributes[0],
-		configAttributes[2], configAttributes[5]);
+	return
+		GraphicsConfig(configAttributes[4], configAttributes[3], configAttributes[1], configAttributes[0],
+			configAttributes[2], configAttributes[5]);
 }
 
 // Private
@@ -87,7 +89,9 @@ GLX::FBConfig* GraphicsConfigChooser::getConfigs(Uint32& configCount) const
 
 	if(configCount == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found." <<
+			Log::Flush();
+
 		DE_ERROR(0x0);
 	}
 
@@ -127,7 +131,8 @@ ConfigAttributeList GraphicsConfigChooser::getConfigAttributes(GLX::FBConfig con
 
 // External
 
-static Bool isConfigLess(const ConfigAttributeList& configAttributesA, const ConfigAttributeList& configAttributesB)
+static Bool isConfigLess(const ConfigAttributeList& configAttributesA,
+	const ConfigAttributeList& configAttributesB)
 {
 	return
 		configAttributesA[1] < configAttributesB[1] ||

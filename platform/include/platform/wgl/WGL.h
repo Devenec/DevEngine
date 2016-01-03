@@ -68,7 +68,8 @@ namespace Platform
 
 		// WGL_ARB_create_context
 
-		using CreateContextAttribsARB = HGLRC (DE_CALL_WGL*)(HDC hdc, HGLRC hShareContext, const Int32* attribList);
+		using CreateContextAttribsARB =
+			HGLRC (DE_CALL_WGL*)(HDC hdc, HGLRC hShareContext, const Int32* attribList);
 
 		// WGL_ARB_extensions_string
 
@@ -76,14 +77,17 @@ namespace Platform
 
 		// WGL_ARB_pixel_format
 
-		using ChoosePixelFormatARB = Int32 (DE_CALL_WGL*)(HDC hdc, const Int32* piAttribIList,
-			const Float32* pfAttribFList, Uint32 nMaxFormats, Int32* piFormats, Uint32* nNumFormats);
+		using ChoosePixelFormatARB =
+			Int32 (DE_CALL_WGL*)(HDC hdc, const Int32* piAttribIList, const Float32* pfAttribFList,
+				Uint32 nMaxFormats, Int32* piFormats, Uint32* nNumFormats);
 
-		using GetPixelFormatAttribFVARB = Int32 (DE_CALL_WGL*)(HDC hdc, Int32 iPixelFormat, Int32 iLayerPlane,
-			Uint32 nAttributes, const Int32* piAttributes, Float32* piValues);
+		using GetPixelFormatAttribFVARB =
+			Int32 (DE_CALL_WGL*)(HDC hdc, Int32 iPixelFormat, Int32 iLayerPlane, Uint32 nAttributes,
+				const Int32* piAttributes, Float32* piValues);
 
-		using GetPixelFormatAttribIVARB = Int32 (DE_CALL_WGL*)(HDC hdc, Int32 piValues, Int32 iLayerPlane,
-			Uint32 nAttributes, const Int32* piAttributes, Int32* attributeValues);
+		using GetPixelFormatAttribIVARB =
+			Int32 (DE_CALL_WGL*)(HDC hdc, Int32 piValues, Int32 iLayerPlane, Uint32 nAttributes,
+				const Int32* piAttributes, Int32* attributeValues);
 
 
 		// Standard

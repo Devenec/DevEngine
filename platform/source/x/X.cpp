@@ -54,13 +54,17 @@ X::~X()
 	XCloseDisplay(_connection);
 }
 
-GLX::Context X::createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes, const Bool isDirect) const
+GLX::Context X::createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes,
+	const Bool isDirect) const
 {
-	GLX::Context contextHandle = GLX::createContextAttribsARB(_connection, configHandle, nullptr, isDirect, attributes);
+	GLX::Context contextHandle =
+		GLX::createContextAttribsARB(_connection, configHandle, nullptr, isDirect, attributes);
 
 	if(contextHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create a graphics context." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create a graphics context." <<
+			Log::Flush();
+
 		DE_ERROR_X(0x0);
 	}
 
@@ -81,21 +85,21 @@ Cursor X::createHiddenPointer(const Window windowHandle) const
 	XColor foregroundColour;
 	XColor backgroundColour;
 
-	const Cursor pointerHandle = XCreatePixmapCursor(_connection, pixmap, pixmap, &foregroundColour, &backgroundColour,
-		0u, 0u);
+	const Cursor pointerHandle = XCreatePixmapCursor(_connection, pixmap, pixmap, &foregroundColour,
+		&backgroundColour, 0u, 0u);
 
 	XFreePixmap(_connection, pixmap);
 	return pointerHandle;
 }
 
-Window X::createWindow(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height, XVisualInfo* visualInfo,
-	XSetWindowAttributes& attributes, const Uint32 attributeMask) const
+Window X::createWindow(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height,
+	XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask) const
 {
 	const Window rootWindowHandle = XRootWindow(_connection, GRAPHICS_ADAPTER_INDEX);
 	attributes.colormap = XCreateColormap(_connection, rootWindowHandle, visualInfo->visual, AllocNone);
 
-	return XCreateWindow(_connection, rootWindowHandle, x, y, width, height, 0u, visualInfo->depth, InputOutput,
-		visualInfo->visual, attributeMask, &attributes);
+	return XCreateWindow(_connection, rootWindowHandle, x, y, width, height, 0u, visualInfo->depth,
+		InputOutput, visualInfo->visual, attributeMask, &attributes);
 }
 
 void X::destroyWindowProperty(const Window windowHandle, const Char8* propertyName) const
@@ -124,8 +128,8 @@ XRRScreenConfiguration* X::getGraphicsAdapterConfig(const Uint32 adapterIndex) c
 
 	if(config == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the graphics adapter configuration." <<
-			Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
+			"Failed to get the graphics adapter configuration." << Log::Flush();
 
 		DE_ERROR_X(0x0);
 	}
@@ -140,7 +144,9 @@ Int32 X::getGraphicsConfigAttribute(GLX::FBConfig configHandle, const Int32 attr
 
 	if(result != 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get a configuration attribute." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get a configuration attribute." <<
+			Log::Flush();
+
 		DE_ERROR_X(0x0);
 	}
 
@@ -149,12 +155,15 @@ Int32 X::getGraphicsConfigAttribute(GLX::FBConfig configHandle, const Int32 attr
 
 GLX::FBConfig* X::getGraphicsConfigs(const Int32* attributes, Uint32& configCount) const
 {
-	GLX::FBConfig* configHandles = GLX::chooseFBConfig(_connection, GRAPHICS_ADAPTER_INDEX, attributes,
-		reinterpret_cast<Int32*>(&configCount));
+	GLX::FBConfig* configHandles =
+		GLX::chooseFBConfig(_connection, GRAPHICS_ADAPTER_INDEX, attributes,
+			reinterpret_cast<Int32*>(&configCount));
 
 	if(configHandles == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get matching configurations." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get matching configurations." <<
+			Log::Flush();
+
 		DE_ERROR_X(0x0);
 	}
 
@@ -195,7 +204,9 @@ Void* X::getWindowUserData(const Window windowHandle) const
 
 	if(result != 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the user data of a window." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the user data of a window." <<
+			Log::Flush();
+
 		DE_ERROR_X(0x0);
 	}
 
@@ -214,9 +225,9 @@ void X::invokeError(const Uint32 errorCode) const
 
 void X::invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function) const
 {
-	defaultLog << LogLevel::Error << "Error occurred at " << file << ", on line " << line << ", in function " <<
-		function << ", with error code " << StreamFormat::Hexadecimal << errorCode << StreamFormat::Decimal << '.' <<
-		Log::Flush();
+	defaultLog << LogLevel::Error << "Error occurred at " << file << ", on line " << line <<
+		", in function " << function << ", with error code " << StreamFormat::Hexadecimal << errorCode <<
+		StreamFormat::Decimal << '.' << Log::Flush();
 
 	XSync(_connection, False);
 	DE_DEBUGGER_BREAK();
@@ -233,8 +244,9 @@ Bool X::isGLXSupported(Uint32& versionMajor, Uint32& versionMinor) const
 	}
 	else
 	{
-		result = GLX::queryVersion(_connection, reinterpret_cast<Int32*>(&versionMajor),
-			reinterpret_cast<Int32*>(&versionMinor));
+		result =
+			GLX::queryVersion(_connection, reinterpret_cast<Int32*>(&versionMajor),
+				reinterpret_cast<Int32*>(&versionMinor));
 
 		return result != 0;
 	}
@@ -264,8 +276,9 @@ XEvent X::popEvent() const
 void X::setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
 	const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const
 {
-	const Int32 result = XRRSetScreenConfigAndRate(_connection, graphicsAdapterConfig, rootWindowHandle,
-		resolutionIndex, RR_Rotate_0, static_cast<Int16>(refreshRate), timestamp);
+	const Int32 result =
+		XRRSetScreenConfigAndRate(_connection, graphicsAdapterConfig, rootWindowHandle, resolutionIndex,
+			RR_Rotate_0, static_cast<Int16>(refreshRate), timestamp);
 
 	if(result == 0)
 	{
@@ -301,14 +314,15 @@ void X::setWindowFullscreen(const Window windowHandle, const Bool isFullscreen) 
 	sendEvent(rootWindowHandle, event, SubstructureNotifyMask);
 }
 
-void X::setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms, const Uint32 protocolAtomCount) const
+void X::setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms,
+	const Uint32 protocolAtomCount) const
 {
 	const Int32 result = XSetWMProtocols(_connection, windowHandle, protocolAtoms, protocolAtomCount);
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the message protocols of a window." <<
-			Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
+			"Failed to set the message protocols of a window." << Log::Flush();
 
 		DE_ERROR_X(0x0);
 	}
@@ -320,8 +334,8 @@ void X::setWindowProperty(const Window windowHandle, const Char8* propertyName, 
 	const Atom propertyAtom = createAtom(propertyName);
 	const Atom typeAtom = createAtom(typeName);
 
-	XChangeProperty(_connection, windowHandle, propertyAtom, typeAtom, dataElementBitSize, PropModeReplace, data,
-		dataElementCount);
+	XChangeProperty(_connection, windowHandle, propertyAtom, typeAtom, dataElementBitSize, PropModeReplace,
+		data, dataElementCount);
 }
 
 void X::setWindowTitle(const Window windowHandle, const String8& title) const
@@ -333,11 +347,14 @@ void X::setWindowTitle(const Window windowHandle, const String8& title) const
 
 void X::setWindowUserData(const Window windowHandle, Void* data) const
 {
-	const Int32 result = XSaveContext(_connection, windowHandle, _windowUserDataContext, static_cast<Char8*>(data));
+	const Int32 result =
+		XSaveContext(_connection, windowHandle, _windowUserDataContext, static_cast<Char8*>(data));
 
 	if(result != 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the user data of a window." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the user data of a window." <<
+			Log::Flush();
+
 		DE_ERROR_X(0x0);
 	}
 }
@@ -350,7 +367,9 @@ void X::checkConnection() const
 {
 	if(_connection == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise a connection." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise a connection." <<
+			Log::Flush();
+
 		DE_ERROR(0x0);
 	}
 	else
@@ -382,14 +401,15 @@ void X::checkXRandRSupport() const
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "XRandR version " << versionMajor << '.' <<
 				versionMinor << " is not supported. The minimum supported version is " <<
-				MIN_SUPPORTED_XRANDR_VERSION_MAJOR << '.' << MIN_SUPPORTED_XRANDR_VERSION_MINOR << '.' << Log::Flush();
+				MIN_SUPPORTED_XRANDR_VERSION_MAJOR << '.' << MIN_SUPPORTED_XRANDR_VERSION_MINOR << '.' <<
+				Log::Flush();
 
 			DE_ERROR(0x0);
 		}
 		else
 		{
-			defaultLog << LogLevel::Info << "Using XRandR version " << versionMajor << '.' << versionMinor << '.' <<
-				Log::Flush();
+			defaultLog << LogLevel::Info << "Using XRandR version " << versionMajor << '.' << versionMinor <<
+				'.' << Log::Flush();
 		}
 	}
 }
@@ -432,8 +452,8 @@ static Int32 handleError(Display* xConnection, XErrorEvent* errorInfo)
 	XGetErrorText(xConnection, errorInfo->error_code, errorMessage, sizeof(errorMessage));
 
 	defaultLog << LogLevel::Error << ::COMPONENT_TAG << "X error occurred, " << errorMessage << " (" <<
-		StreamFormat::Hexadecimal << static_cast<Uint32>(errorInfo->error_code) << StreamFormat::Decimal << ")." <<
-		Log::Flush();
+		StreamFormat::Hexadecimal << static_cast<Uint32>(errorInfo->error_code) << StreamFormat::Decimal <<
+		")." << Log::Flush();
 
 	std::abort();
 	return 0;

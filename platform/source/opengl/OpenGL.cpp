@@ -127,11 +127,12 @@ void OpenGL::checkSupport()
 	::initialiseMajorVersion(versionString);
 	::initialiseMinorVersion(versionString);
 
-	if(isVersionLess(::versionMajor, ::versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR, ::MIN_SUPPORTED_VERSION_MINOR))
+	if(isVersionLess(::versionMajor, ::versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR,
+		::MIN_SUPPORTED_VERSION_MINOR))
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "OpenGL version " << ::versionMajor << '.' <<
-			::versionMinor << " is not supported. The minimum supported version is " << ::MIN_SUPPORTED_VERSION_MAJOR <<
-			'.' << ::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
+			::versionMinor << " is not supported. The minimum supported version is " <<
+			::MIN_SUPPORTED_VERSION_MAJOR << '.' << ::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
 
 		DE_ERROR(0x0);
 	}
@@ -1620,7 +1621,8 @@ static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const
 
 static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
 {
-	defaultLog << LogLevel::Warning << "OpenGL error occurred, " << ::ERROR_NAMES[OpenGL::INVALID_ENUM - errorCode] <<
-		" (" << StreamFormat::Hexadecimal << errorCode << StreamFormat::Decimal << ") at " << file << ", on line " <<
-		line << ", in function " << function << '.' << Log::Flush();
+	defaultLog << LogLevel::Warning << "OpenGL error occurred, " <<
+		::ERROR_NAMES[OpenGL::INVALID_ENUM - errorCode] << " (" << StreamFormat::Hexadecimal << errorCode <<
+		StreamFormat::Decimal << ") at " << file << ", on line " << line << ", in function " << function <<
+		'.' << Log::Flush();
 }

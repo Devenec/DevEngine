@@ -75,7 +75,9 @@ namespace Platform
 		struct FBConfigStruct;
 		using FBConfig = FBConfigStruct*;
 
-		using ChooseFBConfig = FBConfig* (*)(Display* dpy, Int32 screen, const Int32* attrib_list, Int32* nelements);
+		using ChooseFBConfig =
+			FBConfig* (*)(Display* dpy, Int32 screen, const Int32* attrib_list, Int32* nelements);
+
 		using GetFBConfigAttrib = Int32 (*)(Display* dpy, FBConfig config, Int32 attribute, Int32* value);
 		using GetVisualFromFBConfig = XVisualInfo* (*)(Display* dpy, FBConfig config);
 		using MakeContextCurrent = Int32 (*)(Display* dpy, Drawable draw, Drawable read, Context ctx);
@@ -88,8 +90,9 @@ namespace Platform
 
 		// GLX_ARB_create_context
 
-		using CreateContextAttribsARB = Context (*)(Display* dpy, FBConfig config, Context share_context, Int32 direct,
-			const Int32* attrib_list);
+		using CreateContextAttribsARB =
+			Context (*)(Display* dpy, FBConfig config, Context share_context, Int32 direct,
+				const Int32* attrib_list);
 
 
 		// Version 1.0

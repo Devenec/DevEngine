@@ -144,7 +144,8 @@ Vector4 operator /(Vector4 vector, const Float32 scalar)
 
 Bool operator ==(const Vector4& vectorA, const Vector4& vectorB)
 {
-	return vectorA.x == vectorB.x && vectorA.y == vectorB.y && vectorA.z == vectorB.z && vectorA.w == vectorB.w;
+	return
+		vectorA.x == vectorB.x && vectorA.y == vectorB.y && vectorA.z == vectorB.z && vectorA.w == vectorB.w;
 }
 
 Bool operator !=(const Vector4& vectorA, const Vector4& vectorB)

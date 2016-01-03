@@ -79,12 +79,15 @@ void Window::Implementation::setIcon(const Image* image)
 
 void Window::Implementation::setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle)
 {
-	const Int32 result = SetWindowPos(_windowHandle, HWND_TOP, rectangle.x, rectangle.y, rectangle.width,
-		rectangle.height, SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
+	const Int32 result =
+		SetWindowPos(_windowHandle, HWND_TOP, rectangle.x, rectangle.y, rectangle.width, rectangle.height,
+			SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the window rectangle." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the window rectangle." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -124,12 +127,16 @@ Core::Rectangle Window::Implementation::getRectangle() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the window rectangle." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the window rectangle." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 
-	return Core::Rectangle(rectangle.left, rectangle.top, rectangle.right - rectangle.left,
-		rectangle.bottom - rectangle.top);
+	const Uint32 width = rectangle.right - rectangle.left;
+	const Uint32 height = rectangle.bottom - rectangle.top;
+
+	return Core::Rectangle(rectangle.left, rectangle.top, width, height);
 }
 
 void Window::Implementation::setFullscreenStyle(const Bool isFullscreen) const
@@ -154,9 +161,10 @@ void Window::Implementation::setFullscreenStyle(const Bool isFullscreen) const
 Core::Rectangle Window::Implementation::getFullscreenRectangle() const
 {
 	const RECT monitorRectangle = getMonitorRectangle();
+	const Uint32 width = monitorRectangle.right - monitorRectangle.left;
+	const Uint32 height = monitorRectangle.bottom - monitorRectangle.top;
 
-	return Core::Rectangle(monitorRectangle.left, monitorRectangle.top, monitorRectangle.right - monitorRectangle.left,
-		monitorRectangle.bottom - monitorRectangle.top);
+	return Core::Rectangle(monitorRectangle.left, monitorRectangle.top, width, height);
 }
 
 RECT Window::Implementation::getMonitorRectangle() const
@@ -168,8 +176,8 @@ RECT Window::Implementation::getMonitorRectangle() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get info about the monitor of the window." <<
-			Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
+			"Failed to get info about the monitor of the window." << Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}

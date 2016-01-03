@@ -67,10 +67,13 @@ namespace Platform
 
 		Int32 chooseGraphicsConfig(Graphics::GraphicsConfig& chosenConfig) const;
 		GraphicsContext* createGraphicsContext(HWND windowHandle, const Int32 pixelFormatIndex) const;
-		Graphics::GraphicsDevice* createDeviceObject(Graphics::Window* window, GraphicsContext* graphicsContext) const;
+
+		Graphics::GraphicsDevice* createDeviceObject(Graphics::Window* window,
+			GraphicsContext* graphicsContext) const;
+
 		Uint32 getPixelFormatCount() const;
 		PixelFormatIndexList getPixelFormatIndices(const Uint32 formatCount) const;
-		
+
 		Int32 chooseBestPixelFormat(const PixelFormatIndexList& formatIndices,
 			PixelFormatAttributeList& formatAttributes) const;
 

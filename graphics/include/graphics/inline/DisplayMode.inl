@@ -45,7 +45,8 @@ Uint32 DisplayMode::width() const
 
 Bool operator ==(const DisplayMode& displayModeA, const DisplayMode& displayModeB)
 {
-	return displayModeA.refreshRate() == displayModeB.refreshRate() &&
+	return
+		displayModeA.refreshRate() == displayModeB.refreshRate() &&
 		displayModeA.colourDepth() == displayModeB.colourDepth() &&
 		displayModeA.height() == displayModeB.height() &&
 		displayModeA.width() == displayModeB.width();

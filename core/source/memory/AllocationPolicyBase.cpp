@@ -48,8 +48,8 @@ void AllocationPolicyBase::deregisterAllocation(Void* pointer, const Uint32 size
 
 }
 
-void AllocationPolicyBase::registerAllocation(Void* pointer, const Uint32 size, const Char8* file, const Uint32 line,
-	const Char8* function)
+void AllocationPolicyBase::registerAllocation(Void* pointer, const Uint32 size, const Char8* file,
+	const Uint32 line, const Char8* function)
 {
 
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
