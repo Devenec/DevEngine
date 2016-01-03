@@ -33,7 +33,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Graphics::Effect - OpenGL]";
+static const Char8* COMPONENT_TAG = "[Graphics::Effect - OpenGL] ";
 
 
 // Implementation
@@ -42,15 +42,15 @@ class Effect::Implementation final
 {
 public:
 
-	explicit Implementation(OpenGL* openGL)
-		: _openGL(openGL),
+	explicit Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle)
+		: _openGL(static_cast<OpenGL*>(graphicsInterfaceHandle)),
 		  _programHandle(0u)
 	{
 		_programHandle = _openGL->createProgram();
 
 		if(_programHandle == 0u)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the program." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the program." << Log::Flush();
 			DE_ERROR(0x0);
 		}
 	}
@@ -149,7 +149,7 @@ private:
 
 	void outputLinkerFailureLog() const
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to link the program:";
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to link the program:";
 		const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 		if(logLength > 1u)
@@ -166,7 +166,7 @@ private:
 
 		if(logLength > 1u)
 		{
-			defaultLog << LogLevel::Warning << ::COMPONENT_TAG << " The program linked with warning(s):\n" <<
+			defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "The program linked with warning(s):\n" <<
 				getInfoLog(logLength).data() << Log::Flush();
 		}
 	}
@@ -208,8 +208,8 @@ void Effect::use() const
 
 // Private
 
-Effect::Effect(GraphicsInterface graphicsInterface)
-	: _implementation(DE_NEW(Implementation)(static_cast<OpenGL*>(graphicsInterface))) { }
+Effect::Effect(GraphicsInterfaceHandle graphicsInterfaceHandle)
+	: _implementation(DE_NEW(Implementation)(graphicsInterfaceHandle)) { }
 
 Effect::~Effect()
 {

@@ -30,34 +30,32 @@ namespace Graphics
 	{
 	public:
 
-		explicit Implementation(const ::Window windowHandle);
+		explicit Implementation(WindowHandle windowHandle);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
 
 		~Implementation();
 
+		inline Core::Rectangle clientRectangle() const;
+
 		inline void close();
 
-		inline ::Window handle() const;
+		inline WindowHandle handle() const;
 
 		inline void hide() const;
 
-		inline Bool isFullscreen() const;
+		inline Bool isOpen() const;
 
-		Core::Rectangle rectangle() const;
+		inline void setClientRectangle(const Core::Rectangle& rectangle);
 
 		inline void setPointerVisibility(const Bool isPointerVisible);
 
-		void setFullscreen(const Bool isFullscreen);
+		void setFullscreen(const Bool inFullscreen);
 
 		void setIcon(const Image* image);
 
-		void setRectangle(const Core::Rectangle& rectangle);
-
 		void setTitle(const Core::String8& title) const;
-
-		inline Bool shouldClose() const;
 
 		inline void show() const;
 
@@ -66,10 +64,9 @@ namespace Graphics
 
 	private:
 
-		Core::Rectangle _rectangle;
 		Cursor _hiddenPointerHandle;
 		::Window _windowHandle;
-		Bool _isFullscreen;
+		Bool _inFullscreen;
 		Bool _isOpen;
 	};
 

@@ -29,7 +29,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsContextBase - WGL]";
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsContextBase - WGL] ";
 
 
 // Public
@@ -40,7 +40,7 @@ void GraphicsContextBase::makeCurrent() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to make the context current." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to make the context current." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -51,7 +51,7 @@ void GraphicsContextBase::makeNonCurrent() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to make the context non-current." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to make the context non-current." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -83,7 +83,7 @@ void GraphicsContextBase::destroyContext()
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to destroy the context." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to destroy the context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -97,7 +97,7 @@ void GraphicsContextBase::setPixelFormat(const Int32 pixelFormatIndex) const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set a pixel format." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set a pixel format." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }

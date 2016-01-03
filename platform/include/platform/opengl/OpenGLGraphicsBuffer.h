@@ -33,7 +33,7 @@ namespace Graphics
 	{
 	public:
 
-		Implementation(Platform::OpenGL* openGL, const Uint32 binding, const Uint32 size,
+		Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding, const Uint32 size,
 			const AccessMode& accessMode);
 
 		Implementation(const Implementation& implementation) = delete;

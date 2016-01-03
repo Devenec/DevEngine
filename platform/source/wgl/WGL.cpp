@@ -32,7 +32,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::WGL]";
+static const Char8* COMPONENT_TAG = "[Platform::WGL] ";
 
 static void checkExtensions();
 static void getExtensionFunctions();
@@ -94,7 +94,7 @@ static void checkExtensions()
 {
 	if(WGL::getExtensionsStringARB == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Graphics context extensions are not supported." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Graphics context extensions are not supported." <<
 			Log::Flush();
 
 		DE_ERROR(0x0);

@@ -31,7 +31,7 @@ using namespace Platform;
 
 using RequiredConfigAttributeList = Array<Int32, 9u>;
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsConfigChooser - GLX]";
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsConfigChooser - GLX] ";
 
 static const RequiredConfigAttributeList REQUIRED_CONFIG_ATTRIBUTES
 {{
@@ -87,7 +87,7 @@ GLX::FBConfig* GraphicsConfigChooser::getConfigs(Uint32& configCount) const
 
 	if(configCount == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " No matching configurations were found." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 

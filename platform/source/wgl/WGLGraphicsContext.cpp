@@ -30,7 +30,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsContext - WGL]";
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsContext - WGL] ";
 
 static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 {{
@@ -46,8 +46,8 @@ static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 
 // Public
 
-GraphicsContext::Implementation::Implementation(HWND windowHandle, const Int32 pixelFormatIndex)
-	: Base(windowHandle)
+GraphicsContext::Implementation::Implementation(WindowHandle windowHandle, const Int32 pixelFormatIndex)
+	: Base(static_cast<HWND>(windowHandle))
 {
 	setPixelFormat(pixelFormatIndex);
 	initialise();
@@ -61,7 +61,7 @@ void GraphicsContext::Implementation::initialise()
 
 	if(_graphicsContextHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the context." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }

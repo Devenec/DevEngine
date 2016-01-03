@@ -20,14 +20,19 @@
 
 // Public
 
+Core::Rectangle Graphics::Window::Implementation::clientRectangle() const
+{
+	return Platform::X::instance().getWindowClientRectangle(_windowHandle);
+}
+
 void Graphics::Window::Implementation::close()
 {
 	_isOpen = false;
 }
 
-::Window Graphics::Window::Implementation::handle() const
+WindowHandle Graphics::Window::Implementation::handle() const
 {
-	return _windowHandle;
+	return reinterpret_cast<WindowHandle>(_windowHandle);
 }
 
 void Graphics::Window::Implementation::hide() const
@@ -35,20 +40,21 @@ void Graphics::Window::Implementation::hide() const
 	Platform::X::instance().hideWindow(_windowHandle);
 }
 
-Bool Graphics::Window::Implementation::isFullscreen() const
+Bool Graphics::Window::Implementation::isOpen() const
 {
-	return _isFullscreen;
+	return _isOpen;
+}
+
+void Graphics::Window::Implementation::setClientRectangle(const Core::Rectangle& rectangle)
+{
+	if(!_inFullscreen)
+		Platform::X::instance().setWindowClientRectangle(_windowHandle, rectangle);
 }
 
 void Graphics::Window::Implementation::setPointerVisibility(const Bool isPointerVisible)
 {
 	const Cursor pointerHandle = isPointerVisible ? None : _hiddenPointerHandle;
-	Platform::X::instance().setPointer(_windowHandle, pointerHandle);
-}
-
-Bool Graphics::Window::Implementation::shouldClose() const
-{
-	return !_isOpen;
+	Platform::X::instance().setWindowPointer(_windowHandle, pointerHandle);
 }
 
 void Graphics::Window::Implementation::show() const

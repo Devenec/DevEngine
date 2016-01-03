@@ -25,7 +25,7 @@ using namespace Core;
 // Public
 
 Rectangle::Rectangle(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height)
-	: height(height),
+	: x(x),
+	  y(y),
 	  width(width),
-	  x(x),
-	  y(y) { }
+	  height(height) { }

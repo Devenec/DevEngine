@@ -33,7 +33,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::Icon - Windows]";
+static const Char8* COMPONENT_TAG = "[Platform::Icon - Windows] ";
 
 static void checkImageFormat(const ImageFormat& format);
 static BITMAPV5HEADER createBitmapHeader(const Image* image);
@@ -83,7 +83,7 @@ Icon::~Icon()
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to destroy the icon." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to destroy the icon." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
@@ -104,7 +104,7 @@ void Icon::createIcon(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle)
 
 	if(_iconHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the icon." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the icon." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -155,7 +155,7 @@ static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Uint8*& da
 
 	if(bitmapHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the colour bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the colour bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -179,7 +179,7 @@ static HBITMAP createMaskBitmap(const Image* image)
 
 	if(bitmapHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the mask bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the mask bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -192,7 +192,7 @@ static void destroyBitmap(HBITMAP bitmapHandle)
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to destroy a bitmap." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to destroy a bitmap." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -203,7 +203,7 @@ static HDC getDeviceContext()
 
 	if(deviceContextHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get a device context." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get a device context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -233,7 +233,7 @@ static void releaseDeviceContext(HDC deviceContextHandle)
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to release the device context." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to release the device context." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }

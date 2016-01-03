@@ -44,7 +44,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG		  = "[Graphics::GraphicsDeviceManager - Windows]";
+static const Char8* COMPONENT_TAG		  = "[Graphics::GraphicsDeviceManager - Windows] ";
 static const Char16* WINDOW_CLASS_NAME	  = DE_CHAR16("devengine");
 static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine Application");
 static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
@@ -117,7 +117,7 @@ private:
 
 		if(result == 0 && getWindowsErrorCode() != 0u)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the user data of a window." <<
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the user data of a window." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x0);
@@ -221,7 +221,7 @@ static HWND createWindow(const Uint32 width, const Uint32 height)
 
 	if(windowHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create a window." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create a window." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -234,8 +234,11 @@ static RECT createWindowRectangle(const Uint32 width, const Uint32 height)
 	const DisplayMode& currentDisplayMode = graphicsAdapterManager.adapters()[0]->currentDisplayMode();
 
 	RECT rectangle;
+
+	// TODO: change to: (x1 - x2) / 2
 	rectangle.left = currentDisplayMode.width() / 2 - width / 2;
 	rectangle.top = currentDisplayMode.height() / 2 - height / 2;
+
 	rectangle.right = rectangle.left + width;
 	rectangle.bottom = rectangle.top + height;
 
@@ -243,7 +246,7 @@ static RECT createWindowRectangle(const Uint32 width, const Uint32 height)
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create a window rectangle." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create a window rectangle." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
@@ -258,7 +261,7 @@ static void deregisterWindowClass()
 
 	if(result == 0u)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to deregister the window class." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to deregister the window class." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
@@ -271,7 +274,7 @@ static void destroyWindow(HWND windowHandle)
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to destroy a window." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to destroy a window." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -312,7 +315,7 @@ static void registerWindowClass(const WNDCLASSEX& windowClassInfo)
 
 	if(result == 0u)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to register the window class." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to register the window class." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }

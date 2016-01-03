@@ -54,7 +54,7 @@ namespace Graphics
 
 		Implementation* _implementation;
 
-		Shader(GraphicsInterface graphicsInterface, const ShaderType& type, const Core::String8& source);
+		Shader(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type, const Core::String8& source);
 		~Shader();
 	};
 }

@@ -41,23 +41,31 @@ namespace Graphics
 		Window(const Window& window) = delete;
 		Window(Window&& window) = delete;
 
+		/**
+		 * Gets the client area rectangle.
+		 */
+		Core::Rectangle clientRectangle() const;
+
 		WindowHandle handle() const;
 
 		void hide() const;
 
-		Core::Rectangle rectangle() const;
+		Bool isOpen() const;
+
+		/**
+		 * Sets the client area rectangle.
+		 *
+		 * The call has no effect if the window is in fullscreen.
+		 */
+		void setClientRectangle(const Core::Rectangle& rectangle) const;
 
 		void setPointerVisibility(const Bool isPointerVisible) const;
 
-		void setFullscreen(const Bool isFullscreen) const;
+		void setFullscreen(const Bool inFullscreen) const;
 
 		void setIcon(const Image* image) const;
 
-		void setRectangle(const Core::Rectangle& rectangle) const;
-
 		void setTitle(const Core::String8& title) const;
-
-		Bool shouldClose() const;
 
 		void show() const;
 

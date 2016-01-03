@@ -31,7 +31,7 @@ using namespace Graphics;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Graphics::GraphicsAdapter - Windows]";
+static const Char8* COMPONENT_TAG = "[Graphics::GraphicsAdapter - Windows] ";
 
 static DEVMODEW createDisplayModeInfo(const DisplayMode& mode);
 
@@ -73,7 +73,7 @@ void GraphicsAdapter::Implementation::changeDisplayMode(DEVMODEW* displayModeInf
 	if(result != DISP_CHANGE_SUCCESSFUL)
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
-			" Failed to change the display mode, ChangeDisplaySettingsEx returned " << result << '.' << Log::Flush();
+			"Failed to change the display mode, ChangeDisplaySettingsEx returned " << result << '.' << Log::Flush();
 
 		DE_ERROR(0x0);
 	}

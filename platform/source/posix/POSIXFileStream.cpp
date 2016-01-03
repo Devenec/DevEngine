@@ -31,7 +31,7 @@ using namespace Core;
 
 // External
 
-static const Char8* COMPONENT_TAG		= "[Core::FileStream - POSIX]";
+static const Char8* COMPONENT_TAG		= "[Core::FileStream - POSIX] ";
 static const Int32 CREATION_PERMISSIONS = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
 
 static Int32 getFileDescriptorAccessMode(const OpenMode& openMode);
@@ -65,7 +65,7 @@ public:
 
 			if(result != 0)
 			{
-				defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to close the file." << Log::Flush();
+				defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to close the file." << Log::Flush();
 				DE_ERROR(0x0);
 			}
 
@@ -95,7 +95,7 @@ public:
 
 		if(fileDescriptor == -1)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
 			DE_ERROR(0x0);
@@ -106,7 +106,7 @@ public:
 
 		if(_fileHandle == nullptr)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
 			DE_ERROR(0x0);
@@ -123,7 +123,7 @@ public:
 
 		if(result == -1)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the file pointer position." <<
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the file pointer position." <<
 				Log::Flush();
 
 			DE_ERROR(0x0);
@@ -145,7 +145,7 @@ public:
 
 		if(result != 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to read the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to read the file." << Log::Flush();
 			DE_ERROR(0x0);
 		}
 
@@ -161,7 +161,7 @@ public:
 
 		if(result != 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to seek the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to seek the file." << Log::Flush();
 			DE_ERROR(0x0);
 		}
 
@@ -187,7 +187,7 @@ public:
 
 		if(result != 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to write to the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to write to the file." << Log::Flush();
 			DE_ERROR(0x0);
 		}
 

@@ -139,12 +139,11 @@ private:
 	::Window createWindow(const Uint32 width, const Uint32 height)
 	{
 		XVisualInfo* visualInfo = _x.getGraphicsConfigVisualInfo(_graphicsConfigHandle);
-		const ::Window rootWindowHandle = _x.getRootWindowHandle(visualInfo->screen);
 		Int32 windowAttributeMask = 0;
 		XSetWindowAttributes windowAttributes = createWindowAttributes(windowAttributeMask);
 
-		const ::Window windowHandle = _x.createWindow(rootWindowHandle, 0, 0, width, height, visualInfo,
-			windowAttributes, windowAttributeMask);
+		const ::Window windowHandle = _x.createWindow(0, 0, width, height, visualInfo, windowAttributes,
+			windowAttributeMask);
 
 		XFree(visualInfo);
 		_x.setWindowMessageProtocols(windowHandle, &_destroyMessageAtom, 1u);

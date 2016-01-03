@@ -58,7 +58,7 @@ namespace Graphics
 
 		Implementation* _implementation;
 
-		GraphicsBuffer(GraphicsInterface graphicsInterface, const BufferBinding& binding, const Uint32 size,
+		GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding, const Uint32 size,
 			const AccessMode& accessMode);
 
 		virtual ~GraphicsBuffer();

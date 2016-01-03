@@ -28,7 +28,7 @@ using namespace Core;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Core::FileStream - Windows]";
+static const Char8* COMPONENT_TAG = "[Core::FileStream - Windows] ";
 
 static LARGE_INTEGER createLargeInteger(const Int64& value = 0);
 static Uint32 getAccessMode(const OpenMode& openMode);
@@ -64,7 +64,7 @@ public:
 
 			if(result == 0)
 			{
-				defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to close the file." << Log::Flush();
+				defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to close the file." << Log::Flush();
 				DE_ERROR_WINDOWS(0x0);
 			}
 
@@ -98,7 +98,7 @@ public:
 
 		if(_fileHandle == INVALID_HANDLE_VALUE)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to open file '" << filepath << "'." <<
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x0);
@@ -117,7 +117,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the file pointer position." <<
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the file pointer position." <<
 				Log::Flush();
 
 			DE_ERROR_WINDOWS(0x0);
@@ -136,7 +136,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to read the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to read the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 
@@ -151,7 +151,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to seek the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to seek the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
@@ -164,7 +164,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the file size." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the file size." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 
@@ -181,7 +181,7 @@ public:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to write to the file." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to write to the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 
@@ -202,7 +202,7 @@ private:
 
 		if(result == 0)
 		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to flush the file buffer." << Log::Flush();
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to flush the file buffer." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}

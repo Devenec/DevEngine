@@ -28,7 +28,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsContext - GLX]";
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsContext - GLX] ";
 
 static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 {{
@@ -77,7 +77,7 @@ void GraphicsContext::Implementation::swapBuffers() const
 void GraphicsContext::Implementation::checkContext() const
 {
 	if(!X::instance().isGraphicsContextDirect(_graphicsContextHandle))
-		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << " The graphics context is not direct." << Log::Flush();
+		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "The graphics context is not direct." << Log::Flush();
 }
 
 

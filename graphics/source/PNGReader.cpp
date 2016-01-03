@@ -32,7 +32,7 @@ using namespace Graphics;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Graphics::PNGReader]";
+static const Char8* COMPONENT_TAG = "[Graphics::PNGReader] ";
 
 static Void* allocateMemory(png_struct* pngStructure, Uint32 size);
 static void deallocateMemory(png_struct* pngStructure, Void* pointer);
@@ -105,7 +105,7 @@ void PNGReader::initialiseStructure()
 
 	if(_pngStructure == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to initialise the PNG structure." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise the PNG structure." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 }
@@ -116,7 +116,7 @@ void PNGReader::initialiseInfo()
 
 	if(_pngInfo == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to initialise the PNG info." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise the PNG info." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 }
@@ -129,7 +129,7 @@ void PNGReader::validateSignature(FileStream& fileStream)
 
 	if(result != 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " The signature of the PNG file is invalid." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "The signature of the PNG file is invalid." <<
 			Log::Flush();
 
 		DE_ERROR(0x0);
@@ -156,14 +156,14 @@ static void deallocateMemory(png_struct* pngStructure, Void* pointer)
 static void handleError(png_struct* pngStructure, const Char8* message)
 {
 	static_cast<Void>(pngStructure);
-	defaultLog << LogLevel::Error << ::COMPONENT_TAG << " PNG error: " << message << '.' << Log::Flush();
+	defaultLog << LogLevel::Error << ::COMPONENT_TAG << "PNG error: " << message << '.' << Log::Flush();
 	DE_ERROR(0x0);
 }
 
 static void handleWarning(png_struct* pngStructure, const Char8* message)
 {
 	static_cast<Void>(pngStructure);
-	defaultLog << LogLevel::Warning << ::COMPONENT_TAG << " PNG warning: " << message << '.' << Log::Flush();
+	defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "PNG warning: " << message << '.' << Log::Flush();
 }
 
 static void readData(png_struct* pngStructure, Uint8* buffer, Uint32 size)
@@ -172,7 +172,9 @@ static void readData(png_struct* pngStructure, Uint8* buffer, Uint32 size)
 
 	if(fileStream->isPastEndOfFile())
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Reached the end of the file unexpectedly." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Reached the end of the file unexpectedly." <<
+			Log::Flush();
+
 		DE_ERROR(0x0);
 	}
 

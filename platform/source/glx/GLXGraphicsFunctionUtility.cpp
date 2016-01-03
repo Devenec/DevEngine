@@ -18,10 +18,18 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Error.h>
+#include <core/Log.h>
 #include <platform/GraphicsFunctionUtility.h>
 #include <platform/glx/GLX.h>
 
+using namespace Core;
 using namespace Platform;
+
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsFunctionUtility - GLX] ";
+
 
 // Public
 
@@ -34,7 +42,15 @@ GraphicsFunctionUtility::~GraphicsFunctionUtility() { }
 
 GraphicsFunctionUtility::Function GraphicsFunctionUtility::getExtensionFunctionInternal(const Char8* name) const
 {
-	return GLX::getProcAddress(reinterpret_cast<const Uint8*>(name));
+	Function function = GLX::getProcAddress(reinterpret_cast<const Uint8*>(name));
+
+	if(function == nullptr)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the function " << name << '.';
+		DE_ERROR(0x0);
+	}
+
+	return function;
 }
 
 GraphicsFunctionUtility::Function GraphicsFunctionUtility::getStandardFunctionInternal(const Char8* name) const

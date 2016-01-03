@@ -32,7 +32,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Graphics::Shader - OpenGL]";
+static const Char8* COMPONENT_TAG = "[Graphics::Shader - OpenGL] ";
 
 static const Array<const Char8*, 6u> SHADER_TYPE_NAMES
 {{
@@ -51,8 +51,9 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType);
 
 // Public
 
-Shader::Implementation::Implementation(OpenGL* openGL, const ShaderType& type, const Core::String8& source)
-	: _openGL(openGL),
+Shader::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type,
+	const Core::String8& source)
+	: _openGL(static_cast<OpenGL*>(graphicsInterfaceHandle)),
 	  _shaderHandle(0u)
 {
 	createShader(type);
@@ -75,7 +76,7 @@ void Shader::Implementation::createShader(const ShaderType& type)
 
 	if(_shaderHandle == 0u)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to create the " <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the " <<
 			::SHADER_TYPE_NAMES[static_cast<Int32>(type)] << " shader." << Log::Flush();
 
 		DE_ERROR(0x0);
@@ -117,7 +118,7 @@ Int32 Shader::Implementation::getParameter(const Uint32 parameterName) const
 
 void Shader::Implementation::outputCompilerFailureLog() const
 {
-	defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to compile the shader:";
+	defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to compile the shader:";
 	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
 	if(logLength > 1u)
@@ -134,7 +135,7 @@ void Shader::Implementation::outputCompilerSuccessLog() const
 
 	if(logLength > 1u)
 	{
-		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << " The shader compiled with warning(s):\n" <<
+		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "The shader compiled with warning(s):\n" <<
 			getInfoLog(logLength).data() << Log::Flush();
 	}
 }
@@ -153,8 +154,8 @@ Shader::Implementation::CharacterBuffer Shader::Implementation::getInfoLog(const
 
 // Private
 
-Shader::Shader(GraphicsInterface graphicsInterface, const ShaderType& type, const String8& source)
-	: _implementation(DE_NEW(Implementation)(static_cast<OpenGL*>(graphicsInterface), type, source)) { }
+Shader::Shader(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type, const String8& source)
+	: _implementation(DE_NEW(Implementation)(graphicsInterfaceHandle, type, source)) { }
 
 Shader::~Shader()
 {

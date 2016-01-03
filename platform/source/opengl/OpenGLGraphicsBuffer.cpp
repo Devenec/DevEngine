@@ -32,17 +32,17 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Graphics::GraphicsBuffer - OpenGL]";
+static const Char8* COMPONENT_TAG = "[Graphics::GraphicsBuffer - OpenGL] ";
 
 
 // Implementation
 
 // Public
 
-GraphicsBuffer::Implementation::Implementation(OpenGL* openGL, const Uint32 binding, const Uint32 size,
-	const AccessMode& accessMode)
-	: _openGL(openGL),
-	  _binding(binding),
+GraphicsBuffer::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle,
+	const BufferBinding& binding, const Uint32 size, const AccessMode& accessMode)
+	: _openGL(static_cast<OpenGL*>(graphicsInterfaceHandle)),
+	  _binding(static_cast<Uint32>(binding)),
 	  _bufferHandle(0u),
 	  _flags(0u),
 	  _size(size)
@@ -78,7 +78,7 @@ void GraphicsBuffer::Implementation::demapData() const
 
 	if(result == 0u)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to demap the buffer data." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to demap the buffer data." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 
@@ -89,17 +89,17 @@ void GraphicsBuffer::Implementation::demapData() const
 Uint8* GraphicsBuffer::Implementation::mapData(const Uint32 size, const Uint32 bufferOffset) const
 {
 	bind();
-	Void* pointer = _openGL->mapBufferRange(_binding, bufferOffset, size, _flags);
+	Void* data = _openGL->mapBufferRange(_binding, bufferOffset, size, _flags);
 	DE_CHECK_ERROR_OPENGL(_openGL);
 
-	if(pointer == nullptr)
+	if(data == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to map the buffer data." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to map the buffer data." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 
 	debind(); // TODO: restore old binding?
-	return static_cast<Uint8*>(pointer);
+	return static_cast<Uint8*>(data);
 }
 
 void GraphicsBuffer::Implementation::setData(const Uint8* data, const Uint32 size, const Uint32 bufferOffset) const
@@ -122,7 +122,7 @@ void GraphicsBuffer::Implementation::initialiseAccessMode(const AccessMode& acce
 {
 	if((accessMode & AccessMode::Read) == AccessMode::Read)
 		_flags |= OpenGL::MAP_READ_BIT;
-		
+
 	if((accessMode & AccessMode::Write) == AccessMode::Write)
 		_flags |= OpenGL::MAP_WRITE_BIT;
 }
@@ -183,10 +183,9 @@ void GraphicsBuffer::setData(const Uint8* data, const Uint32 dataSize, const Uin
 
 // Protected
 
-GraphicsBuffer::GraphicsBuffer(GraphicsInterface graphicsInterface, const BufferBinding& binding, const Uint32 size,
-	const AccessMode& accessMode)
-	: _implementation(DE_NEW(Implementation)(static_cast<OpenGL*>(graphicsInterface), static_cast<Uint32>(binding),
-		size, accessMode)) { }
+GraphicsBuffer::GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
+	const Uint32 size, const AccessMode& accessMode)
+	: _implementation(DE_NEW(Implementation)(graphicsInterfaceHandle, binding, size, accessMode)) { }
 
 GraphicsBuffer::~GraphicsBuffer()
 {

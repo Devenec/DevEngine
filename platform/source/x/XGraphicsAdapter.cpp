@@ -58,7 +58,10 @@ void GraphicsAdapter::Implementation::setDisplayMode(const DisplayMode& mode)
 	Uint32 resolutionIndex;
 	DisplayModeList::const_iterator iterator = findDisplayMode(mode, resolutionIndex);
 	DE_ASSERT(iterator != _supportedDisplayModes.end());
-	X::instance().setDisplayMode(_config, _rootWindowHandle, resolutionIndex, iterator->refreshRate(), _configTimestamp);
+
+	X::instance().setDisplayMode(_config, _rootWindowHandle, resolutionIndex, iterator->refreshRate(),
+		_configTimestamp);
+
 	_currentDisplayModeIndex = iterator - _supportedDisplayModes.begin();
 }
 

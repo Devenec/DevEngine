@@ -40,9 +40,9 @@ void X::destroyWindow(const Window windowHandle) const
 	XDestroyWindow(_connection, windowHandle);
 }
 
-Int32 X::getDefaultGraphicsAdapterIndex() const
+const Char8* X::getExtensionNameString() const
 {
-	return XDefaultScreen(_connection);
+	return GLX::queryExtensionsString(_connection, GRAPHICS_ADAPTER_INDEX);
 }
 
 Uint32 X::getGraphicsAdapterCount() const
@@ -81,14 +81,9 @@ Bool X::isGraphicsContextDirect(GLX::Context contextHandle) const
 	return GLX::isDirect(_connection, contextHandle) != 0;
 }
 
-void X::setPointer(const Window windowHandle, const Cursor pointerHandle) const
+void X::setWindowPointer(const Window windowHandle, const Cursor pointerHandle) const
 {
 	XDefineCursor(_connection, windowHandle, pointerHandle);
-}
-
-void X::setWindowRectangle(const Window windowHandle, const Core::Rectangle& rectangle) const
-{
-	XMoveResizeWindow(_connection, windowHandle, rectangle.x, rectangle.y, rectangle.width, rectangle.height);
 }
 
 void X::showWindow(const Window windowHandle) const

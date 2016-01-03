@@ -25,7 +25,7 @@ void Window::Implementation::close()
 	_isOpen = false;
 }
 
-HWND Window::Implementation::handle() const
+WindowHandle Window::Implementation::handle() const
 {
 	return _windowHandle;
 }

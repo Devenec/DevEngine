@@ -34,7 +34,7 @@ using namespace Debug;
 
 static constexpr Uint32 MAX_FUNCTION_NAME_LENGTH = 256u;
 
-static const Char8* COMPONENT_TAG = "[Debug::StackTrace - Windows]";
+static const Char8* COMPONENT_TAG = "[Debug::StackTrace - Windows] ";
 
 
 // Implementation
@@ -52,7 +52,7 @@ public:
 		if(maxEntryCount > Numeric<Uint16>::maximum())
 		{
 			defaultLog << LogLevel::Warning << ::COMPONENT_TAG <<
-				" maxEntryCount is too large and is clamped to Core::Numeric<Uint16>::maximum()." << Log::Flush();
+				"maxEntryCount is too large and is clamped to Core::Numeric<Uint16>::maximum()." << Log::Flush();
 
 			_maxEntryCount = Numeric<Uint16>::maximum();
 		}

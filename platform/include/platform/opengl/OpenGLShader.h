@@ -35,7 +35,8 @@ namespace Graphics
 	{
 	public:
 
-		Implementation(Platform::OpenGL* openGL, const ShaderType& type, const Core::String8& source);
+		Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type,
+			const Core::String8& source);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;

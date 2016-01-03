@@ -25,7 +25,7 @@ using namespace Graphics;
 
 // Private
 
-IndexBuffer::IndexBuffer(GraphicsInterface graphicsInterface, const Uint32 size, const IndexType& indexType,
+IndexBuffer::IndexBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const Uint32 size, const IndexType& indexType,
 	const AccessMode& accessMode)
-	: GraphicsBuffer(graphicsInterface, BufferBinding::Index, size, accessMode),
+	: GraphicsBuffer(graphicsInterfaceHandle, BufferBinding::Index, size, accessMode),
 	  _indexType(indexType) { }

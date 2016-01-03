@@ -36,12 +36,14 @@ static Vector<Uint32> createIconData(const Image* image);
 
 // Public
 
-Graphics::Window::Implementation::Implementation(const ::Window windowHandle)
-	: _rectangle(X::instance().getWindowRectangle(windowHandle)),
-	  _hiddenPointerHandle(X::instance().createHiddenPointer(windowHandle)),
-	  _windowHandle(windowHandle),
-	  _isFullscreen(false),
-	  _isOpen(true) { }
+Graphics::Window::Implementation::Implementation(WindowHandle windowHandle)
+	: _hiddenPointerHandle(0u),
+	  _windowHandle(reinterpret_cast<::Window>(windowHandle)),
+	  _inFullscreen(false),
+	  _isOpen(true)
+{
+	_hiddenPointerHandle = X::instance().createHiddenPointer(_windowHandle);
+}
 
 Graphics::Window::Implementation::~Implementation()
 {
@@ -49,20 +51,12 @@ Graphics::Window::Implementation::~Implementation()
 	X::instance().destroyPointer(_hiddenPointerHandle);
 }
 
-Rectangle Graphics::Window::Implementation::rectangle() const
+void Graphics::Window::Implementation::setFullscreen(const Bool inFullscreen)
 {
-	if(_isFullscreen)
-		return X::instance().getWindowRectangle(_windowHandle);
-	else
-		return _rectangle;
-}
-
-void Graphics::Window::Implementation::setFullscreen(const Bool isFullscreen)
-{
-	if(isFullscreen != _isFullscreen)
+	if(inFullscreen != _inFullscreen)
 	{
-		X::instance().setFullscreen(_windowHandle, isFullscreen);
-		_isFullscreen = isFullscreen;
+		X::instance().setWindowFullscreen(_windowHandle, inFullscreen);
+		_inFullscreen = inFullscreen;
 	}
 }
 
@@ -83,14 +77,6 @@ void Graphics::Window::Implementation::setIcon(const Image* image)
 	}
 }
 
-void Graphics::Window::Implementation::setRectangle(const Rectangle& rectangle)
-{
-	X::instance().setWindowRectangle(_windowHandle, rectangle);
-
-	if(!_isFullscreen)
-		_rectangle = rectangle;
-}
-
 void Graphics::Window::Implementation::setTitle(const String8& title) const
 {
 	X::instance().setWindowTitle(_windowHandle, title.c_str());
@@ -101,9 +87,14 @@ void Graphics::Window::Implementation::setTitle(const String8& title) const
 
 // Public
 
+Rectangle Graphics::Window::clientRectangle() const
+{
+	return _implementation->clientRectangle();
+}
+
 WindowHandle Graphics::Window::handle() const
 {
-	return reinterpret_cast<WindowHandle>(_implementation->handle());
+	return _implementation->handle();
 }
 
 void Graphics::Window::hide() const
@@ -111,9 +102,14 @@ void Graphics::Window::hide() const
 	_implementation->hide();
 }
 
-Rectangle Graphics::Window::rectangle() const
+Bool Graphics::Window::isOpen() const
 {
-	return _implementation->rectangle();
+	return _implementation->isOpen();
+}
+
+void Graphics::Window::setClientRectangle(const Rectangle& rectangle) const
+{
+	_implementation->setClientRectangle(rectangle);
 }
 
 void Graphics::Window::setPointerVisibility(const Bool isPointerVisible) const
@@ -121,9 +117,9 @@ void Graphics::Window::setPointerVisibility(const Bool isPointerVisible) const
 	_implementation->setPointerVisibility(isPointerVisible);
 }
 
-void Graphics::Window::setFullscreen(const Bool isFullscreen) const
+void Graphics::Window::setFullscreen(const Bool inFullscreen) const
 {
-	_implementation->setFullscreen(isFullscreen);
+	_implementation->setFullscreen(inFullscreen);
 }
 
 void Graphics::Window::setIcon(const Image* image) const
@@ -131,19 +127,9 @@ void Graphics::Window::setIcon(const Image* image) const
 	_implementation->setIcon(image);
 }
 
-void Graphics::Window::setRectangle(const Rectangle& rectangle) const
-{
-	_implementation->setRectangle(rectangle);
-}
-
 void Graphics::Window::setTitle(const String8& title) const
 {
 	_implementation->setTitle(title);
-}
-
-Bool Graphics::Window::shouldClose() const
-{
-	return _implementation->shouldClose();
 }
 
 void Graphics::Window::show() const
@@ -154,7 +140,7 @@ void Graphics::Window::show() const
 // Private
 
 Graphics::Window::Window(WindowHandle windowHandle)
-	: _implementation(DE_NEW(Implementation)(reinterpret_cast<::Window>(windowHandle))) { }
+	: _implementation(DE_NEW(Implementation)(windowHandle)) { }
 
 Graphics::Window::~Window()
 {

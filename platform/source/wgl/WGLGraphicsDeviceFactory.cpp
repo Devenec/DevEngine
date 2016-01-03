@@ -37,7 +37,7 @@ using namespace Platform;
 
 using PixelFormatRequiredAttributeList = Array<Int32, 9u>;
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsDeviceFactory - WGL]";
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsDeviceFactory - WGL] ";
 
 static const PixelFormatRequiredAttributeList PIXEL_FORMAT_REQUIRED_ATTRIBUTES
 {{
@@ -62,10 +62,9 @@ GraphicsDeviceFactory::GraphicsDeviceFactory()
 
 GraphicsDevice* GraphicsDeviceFactory::createDevice(Window* window, GraphicsConfig& chosenGraphicsConfig)
 {
-	HWND windowHandle = static_cast<HWND>(window->handle());
-	_deviceContextHandle = getWindowDeviceContextHandle(windowHandle);
+	_deviceContextHandle = getWindowDeviceContextHandle(static_cast<HWND>(window->handle()));
 	const Int32 pixelFormatIndex = chooseGraphicsConfig(chosenGraphicsConfig);
-	GraphicsContext* graphicsContext = createGraphicsContext(windowHandle, pixelFormatIndex);
+	GraphicsContext* graphicsContext = createGraphicsContext(window->handle(), pixelFormatIndex);
 
 	return createDeviceObject(window, graphicsContext);
 }
@@ -103,7 +102,7 @@ Int32 GraphicsDeviceFactory::chooseGraphicsConfig(GraphicsConfig& chosenConfig) 
 	return pixelFormatIndex;
 }
 
-GraphicsContext* GraphicsDeviceFactory::createGraphicsContext(HWND windowHandle, const Int32 pixelFormatIndex) const
+GraphicsContext* GraphicsDeviceFactory::createGraphicsContext(WindowHandle windowHandle, const Int32 pixelFormatIndex) const
 {
 	GraphicsContext::Implementation* implementation =
 		DE_NEW(GraphicsContext::Implementation)(windowHandle, pixelFormatIndex);
@@ -125,7 +124,7 @@ Uint32 GraphicsDeviceFactory::getPixelFormatCount() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the number of configurations." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the number of configurations." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
@@ -145,12 +144,12 @@ GraphicsDeviceFactory::PixelFormatIndexList GraphicsDeviceFactory::getPixelForma
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get matching configurations." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get matching configurations." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 	else if(matchingFormatCount == 0u)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " No matching configurations were found." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found." << Log::Flush();
 		DE_ERROR(0x0);
 	}
 
@@ -187,7 +186,7 @@ PixelFormatAttributeList GraphicsDeviceFactory::getPixelFormatAttributes(const I
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get configuration attributes." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get configuration attributes." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 

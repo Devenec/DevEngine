@@ -43,10 +43,10 @@ class VertexBufferState::Implementation final
 {
 public:
 
-	explicit Implementation(OpenGL* openGL)
+	explicit Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle)
 		: _indexBuffer(nullptr),
-		_openGL(openGL),
-		_vertexArrayHandle(0u)
+		  _openGL(static_cast<OpenGL*>(graphicsInterfaceHandle)),
+		  _vertexArrayHandle(0u)
 	{
 		_openGL->genVertexArrays(1, &_vertexArrayHandle);
 		DE_CHECK_ERROR_OPENGL(_openGL);
@@ -173,16 +173,16 @@ void VertexBufferState::setIndexBuffer(IndexBuffer* indexBuffer) const
 	return _implementation->setIndexBuffer(indexBuffer);
 }
 
-void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer,
-	const VertexElementList& vertexElements, const Uint32 stride, const Uint32 offset) const
+void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements,
+	const Uint32 stride, const Uint32 offset) const
 {
 	_implementation->setVertexBuffer(buffer, vertexElements, stride, offset);
 }
 
 // Private
 
-VertexBufferState::VertexBufferState(GraphicsInterface graphicsInterface)
-	: _implementation(DE_NEW(Implementation)(static_cast<OpenGL*>(graphicsInterface))) { }
+VertexBufferState::VertexBufferState(GraphicsInterfaceHandle graphicsInterfaceHandle)
+	: _implementation(DE_NEW(Implementation)(graphicsInterfaceHandle)) { }
 
 VertexBufferState::~VertexBufferState()
 {

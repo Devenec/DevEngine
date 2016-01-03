@@ -31,7 +31,7 @@ namespace Graphics
 	{
 	public:
 
-		explicit Implementation(HWND windowHandle);
+		explicit Implementation(WindowHandle windowHandle);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
@@ -40,7 +40,7 @@ namespace Graphics
 
 		inline void close();
 
-		inline HWND handle() const;
+		inline WindowHandle handle() const;
 
 		inline void hide() const;
 

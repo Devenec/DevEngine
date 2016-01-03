@@ -221,7 +221,7 @@ private:
 		Angle rotation(0.0f);
 		Matrix4 worldTransform;
 
-		while(!_window->shouldClose())
+		while(_window->isOpen())
 		{
 			_graphicsDeviceManager.processWindowMessages();
 			_graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));

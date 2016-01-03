@@ -28,15 +28,15 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Graphics::Window - Windows]";
+static const Char8* COMPONENT_TAG = "[Graphics::Window - Windows] ";
 
 
 // Implementation
 
 // Public
 
-Window::Implementation::Implementation(HWND windowHandle)
-	: _windowHandle(windowHandle),
+Window::Implementation::Implementation(WindowHandle windowHandle)
+	: _windowHandle(static_cast<HWND>(windowHandle)),
 	  _isPointerVisible(true),
 	  _isFullscreen(false),
 	  _isOpen(true)
@@ -84,7 +84,7 @@ void Window::Implementation::setRectangle(const Core::Rectangle& rectangle, cons
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the window rectangle." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the window rectangle." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -99,7 +99,7 @@ void Window::Implementation::setTitle(const String8& title) const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the window title." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the window title." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -124,7 +124,7 @@ Core::Rectangle Window::Implementation::getRectangle() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get the window rectangle." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the window rectangle." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 
@@ -146,7 +146,7 @@ void Window::Implementation::setFullscreenStyle(const Bool isFullscreen) const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to set the window style." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the window style." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }
@@ -168,7 +168,7 @@ RECT Window::Implementation::getMonitorRectangle() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " Failed to get info about the monitor of the window." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get info about the monitor of the window." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
@@ -236,7 +236,7 @@ void Window::show() const
 // Private
 
 Window::Window(WindowHandle windowHandle)
-	: _implementation(DE_NEW(Implementation)(static_cast<HWND>(windowHandle))) { }
+	: _implementation(DE_NEW(Implementation)(windowHandle)) { }
 
 Window::~Window()
 {

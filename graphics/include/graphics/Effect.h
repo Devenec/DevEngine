@@ -52,7 +52,7 @@ namespace Graphics
 
 		Implementation* _implementation;
 
-		Effect(GraphicsInterface graphicsInterface);
+		Effect(GraphicsInterfaceHandle graphicsInterfaceHandle);
 		~Effect();
 	};
 }

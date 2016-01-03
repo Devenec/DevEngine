@@ -24,7 +24,7 @@
 
 namespace Graphics
 {
-	using GraphicsInterface = Void*;
+	using GraphicsInterfaceHandle = Void*;
 
 	class GraphicsResource
 	{

@@ -34,7 +34,7 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::OpenGL]";
+static const Char8* COMPONENT_TAG = "[Platform::OpenGL] ";
 
 static const Array<const Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES
 {{
@@ -129,7 +129,7 @@ void OpenGL::checkSupport()
 
 	if(isVersionLess(::versionMajor, ::versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR, ::MIN_SUPPORTED_VERSION_MINOR))
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << " OpenGL version " << ::versionMajor << '.' <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "OpenGL version " << ::versionMajor << '.' <<
 			::versionMinor << " is not supported. The minimum supported version is " << ::MIN_SUPPORTED_VERSION_MAJOR <<
 			'.' << ::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
 
@@ -1613,7 +1613,7 @@ static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const
 
 	const Char8* messageSourceName = ::DEBUG_MESSAGE_SOURCE_NAMES[messageSource - OpenGL::DEBUG_SOURCE_API];
 
-	defaultLog << ::getDebugMessageLogLevel(messageSeverity) << ::COMPONENT_TAG << ' ' <<
+	defaultLog << ::getDebugMessageLogLevel(messageSeverity) << ::COMPONENT_TAG <<
 		::getDebugMessageTypeName(messageType) << " message (" << StreamFormat::Hexadecimal << messageId <<
 		StreamFormat::Decimal << ") from " << messageSourceName << ": '" << message << '\'' << Log::Flush();
 }
