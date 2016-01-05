@@ -45,6 +45,8 @@ namespace Graphics
 
 		inline void hide() const;
 
+		inline Bool inFullscreen() const;
+
 		inline Bool isOpen() const;
 
 		inline void setClientRectangle(const Core::Rectangle& rectangle);

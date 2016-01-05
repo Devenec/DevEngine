@@ -44,6 +44,7 @@
 
 #include <core/Platform.h>
 #include <core/Types.h>
+#include <graphics/LogUtility.h>
 #include <platform/windows/WindowsGraphics.h>
 
 #define DE_CALL_WGL DE_INTERNAL_CALL_STDCALL
@@ -182,11 +183,6 @@ namespace Platform
 		static GetPixelFormatAttribFVARB getPixelFormatAttribfvARB;
 		static GetPixelFormatAttribIVARB getPixelFormatAttribivARB;
 
-		// WGL_EXT_swap_control
-
-		static GetSwapIntervalEXT getSwapIntervalEXT;
-		static SwapIntervalEXT swapIntervalEXT;
-
 
 		WGL() = delete;
 
@@ -199,6 +195,12 @@ namespace Platform
 		WGL& operator =(WGL&& wGL) = delete;
 
 		static void initialise(const GraphicsContextBase& graphicsContext);
+
+	private:
+
+		static void getExtensionFunctions();
+		static Graphics::ExtensionNameList getExtensionNames(const GraphicsContextBase& graphicsContext);
+		static void checkExtensionSupport(const Graphics::ExtensionNameList& extensionNames);
 	};
 }
 

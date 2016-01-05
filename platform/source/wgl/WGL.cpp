@@ -18,10 +18,7 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/Error.h>
-#include <core/Log.h>
-#include <graphics/LogUtility.h>
-#include <platform/GraphicsExtensionHelper.h>
+#include <platform/GraphicsFunctionUtility.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/windows/Windows.h>
@@ -33,10 +30,6 @@ using namespace Platform;
 // External
 
 static const Char8* COMPONENT_TAG = "[Platform::WGL] ";
-
-static void checkExtensions();
-static void getExtensionFunctions();
-static ExtensionNameList getExtensionNames(const GraphicsContextBase& graphicsContext);
 
 
 // Public
@@ -68,66 +61,48 @@ WGL::GetPixelFormatAttribIVARB WGL::getPixelFormatAttribivARB = nullptr;
 
 void WGL::initialise(const GraphicsContextBase& graphicsContext)
 {
-	::getExtensionFunctions();
-	::checkExtensions();
 	// TODO: check current context state?
-	const ExtensionNameList extensionNames = ::getExtensionNames(graphicsContext);
+	// TODO: 1) Get wglGetExtensionsStringARB  2) checkExtensionSupport()  3) getExtensionFunctions()
+	//   Do same for Linux
+	getExtensionFunctions();
+	const ExtensionNameList extensionNames = getExtensionNames(graphicsContext);
+	checkExtensionSupport(extensionNames);
 	logGraphicsExtensions("graphics context", extensionNames);
 }
-
-
-// Platform::GraphicsExtensionHelper
 
 // Private
 
 // Static
 
-GraphicsExtensionHelper::Function GraphicsExtensionHelper::getFunctionInternal(const Char8* name)
+void WGL::getExtensionFunctions()
 {
-	return reinterpret_cast<Function>(WGL::getProcAddress(name));
-}
+	GraphicsFunctionUtility functionUtility;
 
-
-// External
-
-static void checkExtensions()
-{
-	if(WGL::getExtensionsStringARB == nullptr)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
-			"Graphics context extensions are not supported." << Log::Flush();
-
-		DE_ERROR(0x0);
-	}
-}
-
-static void getExtensionFunctions()
-{
 	// WGL_ARB_create_context
 
-	WGL::createContextAttribsARB =
-		GraphicsExtensionHelper::getFunction<WGL::CreateContextAttribsARB>("wglCreateContextAttribsARB");
+	createContextAttribsARB =
+		functionUtility.getExtensionFunction<CreateContextAttribsARB>("wglCreateContextAttribsARB");
 
 	// WGL_ARB_extensions_string
 
-	WGL::getExtensionsStringARB =
-		GraphicsExtensionHelper::getFunction<WGL::GetExtensionsStringARB>("wglGetExtensionsStringARB");
+	getExtensionsStringARB =
+		functionUtility.getExtensionFunction<GetExtensionsStringARB>("wglGetExtensionsStringARB");
 
 	// WGL_ARB_pixel_format
 
-	WGL::choosePixelFormatARB =
-		GraphicsExtensionHelper::getFunction<WGL::ChoosePixelFormatARB>("wglChoosePixelFormatARB");
+	choosePixelFormatARB =
+		functionUtility.getExtensionFunction<ChoosePixelFormatARB>("wglChoosePixelFormatARB");
 
-	WGL::getPixelFormatAttribfvARB =
-		GraphicsExtensionHelper::getFunction<WGL::GetPixelFormatAttribFVARB>("wglGetPixelFormatAttribfvARB");
+	getPixelFormatAttribfvARB =
+		functionUtility.getExtensionFunction<GetPixelFormatAttribFVARB>("wglGetPixelFormatAttribfvARB");
 
-	WGL::getPixelFormatAttribivARB =
-		GraphicsExtensionHelper::getFunction<WGL::GetPixelFormatAttribIVARB>("wglGetPixelFormatAttribivARB");
+	getPixelFormatAttribivARB =
+		functionUtility.getExtensionFunction<GetPixelFormatAttribIVARB>("wglGetPixelFormatAttribivARB");
 }
 
-static ExtensionNameList getExtensionNames(const GraphicsContextBase& graphicsContext)
+ExtensionNameList WGL::getExtensionNames(const GraphicsContextBase& graphicsContext)
 {
-	const String8 extensionNamesString(WGL::getExtensionsStringARB(graphicsContext.deviceContextHandle()));
+	const String8 extensionNamesString(getExtensionsStringARB(graphicsContext.deviceContextHandle()));
 	ExtensionNameList extensionNames;
 
 	if(extensionNamesString.length() != 0u)
@@ -145,4 +120,9 @@ static ExtensionNameList getExtensionNames(const GraphicsContextBase& graphicsCo
 	}
 
 	return extensionNames;
+}
+
+void WGL::checkExtensionSupport(const ExtensionNameList& extensionNames)
+{
+	// TODO: implement
 }

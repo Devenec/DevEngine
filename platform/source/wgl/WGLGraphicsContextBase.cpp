@@ -69,11 +69,8 @@ void GraphicsContextBase::swapBuffers() const
 // Protected
 
 GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
-	: _deviceContextHandle(nullptr),
-	  _graphicsContextHandle(nullptr)
-{
-	_deviceContextHandle = getWindowDeviceContextHandle(windowHandle);
-}
+	: _deviceContextHandle(getWindowDeviceContextHandle(windowHandle)),
+	  _graphicsContextHandle(nullptr) { }
 
 GraphicsContextBase::~GraphicsContextBase()
 {
@@ -94,14 +91,16 @@ void GraphicsContextBase::destroyContext()
 	_graphicsContextHandle = nullptr;
 }
 
-void GraphicsContextBase::setPixelFormat(const Int32 pixelFormatIndex) const
+void GraphicsContextBase::setConfig(const Int32 configIndex) const
 {
-	PIXELFORMATDESCRIPTOR pixelFormatDescriptor;
-	const Int32 result = SetPixelFormat(_deviceContextHandle, pixelFormatIndex, &pixelFormatDescriptor);
+	PIXELFORMATDESCRIPTOR configDescriptor;
+	const Int32 result = SetPixelFormat(_deviceContextHandle, configIndex, &configDescriptor);
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set a pixel format." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the configuration." <<
+			Log::Flush();
+
 		DE_ERROR_WINDOWS(0x0);
 	}
 }

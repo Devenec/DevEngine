@@ -111,7 +111,6 @@
     <None Include="include\graphics\inline\AccessMode.inl" />
     <None Include="include\graphics\inline\DisplayMode.inl" />
     <None Include="include\graphics\inline\GraphicsConfig.inl" />
-    <None Include="include\graphics\inline\GraphicsDevice.inl" />
     <None Include="include\graphics\inline\Image.inl" />
     <None Include="include\graphics\inline\IndexBuffer.inl" />
     <None Include="include\graphics\inline\PNGReader.inl" />
@@ -122,6 +121,7 @@
     <ClCompile Include="source\DisplayMode.cpp" />
     <ClCompile Include="source\GraphicsConfig.cpp" />
     <ClCompile Include="source\GraphicsDevice.cpp" />
+    <ClCompile Include="source\GraphicsDeviceManager.cpp" />
     <ClCompile Include="source\Image.cpp" />
     <ClCompile Include="source\ImageLoader.cpp" />
     <ClCompile Include="source\IndexBuffer.cpp" />

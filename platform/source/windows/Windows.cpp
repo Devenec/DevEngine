@@ -20,12 +20,21 @@
 
 #include <cstdlib>
 #include <core/Log.h>
+#include <core/Rectangle.h>
 #include <core/debug/Assert.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
 
 // Platform
+
+Core::Rectangle Platform::createRectangle(const RECT& rectangle)
+{
+	const Uint32 width = rectangle.right - rectangle.left;
+	const Uint32 height = rectangle.bottom - rectangle.top;
+
+	return Core::Rectangle(rectangle.left, rectangle.top, width, height);
+}
 
 void Platform::failWindowsAssertion(const Char8* file, const Uint32 line, const Char8* function)
 {

@@ -54,7 +54,7 @@ namespace Platform
 
 		void destroyContext();
 
-		void setPixelFormat(const Int32 pixelFormatIndex) const;
+		void setConfig(const Int32 configIndex) const;
 	};
 
 #include "inline/WGLGraphicsContextBase.inl"

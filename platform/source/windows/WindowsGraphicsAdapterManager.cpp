@@ -35,13 +35,10 @@ using namespace Graphics;
 
 static DISPLAY_DEVICEW createAdapterInfo();
 static DEVMODEW createDisplayModeInfo();
+static DisplayMode getDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo);
+static Uint32 getDisplayModes(const Char16* adapterName, DisplayModeList& modes);
 
-static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex,
-	DEVMODEW& modeInfo);
-
-static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes);
-
-static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
+static Uint32 getCurrentDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
 	const DisplayModeList& modes);
 
 
@@ -53,11 +50,11 @@ public:
 
 	Implementation()
 	{
-		Bool areAdaptersAvailable = true;
+		Bool isAdapterAvailable = true;
 		DISPLAY_DEVICEW adapterInfo = ::createAdapterInfo();
 
-		for(Uint32 i = 0u; areAdaptersAvailable; ++i)
-			areAdaptersAvailable = createAdapter(i, adapterInfo);
+		for(Uint32 i = 0u; isAdapterAvailable; ++i)
+			isAdapterAvailable = createAdapter(i, adapterInfo);
 	}
 
 	Implementation(const Implementation& implementation) = delete;
@@ -103,7 +100,7 @@ private:
 		const
 	{
 		DisplayModeList displayModes;
-		const Uint32 currentDisplayModeIndex = ::getAdapterDisplayModes(adapterInfo.DeviceName, displayModes);
+		const Uint32 currentDisplayModeIndex = ::getDisplayModes(adapterInfo.DeviceName, displayModes);
 
 		return
 			DE_NEW(GraphicsAdapter::Implementation)(adapterInfo.DeviceName, displayModes,
@@ -151,8 +148,7 @@ static DEVMODEW createDisplayModeInfo()
 	return displayModeInfo;
 }
 
-static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32 modeIndex,
-	DEVMODEW& modeInfo)
+static DisplayMode getDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo)
 {
 	const Int32 result = EnumDisplaySettingsW(adapterName, modeIndex, &modeInfo);
 
@@ -162,19 +158,20 @@ static DisplayMode getAdapterDisplayMode(const Char16* adapterName, const Uint32
 	}
 	else
 	{
-		return DisplayMode(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight, modeInfo.dmBitsPerPel,
-			modeInfo.dmDisplayFrequency);
+		return
+			DisplayMode(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight, modeInfo.dmBitsPerPel,
+				modeInfo.dmDisplayFrequency);
 	}
 }
 
-static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList& modes)
+static Uint32 getDisplayModes(const Char16* adapterName, DisplayModeList& modes)
 {
 	DisplayMode mode(1u, 0u, 0u, 0u);
 	DEVMODEW modeInfo = ::createDisplayModeInfo();
 
 	for(Uint32 i = 0u; mode.width() != 0u; ++i)
 	{
-		mode = ::getAdapterDisplayMode(adapterName, i, modeInfo);
+		mode = ::getDisplayMode(adapterName, i, modeInfo);
 
 		if(mode.width() != 0u && std::find(modes.begin(), modes.end(), mode) == modes.end())
 			modes.push_back(mode);
@@ -183,13 +180,13 @@ static Uint32 getAdapterDisplayModes(const Char16* adapterName, DisplayModeList&
 	modes.shrink_to_fit();
 	std::sort(modes.begin(), modes.end());
 
-	return ::getCurrentAdapterDisplayModeIndex(adapterName, modeInfo, modes);
+	return ::getCurrentDisplayModeIndex(adapterName, modeInfo, modes);
 }
 
-static Uint32 getCurrentAdapterDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
+static Uint32 getCurrentDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
 	const DisplayModeList& modes)
 {
-	const DisplayMode displayMode = ::getAdapterDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);
+	const DisplayMode displayMode = ::getDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);
 	DisplayModeList::const_iterator iterator = std::find(modes.begin(), modes.end(), displayMode);
 
 	return iterator - modes.begin();

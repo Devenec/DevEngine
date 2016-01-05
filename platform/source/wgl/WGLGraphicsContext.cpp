@@ -35,8 +35,8 @@ static const Char8* COMPONENT_TAG = "[Platform::GraphicsContext - WGL] ";
 static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 {{
 	WGL::CONTEXT_FLAGS_ARB,			WGL::CONTEXT_DEBUG_BIT_ARB,
-	WGL::CONTEXT_MAJOR_VERSION_ARB, 4,
-	WGL::CONTEXT_MINOR_VERSION_ARB, 5,
+	WGL::CONTEXT_MAJOR_VERSION_ARB, 3,
+	WGL::CONTEXT_MINOR_VERSION_ARB, 3,
 	WGL::CONTEXT_PROFILE_MASK_ARB,	WGL::CONTEXT_CORE_PROFILE_BIT_ARB,
 	0
 }};
@@ -46,10 +46,10 @@ static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 
 // Public
 
-GraphicsContext::Implementation::Implementation(WindowHandle windowHandle, const Int32 pixelFormatIndex)
-	: Base(static_cast<HWND>(windowHandle))
+GraphicsContext::Implementation::Implementation(HWND windowHandle, const Int32 configIndex)
+	: Base(windowHandle)
 {
-	setPixelFormat(pixelFormatIndex);
+	setConfig(configIndex);
 	initialise();
 }
 

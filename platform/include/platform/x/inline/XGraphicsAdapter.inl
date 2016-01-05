@@ -25,7 +25,7 @@ const DisplayMode& GraphicsAdapter::Implementation::currentDisplayMode() const
 	return _supportedDisplayModes[_currentDisplayModeIndex];
 }
 
-Core::String8 GraphicsAdapter::Implementation::name() const
+const Core::String8& GraphicsAdapter::Implementation::name() const
 {
 	return _name;
 }

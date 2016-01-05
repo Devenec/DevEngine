@@ -29,11 +29,9 @@ using namespace Platform;
 
 // External
 
-using RequiredConfigAttributeList = Array<Int32, 9u>;
-
 static const Char8* COMPONENT_TAG = "[Platform::GraphicsConfigChooser - GLX] ";
 
-static const RequiredConfigAttributeList REQUIRED_CONFIG_ATTRIBUTES
+static const Array<Int32, 9u> REQUIRED_CONFIG_ATTRIBUTES
 {{
 	GLX::DOUBLEBUFFER,	1,
 	GLX::DRAWABLE_TYPE, GLX::WINDOW_BIT,

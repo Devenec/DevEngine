@@ -66,8 +66,8 @@ public:
 
 	GraphicsDevice* createDeviceObject(Window* window) const
 	{
-		const ::Window windowHandle = reinterpret_cast<::Window>(window->handle());
-		GraphicsContext* graphicsContext = createGraphicsContext(windowHandle);
+		GraphicsContext* graphicsContext =
+			createGraphicsContext(reinterpret_cast<::Window>(window->handle()));
 
 		GraphicsDevice::Implementation* implementation =
 			DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
@@ -85,7 +85,6 @@ public:
 	{
 		const ::Window windowHandle = createWindow(width, height);
 		Graphics::Window* window = DE_NEW(Graphics::Window)(reinterpret_cast<WindowHandle>(windowHandle));
-		_x.setWindowTitle(windowHandle, ::WINDOW_DEFAULT_TITLE);
 		_x.setWindowUserData(windowHandle, window->_implementation);
 
 		return window;
@@ -105,7 +104,7 @@ public:
 	{
 		while(_x.hasPendingEvents())
 		{
-			XEvent event = _x.popEvent();
+			const XEvent event = _x.popEvent();
 
 			switch(event.type)
 			{
@@ -150,6 +149,7 @@ private:
 
 		XFree(visualInfo);
 		_x.setWindowMessageProtocols(windowHandle, &_destroyMessageAtom, 1u);
+		_x.setWindowTitle(windowHandle, ::WINDOW_DEFAULT_TITLE);
 
 		return windowHandle;
 	}

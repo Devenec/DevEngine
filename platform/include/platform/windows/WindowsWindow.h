@@ -38,27 +38,27 @@ namespace Graphics
 
 		~Implementation() = default;
 
+		Core::Rectangle clientRectangle() const;
+
 		inline void close();
 
 		inline WindowHandle handle() const;
 
 		inline void hide() const;
 
-		inline Bool isFullscreen() const;
+		inline Bool inFullscreen() const;
 
-		Core::Rectangle rectangle() const;
+		inline Bool isOpen() const;
 
-		inline void setPointerVisibility(const Bool isPointerVisible);
+		void setClientRectangle(const Core::Rectangle& rectangle) const;
 
-		void setFullscreen(const Bool isFullscreen);
+		void setFullscreen(const Bool inFullscreen);
 
 		void setIcon(const Image* image);
 
-		void setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle);
+		inline void setPointerVisibility(const Bool isPointerVisible);
 
 		void setTitle(const Core::String8& title) const;
-
-		inline Bool shouldClose() const;
 
 		Bool shouldHidePointer(const Bool isPointerInClientArea) const;
 
@@ -69,17 +69,17 @@ namespace Graphics
 
 	private:
 
-		Core::Rectangle _rectangle;
+		Core::Rectangle _windowedClientRectangle;
 		Platform::Icon _icon;
 		HWND _windowHandle;
-		Bool _isPointerVisible;
-		Bool _isFullscreen;
+		Bool _inFullscreen;
 		Bool _isOpen;
+		Bool _isPointerVisible;
 
-		Core::Rectangle getRectangle() const;
-		void setFullscreenStyle(const Bool isFullscreen) const;
+		Core::Rectangle calculateWindowRectangle(const Core::Rectangle& clientRectangle) const;
+		void setStyle(const Bool inFullscreen) const;
+		void setFullscreenClientRectangle(const Bool inFullscreen);
 		Core::Rectangle getFullscreenRectangle() const;
-		RECT getMonitorRectangle() const;
 	};
 
 #include "inline/WindowsWindow.inl"

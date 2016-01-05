@@ -33,8 +33,7 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG = "[Platform::TemporaryGraphicsContext - WGL] ";
 
-static void checkOpenGLVersion();
-static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();
+static PIXELFORMATDESCRIPTOR createConfigDescriptor();
 
 
 // Public
@@ -42,20 +41,19 @@ static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor();
 TemporaryGraphicsContext::TemporaryGraphicsContext(HWND windowHandle)
 	: Base(windowHandle)
 {
-	initialisePixelFormat();
+	initialiseConfig();
 	createContext();
 	makeCurrent();
-	::checkOpenGLVersion();
 }
 
 // Private
 
-void TemporaryGraphicsContext::initialisePixelFormat() const
+void TemporaryGraphicsContext::initialiseConfig() const
 {
-	const PIXELFORMATDESCRIPTOR pixelFormatDescriptor = ::createPixelFormatDescriptor();
-	const Int32 pixelFormatIndex = choosePixelFormat(pixelFormatDescriptor);
-	checkPixelFormat(pixelFormatIndex);
-	setPixelFormat(pixelFormatIndex);
+	const PIXELFORMATDESCRIPTOR configDescriptor = ::createConfigDescriptor();
+	const Int32 configIndex = chooseConfig(configDescriptor);
+	checkConfig(configIndex);
+	setConfig(configIndex);
 }
 
 void TemporaryGraphicsContext::createContext()
@@ -69,38 +67,38 @@ void TemporaryGraphicsContext::createContext()
 	}
 }
 
-Int32 TemporaryGraphicsContext::choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const
+Int32 TemporaryGraphicsContext::chooseConfig(const PIXELFORMATDESCRIPTOR& configDescriptor) const
 {
-	const Int32 pixelFormatIndex = ChoosePixelFormat(_deviceContextHandle, &pixelFormatDescriptor);
+	const Int32 configIndex = ChoosePixelFormat(_deviceContextHandle, &configDescriptor);
 
-	if(pixelFormatIndex == 0)
+	if(configIndex == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to choose a pixel format." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to choose a configuration." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}
 
-	return pixelFormatIndex;
+	return configIndex;
 }
 
-void TemporaryGraphicsContext::checkPixelFormat(const Int32 pixelFormatIndex) const
+void TemporaryGraphicsContext::checkConfig(const Int32 configIndex) const
 {
-	PIXELFORMATDESCRIPTOR pixelFormatDescriptor;
+	PIXELFORMATDESCRIPTOR configDescriptor;
 
 	const Int32 result =
-		DescribePixelFormat(_deviceContextHandle, pixelFormatIndex, sizeof(PIXELFORMATDESCRIPTOR),
-			&pixelFormatDescriptor);
+		DescribePixelFormat(_deviceContextHandle, configIndex, sizeof(PIXELFORMATDESCRIPTOR),
+			&configDescriptor);
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
-			"Failed to get the description of a pixel format." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get configuration attributes." <<
+			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}
 
-	if((pixelFormatDescriptor.dwFlags & PFD_SUPPORT_OPENGL) == 0u)
+	if((configDescriptor.dwFlags & PFD_SUPPORT_OPENGL) == 0u)
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "The device context does not support OpenGL." <<
 			Log::Flush();
@@ -112,29 +110,13 @@ void TemporaryGraphicsContext::checkPixelFormat(const Int32 pixelFormatIndex) co
 
 // External
 
-static void checkOpenGLVersion()
+static PIXELFORMATDESCRIPTOR createConfigDescriptor()
 {
-	Uint32 major;
-	Uint32 minor;
-	OpenGL::initialiseVersion(major, minor);
+	PIXELFORMATDESCRIPTOR configDescriptor = PIXELFORMATDESCRIPTOR();
+	configDescriptor.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL;
+	configDescriptor.iPixelType = PFD_TYPE_RGBA;
+	configDescriptor.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	configDescriptor.nVersion = 1u;
 
-	if(isVersionLess(major, minor, OpenGL::MIN_SUPPORTED_VERSION_MAJOR, OpenGL::MIN_SUPPORTED_VERSION_MINOR))
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "The OpenGL version " << major << '.' << minor <<
-			" is not supported. The minimum supported version is " << OpenGL::MIN_SUPPORTED_VERSION_MAJOR <<
-			'.' << OpenGL::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0);
-	}
-}
-
-static PIXELFORMATDESCRIPTOR createPixelFormatDescriptor()
-{
-	PIXELFORMATDESCRIPTOR pixelFormatDescriptor = PIXELFORMATDESCRIPTOR();
-	pixelFormatDescriptor.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL;
-	pixelFormatDescriptor.iPixelType = PFD_TYPE_RGBA;
-	pixelFormatDescriptor.nSize = sizeof(PIXELFORMATDESCRIPTOR);
-	pixelFormatDescriptor.nVersion = 1u;
-
-	return pixelFormatDescriptor;
+	return configDescriptor;
 }

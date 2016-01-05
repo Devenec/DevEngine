@@ -109,12 +109,8 @@ Bool Graphics::Window::isOpen() const
 
 void Graphics::Window::setClientRectangle(const Rectangle& rectangle) const
 {
-	_implementation->setClientRectangle(rectangle);
-}
-
-void Graphics::Window::setPointerVisibility(const Bool isPointerVisible) const
-{
-	_implementation->setPointerVisibility(isPointerVisible);
+	if(!_implementation->inFullscreen())
+		_implementation->setClientRectangle(rectangle);
 }
 
 void Graphics::Window::setFullscreen(const Bool inFullscreen) const
@@ -125,6 +121,11 @@ void Graphics::Window::setFullscreen(const Bool inFullscreen) const
 void Graphics::Window::setIcon(const Image* image) const
 {
 	_implementation->setIcon(image);
+}
+
+void Graphics::Window::setPointerVisibility(const Bool isPointerVisible) const
+{
+	_implementation->setPointerVisibility(isPointerVisible);
 }
 
 void Graphics::Window::setTitle(const String8& title) const

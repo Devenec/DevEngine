@@ -41,8 +41,7 @@
 	#define DE_COMPILER_VERSION _MSC_VER
 
 	#if DE_COMPILER_VERSION < DE_COMPILER_VERSION_MIN_MSVC
-		// TODO: clamp line
-		#error The compiler version is not supported. The minimum supported version is DE_COMPILER_VERSION_MIN_MSVC.
+		#error The compiler version is not supported. See the minimum supported version in core/Platform.h.
 	#endif
 #else
 	#error The compiler is not supported.

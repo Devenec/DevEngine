@@ -20,6 +20,7 @@
 
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <graphics/Image.h>
 #include <platform/windows/WindowsWindow.h>
 
 using namespace Core;
@@ -37,33 +38,61 @@ static const Char8* COMPONENT_TAG = "[Graphics::Window - Windows] ";
 
 Window::Implementation::Implementation(WindowHandle windowHandle)
 	: _windowHandle(static_cast<HWND>(windowHandle)),
-	  _isPointerVisible(true),
-	  _isFullscreen(false),
-	  _isOpen(true)
-{
-	_rectangle = getRectangle();
-}
+	  _inFullscreen(false),
+	  _isOpen(true),
+	  _isPointerVisible(true) { }
 
-Core::Rectangle Window::Implementation::rectangle() const
+Core::Rectangle Window::Implementation::clientRectangle() const
 {
-	if(_isFullscreen)
-		return getRectangle();
-	else
-		return _rectangle;
-}
+	RECT clientRectangle;
+	Int32 result = GetClientRect(_windowHandle, &clientRectangle);
 
-void Window::Implementation::setFullscreen(const Bool isFullscreen)
-{
-	if(isFullscreen != _isFullscreen)
+	if(result == 0)
 	{
-		setFullscreenStyle(isFullscreen);
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
+			"Failed to get the client rectangle of the window." << Log::Flush();
 
-		if(isFullscreen)
-			setRectangle(getFullscreenRectangle(), isFullscreen);
-		else
-			setRectangle(_rectangle, isFullscreen);
+		DE_ERROR_WINDOWS(0x0);
+	}
 
-		_isFullscreen = isFullscreen;
+	POINT clientPosition = POINT();
+	result = MapWindowPoints(_windowHandle, HWND_DESKTOP, &clientPosition, 1u);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the position of the window." <<
+			Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0);
+	}
+
+	return Core::Rectangle(clientPosition.x, clientPosition.y, clientRectangle.right, clientRectangle.bottom);
+}
+
+void Window::Implementation::setClientRectangle(const Core::Rectangle& rectangle) const
+{
+	const Core::Rectangle windowRectangle = calculateWindowRectangle(rectangle);
+
+	const Int32 result =
+		MoveWindow(_windowHandle, windowRectangle.x, windowRectangle.y, windowRectangle.width,
+			windowRectangle.height, FALSE);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the window rectangle." <<
+			Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0);
+	}
+}
+
+void Window::Implementation::setFullscreen(const Bool inFullscreen)
+{
+	if(inFullscreen != _inFullscreen)
+	{
+		setStyle(inFullscreen);
+		setFullscreenClientRectangle(inFullscreen);
+		_inFullscreen = inFullscreen;
 	}
 }
 
@@ -75,24 +104,6 @@ void Window::Implementation::setIcon(const Image* image)
 		_icon = Icon(image);
 
 	SendMessageW(_windowHandle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));
-}
-
-void Window::Implementation::setRectangle(const Core::Rectangle& rectangle, const Bool isFullscreenRectangle)
-{
-	const Int32 result =
-		SetWindowPos(_windowHandle, HWND_TOP, rectangle.x, rectangle.y, rectangle.width, rectangle.height,
-			SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the window rectangle." <<
-			Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0);
-	}
-
-	if(!isFullscreenRectangle)
-		_rectangle = rectangle;
 }
 
 void Window::Implementation::setTitle(const String8& title) const
@@ -120,36 +131,64 @@ Bool Window::Implementation::shouldHidePointer(const Bool isPointerInClientArea)
 
 // Private
 
-Core::Rectangle Window::Implementation::getRectangle() const
+Core::Rectangle Window::Implementation::calculateWindowRectangle(const Core::Rectangle& clientRectangle) const
 {
-	RECT rectangle;
-	const Int32 result = GetWindowRect(_windowHandle, &rectangle);
+	RECT windowRectangle;
+	windowRectangle.left = clientRectangle.x;
+	windowRectangle.top = clientRectangle.y;
+	windowRectangle.right = windowRectangle.left + clientRectangle.width;
+	windowRectangle.bottom = windowRectangle.top + clientRectangle.height;
+	const Int32 style = GetWindowLongPtrW(_windowHandle, GWL_STYLE);
+	const Int32 result = AdjustWindowRectEx(&windowRectangle, style, FALSE, 0u);
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the window rectangle." <<
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to calculate the window rectangle." <<
 			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}
 
-	const Uint32 width = rectangle.right - rectangle.left;
-	const Uint32 height = rectangle.bottom - rectangle.top;
-
-	return Core::Rectangle(rectangle.left, rectangle.top, width, height);
+	return createRectangle(windowRectangle);
 }
 
-void Window::Implementation::setFullscreenStyle(const Bool isFullscreen) const
+void Window::Implementation::setFullscreenClientRectangle(const Bool inFullscreen)
 {
-	const Int32 style = GetWindowLongPtrW(_windowHandle, GWL_STYLE);
-	Int32 newStyle = style;
+	Core::Rectangle windowRectangle;
 
-	if(isFullscreen)
-		newStyle &= ~WS_CAPTION;
+	if(inFullscreen)
+	{
+		_windowedClientRectangle = clientRectangle();
+		windowRectangle = getFullscreenRectangle();
+	}
 	else
-		newStyle |= WS_CAPTION;
+	{
+		windowRectangle = _windowedClientRectangle;
+	}
 
-	const Int32 result = SetWindowLongPtrW(_windowHandle, GWL_STYLE, newStyle);
+	const Int32 result =
+		SetWindowPos(_windowHandle, HWND_TOP, windowRectangle.x, windowRectangle.y, windowRectangle.width,
+			windowRectangle.height, SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOZORDER);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the window rectangle." <<
+			Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0);
+	}
+}
+
+void Window::Implementation::setStyle(const Bool inFullscreen) const
+{
+	Int32 style = GetWindowLongPtrW(_windowHandle, GWL_STYLE);
+
+	if(inFullscreen)
+		style &= ~WS_CAPTION;
+	else
+		style |= WS_CAPTION;
+
+	const Int32 result = SetWindowLongPtrW(_windowHandle, GWL_STYLE, style);
 
 	if(result == 0)
 	{
@@ -160,15 +199,6 @@ void Window::Implementation::setFullscreenStyle(const Bool isFullscreen) const
 
 Core::Rectangle Window::Implementation::getFullscreenRectangle() const
 {
-	const RECT monitorRectangle = getMonitorRectangle();
-	const Uint32 width = monitorRectangle.right - monitorRectangle.left;
-	const Uint32 height = monitorRectangle.bottom - monitorRectangle.top;
-
-	return Core::Rectangle(monitorRectangle.left, monitorRectangle.top, width, height);
-}
-
-RECT Window::Implementation::getMonitorRectangle() const
-{
 	HMONITOR monitorHandle = MonitorFromWindow(_windowHandle, MONITOR_DEFAULTTONEAREST);
 	MONITORINFO monitorInfo;
 	monitorInfo.cbSize = sizeof(MONITORINFO);
@@ -176,19 +206,24 @@ RECT Window::Implementation::getMonitorRectangle() const
 
 	if(result == 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
-			"Failed to get info about the monitor of the window." << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get a fullscreen rectangle." <<
+			Log::Flush();
 
 		DE_ERROR_WINDOWS(0x0);
 	}
 
-	return monitorInfo.rcMonitor;
+	return createRectangle(monitorInfo.rcMonitor);
 }
 
 
 // Graphics::Window
 
 // Public
+
+Core::Rectangle Window::clientRectangle() const
+{
+	return _implementation->clientRectangle();
+}
 
 WindowHandle Window::handle() const
 {
@@ -200,19 +235,20 @@ void Window::hide() const
 	_implementation->hide();
 }
 
-Core::Rectangle Window::rectangle() const
+Bool Window::isOpen() const
 {
-	return _implementation->rectangle();
+	return _implementation->isOpen();
 }
 
-void Window::setPointerVisibility(const Bool isPointerVisible) const
+void Window::setClientRectangle(const Core::Rectangle& rectangle) const
 {
-	_implementation->setPointerVisibility(isPointerVisible);
+	if(!_implementation->inFullscreen())
+		_implementation->setClientRectangle(rectangle);
 }
 
-void Window::setFullscreen(const Bool isFullscreen) const
+void Window::setFullscreen(const Bool inFullscreen) const
 {
-	_implementation->setFullscreen(isFullscreen);
+	_implementation->setFullscreen(inFullscreen);
 }
 
 void Window::setIcon(const Image* image) const
@@ -220,20 +256,14 @@ void Window::setIcon(const Image* image) const
 	_implementation->setIcon(image);
 }
 
-void Window::setRectangle(const Core::Rectangle& rectangle) const
+void Window::setPointerVisibility(const Bool isPointerVisible) const
 {
-	if(!_implementation->isFullscreen())
-		_implementation->setRectangle(rectangle, false);
+	_implementation->setPointerVisibility(isPointerVisible);
 }
 
 void Window::setTitle(const String8& title) const
 {
 	_implementation->setTitle(title);
-}
-
-Bool Window::shouldClose() const
-{
-	return _implementation->shouldClose();
 }
 
 void Window::show() const

@@ -31,7 +31,7 @@ namespace Platform
 	{
 	public:
 
-		Implementation(HWND windowHandle, const Int32 pixelFormatIndex);
+		Implementation(HWND windowHandle, const Int32 configIndex);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;

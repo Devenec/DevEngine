@@ -36,7 +36,7 @@ namespace Platform
 {
 	class GraphicsContext;
 
-	using PixelFormatAttributeList = Core::Array<Int32, 7u>;
+	using GraphicsConfigAttributeList = Core::Array<Int32, 7u>;
 
 	class GraphicsDeviceFactory final
 	{
@@ -59,24 +59,21 @@ namespace Platform
 
 	private:
 
-		using PixelFormatIndexList = Core::Vector<Int32>;
+		using GraphicsConfigIndexList = Core::Vector<Int32>;
 
-		static const PixelFormatAttributeList PIXEL_FORMAT_ATTRIBUTE_IDS;
+		static const GraphicsConfigAttributeList GRAPHICS_CONFIG_ATTRIBUTE_IDS;
 
 		HDC _deviceContextHandle;
 
 		Int32 chooseGraphicsConfig(Graphics::GraphicsConfig& chosenConfig) const;
-		GraphicsContext* createGraphicsContext(HWND windowHandle, const Int32 pixelFormatIndex) const;
+		GraphicsContext* createGraphicsContext(HWND windowHandle, const Int32 graphicsConfigIndex) const;
+		Graphics::GraphicsDevice* createDeviceObject(GraphicsContext* graphicsContext) const;
+		Uint32 getGraphicsConfigCount() const;
+		GraphicsConfigIndexList getGraphicsConfigIndices(const Uint32 configCount) const;
 
-		Graphics::GraphicsDevice* createDeviceObject(Graphics::Window* window,
-			GraphicsContext* graphicsContext) const;
+		Int32 chooseBestGraphicsConfig(const GraphicsConfigIndexList& configIndices,
+			GraphicsConfigAttributeList& configAttributes) const;
 
-		Uint32 getPixelFormatCount() const;
-		PixelFormatIndexList getPixelFormatIndices(const Uint32 formatCount) const;
-
-		Int32 chooseBestPixelFormat(const PixelFormatIndexList& formatIndices,
-			PixelFormatAttributeList& formatAttributes) const;
-
-		PixelFormatAttributeList getPixelFormatAttributes(const Int32 formatIndex) const;
+		GraphicsConfigAttributeList getGraphicsConfigAttributes(const Int32 configIndex) const;
 	};
 }

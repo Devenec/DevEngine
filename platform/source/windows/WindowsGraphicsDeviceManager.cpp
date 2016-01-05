@@ -20,6 +20,7 @@
 
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/Rectangle.h>
 #include <graphics/DisplayMode.h>
 #include <graphics/GraphicsAdapter.h>
 #include <graphics/GraphicsAdapterManager.h>
@@ -50,12 +51,12 @@ static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine Application");
 static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
 static HWND createWindow(const Uint32 width = 640u, const Uint32 height = 480u);
-static RECT createWindowRectangle(const Uint32 width, const Uint32 height);
+static Core::Rectangle createWindowRectangle(const Uint32 width, const Uint32 height);
 static void deregisterWindowClass();
 static void destroyWindow(HWND windowHandle);
 static void initialiseWGL();
 static HCURSOR loadPointer();
-static void processMessages();
+static void processWindowMessages();
 static void registerWindowClass(const WNDCLASSEX& windowClassInfo);
 
 
@@ -79,7 +80,20 @@ public:
 		::deregisterWindowClass();
 	}
 
-	Window* createWindowObject(const Uint32 width, const Uint32 height)
+	GraphicsDevice* createDeviceObject(Window* window) const
+	{
+		GraphicsDeviceFactory graphicsDeviceFactory;
+		GraphicsConfig graphicsConfig;
+		GraphicsDevice* device = graphicsDeviceFactory.createDevice(window, graphicsConfig);
+		// TODO: move loggingS to GraphicsDeviceFactory?
+		logChosenGraphicsConfig(graphicsConfig);
+		logGraphicsDeviceCreation(device);
+		GraphicsDeviceFactory::logDeviceInfo(device);
+
+		return device;
+	}
+
+	Window* createWindowObject(const Uint32 width, const Uint32 height) const
 	{
 		HWND windowHandle = ::createWindow(width, height);
 		Window* window = DE_NEW(Window)(windowHandle);
@@ -88,10 +102,8 @@ public:
 		return window;
 	}
 
-	void destroyWindowAndDevice(GraphicsDevice* device)
+	void destroyWindow(Window* window) const
 	{
-		Window* window = device->window();
-		DE_DELETE(device, GraphicsDevice);
 		HWND windowHandle = static_cast<HWND>(window->handle());
 		DE_DELETE(window, Window);
 		::destroyWindow(windowHandle);
@@ -102,13 +114,13 @@ public:
 
 private:
 
-	void initialiseWindowClass()
+	static void initialiseWindowClass()
 	{
 		const WNDCLASSEX windowClassInfo = createWindowClassInfo();
 		::registerWindowClass(windowClassInfo);
 	}
 
-	void setWindowUserData(HWND windowHandle, Window::Implementation* windowImplementation)
+	static void setWindowUserData(HWND windowHandle, Window::Implementation* windowImplementation)
 	{
 		SetLastError(0u);
 
@@ -130,27 +142,29 @@ private:
 		windowClassInfo.cbSize = sizeof(WNDCLASSEXW);
 		windowClassInfo.hCursor = ::loadPointer();
 		windowClassInfo.hInstance = GetModuleHandleW(nullptr);
-		windowClassInfo.lpfnWndProc = processMessage;
+		windowClassInfo.lpfnWndProc = windowMessageHandler;
 		windowClassInfo.lpszClassName = ::WINDOW_CLASS_NAME;
 		windowClassInfo.style = CS_OWNDC;
 
 		return windowClassInfo;
 	}
 
-	static LRESULT CALLBACK processMessage(HWND windowHandle, const Uint32 message, const WPARAM wParam,
+	static Window::Implementation* getWindow(HWND windowHandle)
+	{
+		return reinterpret_cast<Window::Implementation*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
+	}
+
+	static LRESULT CALLBACK windowMessageHandler(HWND windowHandle, const Uint32 message, const WPARAM wParam,
 		const LPARAM lParam)
 	{
-		Window::Implementation* windowImplementation =
-			reinterpret_cast<Window::Implementation*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
-
 		switch(message)
 		{
 			case WM_CLOSE:
-				windowImplementation->close();
+				getWindow(windowHandle)->close();
 				break;
 
 			case WM_SETCURSOR:
-				if(windowImplementation->shouldHidePointer(LOWORD(lParam) == HTCLIENT))
+				if(getWindow(windowHandle)->shouldHidePointer(LOWORD(lParam) == HTCLIENT))
 					return 1;
 
 			default:
@@ -166,45 +180,62 @@ private:
 
 // Public
 
-GraphicsDeviceManager::GraphicsDeviceManager()
-	: _implementation(DE_NEW(Implementation)()) { }
+GraphicsDeviceManager::GraphicsDeviceManager(WindowCreatedHandler windowCreatedHandler)
+	: _implementation(DE_NEW(Implementation)()),
+	  _windowCreatedHandler(windowCreatedHandler) { }
 
 GraphicsDeviceManager::~GraphicsDeviceManager()
 {
-	for(GraphicsDeviceList::const_iterator i = _devices.begin(), end = _devices.end(); i != end; ++i)
-		_implementation->destroyWindowAndDevice(*i);
-
+	destroyDevices();
+	destroyWindows();
 	DE_DELETE(_implementation, Implementation);
 }
 
-GraphicsDevice* GraphicsDeviceManager::createWindowAndDevice(const Uint32 windowWidth,
-	const Uint32 windowHeight)
+GraphicsDevice* GraphicsDeviceManager::createDevice(Window* window)
 {
-	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
-	logWindowCreation();
-	GraphicsDeviceFactory graphicsDeviceFactory;
-	GraphicsConfig graphicsConfig;
-	GraphicsDevice* device = graphicsDeviceFactory.createDevice(window, graphicsConfig);
+	GraphicsDevice* device = _implementation->createDeviceObject(window);
 	_devices.push_back(device);
-	logChosenGraphicsConfig(graphicsConfig);
-	logGraphicsDeviceCreation(device);
-	GraphicsDeviceFactory::logDeviceInfo(device);
 
 	return device;
 }
 
-void GraphicsDeviceManager::destroyWindowAndDevice(GraphicsDevice* device)
+void GraphicsDeviceManager::createWindow(const Uint32 windowWidth, const Uint32 windowHeight)
+{
+	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
+	logWindowCreation();
+	_windows.push_back(window);
+	_windowCreatedHandler(window);
+}
+
+void GraphicsDeviceManager::destroyDevice(GraphicsDevice* device)
 {
 	DE_ASSERT(device != nullptr);
 	GraphicsDeviceList::const_iterator iterator = std::find(_devices.begin(), _devices.end(), device);
 	DE_ASSERT(iterator != _devices.end());
 	_devices.erase(iterator);
-	_implementation->destroyWindowAndDevice(device);
+	DE_DELETE(device, GraphicsDevice);
+}
+
+void GraphicsDeviceManager::destroyWindow(Window* window)
+{
+	DE_ASSERT(window != nullptr);
+	WindowList::const_iterator iterator = std::find(_windows.begin(), _windows.end(), window);
+	DE_ASSERT(iterator != _windows.end());
+	_windows.erase(iterator);
+	_implementation->destroyWindow(window);
 }
 
 void GraphicsDeviceManager::processWindowMessages() const
 {
-	::processMessages();
+	::processWindowMessages();
+}
+
+// Private
+
+void GraphicsDeviceManager::destroyWindows()
+{
+	for(WindowList::const_iterator i = _windows.begin(), end = _windows.end(); i != end; ++i)
+		_implementation->destroyWindow(*i);
 }
 
 
@@ -212,13 +243,11 @@ void GraphicsDeviceManager::processWindowMessages() const
 
 static HWND createWindow(const Uint32 width, const Uint32 height)
 {
-	const RECT windowRectangle = ::createWindowRectangle(width, height);
-	const Int32 windowWidth = windowRectangle.right - windowRectangle.left;
-	const Int32 windowHeight = windowRectangle.bottom - windowRectangle.top;
+	const Core::Rectangle rectangle = ::createWindowRectangle(width, height);
 
 	HWND windowHandle =
-		CreateWindowExW(0u, ::WINDOW_CLASS_NAME, ::WINDOW_DEFAULT_TITLE, ::WINDOW_STYLE, windowRectangle.left,
-			windowRectangle.top, windowWidth, windowHeight, nullptr, nullptr, GetModuleHandleW(nullptr),
+		CreateWindowExW(0u, ::WINDOW_CLASS_NAME, ::WINDOW_DEFAULT_TITLE, ::WINDOW_STYLE, rectangle.x,
+			rectangle.y, rectangle.width, rectangle.height, nullptr, nullptr, GetModuleHandleW(nullptr),
 			nullptr);
 
 	if(windowHandle == nullptr)
@@ -230,21 +259,18 @@ static HWND createWindow(const Uint32 width, const Uint32 height)
 	return windowHandle;
 }
 
-static RECT createWindowRectangle(const Uint32 width, const Uint32 height)
+static Core::Rectangle createWindowRectangle(const Uint32 width, const Uint32 height)
 {
 	const GraphicsAdapterManager& graphicsAdapterManager = GraphicsAdapterManager::instance();
 	const DisplayMode& currentDisplayMode = graphicsAdapterManager.adapters()[0]->currentDisplayMode();
 
 	RECT rectangle;
-
-	// TODO: change to: (x1 - x2) / 2
-	rectangle.left = currentDisplayMode.width() / 2 - width / 2;
-	rectangle.top = currentDisplayMode.height() / 2 - height / 2;
-
+	rectangle.left = (currentDisplayMode.width() - width) / 2;
+	rectangle.top = (currentDisplayMode.height() - height) / 2;
 	rectangle.right = rectangle.left + width;
 	rectangle.bottom = rectangle.top + height;
 
-	const Int32 result = AdjustWindowRectEx(&rectangle, ::WINDOW_STYLE, 0, 0u);
+	const Int32 result = AdjustWindowRectEx(&rectangle, ::WINDOW_STYLE, FALSE, 0u);
 
 	if(result == 0)
 	{
@@ -254,7 +280,7 @@ static RECT createWindowRectangle(const Uint32 width, const Uint32 height)
 		DE_ERROR_WINDOWS(0x0);
 	}
 
-	return rectangle;
+	return createRectangle(rectangle);
 }
 
 static void deregisterWindowClass()
@@ -303,11 +329,11 @@ static HCURSOR loadPointer()
 		return static_cast<HCURSOR>(pointerHandle);
 }
 
-static void processMessages()
+static void processWindowMessages()
 {
 	MSG message;
 
-	while(PeekMessageW(&message, nullptr, 0u, 0u, PM_REMOVE) != FALSE)
+	while(PeekMessageW(&message, nullptr, 0u, 0u, PM_REMOVE) != 0)
 		DispatchMessageW(&message);
 }
 

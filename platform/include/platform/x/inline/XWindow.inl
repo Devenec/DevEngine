@@ -40,6 +40,11 @@ void Graphics::Window::Implementation::hide() const
 	Platform::X::instance().hideWindow(_windowHandle);
 }
 
+Bool Window::Implementation::inFullscreen() const
+{
+	return _inFullscreen;
+}
+
 Bool Graphics::Window::Implementation::isOpen() const
 {
 	return _isOpen;

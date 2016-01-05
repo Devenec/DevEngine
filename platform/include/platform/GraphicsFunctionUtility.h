@@ -24,7 +24,7 @@
 
 namespace Platform
 {
-	class GraphicsFunctionUtility
+	class GraphicsFunctionUtility final
 	{
 	public:
 

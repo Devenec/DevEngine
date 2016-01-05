@@ -32,8 +32,8 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG				   = "[Platform::GLX] ";
-static const Char8* LIBRARY_FILENAME			   = "libGL.so";
+static const Char8* COMPONENT_TAG			   = "[Platform::GLX] ";
+static const Char8* LIBRARY_FILENAME		   = "libGL.so";
 static const Int32 MIN_SUPPORTED_VERSION_MAJOR = 1;
 static const Int32 MIN_SUPPORTED_VERSION_MINOR = 4;
 
@@ -93,8 +93,8 @@ void GLX::loadLibrary()
 
 	if(_libraryHandle == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to load " << ::LIBRARY_FILENAME << ": " <<
-			dlerror() << '.' << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to load the library " <<
+			::LIBRARY_FILENAME << ": " << dlerror() << '.' << Log::Flush();
 
 		DE_ERROR(0x0);
 	}
@@ -215,8 +215,8 @@ void GLX::unloadLibrary() const
 
 	if(result != 0)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to unload " << ::LIBRARY_FILENAME <<
-			": " << dlerror() << '.' << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to unload the library " <<
+			::LIBRARY_FILENAME << ": " << dlerror() << '.' << Log::Flush();
 
 		DE_ERROR(0x0);
 	}
@@ -228,8 +228,8 @@ Void* GLX::getStandardFunctionInternal(const Char8* name) const
 
 	if(functionPointer == nullptr)
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to load a standard function '" << name <<
-			"': " << dlerror() << '.' << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the address of the function '" <<
+			name << "': " << dlerror() << '.' << Log::Flush();
 
 		DE_ERROR(0x0);
 	}

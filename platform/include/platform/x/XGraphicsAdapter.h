@@ -41,7 +41,7 @@ namespace Graphics
 
 		inline const DisplayMode& currentDisplayMode() const;
 
-		inline Core::String8 name() const;
+		inline const Core::String8& name() const;
 
 		void setDisplayMode(const DisplayMode& mode);
 

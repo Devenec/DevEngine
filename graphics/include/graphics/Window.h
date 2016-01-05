@@ -59,11 +59,11 @@ namespace Graphics
 		 */
 		void setClientRectangle(const Core::Rectangle& rectangle) const;
 
-		void setPointerVisibility(const Bool isPointerVisible) const;
-
 		void setFullscreen(const Bool inFullscreen) const;
 
 		void setIcon(const Image* image) const;
+
+		void setPointerVisibility(const Bool isPointerVisible) const;
 
 		void setTitle(const Core::String8& title) const;
 

@@ -47,9 +47,9 @@ namespace Platform
 
 		using Base = GraphicsContextBase;
 
-		void initialisePixelFormat() const;
+		void initialiseConfig() const;
 		void createContext();
-		Int32 choosePixelFormat(const PIXELFORMATDESCRIPTOR& pixelFormatDescriptor) const;
-		void checkPixelFormat(const Int32 pixelFormatIndex) const;
+		Int32 chooseConfig(const PIXELFORMATDESCRIPTOR& configDescriptor) const;
+		void checkConfig(const Int32 configIndex) const;
 	};
 }

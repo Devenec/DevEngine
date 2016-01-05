@@ -43,8 +43,15 @@
 		Platform::invokeWindowsError(errorCode)
 #endif
 
+namespace Core
+{
+	class Rectangle;
+}
+
 namespace Platform
 {
+	Core::Rectangle createRectangle(const RECT& rectangle);
+
 	void failWindowsAssertion(const Char8* file, const Uint32 line, const Char8* function);
 
 	HDC getWindowDeviceContextHandle(HWND windowHandle);
