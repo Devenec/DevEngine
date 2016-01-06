@@ -18,7 +18,6 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/Error.h>
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <core/UtilityMacros.h>
@@ -99,7 +98,17 @@ GraphicsFunctionUtility::~GraphicsFunctionUtility()
 GraphicsFunctionUtility::Function GraphicsFunctionUtility::getExtensionFunctionInternal(const Char8* name)
 	const
 {
-	return reinterpret_cast<Function>(WGL::getProcAddress(name));
+	Function function = reinterpret_cast<Function>(WGL::getProcAddress(name));
+
+	if(function == nullptr)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the address of the function " <<
+			name << '.';
+
+		DE_ERROR_WINDOWS(0x0);
+	}
+
+	return function;
 }
 
 GraphicsFunctionUtility::Function GraphicsFunctionUtility::getStandardFunctionInternal(const Char8* name)

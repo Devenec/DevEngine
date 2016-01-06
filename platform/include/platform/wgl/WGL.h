@@ -198,9 +198,10 @@ namespace Platform
 
 	private:
 
-		static void getExtensionFunctions();
+		static void initialiseExtensions();
 		static Graphics::ExtensionNameList getExtensionNames(const GraphicsContextBase& graphicsContext);
-		static void checkExtensionSupport(const Graphics::ExtensionNameList& extensionNames);
+		static void checkExtensionsSupport(const Graphics::ExtensionNameList& extensionNames);
+		static void getExtensionFunctions();
 	};
 }
 

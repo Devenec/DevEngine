@@ -39,7 +39,7 @@
 
 namespace Platform
 {
-	class X : public Core::Singleton<X>
+	class X final : public Core::Singleton<X>
 	{
 	public:
 

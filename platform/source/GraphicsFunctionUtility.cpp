@@ -1,5 +1,5 @@
 /**
- * @file graphics/Colour.h
+ * @file platform/GraphicsFunctionUtility.cpp
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,40 +18,30 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include <core/Error.h>
+#include <core/Log.h>
+#include <platform/GraphicsFunctionUtility.h>
 
-#include <core/Types.h>
-#include <core/Numeric.h>
+using namespace Core;
+using namespace Platform;
 
-namespace Graphics
+// External
+
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsFunctionUtility] ";
+
+
+// Public
+
+// Static
+
+void GraphicsFunctionUtility::checkExtensionSupport(const ExtensionNameSet& extensionNameSet,
+	const Char8* extensionName)
 {
-	class Colour final
+	if(extensionNameSet.find(extensionName) == extensionNameSet.end())
 	{
-	public:
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
+			"The required graphics extension " << extensionName << " is not supported.";
 
-		Float32 alpha;
-
-		Float32 blue;
-
-		Float32 green;
-
-		Float32 red;
-
-		Colour() = default;
-
-		Colour(const Float32 red, const Float32 green, const Float32 blue, const Float32 alpha = 1.0f);
-
-		Colour(const Uint8 red, const Uint8 green, const Uint8 blue,
-			const Uint8 alpha = Core::Numeric<Uint8>::maximum());
-
-		Colour(const Colour& colour) = default;
-
-		Colour(Colour&& colour) = default;
-
-		~Colour() = default;
-
-		Colour& operator =(const Colour& colour) = default;
-
-		Colour& operator =(Colour&& colour) = default;
-	};
+		DE_ERROR(0x0);
+	}
 }

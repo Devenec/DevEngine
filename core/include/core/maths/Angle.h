@@ -24,7 +24,7 @@
 
 namespace Maths
 {
-	class Angle
+	class Angle final
 	{
 	public:
 
@@ -72,13 +72,13 @@ namespace Maths
 	inline Bool operator ==(const Angle& angleA, const Angle& angleB);
 
 	inline Bool operator !=(const Angle& angleA, const Angle& angleB);
-	
+
 	inline Bool operator <(const Angle& angleA, const Angle& angleB);
-	
+
 	inline Bool operator <=(const Angle& angleA, const Angle& angleB);
-	
+
 	inline Bool operator >(const Angle& angleA, const Angle& angleB);
-	
+
 	inline Bool operator >=(const Angle& angleA, const Angle& angleB);
 
 #include "inline/Angle.inl"

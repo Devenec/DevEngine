@@ -62,42 +62,24 @@ WGL::GetPixelFormatAttribIVARB WGL::getPixelFormatAttribivARB = nullptr;
 void WGL::initialise(const GraphicsContextBase& graphicsContext)
 {
 	// TODO: check current context state?
-	// TODO: 1) Get wglGetExtensionsStringARB  2) checkExtensionSupport()  3) getExtensionFunctions()
-	//   Do same for Linux
-	getExtensionFunctions();
+
+	initialiseExtensions();
 	const ExtensionNameList extensionNames = getExtensionNames(graphicsContext);
-	checkExtensionSupport(extensionNames);
 	logGraphicsExtensions("graphics context", extensionNames);
+	checkExtensionsSupport(extensionNames);
+	getExtensionFunctions();
 }
 
 // Private
 
 // Static
 
-void WGL::getExtensionFunctions()
+void WGL::initialiseExtensions()
 {
 	GraphicsFunctionUtility functionUtility;
 
-	// WGL_ARB_create_context
-
-	createContextAttribsARB =
-		functionUtility.getExtensionFunction<CreateContextAttribsARB>("wglCreateContextAttribsARB");
-
-	// WGL_ARB_extensions_string
-
 	getExtensionsStringARB =
 		functionUtility.getExtensionFunction<GetExtensionsStringARB>("wglGetExtensionsStringARB");
-
-	// WGL_ARB_pixel_format
-
-	choosePixelFormatARB =
-		functionUtility.getExtensionFunction<ChoosePixelFormatARB>("wglChoosePixelFormatARB");
-
-	getPixelFormatAttribfvARB =
-		functionUtility.getExtensionFunction<GetPixelFormatAttribFVARB>("wglGetPixelFormatAttribfvARB");
-
-	getPixelFormatAttribivARB =
-		functionUtility.getExtensionFunction<GetPixelFormatAttribIVARB>("wglGetPixelFormatAttribivARB");
 }
 
 ExtensionNameList WGL::getExtensionNames(const GraphicsContextBase& graphicsContext)
@@ -122,7 +104,34 @@ ExtensionNameList WGL::getExtensionNames(const GraphicsContextBase& graphicsCont
 	return extensionNames;
 }
 
-void WGL::checkExtensionSupport(const ExtensionNameList& extensionNames)
+void WGL::checkExtensionsSupport(const ExtensionNameList& extensionNames)
 {
-	// TODO: implement
+	const ExtensionNameSet extensionNameSet(extensionNames.begin(), extensionNames.end());
+	GraphicsFunctionUtility::checkExtensionSupport(extensionNameSet, "WGL_ARB_create_context");
+	GraphicsFunctionUtility::checkExtensionSupport(extensionNameSet, "WGL_ARB_pixel_format");
+}
+
+void WGL::getExtensionFunctions()
+{
+	GraphicsFunctionUtility functionUtility;
+
+	// WGL_ARB_create_context
+
+	createContextAttribsARB =
+		functionUtility.getExtensionFunction<CreateContextAttribsARB>("wglCreateContextAttribsARB");
+
+	// WGL_ARB_extensions_string
+
+	// getExtensionsStringARB is initialised in WGL::initialiseExtensions()
+
+	// WGL_ARB_pixel_format
+
+	choosePixelFormatARB =
+		functionUtility.getExtensionFunction<ChoosePixelFormatARB>("wglChoosePixelFormatARB");
+
+	getPixelFormatAttribfvARB =
+		functionUtility.getExtensionFunction<GetPixelFormatAttribFVARB>("wglGetPixelFormatAttribfvARB");
+
+	getPixelFormatAttribivARB =
+		functionUtility.getExtensionFunction<GetPixelFormatAttribIVARB>("wglGetPixelFormatAttribivARB");
 }

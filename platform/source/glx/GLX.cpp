@@ -74,9 +74,7 @@ GLX::GLX()
 	loadLibrary();
 	getStandardFunctions();
 	checkSupport();
-	getExtensionFunctions();
-	checkExtensionSupport();
-	logGraphicsExtensions("graphics context", getExtensionNames());
+	initialiseExtensions();
 }
 
 GLX::~GLX()
@@ -156,41 +154,12 @@ void GLX::checkSupport() const
 	}
 }
 
-void GLX::getExtensionFunctions() const
+void GLX::initialiseExtensions() const
 {
-	GraphicsFunctionUtility functionUtility;
-
-	// GLX_ARB_create_context
-
-	createContextAttribsARB =
-		functionUtility.getExtensionFunction<CreateContextAttribsARB>("glXCreateContextAttribsARB");
-}
-
-void GLX::checkExtensionSupport() const
-{
-	// TODO: implement
-}
-
-ExtensionNameList GLX::getExtensionNames() const
-{
-	const String8 extensionNamesString(X::instance().getExtensionNameString());
-	ExtensionNameList extensionNames;
-
-	if(extensionNamesString.length() != 0u)
-	{
-		Uint32 currentPosition = 0u;
-		Uint32 spacePosition;
-
-		while((spacePosition = extensionNamesString.find(' ', currentPosition)) != String8::npos)
-		{
-			extensionNames.push_back(extensionNamesString.substr(currentPosition,
-				spacePosition - currentPosition));
-
-			currentPosition = spacePosition + 1u;
-		}
-	}
-
-	return extensionNames;
+	const ExtensionNameList extensionNames = getExtensionNames();
+	logGraphicsExtensions("graphics context", extensionNames);
+	checkExtensionsSupport(extensionNames);
+	getExtensionFunctions();
 }
 
 void GLX::clearFunctions() const
@@ -220,6 +189,44 @@ void GLX::unloadLibrary() const
 
 		DE_ERROR(0x0);
 	}
+}
+
+ExtensionNameList GLX::getExtensionNames() const
+{
+	const String8 extensionNamesString(X::instance().getExtensionNameString());
+	ExtensionNameList extensionNames;
+
+	if(extensionNamesString.length() != 0u)
+	{
+		Uint32 currentPosition = 0u;
+		Uint32 spacePosition;
+
+		while((spacePosition = extensionNamesString.find(' ', currentPosition)) != String8::npos)
+		{
+			extensionNames.push_back(extensionNamesString.substr(currentPosition,
+				spacePosition - currentPosition));
+
+			currentPosition = spacePosition + 1u;
+		}
+	}
+
+	return extensionNames;
+}
+
+void GLX::checkExtensionsSupport(const ExtensionNameList& extensionNames) const
+{
+	const ExtensionNameSet extensionNameSet(extensionNames.begin(), extensionNames.end());
+	GraphicsFunctionUtility::checkExtensionSupport(extensionNameSet, "GLX_ARB_create_context");
+}
+
+void GLX::getExtensionFunctions() const
+{
+	GraphicsFunctionUtility functionUtility;
+
+	// GLX_ARB_create_context
+
+	createContextAttribsARB =
+		functionUtility.getExtensionFunction<CreateContextAttribsARB>("glXCreateContextAttribsARB");
 }
 
 Void* GLX::getStandardFunctionInternal(const Char8* name) const

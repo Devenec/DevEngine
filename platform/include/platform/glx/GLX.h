@@ -230,11 +230,12 @@ namespace Platform
 		void loadLibrary();
 		void getStandardFunctions() const;
 		void checkSupport() const;
-		void getExtensionFunctions() const;
-		void checkExtensionSupport() const;
-		Graphics::ExtensionNameList getExtensionNames() const;
+		void initialiseExtensions() const;
 		void clearFunctions() const;
 		void unloadLibrary() const;
+		Graphics::ExtensionNameList getExtensionNames() const;
+		void checkExtensionsSupport(const Graphics::ExtensionNameList& extensionNames) const;
+		void getExtensionFunctions() const;
 		Void* getStandardFunctionInternal(const Char8* name) const;
 
 		template<typename T>

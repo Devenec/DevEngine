@@ -20,10 +20,14 @@
 
 #pragma once
 
+#include <unordered_set> // TODO: add and replace with Core::Set
+#include <core/String.h>
 #include <core/Types.h>
 
 namespace Platform
 {
+	using ExtensionNameSet = std::unordered_set<Core::String8>;
+
 	class GraphicsFunctionUtility final
 	{
 	public:
@@ -43,6 +47,9 @@ namespace Platform
 
 		GraphicsFunctionUtility& operator =(const GraphicsFunctionUtility& graphicsFunctionUtility) = delete;
 		GraphicsFunctionUtility& operator =(GraphicsFunctionUtility&& graphicsFunctionUtility) = delete;
+
+		static void checkExtensionSupport(const ExtensionNameSet& extensionNameSet,
+			const Char8* extensionName);
 
 	private:
 

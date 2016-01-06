@@ -114,6 +114,7 @@
     <None Include="include\platform\windows\inline\WindowsWindow.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\GraphicsFunctionUtility.cpp" />
     <ClCompile Include="source\Utility.cpp" />
     <ClCompile Include="source\opengl\OpenGLEffect.cpp" />
     <ClCompile Include="source\opengl\OpenGLGraphicsBuffer.cpp" />

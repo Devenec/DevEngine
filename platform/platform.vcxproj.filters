@@ -45,7 +45,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\GraphicsFunctionUtility.h">
-        <Filter>Header Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\PlatformInternal.h">
       <Filter>Header Files</Filter>
@@ -90,7 +90,7 @@
       <Filter>Header Files\windows</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\windows\WindowsGraphicsAdapter.h">
-        <Filter>Header Files\windows</Filter>
+      <Filter>Header Files\windows</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\windows\WindowsIcon.h">
       <Filter>Header Files\windows</Filter>
@@ -100,9 +100,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-      <None Include="include\platform\inline\GraphicsFunctionUtility.inl">
-          <Filter>Header Files\inline</Filter>
-      </None>
+    <None Include="include\platform\inline\GraphicsFunctionUtility.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
     <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl">
       <Filter>Header Files\opengl\inline</Filter>
     </None>
@@ -116,7 +116,7 @@
       <Filter>Header Files\wgl\inline</Filter>
     </None>
     <None Include="include\platform\windows\inline\WindowsGraphicsAdapter.inl">
-        <Filter>Header Files\windows\inline</Filter>
+      <Filter>Header Files\windows\inline</Filter>
     </None>
     <None Include="include\platform\windows\inline\WindowsIcon.inl">
       <Filter>Header Files\windows\inline</Filter>
@@ -126,6 +126,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\GraphicsFunctionUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\Utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -151,7 +154,7 @@
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp">
-        <Filter>Source Files\wgl</Filter>
+      <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp">
       <Filter>Source Files\wgl</Filter>
@@ -160,7 +163,7 @@
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLGraphicsFunctionUtility.cpp">
-        <Filter>Source Files\wgl</Filter>
+      <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp">
       <Filter>Source Files\wgl</Filter>
