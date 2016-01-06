@@ -83,14 +83,7 @@ public:
 	GraphicsDevice* createDeviceObject(Window* window) const
 	{
 		GraphicsDeviceFactory graphicsDeviceFactory;
-		GraphicsConfig graphicsConfig;
-		GraphicsDevice* device = graphicsDeviceFactory.createDevice(window, graphicsConfig);
-		// TODO: move loggingS to GraphicsDeviceFactory?
-		logChosenGraphicsConfig(graphicsConfig);
-		logGraphicsDeviceCreation(device);
-		GraphicsDeviceFactory::logDeviceInfo(device);
-
-		return device;
+		return graphicsDeviceFactory.createDevice(window);
 	}
 
 	Window* createWindowObject(const Uint32 width, const Uint32 height) const
@@ -194,6 +187,7 @@ GraphicsDeviceManager::~GraphicsDeviceManager()
 GraphicsDevice* GraphicsDeviceManager::createDevice(Window* window)
 {
 	GraphicsDevice* device = _implementation->createDeviceObject(window);
+	logGraphicsDeviceCreation(device);
 	_devices.push_back(device);
 
 	return device;
@@ -202,7 +196,7 @@ GraphicsDevice* GraphicsDeviceManager::createDevice(Window* window)
 void GraphicsDeviceManager::createWindow(const Uint32 windowWidth, const Uint32 windowHeight)
 {
 	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
-	logWindowCreation();
+	logWindowCreation(window);
 	_windows.push_back(window);
 	_windowCreatedHandler(window);
 }

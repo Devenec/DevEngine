@@ -107,6 +107,7 @@
     <ClInclude Include="include\core\Numeric.h" />
     <ClInclude Include="include\core\Platform.h" />
     <ClInclude Include="include\core\Rectangle.h" />
+    <ClInclude Include="include\core\Set.h" />
     <ClInclude Include="include\core\Singleton.h" />
     <ClInclude Include="include\core\String.h" />
     <ClInclude Include="include\core\StringStream.h" />

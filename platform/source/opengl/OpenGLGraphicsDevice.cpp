@@ -24,12 +24,13 @@
 #include <graphics/Colour.h>
 #include <graphics/Effect.h>
 #include <graphics/GraphicsBuffer.h>
+#include <graphics/GraphicsDevice.h>
 #include <graphics/IndexBuffer.h>
 #include <graphics/Shader.h>
 #include <graphics/VertexBufferState.h>
+#include <graphics/Viewport.h>
 #include <platform/GraphicsContext.h>
 #include <platform/opengl/OpenGL.h>
-#include <platform/opengl/OpenGLGraphicsDevice.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -37,132 +38,156 @@ using namespace Platform;
 
 // Implementation
 
-// Public
-
-GraphicsDevice::Implementation::Implementation(GraphicsContext* graphicsContext)
-	: _activeEffect(nullptr),
-	  _graphicsContext(graphicsContext),
-	  _activeVertexBufferState(nullptr),
-	  _openGL(nullptr)
+class GraphicsDevice::Implementation final
 {
-	initialiseOpenGL();
-	initialiseViewport();
-}
+public:
 
-GraphicsDevice::Implementation::~Implementation()
-{
-	DE_DELETE(_openGL, OpenGL);
-	DE_DELETE(_graphicsContext, GraphicsContext);
-}
+	Implementation(GraphicsContext* graphicsContext)
+		: _activeEffect(nullptr),
+		  _activeVertexBufferState(nullptr),
+		  _graphicsContext(graphicsContext),
+		  _openGL(nullptr)
+	{
+		initialiseOpenGL();
+		initialiseViewport();
+	}
 
-void GraphicsDevice::Implementation::clear(const Colour& colour) const
-{
-	_openGL->clearColor(colour.red, colour.green, colour.blue, colour.alpha);
-	_openGL->clear(OpenGL::COLOR_BUFFER_BIT);
-	DE_CHECK_ERROR_OPENGL(_openGL);
-}
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
 
-GraphicsBuffer* GraphicsDevice::Implementation::createBuffer(const BufferBinding& binding, const Uint32 size,
-	const AccessMode& accessMode) const
-{
-	return DE_NEW(GraphicsBuffer)(_openGL, binding, size, accessMode);
-}
+	~Implementation()
+	{
+		DE_DELETE(_openGL, OpenGL);
+		DE_DELETE(_graphicsContext, GraphicsContext);
+	}
 
-Effect* GraphicsDevice::Implementation::createEffect() const
-{
-	return DE_NEW(Effect)(_openGL);
-}
+	void clear(const Colour& colour) const
+	{
+		_openGL->clearColor(colour.red, colour.green, colour.blue, colour.alpha);
+		_openGL->clear(OpenGL::COLOR_BUFFER_BIT);
+		DE_CHECK_ERROR_OPENGL(_openGL);
+	}
 
-IndexBuffer* GraphicsDevice::Implementation::createIndexBuffer(const Uint32 size, const IndexType& indexType,
-	const AccessMode& accessMode) const
-{
-	return DE_NEW(IndexBuffer)(_openGL, size, indexType, accessMode);
-}
+	GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size,
+		const AccessMode& accessMode) const
+	{
+		return DE_NEW(GraphicsBuffer)(_openGL, binding, size, accessMode);
+	}
 
-Shader* GraphicsDevice::Implementation::createShader(const ShaderType& type, const String8& source) const
-{
-	return DE_NEW(Shader)(_openGL, type, source);
-}
+	Effect* createEffect() const
+	{
+		return DE_NEW(Effect)(_openGL);
+	}
 
-VertexBufferState* GraphicsDevice::Implementation::createVertexBufferState() const
-{
-	return DE_NEW(VertexBufferState)(_openGL);
-}
+	IndexBuffer* createIndexBuffer(const Uint32 size, const IndexType& indexType,
+		const AccessMode& accessMode) const
+	{
+		return DE_NEW(IndexBuffer)(_openGL, size, indexType, accessMode);
+	}
 
-void GraphicsDevice::Implementation::draw(const PrimitiveType& primitiveType, const Uint32 vertexCount,
-	const Uint32 vertexOffset) const
-{
-	initialiseDrawing();
-	_openGL->drawArrays(static_cast<Uint32>(primitiveType), vertexOffset, vertexCount);
-	DE_CHECK_ERROR_OPENGL(_openGL);
-	deinitialiseDrawing();
-}
+	Shader* createShader(const ShaderType& type, const String8& source) const
+	{
+		return DE_NEW(Shader)(_openGL, type, source);
+	}
 
-void GraphicsDevice::Implementation::drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount,
-	const Uint32 indexOffset) const
-{
-	initialiseDrawing();
-	IndexBuffer* indexBuffer = _activeVertexBufferState->indexBuffer();
-	DE_ASSERT(indexBuffer != nullptr);
-	const Uint32 indexTypeId = static_cast<Uint32>(indexBuffer->indexType());
-	const Uint32 byteOffset = indexOffset * ((indexTypeId & 0x03) + 1u);
+	VertexBufferState* createVertexBufferState() const
+	{
+		return DE_NEW(VertexBufferState)(_openGL);
+	}
 
-	_openGL->drawElements(static_cast<Uint32>(primitiveType), indexCount, indexTypeId >> 2,
-		reinterpret_cast<Void*>(byteOffset));
+	void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount, const Uint32 vertexOffset) const
+	{
+		initialiseDrawing();
+		_openGL->drawArrays(static_cast<Uint32>(primitiveType), vertexOffset, vertexCount);
+		DE_CHECK_ERROR_OPENGL(_openGL);
+		deinitialiseDrawing();
+	}
 
-	DE_CHECK_ERROR_OPENGL(_openGL);
-	deinitialiseDrawing();
-}
+	void drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset)
+		const
+	{
+		initialiseDrawing();
+		IndexBuffer* indexBuffer = _activeVertexBufferState->indexBuffer();
+		DE_ASSERT(indexBuffer != nullptr);
+		const Uint32 indexTypeId = static_cast<Uint32>(indexBuffer->indexType());
+		const Uint32 byteOffset = indexOffset * ((indexTypeId & 0x03) + 1u);
 
-void GraphicsDevice::Implementation::logInfo() const
-{
-	_openGL->logInfo();
-}
+		_openGL->drawElements(static_cast<Uint32>(primitiveType), indexCount, indexTypeId >> 2,
+			reinterpret_cast<Void*>(byteOffset));
 
-void GraphicsDevice::Implementation::setViewport(const Viewport& viewport)
-{
-	_viewport = viewport;
-	const Rectangle& bounds = viewport.bounds();
-	_openGL->viewport(bounds.x, bounds.y, bounds.width, bounds.height);
-	DE_CHECK_ERROR_OPENGL(_openGL);
-}
+		DE_CHECK_ERROR_OPENGL(_openGL);
+		deinitialiseDrawing();
+	}
 
-void GraphicsDevice::Implementation::swapBuffers() const
-{
-	_graphicsContext->swapBuffers();
-}
+	void setEffect(Effect* effect)
+	{
+		_activeEffect = effect;
+	}
 
-// Private
+	void setVertexBufferState(VertexBufferState* vertexBufferState)
+	{
+		_activeVertexBufferState = vertexBufferState;
+	}
 
-void GraphicsDevice::Implementation::initialiseOpenGL()
-{
-	_graphicsContext->makeCurrent();
-	_openGL = DE_NEW(OpenGL)();
-}
+	void setViewport(const Viewport& viewport)
+	{
+		_viewport = viewport;
+		const Rectangle& bounds = viewport.bounds();
+		_openGL->viewport(bounds.x, bounds.y, bounds.width, bounds.height);
+		DE_CHECK_ERROR_OPENGL(_openGL);
+	}
 
-void GraphicsDevice::Implementation::initialiseViewport()
-{
-	Int32 viewportValues[4];
-	_openGL->getIntegerv(OpenGL::VIEWPORT, viewportValues);
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	void swapBuffers() const
+	{
+		_graphicsContext->swapBuffers();
+	}
 
-	_viewport.setBounds(Rectangle(viewportValues[0], viewportValues[1], viewportValues[2],
-		viewportValues[3]));
-}
+	const Viewport& viewport() const
+	{
+		return _viewport;
+	}
 
-void GraphicsDevice::Implementation::initialiseDrawing() const
-{
-	DE_ASSERT(_activeEffect != nullptr);
-	DE_ASSERT(_activeVertexBufferState != nullptr);
-	_activeEffect->use();
-	_activeVertexBufferState->bind();
-}
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
 
-void GraphicsDevice::Implementation::deinitialiseDrawing() const
-{
-	_activeVertexBufferState->debind();
-	_activeEffect->disuse();
-}
+private:
+
+	Viewport _viewport;
+	Effect* _activeEffect;
+	VertexBufferState* _activeVertexBufferState;
+	GraphicsContext* _graphicsContext;
+	OpenGL* _openGL;
+
+	void initialiseOpenGL()
+	{
+		_graphicsContext->makeCurrent();
+		_openGL = DE_NEW(OpenGL)();
+	}
+
+	void initialiseViewport()
+	{
+		Int32 viewportValues[4];
+		_openGL->getIntegerv(OpenGL::VIEWPORT, viewportValues);
+		DE_CHECK_ERROR_OPENGL(_openGL);
+
+		_viewport.setBounds(Rectangle(viewportValues[0], viewportValues[1], viewportValues[2],
+			viewportValues[3]));
+	}
+
+	void initialiseDrawing() const
+	{
+		DE_ASSERT(_activeEffect != nullptr);
+		DE_ASSERT(_activeVertexBufferState != nullptr);
+		_activeEffect->use();
+		_activeVertexBufferState->bind();
+	}
+
+	void deinitialiseDrawing() const
+	{
+		_activeVertexBufferState->debind();
+		_activeEffect->disuse();
+	}
+};
 
 
 // Graphics::GraphicsDevice
@@ -255,8 +280,8 @@ void GraphicsDevice::swapBuffers() const
 
 // Private
 
-GraphicsDevice::GraphicsDevice(Implementation* implementation)
-	: _implementation(implementation) { }
+GraphicsDevice::GraphicsDevice(GraphicsContext* graphicsContext)
+	: _implementation(DE_NEW(Implementation)(graphicsContext)) { }
 
 GraphicsDevice::~GraphicsDevice()
 {

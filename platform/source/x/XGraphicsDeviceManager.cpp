@@ -28,7 +28,6 @@
 #include <platform/GraphicsContext.h>
 #include <platform/glx/GLX.h>
 #include <platform/glx/GLXGraphicsConfigChooser.h>
-#include <platform/glx/GLXGraphicsContext.h>
 #include <platform/opengl/OpenGLGraphicsDevice.h>
 #include <platform/x/X.h>
 #include <platform/x/XWindow.h>
@@ -42,7 +41,7 @@ using namespace Platform;
 static const Char8* WINDOW_DEFAULT_TITLE = "DevEngine Application";
 
 static GLX::FBConfig chooseGraphicsConfig();
-static GraphicsConfig getGraphicsConfig(GLX::FBConfig configHandle);
+static void logGraphicsConfig(GLX::FBConfig configHandle);
 
 
 // Implementation
@@ -66,19 +65,10 @@ public:
 
 	GraphicsDevice* createDeviceObject(Window* window) const
 	{
-		GraphicsContext* graphicsContext =
-			createGraphicsContext(reinterpret_cast<::Window>(window->handle()));
+		logGraphicsConfig(_graphicsConfigHandle);
+		GraphicsContext* graphicsContext = DE_NEW(GraphicsContext)(window->handle(), _graphicsConfigHandle);
 
-		GraphicsDevice::Implementation* implementation =
-			DE_NEW(GraphicsDevice::Implementation)(graphicsContext);
-
-		GraphicsDevice* device = DE_NEW(GraphicsDevice)(implementation);
-		GraphicsConfig graphicsConfig = getGraphicsConfig(_graphicsConfigHandle);
-		logChosenGraphicsConfig(graphicsConfig);
-		logGraphicsDeviceCreation(device);
-		implementation->logInfo();
-
-		return device;
+		return DE_NEW(GraphicsDevice)(graphicsContext);
 	}
 
 	Graphics::Window* createWindowObject(const Uint32 width, const Uint32 height)
@@ -130,14 +120,6 @@ private:
 	GLX::FBConfig _graphicsConfigHandle;
 	X& _x;
 
-	GraphicsContext* createGraphicsContext(::Window windowHandle) const
-	{
-		GraphicsContext::Implementation* implementation =
-			DE_NEW(GraphicsContext::Implementation)(windowHandle, _graphicsConfigHandle);
-
-		return DE_NEW(GraphicsContext)(implementation);
-	}
-
 	::Window createWindow(const Uint32 width, const Uint32 height)
 	{
 		XVisualInfo* visualInfo = _x.getGraphicsConfigVisualInfo(_graphicsConfigHandle);
@@ -188,6 +170,7 @@ GraphicsDeviceManager::~GraphicsDeviceManager()
 GraphicsDevice* GraphicsDeviceManager::createDevice(Window* window)
 {
 	GraphicsDevice* device = _implementation->createDeviceObject(window);
+	logGraphicsDeviceCreation(device);
 	_devices.push_back(device);
 
 	return device;
@@ -196,7 +179,7 @@ GraphicsDevice* GraphicsDeviceManager::createDevice(Window* window)
 void GraphicsDeviceManager::createWindow(const Uint32 windowWidth, const Uint32 windowHeight)
 {
 	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
-	logWindowCreation();
+	logWindowCreation(window);
 	_windows.push_back(window);
 	_windowCreatedHandler(window);
 }
@@ -241,8 +224,9 @@ static GLX::FBConfig chooseGraphicsConfig()
 	return graphicsConfigChooser.chooseConfig();
 }
 
-static GraphicsConfig getGraphicsConfig(GLX::FBConfig configHandle)
+static void logGraphicsConfig(GLX::FBConfig configHandle)
 {
 	GraphicsConfigChooser graphicsConfigChooser;
-	return graphicsConfigChooser.getConfig(configHandle);
+	GraphicsConfig config = graphicsConfigChooser.getConfig(configHandle);
+	logChosenGraphicsConfig(config);
 }

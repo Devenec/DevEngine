@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/inline/OpenGLGraphicsDevice.inl
+ * @file core/Set.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,19 +18,19 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Public
+#pragma once
 
-void GraphicsDevice::Implementation::setEffect(Effect* effect)
-{
-	_activeEffect = effect;
-}
+#include <functional>
+#include <unordered_set>
+#include <utility>
+#include <core/memory/STDAllocator.h>
 
-void GraphicsDevice::Implementation::setVertexBufferState(VertexBufferState* vertexBufferState)
+namespace Core
 {
-	_activeVertexBufferState = vertexBufferState;
-}
-
-const Viewport& GraphicsDevice::Implementation::viewport() const
-{
-	return _viewport;
+	/**
+	 * Unordered set for storing unique keys
+	 */
+	template<typename Key, typename Hash = std::hash<Key>, typename KeyEqual = std::equal_to<Key>,
+		typename Allocator = Memory::STDAllocator<Key>>
+	using Set = std::unordered_set<Key, Hash, KeyEqual, Allocator>;
 }

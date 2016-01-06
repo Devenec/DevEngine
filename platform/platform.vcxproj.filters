@@ -59,9 +59,6 @@
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
-    <ClInclude Include="include\platform\opengl\OpenGLGraphicsDevice.h">
-      <Filter>Header Files\opengl</Filter>
-    </ClInclude>
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsEnumerations.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
@@ -71,8 +68,8 @@
     <ClInclude Include="include\platform\wgl\WGL.h">
       <Filter>Header Files\wgl</Filter>
     </ClInclude>
-    <ClInclude Include="include\platform\wgl\WGLGraphicsContext.h">
-      <Filter>Header Files\wgl</Filter>
+    <ClInclude Include="include\platform\wgl\WGLGraphicsConfigChooser.h">
+        <Filter>Header Files\wgl</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\wgl\WGLGraphicsContextBase.h">
       <Filter>Header Files\wgl</Filter>
@@ -104,9 +101,6 @@
       <Filter>Header Files\inline</Filter>
     </None>
     <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl">
-      <Filter>Header Files\opengl\inline</Filter>
-    </None>
-    <None Include="include\platform\opengl\inline\OpenGLGraphicsDevice.inl">
       <Filter>Header Files\opengl\inline</Filter>
     </None>
     <None Include="include\platform\opengl\inline\OpenGLShader.inl">
@@ -152,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="source\wgl\WGL.cpp">
       <Filter>Source Files\wgl</Filter>
+    </ClCompile>
+    <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp">
+        <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp">
       <Filter>Source Files\wgl</Filter>

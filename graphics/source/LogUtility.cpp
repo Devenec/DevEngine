@@ -27,6 +27,7 @@
 #include <graphics/GraphicsDevice.h>
 #include <graphics/LogUtility.h>
 #include <graphics/Viewport.h>
+#include <graphics/Window.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -76,7 +77,7 @@ void Graphics::logGraphicsDeviceCreation(GraphicsDevice* device)
 {
 	const Viewport& viewport = device->viewport();
 
-	defaultLog << LogLevel::Info << "Created a graphics device:\n\nFramebuffer dimensions: " <<
+	defaultLog << LogLevel::Info << "Created a graphics device\n\nFramebuffer dimensions: " <<
 		viewport.bounds().width << " x " << viewport.bounds().height << '\n' << Log::Flush();
 }
 
@@ -97,9 +98,13 @@ void Graphics::logGraphicsExtensions(const Char8* description, const ExtensionNa
 	defaultLog << Log::Flush();
 }
 
-void Graphics::logWindowCreation()
+void Graphics::logWindowCreation(Window* window)
 {
-	defaultLog << LogLevel::Info << "Created a window" << Log::Flush();
+	const Rectangle clientRectangle = window->clientRectangle();
+
+	defaultLog << LogLevel::Info << "Created a window\n\nClient rectangle: [" << clientRectangle.x << ", " <<
+		clientRectangle.y << ", " << clientRectangle.width << ", " << clientRectangle.height << "]\n" <<
+		Log::Flush();
 }
 
 

@@ -27,6 +27,7 @@
 
 namespace Platform
 {
+	class GraphicsContext;
 	class GraphicsDeviceFactory;
 }
 
@@ -100,7 +101,7 @@ namespace Graphics
 		GraphicsResourceList _resources;
 		Implementation* _implementation;
 
-		GraphicsDevice(Implementation* implementation);
+		GraphicsDevice(Platform::GraphicsContext* graphicsContext);
 		~GraphicsDevice();
 
 		void destroyResources() const;

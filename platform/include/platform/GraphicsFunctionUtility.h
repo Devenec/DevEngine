@@ -20,13 +20,13 @@
 
 #pragma once
 
-#include <unordered_set> // TODO: add and replace with Core::Set
+#include <core/Set.h>
 #include <core/String.h>
 #include <core/Types.h>
 
 namespace Platform
 {
-	using ExtensionNameSet = std::unordered_set<Core::String8>;
+	using ExtensionNameSet = Core::Set<Core::String8>;
 
 	class GraphicsFunctionUtility final
 	{

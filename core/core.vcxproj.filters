@@ -92,6 +92,9 @@
     <ClInclude Include="include\core\Rectangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Set.h">
+        <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\Singleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>

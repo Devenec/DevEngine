@@ -29,6 +29,7 @@ namespace Graphics
 {
 	class GraphicsConfig;
 	class GraphicsDevice;
+	class Window;
 
 	using ExtensionNameList = Core::Vector<Core::String8>;
 
@@ -40,5 +41,5 @@ namespace Graphics
 
 	void logGraphicsExtensions(const Char8* description, const ExtensionNameList& extensionNames);
 
-	void logWindowCreation();
+	void logWindowCreation(Window* window);
 }

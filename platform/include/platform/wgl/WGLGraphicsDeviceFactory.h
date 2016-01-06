@@ -20,14 +20,11 @@
 
 #pragma once
 
-#include <core/Array.h>
 #include <core/Types.h>
-#include <core/Vector.h>
 #include <platform/windows/WindowsGraphics.h>
 
 namespace Graphics
 {
-	class GraphicsConfig;
 	class GraphicsDevice;
 	class Window;
 }
@@ -36,44 +33,24 @@ namespace Platform
 {
 	class GraphicsContext;
 
-	using GraphicsConfigAttributeList = Core::Array<Int32, 7u>;
-
 	class GraphicsDeviceFactory final
 	{
 	public:
 
-		GraphicsDeviceFactory();
+		GraphicsDeviceFactory() = default;
 
 		GraphicsDeviceFactory(const GraphicsDeviceFactory& graphicsDeviceFactory) = delete;
 		GraphicsDeviceFactory(GraphicsDeviceFactory&& graphicsDeviceFactory) = delete;
 
 		~GraphicsDeviceFactory() = default;
 
-		Graphics::GraphicsDevice* createDevice(Graphics::Window* window,
-			Graphics::GraphicsConfig& chosenGraphicsConfig);
+		Graphics::GraphicsDevice* createDevice(Graphics::Window* window);
 
 		GraphicsDeviceFactory& operator =(const GraphicsDeviceFactory& graphicsDeviceFactory) = delete;
 		GraphicsDeviceFactory& operator =(GraphicsDeviceFactory&& graphicsDeviceFactory) = delete;
 
-		static void logDeviceInfo(Graphics::GraphicsDevice* graphicsDevice);
-
 	private:
 
-		using GraphicsConfigIndexList = Core::Vector<Int32>;
-
-		static const GraphicsConfigAttributeList GRAPHICS_CONFIG_ATTRIBUTE_IDS;
-
-		HDC _deviceContextHandle;
-
-		Int32 chooseGraphicsConfig(Graphics::GraphicsConfig& chosenConfig) const;
-		GraphicsContext* createGraphicsContext(HWND windowHandle, const Int32 graphicsConfigIndex) const;
-		Graphics::GraphicsDevice* createDeviceObject(GraphicsContext* graphicsContext) const;
-		Uint32 getGraphicsConfigCount() const;
-		GraphicsConfigIndexList getGraphicsConfigIndices(const Uint32 configCount) const;
-
-		Int32 chooseBestGraphicsConfig(const GraphicsConfigIndexList& configIndices,
-			GraphicsConfigAttributeList& configAttributes) const;
-
-		GraphicsConfigAttributeList getGraphicsConfigAttributes(const Int32 configIndex) const;
+		Int32 chooseGraphicsConfig(HDC deviceContextHandle) const;
 	};
 }

@@ -21,7 +21,9 @@
 #include <core/Array.h>
 #include <core/Log.h>
 #include <core/Memory.h>
-#include <platform/glx/GLXGraphicsContext.h>
+#include <platform/GraphicsContext.h>
+#include <platform/glx/GLX.h>
+#include <platform/x/X.h>
 
 using namespace Core;
 using namespace Platform;
@@ -42,56 +44,69 @@ static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 
 // Implementation
 
-// Public
-
-GraphicsContext::Implementation::Implementation(const Window windowHandle, GLX::FBConfig configHandle)
-	: _graphicsContextHandle(nullptr),
-	  _windowHandle(windowHandle)
+class GraphicsContext::Implementation final
 {
-	_graphicsContextHandle =
-		X::instance().createGraphicsContext(configHandle, ::CONTEXT_ATTRIBUTES.data(), true);
+public:
 
-	checkContext();
-}
-
-GraphicsContext::Implementation::~Implementation()
-{
-	X::instance().destroyGraphicsContext(_graphicsContextHandle);
-}
-
-void GraphicsContext::Implementation::makeCurrent() const
-{
-	X::instance().makeGraphicsContextCurrent(_windowHandle, _graphicsContextHandle);
-}
-
-void GraphicsContext::Implementation::makeNonCurrent() const
-{
-	X::instance().makeGraphicsContextCurrent(None, nullptr);
-}
-
-void GraphicsContext::Implementation::swapBuffers() const
-{
-	X::instance().swapBuffers(_windowHandle);
-}
-
-// Private
-
-void GraphicsContext::Implementation::checkContext() const
-{
-	if(!X::instance().isGraphicsContextDirect(_graphicsContextHandle))
+	Implementation(Graphics::WindowHandle windowHandle, ConfigHandle configHandle)
+		: _graphicsContextHandle(nullptr),
+		  _windowHandle(reinterpret_cast<::Window>(windowHandle))
 	{
-		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "The graphics context is not direct." <<
-			Log::Flush();
+		_graphicsContextHandle =
+			X::instance().createGraphicsContext(static_cast<GLX::FBConfig>(configHandle),
+				::CONTEXT_ATTRIBUTES.data(), true);
+
+		checkContext();
 	}
-}
+
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
+
+	~Implementation()
+	{
+		X::instance().destroyGraphicsContext(_graphicsContextHandle);
+	}
+
+	void makeCurrent() const
+	{
+		X::instance().makeGraphicsContextCurrent(_windowHandle, _graphicsContextHandle);
+	}
+
+	void makeNonCurrent() const
+	{
+		X::instance().makeGraphicsContextCurrent(None, nullptr);
+	}
+
+	void swapBuffers() const
+	{
+		X::instance().swapBuffers(_windowHandle);
+	}
+
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
+
+private:
+
+	GLX::Context _graphicsContextHandle;
+	::Window _windowHandle;
+
+	void checkContext() const
+	{
+		if(!X::instance().isGraphicsContextDirect(_graphicsContextHandle))
+		{
+			defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "The context is not direct." <<
+				Log::Flush();
+		}
+	}
+};
 
 
 // Platform::GraphicsContext
 
 // Public
 
-GraphicsContext::GraphicsContext(Implementation* implementation)
-	: _implementation(implementation) { }
+GraphicsContext::GraphicsContext(Graphics::WindowHandle windowHandle, ConfigHandle configHandle)
+	: _implementation(DE_NEW(Implementation)(windowHandle, configHandle)) { }
 
 GraphicsContext::~GraphicsContext()
 {

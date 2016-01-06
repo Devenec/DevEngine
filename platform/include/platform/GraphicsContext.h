@@ -20,15 +20,18 @@
 
 #pragma once
 
+#include <core/Types.h>
+#include <graphics/Window.h>
+
 namespace Platform
 {
+	using ConfigHandle = Void*;
+
 	class GraphicsContext final
 	{
 	public:
 
-		class Implementation;
-
-		GraphicsContext(Implementation* implementation);
+		GraphicsContext(Graphics::WindowHandle windowHandle, ConfigHandle configHandle);
 
 		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
 		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
@@ -45,6 +48,8 @@ namespace Platform
 		GraphicsContext& operator =(GraphicsContext&& graphicsContext) = delete;
 
 	private:
+
+		class Implementation;
 
 		Implementation* _implementation;
 	};

@@ -36,7 +36,7 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG = "[Platform::OpenGL] ";
 
-static const Array<const Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES
+/*static const Array<const Char8*, 6u> DEBUG_MESSAGE_SOURCE_NAMES
 {{
 	"OpenGL",
 	"window system",
@@ -58,7 +58,7 @@ static const Array<const Char8*, 10u> DEBUG_MESSAGE_TYPE_NAMES
 	"Portability",
 	"Undefined behaviour",
 	"Unknown"
-}};
+}};*/
 
 static const Array<const Char8*, 7u> ERROR_NAMES
 {{
@@ -77,14 +77,14 @@ static const Uint32 MIN_SUPPORTED_VERSION_MINOR = 3u;
 static Uint32 versionMajor = 0u;
 static Uint32 versionMinor = 0u;
 
-static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
-static const Char8* getDebugMessageTypeName(const Uint32 messageType);
+//static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity);
+//static const Char8* getDebugMessageTypeName(const Uint32 messageType);
 static void initialiseMajorVersion(const String8& versionString);
 static void initialiseMinorVersion(const String8& versionString);
 
-static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
+/*static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
 	const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
-	const Void* userData);
+	const Void* userData);*/
 
 static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function);
 
@@ -94,11 +94,14 @@ static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 
 OpenGL::OpenGL()
 {
 	// TODO: check current context state?
+
+	initialiseVersion();
 	checkSupport();
 	getStandardFunctions();
+	logInfo();
 
-	if(debugMessageCallback != nullptr)
-		initialiseDebugMessaging();
+	//if(debugMessageCallback != nullptr)
+		//initialiseDebugMessaging();
 }
 
 void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const
@@ -109,24 +112,19 @@ void OpenGL::checkForErrors(const Char8* file, const Uint32 line, const Char8* f
 		::reportError(errorCode, file, line, function);
 }
 
-void OpenGL::logInfo() const
-{
-	defaultLog << LogLevel::Info << "Initialised OpenGL rendering.\n\nVersion: " << ::versionMajor << '.' <<
-		::versionMinor << '\n';
-
-	logGraphicsExtensions("graphics interface", getExtensionNames());
-}
-
 // Private
 
-void OpenGL::checkSupport()
+void OpenGL::initialiseVersion()
 {
 	GraphicsFunctionUtility functionUtility;
 	getString = functionUtility.getStandardFunction<GetString>("glGetString");
 	const String8 versionString(reinterpret_cast<const Char8*>(getString(VERSION)));
 	::initialiseMajorVersion(versionString);
 	::initialiseMinorVersion(versionString);
+}
 
+void OpenGL::checkSupport() const
+{
 	if(isVersionLess(::versionMajor, ::versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR,
 		::MIN_SUPPORTED_VERSION_MINOR))
 	{
@@ -165,7 +163,7 @@ void OpenGL::getStandardFunctions()
 	getError = functionUtility.getStandardFunction<GetError>("glGetError");
 	getFloatv = functionUtility.getStandardFunction<GetFloatV>("glGetFloatv");
 	getIntegerv = functionUtility.getStandardFunction<GetIntegerV>("glGetIntegerv");
-	// getString is initialised in OpenGL::checkSupport()
+	// getString is initialised in OpenGL::initialiseVersion()
 	getTexImage = functionUtility.getStandardFunction<GetTexImage>("glGetTexImage");
 
 	getTexLevelParameterfv =
@@ -1502,14 +1500,22 @@ void OpenGL::getStandardFunctions()
 	}
 }
 
-void OpenGL::initialiseDebugMessaging() const
+void OpenGL::logInfo() const
+{
+	defaultLog << LogLevel::Info << "Initialised OpenGL rendering\n\nVersion: " << ::versionMajor << '.' <<
+		::versionMinor << '\n';
+
+	logGraphicsExtensions("graphics interface", getExtensionNames());
+}
+
+/*void OpenGL::initialiseDebugMessaging() const
 {
 	enable(DEBUG_OUTPUT_SYNCHRONOUS);
 	DE_CHECK_ERROR_OPENGL(this);
 	debugMessageControl(DONT_CARE, DEBUG_TYPE_OTHER, DONT_CARE, 0, nullptr, FALSE);
 	DE_CHECK_ERROR_OPENGL(this);
 	debugMessageCallback(::processDebugMessage, nullptr);
-}
+}*/
 
 ExtensionNameList OpenGL::getExtensionNames() const
 {
@@ -1531,7 +1537,7 @@ ExtensionNameList OpenGL::getExtensionNames() const
 
 // External
 
-static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity)
+/*static LogLevel getDebugMessageLogLevel(const Uint32 messageSeverity)
 {
 	switch(messageSeverity)
 	{
@@ -1584,7 +1590,7 @@ static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 		default:
 			return ::DEBUG_MESSAGE_TYPE_NAMES[9];
 	}
-}
+}*/
 
 static void initialiseMajorVersion(const String8& versionString)
 {
@@ -1605,7 +1611,7 @@ static void initialiseMinorVersion(const String8& versionString)
 	::versionMinor = std::strtol(minorString.c_str(), nullptr, 10);
 }
 
-static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
+/*static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,
 	const Uint32 messageId, const Uint32 messageSeverity, const Int32 messageLength, const Char8* message,
 	const Void* userData)
 {
@@ -1617,7 +1623,7 @@ static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const
 	defaultLog << ::getDebugMessageLogLevel(messageSeverity) << ::COMPONENT_TAG <<
 		::getDebugMessageTypeName(messageType) << " message (" << StreamFormat::Hexadecimal << messageId <<
 		StreamFormat::Decimal << ") from " << messageSourceName << ": '" << message << '\'' << Log::Flush();
-}
+}*/
 
 static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
 {

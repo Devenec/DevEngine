@@ -21,11 +21,13 @@
 #include <core/Array.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <platform/GraphicsContext.h>
 #include <platform/wgl/WGL.h>
-#include <platform/wgl/WGLGraphicsContext.h>
+#include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
+using namespace Graphics;
 using namespace Platform;
 
 // External
@@ -44,36 +46,53 @@ static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 
 // Implementation
 
-// Public
-
-GraphicsContext::Implementation::Implementation(HWND windowHandle, const Int32 configIndex)
-	: Base(windowHandle)
+class GraphicsContext::Implementation final : public GraphicsContextBase
 {
-	setConfig(configIndex);
-	initialise();
-}
+public:
 
-// Private
+	// Public
 
-void GraphicsContext::Implementation::initialise()
-{
-	_graphicsContextHandle =
-		WGL::createContextAttribsARB(_deviceContextHandle, nullptr, ::CONTEXT_ATTRIBUTES.data());
-
-	if(_graphicsContextHandle == nullptr)
+	Implementation(WindowHandle windowHandle, ConfigHandle configHandle)
+		: Base(static_cast<HWND>(windowHandle))
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the context." << Log::Flush();
-		DE_ERROR_WINDOWS(0x0);
+		setConfig(reinterpret_cast<Int32>(configHandle));
+		initialise();
 	}
-}
+
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
+
+	~Implementation() = default;
+
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
+
+private:
+
+	using Base = GraphicsContextBase;
+
+	void initialise()
+	{
+		_graphicsContextHandle =
+			WGL::createContextAttribsARB(_deviceContextHandle, nullptr, ::CONTEXT_ATTRIBUTES.data());
+
+		if(_graphicsContextHandle == nullptr)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the context." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+	}
+};
 
 
 // Platform::GraphicsContext
 
 // Public
 
-GraphicsContext::GraphicsContext(Implementation* implementation)
-	: _implementation(implementation) { }
+GraphicsContext::GraphicsContext(WindowHandle windowHandle, ConfigHandle configHandle)
+	: _implementation(DE_NEW(Implementation)(windowHandle, configHandle)) { }
 
 GraphicsContext::~GraphicsContext()
 {

@@ -3630,15 +3630,17 @@ namespace Platform
 
 		void checkForErrors(const Char8* file, const Uint32 line, const Char8* function) const;
 
-		void logInfo() const;
-
 	private:
 
 		using ExtensionNameList = Core::Vector<Core::String8>;
 
-		void checkSupport();
+		void initialiseVersion();
+		void checkSupport() const;
 		void getStandardFunctions();
-		void initialiseDebugMessaging() const;
+		void logInfo() const;
+		//void initialiseDebugMessaging() const;
 		ExtensionNameList getExtensionNames() const;
 	};
 }
+
+#undef DE_CALL_OPENGL
