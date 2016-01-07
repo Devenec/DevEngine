@@ -56,7 +56,7 @@ namespace Graphics
 		DisplayModeList _supportedDisplayModes;
 		XRRScreenConfiguration* _config;
 		Time _configTimestamp;
-		Window _rootWindowHandle;
+		::Window _rootWindowHandle;
 		Uint32 _currentDisplayModeIndex;
 		Uint32 _initialDisplayModeIndex;
 

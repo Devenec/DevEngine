@@ -22,7 +22,10 @@ all:
 	$(MAKE) -C core; \
 	$(MAKE) -C graphics; \
 	$(MAKE) -C platform; \
-	$(MAKE) -C samples/sample
+	$(MAKE) -C samples/sample \
+
+	# Temporary solution to have assets in correct location
+	cp -arv samples/sample/assets/ build/$(TARGET_PLATFORM)/$(TARGET_ARCHITECTURE)/$(TARGET_CONFIGURATION)/
 
 .PHONY: clean
 clean:
@@ -32,4 +35,7 @@ clean:
 	$(MAKE) -C core clean; \
 	$(MAKE) -C graphics clean; \
 	$(MAKE) -C platform clean; \
-	$(MAKE) -C samples/sample clean
+	$(MAKE) -C samples/sample clean \
+
+	# Temporary solution, see above
+	rm -fr build/$(TARGET_PLATFORM)/$(TARGET_ARCHITECTURE)/$(TARGET_CONFIGURATION)/assets/

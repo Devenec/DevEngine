@@ -20,14 +20,15 @@
 
 #include <content/ContentBase.h>
 #include <content/ContentManager.h>
+#include <core/FileSystem.h>
 
 using namespace Content;
 using namespace Core;
 
 // Public
 
-ContentManager::ContentManager(const String8& contentDirectory)
-	: _contentRootDirectory(contentDirectory) { }
+ContentManager::ContentManager()
+	: _contentRootDirectory(FileSystem::getDefaultContentRootDirectory()) { }
 
 ContentManager::~ContentManager()
 {

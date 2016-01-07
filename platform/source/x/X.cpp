@@ -71,7 +71,7 @@ GLX::Context X::createGraphicsContext(GLX::FBConfig configHandle, const Int32* a
 	return contextHandle;
 }
 
-Cursor X::createHiddenPointer(const Window windowHandle) const
+Cursor X::createHiddenPointer(const ::Window windowHandle) const
 {
 	const Char8 data[] { 0 };
 	const Pixmap pixmap = XCreateBitmapFromData(_connection, windowHandle, data, 1u, 1u);
@@ -92,23 +92,23 @@ Cursor X::createHiddenPointer(const Window windowHandle) const
 	return pointerHandle;
 }
 
-Window X::createWindow(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height,
+::Window X::createWindow(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height,
 	XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask) const
 {
-	const Window rootWindowHandle = XRootWindow(_connection, GRAPHICS_ADAPTER_INDEX);
+	const ::Window rootWindowHandle = XRootWindow(_connection, GRAPHICS_ADAPTER_INDEX);
 	attributes.colormap = XCreateColormap(_connection, rootWindowHandle, visualInfo->visual, AllocNone);
 
 	return XCreateWindow(_connection, rootWindowHandle, x, y, width, height, 0u, visualInfo->depth,
 		InputOutput, visualInfo->visual, attributeMask, &attributes);
 }
 
-void X::destroyWindowProperty(const Window windowHandle, const Char8* propertyName) const
+void X::destroyWindowProperty(const ::Window windowHandle, const Char8* propertyName) const
 {
 	const Atom propertyAtom = createAtom(propertyName);
 	XDeleteProperty(_connection, windowHandle, propertyAtom);
 }
 
-void X::destroyWindowUserData(const Window windowHandle) const
+void X::destroyWindowUserData(const ::Window windowHandle) const
 {
 	const Int32 result = XDeleteContext(_connection, windowHandle, _windowUserDataContext);
 
@@ -123,7 +123,7 @@ void X::destroyWindowUserData(const Window windowHandle) const
 
 XRRScreenConfiguration* X::getGraphicsAdapterConfig(const Uint32 adapterIndex) const
 {
-	const Window rootWindowHandle = XRootWindow(_connection, adapterIndex);
+	const ::Window rootWindowHandle = XRootWindow(_connection, adapterIndex);
 	XRRScreenConfiguration* config = XRRGetScreenInfo(_connection, rootWindowHandle);
 
 	if(config == nullptr)
@@ -185,19 +185,19 @@ XVisualInfo* X::getGraphicsConfigVisualInfo(GLX::FBConfig configHandle) const
 	return visualInfo;
 }
 
-Rectangle X::getWindowClientRectangle(const Window windowHandle) const
+Rectangle X::getWindowClientRectangle(const ::Window windowHandle) const
 {
-	const Window rootWindowHandle = XRootWindow(_connection, GRAPHICS_ADAPTER_INDEX);
+	const ::Window rootWindowHandle = XRootWindow(_connection, GRAPHICS_ADAPTER_INDEX);
 	Int32 x = 0;
 	Int32 y = 0;
-	Window childWindowHandle;
+	::Window childWindowHandle;
 	XTranslateCoordinates(_connection, windowHandle, rootWindowHandle, 0, 0, &x, &y, &childWindowHandle);
 	const XWindowAttributes windowAttributes = getWindowAttributes(windowHandle);
 
 	return Rectangle(x, y, windowAttributes.width, windowAttributes.height);
 }
 
-Void* X::getWindowUserData(const Window windowHandle) const
+Void* X::getWindowUserData(const ::Window windowHandle) const
 {
 	Char8* data = nullptr;
 	const Int32 result = XFindContext(_connection, windowHandle, _windowUserDataContext, &data);
@@ -215,8 +215,8 @@ Void* X::getWindowUserData(const Window windowHandle) const
 
 void X::invokeError(const Uint32 errorCode) const
 {
-	defaultLog << LogLevel::Error << "Error occurred with code " << StreamFormat::Hexadecimal << errorCode <<
-		StreamFormat::Decimal << '.' << Log::Flush();
+	defaultLog << LogLevel::Error << "X error occurred with code " << StreamFormat::Hexadecimal <<
+		errorCode << StreamFormat::Decimal << '.' << Log::Flush();
 
 	XSync(_connection, False);
 	DE_DEBUGGER_BREAK();
@@ -225,8 +225,8 @@ void X::invokeError(const Uint32 errorCode) const
 
 void X::invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function) const
 {
-	defaultLog << LogLevel::Error << "Error occurred at " << file << ", on line " << line <<
-		", in function " << function << ", with error code " << StreamFormat::Hexadecimal << errorCode <<
+	defaultLog << LogLevel::Error << "X error occurred at " << file << ", on line " << line <<
+		", in function " << function << ", with code " << StreamFormat::Hexadecimal << errorCode <<
 		StreamFormat::Decimal << '.' << Log::Flush();
 
 	XSync(_connection, False);
@@ -287,7 +287,7 @@ void X::setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Draw
 	}
 }
 
-void X::setWindowClientRectangle(const Window windowHandle, const Core::Rectangle& rectangle) const
+void X::setWindowClientRectangle(const ::Window windowHandle, const Core::Rectangle& rectangle) const
 {
 	const XWindowAttributes windowAttributes = getWindowAttributes(windowHandle);
 	const Int32 x = rectangle.x - windowAttributes.x;
@@ -295,7 +295,7 @@ void X::setWindowClientRectangle(const Window windowHandle, const Core::Rectangl
 	XMoveResizeWindow(_connection, windowHandle, x, y, rectangle.width, rectangle.height);
 }
 
-void X::setWindowFullscreen(const Window windowHandle, const Bool isFullscreen) const
+void X::setWindowFullscreen(const ::Window windowHandle, const Bool isFullscreen) const
 {
 	const Atom fullscreenAtom = createAtom("_NET_WM_STATE_FULLSCREEN");
 	const Uint32 dataElementCount = isFullscreen ? 1u : 0u;
@@ -303,7 +303,7 @@ void X::setWindowFullscreen(const Window windowHandle, const Bool isFullscreen) 
 	setWindowProperty(windowHandle, "_NET_WM_STATE", "ATOM", reinterpret_cast<const Uint8*>(&fullscreenAtom),
 		32u, dataElementCount);
 
-	const Window rootWindowHandle = XRootWindow(_connection, GRAPHICS_ADAPTER_INDEX);
+	const ::Window rootWindowHandle = XRootWindow(_connection, GRAPHICS_ADAPTER_INDEX);
 	XEvent event = XEvent();
 	event.type = ClientMessage;
 	event.xclient.data.l[0] = isFullscreen ? 1 : 0;
@@ -314,7 +314,7 @@ void X::setWindowFullscreen(const Window windowHandle, const Bool isFullscreen) 
 	sendEvent(rootWindowHandle, event, SubstructureNotifyMask);
 }
 
-void X::setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms,
+void X::setWindowMessageProtocols(const ::Window windowHandle, Atom* protocolAtoms,
 	const Uint32 protocolAtomCount) const
 {
 	const Int32 result = XSetWMProtocols(_connection, windowHandle, protocolAtoms, protocolAtomCount);
@@ -328,7 +328,7 @@ void X::setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms
 	}
 }
 
-void X::setWindowProperty(const Window windowHandle, const Char8* propertyName, const Char8* typeName,
+void X::setWindowProperty(const ::Window windowHandle, const Char8* propertyName, const Char8* typeName,
 	const Uint8* data, const Uint32 dataElementBitSize, const Uint32 dataElementCount) const
 {
 	const Atom propertyAtom = createAtom(propertyName);
@@ -338,14 +338,14 @@ void X::setWindowProperty(const Window windowHandle, const Char8* propertyName, 
 		data, dataElementCount);
 }
 
-void X::setWindowTitle(const Window windowHandle, const String8& title) const
+void X::setWindowTitle(const ::Window windowHandle, const String8& title) const
 {
 	const Uint8* titleData = reinterpret_cast<const Uint8*>(title.c_str());
 	setWindowProperty(windowHandle, "_NET_WM_NAME", "UTF8_STRING", titleData, 8u, title.length() + 1u);
 	setWindowProperty(windowHandle, "WM_NAME", "UTF8_STRING", titleData, 8u, title.length() + 1u);
 }
 
-void X::setWindowUserData(const Window windowHandle, Void* data) const
+void X::setWindowUserData(const ::Window windowHandle, Void* data) const
 {
 	const Int32 result =
 		XSaveContext(_connection, windowHandle, _windowUserDataContext, static_cast<Char8*>(data));
@@ -414,7 +414,7 @@ void X::checkXRandRSupport() const
 	}
 }
 
-XWindowAttributes X::getWindowAttributes(const Window windowHandle) const
+XWindowAttributes X::getWindowAttributes(const ::Window windowHandle) const
 {
 	XWindowAttributes windowAttributes;
 	const Int32 result = XGetWindowAttributes(_connection, windowHandle, &windowAttributes);
@@ -430,7 +430,7 @@ XWindowAttributes X::getWindowAttributes(const Window windowHandle) const
 	return windowAttributes;
 }
 
-void X::sendEvent(const Window windowHandle, XEvent& event, const Int32 eventMask) const
+void X::sendEvent(const ::Window windowHandle, XEvent& event, const Int32 eventMask) const
 {
 	const Int32 result = XSendEvent(_connection, windowHandle, False, eventMask, &event);
 

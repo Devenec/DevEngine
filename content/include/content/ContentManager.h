@@ -34,7 +34,7 @@ namespace Content
 	{
 	public:
 
-		explicit ContentManager(const Core::String8& contentRootDirectory = Core::String8());
+		ContentManager();
 
 		ContentManager(const ContentManager& contentManager) = delete;
 		ContentManager(ContentManager&& contentManager) = delete;

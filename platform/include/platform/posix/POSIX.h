@@ -1,5 +1,5 @@
 /**
- * @file core/FileSystem.h
+ * @file platform/posix/POSIX.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,27 +20,22 @@
 
 #pragma once
 
-#include <core/String.h>
+#include <core/ConfigInternal.h>
 #include <core/Types.h>
+#include <core/UtilityMacros.h>
 
-namespace Core
+#if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
+	#define DE_ERROR_POSIX(errorCode) \
+		Platform::invokePOSIXError(errorCode, DE_FILE, DE_LINE, DE_FUNCTION)
+#else
+	#define DE_ERROR_POSIX(errorCode) \
+		Platform::invokePOSIXError(errorCode)
+#endif
+
+namespace Platform
 {
-	class FileSystem final
-	{
-	public:
+	void invokePOSIXError(const Uint32 errorCode);
 
-		FileSystem() = delete;
-
-		FileSystem(const FileSystem& fileSystem) = delete;
-		FileSystem(FileSystem&& fileSystem) = delete;
-
-		~FileSystem() = delete;
-
-		static Bool fileExists(const String8& filepath);
-
-		static String8 getDefaultContentRootDirectory();
-
-		FileSystem& operator =(const FileSystem& fileSystem) = delete;
-		FileSystem& operator =(FileSystem&& fileSystem) = delete;
-	};
+	void invokePOSIXError(const Uint32 errorCode, const Char8* file, const Uint32 line,
+		const Char8* function);
 }

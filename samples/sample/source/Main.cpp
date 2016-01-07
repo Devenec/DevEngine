@@ -129,7 +129,7 @@ private:
 
 	void initialise()
 	{
-		Image* image = _contentManager.load<Image>("samples/sample/assets/icon.png");
+		Image* image = _contentManager.load<Image>("assets/icon.png");
 		_window->setIcon(image);
 		_window->setTitle("DevEngine Sample - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
 		_window->show();

@@ -28,7 +28,6 @@
 #include <platform/GraphicsContext.h>
 #include <platform/glx/GLX.h>
 #include <platform/glx/GLXGraphicsConfigChooser.h>
-#include <platform/opengl/OpenGLGraphicsDevice.h>
 #include <platform/x/X.h>
 #include <platform/x/XWindow.h>
 
@@ -63,7 +62,7 @@ public:
 
 	~Implementation() = default;
 
-	GraphicsDevice* createDeviceObject(Window* window) const
+	GraphicsDevice* createDeviceObject(Graphics::Window* window) const
 	{
 		logGraphicsConfig(_graphicsConfigHandle);
 		GraphicsContext* graphicsContext = DE_NEW(GraphicsContext)(window->handle(), _graphicsConfigHandle);
@@ -167,7 +166,7 @@ GraphicsDeviceManager::~GraphicsDeviceManager()
 	DE_DELETE(_implementation, Implementation);
 }
 
-GraphicsDevice* GraphicsDeviceManager::createDevice(Window* window)
+GraphicsDevice* GraphicsDeviceManager::createDevice(Graphics::Window* window)
 {
 	GraphicsDevice* device = _implementation->createDeviceObject(window);
 	logGraphicsDeviceCreation(device);
@@ -178,7 +177,7 @@ GraphicsDevice* GraphicsDeviceManager::createDevice(Window* window)
 
 void GraphicsDeviceManager::createWindow(const Uint32 windowWidth, const Uint32 windowHeight)
 {
-	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
+	Graphics::Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
 	logWindowCreation(window);
 	_windows.push_back(window);
 	_windowCreatedHandler(window);
@@ -193,7 +192,7 @@ void GraphicsDeviceManager::destroyDevice(GraphicsDevice* device)
 	DE_DELETE(device, GraphicsDevice);
 }
 
-void GraphicsDeviceManager::destroyWindow(Window* window)
+void GraphicsDeviceManager::destroyWindow(Graphics::Window* window)
 {
 	DE_ASSERT(window != nullptr);
 	WindowList::const_iterator iterator = std::find(_windows.begin(), _windows.end(), window);

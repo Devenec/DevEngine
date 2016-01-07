@@ -55,20 +55,20 @@ namespace Platform
 		GLX::Context createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes,
 			const Bool isDirect) const;
 
-		Cursor createHiddenPointer(const Window windowHandle) const;
+		Cursor createHiddenPointer(const ::Window windowHandle) const;
 
-		Window createWindow(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height,
+		::Window createWindow(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height,
 			XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask) const;
 
 		inline void destroyGraphicsContext(GLX::Context contextHandle) const;
 
 		inline void destroyPointer(const Cursor pointerHandle) const;
 
-		inline void destroyWindow(const Window windowHandle) const;
+		inline void destroyWindow(const ::Window windowHandle) const;
 
-		void destroyWindowProperty(const Window windowHandle, const Char8* propertyName) const;
+		void destroyWindowProperty(const ::Window windowHandle, const Char8* propertyName) const;
 
-		void destroyWindowUserData(const Window windowHandle) const;
+		void destroyWindowUserData(const ::Window windowHandle) const;
 
 		inline const Char8* getExtensionNameString() const;
 
@@ -88,15 +88,15 @@ namespace Platform
 
 		XVisualInfo* getGraphicsConfigVisualInfo(GLX::FBConfig configHandle) const;
 
-		inline Window getRootWindowHandle(const Uint32 graphicsAdapterIndex) const;
+		inline ::Window getRootWindowHandle(const Uint32 graphicsAdapterIndex) const;
 
-		Core::Rectangle getWindowClientRectangle(const Window windowHandle) const;
+		Core::Rectangle getWindowClientRectangle(const ::Window windowHandle) const;
 
-		Void* getWindowUserData(const Window windowHandle) const;
+		Void* getWindowUserData(const ::Window windowHandle) const;
 
 		inline Bool hasPendingEvents() const;
 
-		inline void hideWindow(const Window windowHandle) const;
+		inline void hideWindow(const ::Window windowHandle) const;
 
 		void invokeError(const Uint32 errorCode) const;
 
@@ -114,23 +114,23 @@ namespace Platform
 		void setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
 			const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const;
 
-		void setWindowClientRectangle(const Window windowHandle, const Core::Rectangle& rectangle) const;
+		void setWindowClientRectangle(const ::Window windowHandle, const Core::Rectangle& rectangle) const;
 
-		void setWindowFullscreen(const Window windowHandle, const Bool isFullscreen) const;
+		void setWindowFullscreen(const ::Window windowHandle, const Bool isFullscreen) const;
 
-		void setWindowMessageProtocols(const Window windowHandle, Atom* protocolAtoms,
+		void setWindowMessageProtocols(const ::Window windowHandle, Atom* protocolAtoms,
 			const Uint32 protocolAtomCount) const;
 
-		inline void setWindowPointer(const Window windowHandle, const Cursor pointerHandle) const;
+		inline void setWindowPointer(const ::Window windowHandle, const Cursor pointerHandle) const;
 
-		void setWindowProperty(const Window windowHandle, const Char8* propertyName, const Char8* typeName,
+		void setWindowProperty(const ::Window windowHandle, const Char8* propertyName, const Char8* typeName,
 			const Uint8* data, const Uint32 dataElementBitSize, const Uint32 dataElementCount) const;
 
-		void setWindowTitle(const Window windowHandle, const Core::String8& title) const;
+		void setWindowTitle(const ::Window windowHandle, const Core::String8& title) const;
 
-		void setWindowUserData(const Window windowHandle, Void* data) const;
+		void setWindowUserData(const ::Window windowHandle, Void* data) const;
 
-		inline void showWindow(const Window windowHandle) const;
+		inline void showWindow(const ::Window windowHandle) const;
 
 		inline void swapBuffers(GLX::Drawable drawableHandle) const;
 
@@ -146,8 +146,8 @@ namespace Platform
 
 		void checkConnection() const;
 		void checkXRandRSupport() const;
-		XWindowAttributes getWindowAttributes(const Window windowHandle) const;
-		void sendEvent(const Window windowHandle, XEvent& event, const Int32 eventMask) const;
+		XWindowAttributes getWindowAttributes(const ::Window windowHandle) const;
+		void sendEvent(const ::Window windowHandle, XEvent& event, const Int32 eventMask) const;
 	};
 
 #include "inline/X.inl"

@@ -43,7 +43,9 @@ SOURCE_FILES = \
 	opengl/OpenGLGraphicsDevice.cpp \
 	opengl/OpenGLShader.cpp \
 	opengl/OpenGLVertexBufferState.cpp \
+	posix/POSIX.cpp \
 	posix/POSIXFileStream.cpp \
+	posix/POSIXFileSystem.cpp \
 	std/STDLog.cpp \
 	std/STDMain.cpp \
 	x/X.cpp \

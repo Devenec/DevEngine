@@ -21,11 +21,11 @@
 #include <cstdio>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <core/Error.h>
 #include <core/FileStream.h>
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
+#include <platform/posix/POSIX.h>
 
 using namespace Core;
 
@@ -68,7 +68,7 @@ public:
 				defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to close the file." <<
 					Log::Flush();
 
-				DE_ERROR(0x0);
+				DE_ERROR_POSIX(0x0);
 			}
 
 			_fileHandle = nullptr;
@@ -103,7 +103,7 @@ public:
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
-			DE_ERROR(0x0);
+			DE_ERROR_POSIX(0x0);
 		}
 
 		const char* handleAccessMode = ::getFileHandleAccessMode(openMode);
@@ -114,7 +114,7 @@ public:
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to open file '" << filepath << "'." <<
 				Log::Flush();
 
-			DE_ERROR(0x0);
+			DE_ERROR_POSIX(0x0);
 		}
 
 		_openMode = openMode;
@@ -131,7 +131,7 @@ public:
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the file pointer position." <<
 				Log::Flush();
 
-			DE_ERROR(0x0);
+			DE_ERROR_POSIX(0x0);
 		}
 
 		return result;
@@ -151,7 +151,7 @@ public:
 		if(result != 0)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to read the file." << Log::Flush();
-			DE_ERROR(0x0);
+			DE_ERROR_POSIX(0x0);
 		}
 
 		_previousAction = PreviousAction::Read;
@@ -167,7 +167,7 @@ public:
 		if(result != 0)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to seek the file." << Log::Flush();
-			DE_ERROR(0x0);
+			DE_ERROR_POSIX(0x0);
 		}
 
 		_previousAction = PreviousAction::None;
@@ -195,7 +195,7 @@ public:
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to write to the file." <<
 				Log::Flush();
 
-			DE_ERROR(0x0);
+			DE_ERROR_POSIX(0x0);
 		}
 
 		_previousAction = PreviousAction::Write;
