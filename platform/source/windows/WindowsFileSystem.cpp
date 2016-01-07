@@ -51,3 +51,8 @@ Bool FileSystem::fileExists(const String8& filepath)
 
 	return (fileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0u;
 }
+
+String8 FileSystem::getDefaultContentRootDirectory()
+{
+	return String8();
+}
