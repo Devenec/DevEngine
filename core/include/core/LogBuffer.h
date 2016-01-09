@@ -26,7 +26,7 @@
 
 namespace Core
 {
-	using FlushFunction = void (*)(const String8& message);
+	using FlushFunction = void (*)(const Char8* message);
 
 	class LogBuffer final
 	{
@@ -59,8 +59,9 @@ namespace Core
 		FileStream _fileStream;
 		FlushFunction _flushFunction;
 
+		void openFileStream() const;
 		inline void appendLineBreakAndIndent();
-		void appendToLineBuffer(const Char8* characters, Uint32& characterOffset, Uint32 characterCount);
+		Uint32 appendToLineBuffer(const Char8* characters, const Char8* charactersEnd);
 		void appendLineBuffer();
 		void flushMainBuffer();
 	};

@@ -1503,7 +1503,7 @@ void OpenGL::getStandardFunctions()
 void OpenGL::logInfo() const
 {
 	defaultLog << LogLevel::Info << "Initialised OpenGL rendering\n\nVersion: " << ::versionMajor << '.' <<
-		::versionMinor << '\n';
+		::versionMinor << '\n' << Log::Flush();
 
 	logGraphicsExtensions("graphics interface", getExtensionNames());
 }

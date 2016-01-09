@@ -23,9 +23,11 @@
 
 using namespace Core;
 
-// Core
+// Private
 
-void Core::writeToConsole(const String8& message)
+// Static
+
+void Log::writeToConsole(const Char8* message)
 {
-	std::printf("%s", message.c_str());
+	std::printf("%s", message);
 }

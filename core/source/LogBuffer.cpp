@@ -18,8 +18,10 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <cstring>
 #include <core/Config.h>
+#include <core/FileSystem.h>
 #include <core/LogBuffer.h>
 #include <core/Numeric.h>
 #include <core/maths/Utility.h>
@@ -37,11 +39,11 @@ static Bool isWhitespaceCharacter(const Char8 character);
 const Uint32 LogBuffer::NON_POSITION = Numeric<Uint32>::maximum();
 
 LogBuffer::LogBuffer(FlushFunction flushFunction)
-	: _fileStream("log", OpenMode::Write | OpenMode::Truncate),
-	  _flushFunction(flushFunction)
+	: _flushFunction(flushFunction)
 {
 	_lineBuffer.reserve(Config::LOG_LINE_MAX_WIDTH + 1u);
 	_mainBuffer.reserve(Config::LOG_BUFFER_SIZE);
+	openFileStream();
 }
 
 void LogBuffer::appendCharacter(const Char8 character)
@@ -62,27 +64,19 @@ void LogBuffer::appendCharacters(const Char8* characters, Uint32 characterCount)
 	if(characterCount == NON_POSITION)
 		characterCount = std::strlen(characters);
 
-	Uint32 characterOffset = 0u;
+	const Char8* charactersEnd = characters + characterCount;
 
-	while(characterOffset < characterCount)
+	while(characters < charactersEnd)
 	{
 		if(_lineBuffer.length() == Config::LOG_LINE_MAX_WIDTH)
 		{
 			appendLineBreakAndIndent();
 
-			if(::isWhitespaceCharacter(characters[characterOffset]))
-				++characterOffset;
+			if(::isWhitespaceCharacter(*characters))
+				++characters;
 		}
 
-		appendToLineBuffer(characters, characterOffset, characterCount);
-		const Uint32 lineBreakPosition = _lineBuffer.find('\n', 8u);
-
-		if(lineBreakPosition != NON_POSITION)
-		{
-			characterOffset -= _lineBuffer.length() - lineBreakPosition - 1u;
-			_lineBuffer.resize(lineBreakPosition);
-			appendLineBreakAndIndent();
-		}
+		characters += appendToLineBuffer(characters, charactersEnd);
 	}
 }
 
@@ -96,12 +90,30 @@ void LogBuffer::flush()
 
 // Private
 
-void LogBuffer::appendToLineBuffer(const Char8* characters, Uint32& characterOffset, Uint32 characterCount)
+void LogBuffer::openFileStream() const
 {
+	const String8 logFilepath = FileSystem::getDefaultContentRootDirectory() + "log";
+	_fileStream.open(logFilepath, OpenMode::Write | OpenMode::Truncate);
+}
+
+Uint32 LogBuffer::appendToLineBuffer(const Char8* characters, const Char8* charactersEnd)
+{
+	const Char8* lineBreakPosition = std::find(characters, charactersEnd, '\n');
 	const Uint32 availableCapacity = Config::LOG_LINE_MAX_WIDTH - _lineBuffer.length();
-	characterCount = minimum(availableCapacity, characterCount - characterOffset);
-	_lineBuffer.append(characters + characterOffset, characterCount);
-	characterOffset += characterCount;
+	Uint32 characterCount = minimum(availableCapacity, static_cast<Uint32>(charactersEnd - characters));
+
+	if(lineBreakPosition != charactersEnd)
+		characterCount = lineBreakPosition - characters;
+
+	_lineBuffer.append(characters, characterCount);
+
+	if(lineBreakPosition != charactersEnd)
+	{
+		appendLineBreakAndIndent();
+		++characterCount;
+	}
+
+	return characterCount;
 }
 
 void LogBuffer::appendLineBuffer()
@@ -122,7 +134,7 @@ void LogBuffer::appendLineBuffer()
 
 void LogBuffer::flushMainBuffer()
 {
-	_flushFunction(_mainBuffer);
+	_flushFunction(_mainBuffer.c_str());
 
 	if(_fileStream.isOpen())
 		_fileStream.write(reinterpret_cast<const Uint8*>(_mainBuffer.c_str()), _mainBuffer.length());

@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include <cstdio>
 #include <core/LogBuffer.h>
 #include <core/String.h>
 #include <core/Types.h>
@@ -104,14 +103,11 @@ namespace Core
 		void appendStreamLevel(const LogLevel& level);
 		void appendUint32(const Uint32 integer);
 		void appendUint64(const Uint64 integer);
-		void formatUint32FormatCharacters(Char8* format) const;
-		void formatUint64FormatCharacters(Char8* format) const;
+		void createUint32Format(Char8* formatBuffer) const;
+		void createUint64Format(Char8* formatBuffer) const;
+
+		static void writeToConsole(const Char8* message);
 	};
-
-	void writeToConsole(const String8& message);
-
-	template<typename... Parameters>
-	Uint32 toString(const Char8* format, Char8* buffer, const Uint32 bufferSize, Parameters... parameters);
 
 	inline StreamFormat operator &(StreamFormat streamFormatA, const StreamFormat& streamFormatB);
 

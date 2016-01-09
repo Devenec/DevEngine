@@ -80,17 +80,6 @@ Log& Log::operator <<(const StreamFormat& streamFormat)
 
 // Core
 
-template<typename... Parameters>
-Uint32 toString(const Char8* format, Char8* buffer, const Uint32 bufferSize, Parameters... parameters)
-{
-	const Uint32 charactersWritten = std::snprintf(buffer, bufferSize, format, parameters...);
-
-	if(charactersWritten < bufferSize)
-		return charactersWritten;
-	else
-		return bufferSize;
-}
-
 StreamFormat operator &(StreamFormat streamFormatA, const StreamFormat& streamFormatB)
 {
 	streamFormatA &= streamFormatB;

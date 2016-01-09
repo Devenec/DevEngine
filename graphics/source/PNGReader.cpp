@@ -161,6 +161,7 @@ static void deallocateMemory(png_struct* pngStructure, Void* pointer)
 static void handleError(png_struct* pngStructure, const Char8* message)
 {
 	static_cast<Void>(pngStructure);
+
 	defaultLog << LogLevel::Error << ::COMPONENT_TAG << "PNG error: " << message << '.' << Log::Flush();
 	DE_ERROR(0x0);
 }

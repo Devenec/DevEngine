@@ -74,6 +74,9 @@ namespace Core
 	{
 	public:
 
+		/**
+		 * Does nothing.
+		 */
 		FileStream();
 
 		/**
