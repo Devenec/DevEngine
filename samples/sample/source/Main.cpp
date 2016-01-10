@@ -232,7 +232,6 @@ private:
 
 		while(_window->isOpen())
 		{
-			//_graphicsDeviceManager.processWindowMessages();
 			_graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
 			rotation += 0.01f;
 
@@ -245,13 +244,11 @@ private:
 			_graphicsDevice->draw(PrimitiveType::TriangleStrip, 4u);
 			_graphicsDevice->swapBuffers();
 		}
-
-		//_isRunning = false;
 	}
 
 	void deinitialise()
 	{
-		_uniformBuffer->debindIndexed(0u);
+		_graphicsDeviceManager.destroyDevice(_graphicsDevice);
 	}
 
 	static void onWindowCreated(Window* window)

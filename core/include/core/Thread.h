@@ -24,8 +24,6 @@
 
 namespace Core
 {
-	using ThreadID = Void*;
-
 	class Thread final
 	{
 	public:
@@ -41,7 +39,7 @@ namespace Core
 
 		void detach() const;
 
-		ThreadID id() const;
+		Uint32 id() const;
 
 		Bool isJoinable() const;
 
@@ -52,7 +50,7 @@ namespace Core
 		Thread& operator =(const Thread& thread) = delete;
 		Thread& operator =(Thread&& thread) = delete;
 
-		static ThreadID currentID();
+		static Uint32 currentID();
 
 	private:
 

@@ -1628,7 +1628,7 @@ static void initialiseMinorVersion(const String8& versionString)
 static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
 {
 	defaultLog << LogLevel::Warning << "OpenGL error occurred, " <<
-		::ERROR_NAMES[OpenGL::INVALID_ENUM - errorCode] << " (" << StreamFormat::Hexadecimal << errorCode <<
+		::ERROR_NAMES[errorCode - OpenGL::INVALID_ENUM] << " (" << StreamFormat::Hexadecimal << errorCode <<
 		StreamFormat::Decimal << ") at " << file << ", on line " << line << ", in function " << function <<
 		'.' << Log::Flush();
 }

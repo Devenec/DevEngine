@@ -115,13 +115,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\GraphicsConfig.cpp">
-        <Filter>Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\GraphicsDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\GraphicsDeviceManager.cpp">
-        <Filter>Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Image.cpp">
       <Filter>Source Files</Filter>

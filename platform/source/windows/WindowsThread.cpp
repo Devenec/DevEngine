@@ -1,5 +1,5 @@
 /**
- * @file platform/posix/POSIXThread.h
+ * @file platform/windows/WindowsThread.cpp
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,14 +18,13 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/Platform.h>
 #include <core/Thread.h>
-#include <platform/posix/POSIX.h>
+#include <platform/windows/Windows.h>
 
 using namespace Core;
-using namespace Platform;
 
 // External
 
@@ -35,11 +34,9 @@ struct ThreadParameter
 	Void* userParameter;
 };
 
-static const Char8* COMPONENT_TAG = "[Core::Thread - POSIX] ";
+static const Char8* COMPONENT_TAG = "[Core::Thread - Windows] ";
 
-static pthread_attr_t createThreadAttributes(const Bool isJoinable);
-static void destroyThreadAttributes(pthread_attr_t& attributes);
-static Void* threadEntryFunction(Void* parameter);
+static unsigned long DE_INTERNAL_CALL_STDCALL threadEntryFunction(Void* parameter);
 
 
 // Implementation
@@ -49,7 +46,7 @@ class Thread::Implementation final
 public:
 
 	Implementation()
-		: _isJoinable(false) { }
+		: _threadHandle(nullptr) { }
 
 	Implementation(const Implementation& implementation) = delete;
 	Implementation(Implementation&& implementation) = delete;
@@ -58,22 +55,22 @@ public:
 
 	void detach()
 	{
-		const Int32 result = pthread_detach(_threadHandle);
-
-		if(result != POSIX_RESULT_OK)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to detach the thread." <<
-				Log::Flush();
-
-			DE_ERROR_POSIX_CODE(0x0, result);
-		}
-
-		_isJoinable = false;
+		closeThreadHandle();
 	}
 
 	Uint32 id() const
 	{
-		// TODO: get proper ID
+		const Uint32 id = GetThreadId(_threadHandle);
+
+		if(id == 0u)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the thread ID." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+
+		return id;
 	}
 
 	Bool isJoinable() const
@@ -81,40 +78,34 @@ public:
 		return _isJoinable;
 	}
 
-	Int32 join() const
+	Int32 join()
 	{
-		Void* exitValue;
-		const Int32 result = pthread_join(_threadHandle, &exitValue);
+		waitForExit();
+		const Int32 exitValue = getExitValue();
+		closeThreadHandle();
 
-		if(result != POSIX_RESULT_OK)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to join the thread." << Log::Flush();
-			DE_ERROR_POSIX_CODE(0x0, result);
-		}
-
-		return reinterpret_cast<Int32>(exitValue);
+		return exitValue;
 	}
 
 	void run(ThreadEntryFunction entryFunction, Void* parameter, const Bool isJoinable)
 	{
-		pthread_attr_t attributes = ::createThreadAttributes(isJoinable);
 		ThreadParameter* threadParameter = DE_NEW(ThreadParameter);
 		threadParameter->entryFunction = entryFunction;
 		threadParameter->userParameter = parameter;
+		_threadHandle = CreateThread(nullptr, 0u, threadEntryFunction, threadParameter, 0u, nullptr);
 
-		const Int32 result = pthread_create(&_threadHandle, &attributes, threadEntryFunction,
-			threadParameter);
-
-		if(result != POSIX_RESULT_OK)
+		if(_threadHandle == nullptr)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the thread." <<
 				Log::Flush();
 
-			DE_ERROR_POSIX_CODE(0x0, result);
+			DE_ERROR_WINDOWS(0x0);
 		}
 
+		if(!isJoinable)
+			closeThreadHandle();
+
 		_isJoinable = isJoinable;
-		::destroyThreadAttributes(attributes);
 	}
 
 	Implementation& operator =(const Implementation& implementation) = delete;
@@ -122,13 +113,55 @@ public:
 
 	static Uint32 currentID()
 	{
-		// TODO: get proper ID
+		return GetCurrentThreadId();
 	}
 
 private:
 
-	pthread_t _threadHandle;
+	HANDLE _threadHandle;
 	Bool _isJoinable;
+
+	void closeThreadHandle()
+	{
+		const Int32 result = CloseHandle(_threadHandle);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to close the thread handle." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+	}
+
+	void waitForExit() const
+	{
+		const Uint32 result = WaitForSingleObject(_threadHandle, INFINITE);
+
+		if(result == WAIT_FAILED)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to join the thread." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+	}
+
+	Int32 getExitValue() const
+	{
+		unsigned long exitValue;
+		const Int32 result = GetExitCodeThread(_threadHandle, &exitValue);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the exit value." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+
+		return exitValue;
+	}
 };
 
 
@@ -179,52 +212,11 @@ Uint32 Thread::currentID()
 
 // External
 
-static pthread_attr_t createThreadAttributes(const Bool isJoinable)
-{
-	pthread_attr_t attributes;
-	Int32 result = pthread_attr_init(&attributes);
-
-	if(result != POSIX_RESULT_OK)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise the thread attributes." <<
-			Log::Flush();
-
-		DE_ERROR_POSIX_CODE(0x0, result);
-	}
-
-	const Int32 joinableState = isJoinable ? PTHREAD_CREATE_JOINABLE : PTHREAD_CREATE_DETACHED;
-	result = pthread_attr_setdetachstate(&attributes, joinableState);
-
-	if(result != POSIX_RESULT_OK)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the thread joinable state." <<
-			Log::Flush();
-
-		DE_ERROR_POSIX_CODE(0x0, result);
-	}
-
-	return attributes;
-}
-
-static void destroyThreadAttributes(pthread_attr_t& attributes)
-{
-	const Int32 result = pthread_attr_destroy(&attributes);
-
-	if(result != POSIX_RESULT_OK)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to destroy the thread attributes." <<
-			Log::Flush();
-
-		DE_ERROR_POSIX_CODE(0x0, result);
-	}
-}
-
-static Void* threadEntryFunction(Void* parameter)
+static unsigned long DE_INTERNAL_CALL_STDCALL threadEntryFunction(Void* parameter)
 {
 	ThreadParameter* threadParameter = static_cast<ThreadParameter*>(parameter);
 	ThreadParameter threadParameterCopy = *threadParameter;
 	DE_DELETE(threadParameter, ThreadParameter);
-	const Int32 exitValue = threadParameterCopy.entryFunction(threadParameterCopy.userParameter);
 
-	return reinterpret_cast<Void*>(exitValue);
+	return threadParameterCopy.entryFunction(threadParameterCopy.userParameter);
 }
