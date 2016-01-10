@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <platform/windows/Windows.h>
+#include <platform/windows/WindowsGraphics.h>
 
 namespace Graphics
 {

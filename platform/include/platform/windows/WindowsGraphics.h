@@ -20,11 +20,20 @@
 
 #pragma once
 
+struct _devicemodeW;
+using DEVMODEW = _devicemodeW;
+
+struct HBITMAP__;
+using HBITMAP = HBITMAP__*;
+
 struct HDC__;
 using HDC = HDC__*;
 
 struct HGLRC__;
 using HGLRC = HGLRC__*;
+
+struct HICON__;
+using HICON = HICON__*;
 
 struct HWND__;
 using HWND = HWND__*;

@@ -22,7 +22,7 @@
 
 #include <core/Rectangle.h>
 #include <graphics/Window.h>
-#include <platform/windows/Windows.h>
+#include <platform/windows/WindowsGraphics.h>
 #include <platform/windows/WindowsIcon.h>
 
 namespace Graphics
@@ -44,7 +44,7 @@ namespace Graphics
 
 		inline WindowHandle handle() const;
 
-		inline void hide() const;
+		void hide() const;
 
 		inline Bool inFullscreen() const;
 
@@ -62,7 +62,7 @@ namespace Graphics
 
 		Bool shouldHidePointer(const Bool isPointerInClientArea) const;
 
-		inline void show() const;
+		void show() const;
 
 		Implementation& operator =(const Implementation& implementation) = delete;
 		Implementation& operator =(Implementation&& implementation) = delete;

@@ -66,7 +66,6 @@ namespace Graphics
 		GraphicsDeviceList _devices;
 		WindowList _windows;
 		Implementation* _implementation;
-		WindowCreatedHandler _windowCreatedHandler;
 
 		void destroyDevices();
 		void destroyWindows();

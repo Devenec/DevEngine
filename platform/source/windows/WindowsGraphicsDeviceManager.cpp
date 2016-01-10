@@ -34,7 +34,7 @@
 #include <platform/wgl/WGLTemporaryGraphicsContext.h>
 
 #define OEMRESOURCE
-#include <platform/windows/Windows.h> // Needs to be the first header to include Windows.h
+#include <platform/windows/Windows.h> // Must be the first header to include Windows.h
 #undef OEMRESOURCE
 
 #include <platform/windows/WindowsWindow.h>
@@ -46,6 +46,7 @@ using namespace Platform;
 // External
 
 static const Char8* COMPONENT_TAG		  = "[Graphics::GraphicsDeviceManager - Windows] ";
+static const Uint32 CREATE_WINDOW_MESSAGE = WM_USER;
 static const Char16* WINDOW_CLASS_NAME	  = DE_CHAR16("devengine");
 static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine Application");
 static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
@@ -58,6 +59,7 @@ static void initialiseWGL();
 static HCURSOR loadPointer();
 static void processWindowMessages();
 static void registerWindowClass(const WNDCLASSEX& windowClassInfo);
+static void sendMessage(HWND windowHandle, const Uint32 message);
 
 
 // Implementation
@@ -66,7 +68,8 @@ class GraphicsDeviceManager::Implementation final
 {
 public:
 
-	Implementation()
+	Implementation(WindowCreatedHandler windowCreatedHandler)
+		: _windowCreatedHandler(windowCreatedHandler)
 	{
 		initialiseWindowClass();
 		::initialiseWGL();
@@ -90,7 +93,7 @@ public:
 	{
 		HWND windowHandle = ::createWindow(width, height);
 		Window* window = DE_NEW(Window)(windowHandle);
-		setWindowUserData(windowHandle, window->_implementation);
+		setWindowUserData(windowHandle, window);
 
 		return window;
 	}
@@ -107,20 +110,20 @@ public:
 
 private:
 
+	WindowCreatedHandler _windowCreatedHandler;
+
 	static void initialiseWindowClass()
 	{
 		const WNDCLASSEX windowClassInfo = createWindowClassInfo();
 		::registerWindowClass(windowClassInfo);
 	}
 
-	static void setWindowUserData(HWND windowHandle, Window::Implementation* windowImplementation)
+	static void setWindowUserData(HWND windowHandle, Window* window)
 	{
 		SetLastError(0u);
+		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(window));
 
-		const Int32 result =
-			SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(windowImplementation));
-
-		if(result == 0 && getWindowsErrorCode() != 0u)
+		if(result == 0 && GetLastError() != 0u)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the user data of a window." <<
 				Log::Flush();
@@ -142,29 +145,58 @@ private:
 		return windowClassInfo;
 	}
 
-	static Window::Implementation* getWindow(HWND windowHandle)
+	static Window* getWindow(HWND windowHandle)
 	{
-		return reinterpret_cast<Window::Implementation*>(GetWindowLongPtrW(windowHandle, GWLP_USERDATA));
+		SetLastError(0u);
+		const Int32 userData = GetWindowLongPtrW(windowHandle, GWLP_USERDATA);
+
+		if(userData == 0 && GetLastError() != 0u)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the user data of a window." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+
+		return reinterpret_cast<Window*>(userData);
 	}
 
-	static LRESULT CALLBACK windowMessageHandler(HWND windowHandle, const Uint32 message, const WPARAM wParam,
-		const LPARAM lParam)
+	static LRESULT CALLBACK windowMessageHandler(HWND windowHandle, const Uint32 message,
+		const WPARAM wordParameter, const LPARAM longParameter)
 	{
 		switch(message)
 		{
 			case WM_CLOSE:
-				getWindow(windowHandle)->close();
+				getWindow(windowHandle)->_implementation->close();
+				break;
+
+			case ::CREATE_WINDOW_MESSAGE:
+				handleWindowCreation(windowHandle);
 				break;
 
 			case WM_SETCURSOR:
-				if(getWindow(windowHandle)->shouldHidePointer(LOWORD(lParam) == HTCLIENT))
+				if(handlePointerMovement(windowHandle, LOWORD(longParameter) == HTCLIENT))
 					return 1;
 
 			default:
-				return DefWindowProcW(windowHandle, message, wParam, lParam);
+				return DefWindowProcW(windowHandle, message, wordParameter, longParameter);
 		}
 
 		return 0;
+	}
+
+	static Bool handlePointerMovement(HWND windowHandle, const Bool isPointerInClientArea)
+	{
+		Window* window = getWindow(windowHandle);
+		return window->_implementation->shouldHidePointer(isPointerInClientArea);
+	}
+
+	static void handleWindowCreation(HWND windowHandle)
+	{
+		Window* window = getWindow(windowHandle);
+
+		if(window != nullptr)
+			instance()._implementation->_windowCreatedHandler(window);
 	}
 };
 
@@ -174,8 +206,7 @@ private:
 // Public
 
 GraphicsDeviceManager::GraphicsDeviceManager(WindowCreatedHandler windowCreatedHandler)
-	: _implementation(DE_NEW(Implementation)()),
-	  _windowCreatedHandler(windowCreatedHandler) { }
+	: _implementation(DE_NEW(Implementation)(windowCreatedHandler)) { }
 
 GraphicsDeviceManager::~GraphicsDeviceManager()
 {
@@ -198,7 +229,6 @@ void GraphicsDeviceManager::createWindow(const Uint32 windowWidth, const Uint32 
 	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
 	logWindowCreation(window);
 	_windows.push_back(window);
-	_windowCreatedHandler(window);
 }
 
 void GraphicsDeviceManager::destroyDevice(GraphicsDevice* device)
@@ -250,6 +280,7 @@ static HWND createWindow(const Uint32 width, const Uint32 height)
 		DE_ERROR_WINDOWS(0x0);
 	}
 
+	::sendMessage(windowHandle, ::CREATE_WINDOW_MESSAGE);
 	return windowHandle;
 }
 
@@ -340,6 +371,17 @@ static void registerWindowClass(const WNDCLASSEX& windowClassInfo)
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to register the window class." <<
 			Log::Flush();
 
+		DE_ERROR_WINDOWS(0x0);
+	}
+}
+
+static void sendMessage(HWND windowHandle, const Uint32 message)
+{
+	const Int32 result = PostMessageW(windowHandle, message, 0u, 0);
+
+	if(result == 0u)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to send a message." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
 }

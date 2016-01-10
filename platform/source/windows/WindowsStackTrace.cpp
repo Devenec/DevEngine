@@ -25,7 +25,7 @@
 #include <core/UtilityMacros.h>
 #include <core/debug/StackTrace.h>
 #include <platform/windows/Windows.h>
-#include <DbgHelp.h> // Needs to be included after Windows.h (platform/windows/Windows.h)
+#include <DbgHelp.h> // Must be included after Windows.h (platform/windows/Windows.h)
 
 using namespace Core;
 using namespace Debug;

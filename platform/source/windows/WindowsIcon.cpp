@@ -25,6 +25,7 @@
 #include <core/debug/Assert.h>
 #include <graphics/Image.h>
 #include <graphics/ImageFormat.h>
+#include <platform/windows/Windows.h>
 #include <platform/windows/WindowsIcon.h>
 
 using namespace Core;

@@ -21,6 +21,7 @@
 #include <core/Log.h>
 #include <core/Memory.h>
 #include <graphics/Image.h>
+#include <platform/windows/Windows.h>
 #include <platform/windows/WindowsWindow.h>
 
 using namespace Core;
@@ -67,6 +68,11 @@ Core::Rectangle Window::Implementation::clientRectangle() const
 	}
 
 	return Core::Rectangle(clientPosition.x, clientPosition.y, clientRectangle.right, clientRectangle.bottom);
+}
+
+void Window::Implementation::hide() const
+{
+	ShowWindow(_windowHandle, SW_HIDE);
 }
 
 void Window::Implementation::setClientRectangle(const Core::Rectangle& rectangle) const
@@ -127,6 +133,11 @@ Bool Window::Implementation::shouldHidePointer(const Bool isPointerInClientArea)
 	}
 
 	return false;
+}
+
+void Window::Implementation::show() const
+{
+	ShowWindow(_windowHandle, SW_SHOW);
 }
 
 // Private

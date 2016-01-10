@@ -30,11 +30,6 @@ WindowHandle Window::Implementation::handle() const
 	return _windowHandle;
 }
 
-void Window::Implementation::hide() const
-{
-	ShowWindow(_windowHandle, SW_HIDE);
-}
-
 Bool Window::Implementation::inFullscreen() const
 {
 	return _inFullscreen;
@@ -48,9 +43,4 @@ Bool Window::Implementation::isOpen() const
 void Window::Implementation::setPointerVisibility(const Bool isPointerVisible)
 {
 	_isPointerVisible = isPointerVisible;
-}
-
-void Window::Implementation::show() const
-{
-	ShowWindow(_windowHandle, SW_SHOW);
 }

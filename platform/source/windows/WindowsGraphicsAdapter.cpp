@@ -24,6 +24,7 @@
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
 #include <graphics/DisplayMode.h>
+#include <platform/windows/Windows.h>
 #include <platform/windows/WindowsGraphicsAdapter.h>
 
 using namespace Core;

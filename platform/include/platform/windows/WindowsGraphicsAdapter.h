@@ -22,7 +22,7 @@
 
 #include <core/Types.h>
 #include <graphics/GraphicsAdapter.h>
-#include <platform/windows/Windows.h>
+#include <platform/windows/WindowsGraphics.h>
 
 namespace Graphics
 {
