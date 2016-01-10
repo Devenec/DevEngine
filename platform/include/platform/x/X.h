@@ -58,7 +58,7 @@ namespace Platform
 		Cursor createHiddenPointer(const ::Window windowHandle) const;
 
 		::Window createWindow(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height,
-			XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask) const;
+			XVisualInfo* visualInfo, XSetWindowAttributes attributes, Uint32 attributeMask) const;
 
 		inline void destroyGraphicsContext(GLX::Context contextHandle) const;
 
@@ -111,6 +111,8 @@ namespace Platform
 
 		XEvent popEvent() const;
 
+		void sendEvent(const ::Window windowHandle, XEvent& event, const Int32 eventMask) const;
+
 		void setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
 			const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const;
 
@@ -147,7 +149,6 @@ namespace Platform
 		void checkConnection() const;
 		void checkXRandRSupport() const;
 		XWindowAttributes getWindowAttributes(const ::Window windowHandle) const;
-		void sendEvent(const ::Window windowHandle, XEvent& event, const Int32 eventMask) const;
 	};
 
 #include "inline/X.inl"

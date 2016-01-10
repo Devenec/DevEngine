@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <errno.h>
 #include <core/ConfigInternal.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
@@ -27,13 +28,23 @@
 #if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 	#define DE_ERROR_POSIX(errorCode) \
 		Platform::invokePOSIXError(errorCode, DE_FILE, DE_LINE, DE_FUNCTION)
+
+	#define DE_ERROR_POSIX_CODE(errorCode, posixErrorCode) \
+		errno = posixErrorCode; \
+		Platform::invokePOSIXError(errorCode, DE_FILE, DE_LINE, DE_FUNCTION)
 #else
 	#define DE_ERROR_POSIX(errorCode) \
+		Platform::invokePOSIXError(errorCode)
+
+	#define DE_ERROR_POSIX_CODE(errorCode, posixErrorCode) \
+		errno = posixErrorCode; \
 		Platform::invokePOSIXError(errorCode)
 #endif
 
 namespace Platform
 {
+	extern const Int32 POSIX_RESULT_OK;
+
 	void invokePOSIXError(const Uint32 errorCode);
 
 	void invokePOSIXError(const Uint32 errorCode, const Char8* file, const Uint32 line,

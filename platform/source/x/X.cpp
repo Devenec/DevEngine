@@ -93,10 +93,11 @@ Cursor X::createHiddenPointer(const ::Window windowHandle) const
 }
 
 ::Window X::createWindow(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height,
-	XVisualInfo* visualInfo, XSetWindowAttributes& attributes, const Uint32 attributeMask) const
+	XVisualInfo* visualInfo, XSetWindowAttributes attributes, Uint32 attributeMask) const
 {
 	const ::Window rootWindowHandle = XRootWindow(_connection, GRAPHICS_ADAPTER_INDEX);
 	attributes.colormap = XCreateColormap(_connection, rootWindowHandle, visualInfo->visual, AllocNone);
+	attributeMask |= CWColormap;
 
 	return XCreateWindow(_connection, rootWindowHandle, x, y, width, height, 0u, visualInfo->depth,
 		InputOutput, visualInfo->visual, attributeMask, &attributes);
@@ -273,6 +274,19 @@ XEvent X::popEvent() const
 	return event;
 }
 
+void X::sendEvent(const ::Window windowHandle, XEvent& event, const Int32 eventMask) const
+{
+	const Int32 result = XSendEvent(_connection, windowHandle, False, eventMask, &event);
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the attributes of a window." <<
+			Log::Flush();
+
+		DE_ERROR_X(0x0);
+	}
+}
+
 void X::setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
 	const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const
 {
@@ -428,19 +442,6 @@ XWindowAttributes X::getWindowAttributes(const ::Window windowHandle) const
 	}
 
 	return windowAttributes;
-}
-
-void X::sendEvent(const ::Window windowHandle, XEvent& event, const Int32 eventMask) const
-{
-	const Int32 result = XSendEvent(_connection, windowHandle, False, eventMask, &event);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the attributes of a window." <<
-			Log::Flush();
-
-		DE_ERROR_X(0x0);
-	}
 }
 
 

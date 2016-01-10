@@ -19,13 +19,14 @@
  */
 
 #include <cstdlib>
-#include <errno.h>
 #include <core/Log.h>
 #include <platform/posix/POSIX.h>
 
 using namespace Core;
 
 // Platform
+
+const Int32 Platform::POSIX_RESULT_OK = 0;
 
 void Platform::invokePOSIXError(const Uint32 errorCode)
 {

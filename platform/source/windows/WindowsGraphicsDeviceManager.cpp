@@ -171,11 +171,11 @@ private:
 				break;
 
 			case ::CREATE_WINDOW_MESSAGE:
-				handleWindowCreation(windowHandle);
+				processWindowCreation(windowHandle);
 				break;
 
 			case WM_SETCURSOR:
-				if(handlePointerMovement(windowHandle, LOWORD(longParameter) == HTCLIENT))
+				if(processPointerMovement(windowHandle, LOWORD(longParameter) == HTCLIENT))
 					return 1;
 
 			default:
@@ -185,13 +185,13 @@ private:
 		return 0;
 	}
 
-	static Bool handlePointerMovement(HWND windowHandle, const Bool isPointerInClientArea)
+	static Bool processPointerMovement(HWND windowHandle, const Bool isPointerInClientArea)
 	{
 		Window* window = getWindow(windowHandle);
 		return window->_implementation->shouldHidePointer(isPointerInClientArea);
 	}
 
-	static void handleWindowCreation(HWND windowHandle)
+	static void processWindowCreation(HWND windowHandle)
 	{
 		Window* window = getWindow(windowHandle);
 

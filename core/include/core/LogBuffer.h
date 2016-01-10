@@ -26,11 +26,11 @@
 
 namespace Core
 {
-	using FlushFunction = void (*)(const Char8* message);
-
 	class LogBuffer final
 	{
 	public:
+
+		using FlushFunction = void (*)(const Char8* message);
 
 		static const Uint32 NON_POSITION;
 
