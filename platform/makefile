@@ -46,6 +46,7 @@ SOURCE_FILES = \
 	posix/POSIX.cpp \
 	posix/POSIXFileStream.cpp \
 	posix/POSIXFileSystem.cpp \
+	posix/POSIXThread.cpp \
 	std/STDLog.cpp \
 	std/STDMain.cpp \
 	x/X.cpp \

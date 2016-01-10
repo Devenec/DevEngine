@@ -51,6 +51,7 @@ STATIC_LIBRARIES = \
 	png \
 	z \
 	dl \
+	pthread \
 	X11 \
 	Xrandr
 

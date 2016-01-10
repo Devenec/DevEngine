@@ -35,16 +35,18 @@ static const Int32 MIN_SUPPORTED_XRANDR_VERSION_MINOR = 1;
 
 static Int32 handleError(Display* xConnection, XErrorEvent* errorInfo);
 static Int32 handleIOError(Display* xConnection);
+static void initialiseMultithreading();
 static void setErrorHandlers();
-
 
 // Public
 
 X::X()
-	: _connection(XOpenDisplay(nullptr)),
-	  _windowUserDataContext(XUniqueContext())
+	: _connection(nullptr),
+	  _windowUserDataContext(0)
 {
-	checkConnection();
+	::initialiseMultithreading();
+	_windowUserDataContext = XUniqueContext();
+	initialiseConnection();
 	::setErrorHandlers();
 	checkXRandRSupport();
 }
@@ -377,8 +379,10 @@ void X::setWindowUserData(const ::Window windowHandle, Void* data) const
 
 const Int32 X::GRAPHICS_ADAPTER_INDEX = 0;
 
-void X::checkConnection() const
+void X::initialiseConnection()
 {
+	_connection = XOpenDisplay(nullptr);
+
 	if(_connection == nullptr)
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise a connection." <<
@@ -469,6 +473,19 @@ static Int32 handleIOError(Display* xConnection)
 
 	std::abort();
 	return 0;
+}
+
+static void initialiseMultithreading()
+{
+	const Int32 result = XInitThreads();
+
+	if(result == 0)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise multithreading." <<
+			Log::Flush();
+
+		DE_ERROR_X(0x0);
+	}
 }
 
 static void setErrorHandlers()

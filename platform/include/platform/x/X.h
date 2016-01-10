@@ -146,7 +146,7 @@ namespace Platform
 		Display* _connection;
 		Int32 _windowUserDataContext;
 
-		void checkConnection() const;
+		void initialiseConnection();
 		void checkXRandRSupport() const;
 		XWindowAttributes getWindowAttributes(const ::Window windowHandle) const;
 	};

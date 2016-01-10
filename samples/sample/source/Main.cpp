@@ -21,6 +21,7 @@
 #include <content/ContentManager.h>
 #include <core/Main.h>
 #include <core/Singleton.h>
+#include <core/Thread.h>
 #include <core/Types.h>
 #include <core/Vector.h>
 #include <core/maths/Angle.h>
@@ -108,6 +109,8 @@ public:
 
 		while(_isRunning)
 			_graphicsDeviceManager.processWindowMessages();
+
+		_updateThread.join();
 	}
 
 	App& operator =(const App& app) = delete;
@@ -122,6 +125,7 @@ private:
 	GraphicsDevice* _graphicsDevice;
 	IndexBuffer* _indexBuffer;
 	GraphicsBuffer* _uniformBuffer;
+	Thread _updateThread;
 	GraphicsBuffer* _vertexBuffer;
 	VertexBufferState* _vertexBufferState;
 	Window* _window;
@@ -228,7 +232,7 @@ private:
 
 		while(_window->isOpen())
 		{
-			_graphicsDeviceManager.processWindowMessages();
+			//_graphicsDeviceManager.processWindowMessages();
 			_graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
 			rotation += 0.01f;
 
@@ -242,7 +246,7 @@ private:
 			_graphicsDevice->swapBuffers();
 		}
 
-		_isRunning = false;
+		//_isRunning = false;
 	}
 
 	void deinitialise()
@@ -254,9 +258,18 @@ private:
 	{
 		App& app = App::instance();
 		app._window = window;
-		app.initialise();
-		app.update();
-		app.deinitialise();
+		app._updateThread.run(updateThreadMain, &app);
+	}
+
+	static Int32 updateThreadMain(Void* parameter)
+	{
+		App* app = static_cast<App*>(parameter);
+		app->initialise();
+		app->update();
+		app->deinitialise();
+		app->_isRunning = false;
+
+		return 0;
 	}
 };
 
