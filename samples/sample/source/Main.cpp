@@ -18,6 +18,7 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <content/ContentManager.h>
 #include <core/Main.h>
 #include <core/Singleton.h>
@@ -147,7 +148,47 @@ private:
 		_effect->link();
 		_graphicsDevice->destroyResource(fragmentShader);
 		_graphicsDevice->destroyResource(vertexShader);
+		initialiseVertexBuffer();
+		initialiseIndexBuffer();
+		initialiseVertexBufferState();
+		_graphicsDevice->setEffect(_effect);
+		_graphicsDevice->setVertexBufferState(_vertexBufferState);
+		initialiseUniformBuffer();
+	}
 
+	void update()
+	{
+		Vector3 axis(0.0f, 1.0f, 1.0f);
+		axis.normalise();
+		Angle rotation(0.0f);
+		Matrix4 worldTransform;
+
+		while(_window->isOpen())
+		{
+			_graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
+			rotation += 0.01f;
+
+			worldTransform =
+				Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
+			
+			Float32* data =
+				reinterpret_cast<Float32*>(_uniformBuffer->mapData(sizeof(Matrix4), sizeof(Matrix4)));
+
+			std::copy(worldTransform.data(), worldTransform.data() + 16, data);
+			_uniformBuffer->demapData();
+
+			_graphicsDevice->draw(PrimitiveType::TriangleStrip, 4u);
+			_graphicsDevice->swapBuffers();
+		}
+	}
+
+	void deinitialise()
+	{
+		_graphicsDeviceManager.destroyDevice(_graphicsDevice);
+	}
+
+	void initialiseVertexBuffer()
+	{
 		Vector<Float32> VERTEX_DATA
 		{
 			 0.0f,	5.0f, 0.0f,
@@ -172,37 +213,43 @@ private:
 		colour = 0x000FFFFF;
 		VERTEX_DATA[15] = *reinterpret_cast<Float32*>(&colour);
 
+		const Uint32 bufferSize = sizeof(Float32) * VERTEX_DATA.size();
+		_vertexBuffer = _graphicsDevice->createBuffer(BufferBinding::Vertex, bufferSize);
+		Float32* data = reinterpret_cast<Float32*>(_vertexBuffer->mapData(bufferSize));
+		std::copy(VERTEX_DATA.begin(), VERTEX_DATA.end(), data);
+		_vertexBuffer->demapData();
+	}
+
+	void initialiseIndexBuffer()
+	{
 		const Vector<Uint8> INDEX_DATA
 		{
 			 0u, 1u, 2u,
 			 3u, 2u, 1u,
 		};
 
-		_vertexBuffer =
-			_graphicsDevice->createBuffer(BufferBinding::Vertex, sizeof(Float32) * VERTEX_DATA.size());
+		const Uint32 bufferSize = sizeof(Uint8) * INDEX_DATA.size();
+		_indexBuffer = _graphicsDevice->createIndexBuffer(bufferSize, IndexType::Uint8);
+		Uint8* data = _vertexBuffer->mapData(bufferSize);
+		std::copy(INDEX_DATA.begin(), INDEX_DATA.end(), data);
+		_vertexBuffer->demapData();
+	}
 
-		_vertexBuffer->setData(reinterpret_cast<const Uint8*>(VERTEX_DATA.data()),
-			sizeof(Float32) * VERTEX_DATA.size());
-
-		_indexBuffer =
-			_graphicsDevice->createIndexBuffer(sizeof(Uint8) * INDEX_DATA.size(), IndexType::Uint8);
-
-		_indexBuffer->setData(reinterpret_cast<const Uint8*>(INDEX_DATA.data()),
-			sizeof(Uint8) * INDEX_DATA.size());
-
-		_vertexBufferState = _graphicsDevice->createVertexBufferState();
-
+	void initialiseVertexBufferState()
+	{
 		VertexElementList vertexElements
 		{
 			VertexElement(0u, VertexElementType::Float32Vector3),
 			VertexElement(1u, VertexElementType::Uint32_R10G10B10A2)
 		};
 
+		_vertexBufferState = _graphicsDevice->createVertexBufferState();
 		_vertexBufferState->setVertexBuffer(_vertexBuffer, vertexElements, 4u * sizeof(Float32));
 		_vertexBufferState->setIndexBuffer(_indexBuffer);
-		_graphicsDevice->setEffect(_effect);
-		_graphicsDevice->setVertexBufferState(_vertexBufferState);
+	}
 
+	void initialiseUniformBuffer()
+	{
 		const Float32 near = 0.1f;
 		const Float32 far = 100.0f;
 		const Float32 top = near * tangent(0.5f * 1.047f);
@@ -219,36 +266,10 @@ private:
 		_uniformBuffer =
 			_graphicsDevice->createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32), AccessMode::Write);
 
-		_uniformBuffer->setData(reinterpret_cast<const Uint8*>(projectionTransform.data()), sizeof(Matrix4));
+		Float32* data = reinterpret_cast<Float32*>(_uniformBuffer->mapData(sizeof(Matrix4)));
+		std::copy(projectionTransform.data(), projectionTransform.data() + 16, data);
+		_uniformBuffer->demapData();
 		_uniformBuffer->bindIndexed(0u);
-	}
-
-	void update()
-	{
-		Vector3 axis(0.0f, 1.0f, 1.0f);
-		axis.normalise();
-		Angle rotation(0.0f);
-		Matrix4 worldTransform;
-
-		while(_window->isOpen())
-		{
-			_graphicsDevice->clear(Colour(0.8f, 0.0f, 1.0f));
-			rotation += 0.01f;
-
-			worldTransform =
-				Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
-
-			_uniformBuffer->setData(reinterpret_cast<const Uint8*>(worldTransform.data()), sizeof(Matrix4),
-				sizeof(Matrix4));
-
-			_graphicsDevice->draw(PrimitiveType::TriangleStrip, 4u);
-			_graphicsDevice->swapBuffers();
-		}
-	}
-
-	void deinitialise()
-	{
-		_graphicsDeviceManager.destroyDevice(_graphicsDevice);
 	}
 
 	static void onWindowCreated(Window* window)

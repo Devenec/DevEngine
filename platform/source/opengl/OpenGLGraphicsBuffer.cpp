@@ -18,7 +18,6 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <algorithm>
 #include <core/Error.h>
 #include <core/Log.h>
 #include <core/Memory.h>
@@ -104,15 +103,6 @@ Uint8* GraphicsBuffer::Implementation::mapData(const Uint32 size, const Uint32 b
 	return static_cast<Uint8*>(data);
 }
 
-void GraphicsBuffer::Implementation::setData(const Uint8* data, const Uint32 size, const Uint32 bufferOffset)
-	const
-{
-	DE_ASSERT(data != nullptr);
-	Uint8* mappedData = mapData(size, bufferOffset);
-	std::copy(data, data + size, mappedData);
-	demapData(); // TODO: restore old binding?
-}
-
 // Private
 
 void GraphicsBuffer::Implementation::bind(const Uint32 bufferHandle) const
@@ -177,11 +167,6 @@ void GraphicsBuffer::demapData() const
 Uint8* GraphicsBuffer::mapData(const Uint32 size, const Uint32 bufferOffset) const
 {
 	return _implementation->mapData(size, bufferOffset);
-}
-
-void GraphicsBuffer::setData(const Uint8* data, const Uint32 dataSize, const Uint32 bufferOffset) const
-{
-	_implementation->setData(data, dataSize, bufferOffset);
 }
 
 // Protected

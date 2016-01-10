@@ -47,8 +47,6 @@ namespace Graphics
 
 		Uint8* mapData(const Uint32 size, const Uint32 offset = 0u) const;
 
-		void setData(const Uint8* data, const Uint32 size, const Uint32 offset = 0u) const;
-
 		GraphicsBuffer& operator =(const GraphicsBuffer& graphicsBuffer) = delete;
 		GraphicsBuffer& operator =(GraphicsBuffer&& graphicsBuffer) = delete;
 
