@@ -41,7 +41,7 @@ static const Char8* COMPONENT_TAG = "[Platform::GraphicsDeviceFactory - WGL] ";
 GraphicsDevice* GraphicsDeviceFactory::createDevice(Window* window)
 {
 	HDC deviceContextHandle = getWindowDeviceContextHandle(static_cast<HWND>(window->handle()));
-	const Int32 graphicsConfigIndex = chooseGraphicsConfig(deviceContextHandle);
+	const Int graphicsConfigIndex = chooseGraphicsConfig(deviceContextHandle);
 
 	GraphicsContext* graphicsContext =
 		DE_NEW(GraphicsContext)(window->handle(), reinterpret_cast<ConfigHandle>(graphicsConfigIndex));

@@ -148,7 +148,7 @@ template<typename T>
 static void logElementsInColumns(const Vector<T>& elements, const Uint32 columnCount,
 	LogElementFunction<T> logElementFunction)
 {
-	const Uint32 elementCount = elements.size();
+	const Uint elementCount = elements.size();
 	const Uint32 rowCount = static_cast<Uint32>(ceiling(static_cast<Float32>(elementCount) / columnCount));
 
 	for(Uint32 i = 0u; i < rowCount; ++i)

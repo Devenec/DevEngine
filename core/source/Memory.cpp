@@ -29,7 +29,7 @@
 
 // Core
 
-Void* Core::allocateMemory(const Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
+Void* Core::allocateMemory(const Uint size, const Char8* file, const Uint32 line, const Char8* function)
 {
 	DE_ASSERT(size > 0u);
 	Void* pointer = std::malloc(size);
@@ -55,7 +55,7 @@ Void* Core::allocateMemory(const Uint32 size, const Char8* file, const Uint32 li
 	return pointer;
 }
 
-void Core::deallocateMemory(Void* pointer, const Uint32 size)
+void Core::deallocateMemory(Void* pointer, const Uint size)
 {
 
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)

@@ -46,7 +46,7 @@ void AllocationTracker::deinitialise()
 	defaultLog << LogLevel::Debug << "AllocationTracker deinitialised." << Log::Flush();
 }
 
-void AllocationTracker::deregisterAllocation(Void* pointer, const Uint32 size)
+void AllocationTracker::deregisterAllocation(Void* pointer, const Uint size)
 {
 	if(_isInitialised)
 	{
@@ -67,7 +67,7 @@ void AllocationTracker::initialise()
 	defaultLog << LogLevel::Debug << "AllocationTracker initialised." << Log::Flush();
 }
 
-void AllocationTracker::registerAllocation(Void* pointer, const Uint32 size, const Char8* file,
+void AllocationTracker::registerAllocation(Void* pointer, const Uint size, const Char8* file,
 	const Uint32 line, const Char8* function)
 {
 	if(_isInitialised)

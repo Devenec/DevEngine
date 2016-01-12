@@ -48,20 +48,26 @@
 #endif
 
 
-// Compiler specific internal functions
+// Target processor architecture detection
 
 #if DE_COMPILER == DE_COMPILER_CLANG
-	#define DE_INTERNAL_COMPILER_WARN(msg) \
-		_Pragma(DE_INTERNAL1_STRING8(message(msg)))
-
-	#define DE_INTERNAL_DEBUGGER_BREAK()
-		// TODO: implement
+	#if defined(__i386) || defined(__i386__)
+		#define DE_ARCHITECTURE DE_ARCHITECTURE_X86
+	#else
+		#define DE_ARCHITECTURE 0
+	#endif
 #elif DE_COMPILER == DE_COMPILER_MSVC
-	#define DE_INTERNAL_COMPILER_WARN(msg) \
-		__pragma(message(__FILE__ "(" DE_INTERNAL2_STRING8(__LINE__) ") : warning: " msg))
+	#if defined(_WIN64)
+		#define DE_ARCHITECTURE DE_ARCHITECTURE_X64
+	#elif defined(_WIN32)
+		#define DE_ARCHITECTURE DE_ARCHITECTURE_X86
+	#else
+		#define DE_ARCHITECTURE 0
+	#endif
+#endif
 
-	#define DE_INTERNAL_DEBUGGER_BREAK() \
-		__asm int 3
+#if DE_ARCHITECTURE == 0
+	#error The target processor architecture is not supported.
 #endif
 
 
@@ -75,12 +81,20 @@
 #endif
 
 
-// Target processor architecture detection
+// Compiler specific internal functions
 
-#if defined(__i386) || defined(__i386__) || (DE_COMPILER == DE_COMPILER_MSVC && !defined(_WIN64))
-	#define DE_ARCHITECTURE DE_ARCHITECTURE_X86
-#else
-	#error The target processor architecture is not supported.
+#if DE_COMPILER == DE_COMPILER_CLANG
+	#define DE_INTERNAL_COMPILER_WARN(msg) \
+		_Pragma(DE_INTERNAL1_STRING8(message(msg)))
+
+	#define DE_INTERNAL_DEBUGGER_BREAK()
+		// TODO: implement
+#elif DE_COMPILER == DE_COMPILER_MSVC
+	#define DE_INTERNAL_COMPILER_WARN(msg) \
+		__pragma(message(__FILE__ "(" DE_INTERNAL2_STRING8(__LINE__) ") : warning: " msg))
+
+	#define DE_INTERNAL_DEBUGGER_BREAK() \
+		__debugbreak()
 #endif
 
 
@@ -102,10 +116,20 @@
 
 // Target platform detection
 
-#if defined(__linux) || defined(__linux__)
-	#define DE_PLATFORM DE_PLATFORM_LINUX
-#elif defined(_WIN32)
-	#define DE_PLATFORM DE_PLATFORM_WINDOWS
-#else
+#if DE_COMPILER == DE_COMPILER_CLANG
+	#if defined(__linux) || defined(__linux__)
+		#define DE_PLATFORM DE_PLATFORM_LINUX
+	#else
+		#define DE_PLATFORM 0
+	#endif
+#elif DE_COMPILER == DE_COMPILER_MSVC
+	#if defined(_WIN32)
+		#define DE_PLATFORM DE_PLATFORM_WINDOWS
+	#else
+		#define DE_PLATFORM 0
+	#endif
+#endif
+
+#if DE_PLATFORM == 0
 	#error The target platform is not supported.
 #endif

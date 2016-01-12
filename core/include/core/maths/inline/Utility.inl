@@ -125,6 +125,11 @@ Uint32 minimum(const Uint32 valueA, const Uint32 valueB)
 	return valueA < valueB ? valueA : valueB;
 }
 
+Uint64 minimum(const Uint64 valueA, const Uint64 valueB)
+{
+	return valueA < valueB ? valueA : valueB;
+}
+
 Float32 minimum(const Float32 valueA, const Float32 valueB)
 {
 	return valueA < valueB ? valueA : valueB;

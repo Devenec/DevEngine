@@ -34,7 +34,7 @@ namespace Graphics
 	public:
 
 		Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
-			const Uint32 size, const AccessMode& accessMode);
+			const Uint size, const AccessMode& accessMode);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
@@ -57,9 +57,7 @@ namespace Graphics
 
 		inline Uint8* mapData() const;
 
-		Uint8* mapData(const Uint32 size, const Uint32 offset) const;
-
-		void setData(const Uint8* data, const Uint32 size, const Uint32 offset) const;
+		Uint8* mapData(const Uint size, const Uint offset) const;
 
 		Implementation& operator =(const Implementation& implementation) = delete;
 		Implementation& operator =(Implementation&& implementation) = delete;
@@ -67,10 +65,10 @@ namespace Graphics
 	private:
 
 		Platform::OpenGL* _openGL;
+		Uint _size;
 		Uint32 _binding;
 		Uint32 _bufferHandle;
 		Uint32 _flags;
-		Uint32 _size;
 
 		void bind(const Uint32 bufferHandle) const;
 		void initialiseAccessMode(const AccessMode& accessMode);

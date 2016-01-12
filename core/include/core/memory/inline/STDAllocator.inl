@@ -35,7 +35,7 @@ STDAllocator<T, AllocationPolicy>::STDAllocator(const STDAllocator<U, OtherAlloc
 }
 
 template<typename T, typename AllocationPolicy>
-T* STDAllocator<T, AllocationPolicy>::allocate(const Uint32 objectCount)
+T* STDAllocator<T, AllocationPolicy>::allocate(const Uint objectCount)
 {
 	return static_cast<T*>(AllocationPolicy::allocate(objectCount * sizeof(T)));
 }
@@ -49,7 +49,7 @@ void STDAllocator<T, AllocationPolicy>::construct(U* pointer, Parameters&&... pa
 }
 
 template<typename T, typename AllocationPolicy>
-void STDAllocator<T, AllocationPolicy>::deallocate(T* pointer, const Uint32 objectCount)
+void STDAllocator<T, AllocationPolicy>::deallocate(T* pointer, const Uint objectCount)
 {
 	AllocationPolicy::deallocate(pointer, objectCount * sizeof(T));
 }

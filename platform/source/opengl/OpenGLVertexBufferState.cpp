@@ -90,7 +90,7 @@ public:
 	}
 
 	void setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements,
-		const Uint32 stride, const Uint32 offset) const
+		const Uint32 stride, const Uint offset) const
 	{
 		DE_ASSERT(buffer->_implementation->binding() == static_cast<Uint32>(BufferBinding::Vertex));
 		Uint32 bufferHandle = 0u;
@@ -122,9 +122,9 @@ private:
 	}
 
 	void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride,
-		const Uint32 bufferOffset) const
+		const Uint bufferOffset) const
 	{
-		Uint32 elementOffset = bufferOffset;
+		Uint elementOffset = bufferOffset;
 
 		for(VertexElementList::const_iterator i = vertexElements.begin(), end = vertexElements.end();
 			i != end; ++i)
@@ -137,7 +137,7 @@ private:
 		}
 	}
 
-	void setVertexElementFormat(const VertexElement& element, const Uint32 elementOffset, const Uint32 stride)
+	void setVertexElementFormat(const VertexElement& element, const Uint elementOffset, const Uint32 stride)
 		const
 	{
 		Bool normalise;
@@ -180,7 +180,7 @@ void VertexBufferState::setIndexBuffer(IndexBuffer* indexBuffer) const
 }
 
 void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements,
-	const Uint32 stride, const Uint32 offset) const
+	const Uint32 stride, const Uint offset) const
 {
 	_implementation->setVertexBuffer(buffer, vertexElements, stride, offset);
 }

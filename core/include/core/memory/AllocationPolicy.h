@@ -39,10 +39,10 @@ namespace Memory
 		AllocationPolicy& operator =(const AllocationPolicy& allocationPolicy) = delete;
 		AllocationPolicy& operator =(AllocationPolicy&& allocationPolicy) = delete;
 
-		static Void* allocate(const Uint32 size, const Char8* file = nullptr, const Uint32 line = 0u,
+		static Void* allocate(const Uint size, const Char8* file = nullptr, const Uint32 line = 0u,
 			const Char8* function = nullptr);
 
-		static void deallocate(Void* pointer, const Uint32 size = 0u);
+		static void deallocate(Void* pointer, const Uint size = 0u);
 
 	private:
 

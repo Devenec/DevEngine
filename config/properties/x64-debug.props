@@ -3,11 +3,11 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <OutDir>$(SolutionDir)windows\x86\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)windows\x64\$(Configuration)\</OutDir>
     <IntDir>$(OutDir)obj\$(TargetName)\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
-    <_PropertySheetDisplayName>x86-release</_PropertySheetDisplayName>
+    <_PropertySheetDisplayName>x64-debug</_PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -17,13 +17,13 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <WarningLevel>Level4</WarningLevel>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <OmitFramePointers>false</OmitFramePointers>
       <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <PreprocessToFile>false</PreprocessToFile>
@@ -33,12 +33,12 @@
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>false</ExceptionHandling>
       <SmallerTypeCheck>false</SmallerTypeCheck>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <StructMemberAlignment>8Bytes</StructMemberAlignment>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>false</EnableParallelCodeGeneration>
       <FloatingPointModel>Precise</FloatingPointModel>
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <CreateHotpatchableImage>false</CreateHotpatchableImage>
@@ -62,8 +62,8 @@
       <UseFullPaths>false</UseFullPaths>
       <OmitDefaultLibName>false</OmitDefaultLibName>
       <ErrorReporting>Prompt</ErrorReporting>
+      <PreprocessorDefinitions>DE_BUILD_CONFIG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4530;4577;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PreprocessorDefinitions>DE_BUILD_CONFIG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -84,12 +84,11 @@
       <SwapRunFromCD>false</SwapRunFromCD>
       <SwapRunFromNET>false</SwapRunFromNET>
       <Driver>NotSet</Driver>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>false</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <ProfileGuidedDatabase>$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
       <EntryPointSymbol>wmainCRTStartup</EntryPointSymbol>
-      <TargetMachine>MachineX86</TargetMachine>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
@@ -101,8 +100,8 @@
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <TargetMachine>MachineX86</TargetMachine>
-      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+      <TargetMachine>MachineX64</TargetMachine>
+      <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
       <Verbose>false</Verbose>
       <TreatLibWarningAsErrors>false</TreatLibWarningAsErrors>
     </Lib>

@@ -52,12 +52,12 @@ namespace Memory
 
 		~STDAllocator() = default;
 
-		inline T* allocate(const Uint32 objectCount);
+		inline T* allocate(const Uint objectCount);
 
 		template<typename U, typename... Parameters>
 		inline void construct(U* pointer, Parameters&&... parameters);
 
-		inline void deallocate(T* pointer, const Uint32 objectCount);
+		inline void deallocate(T* pointer, const Uint objectCount);
 
 		template<typename U>
 		inline void destroy(U* pointer);

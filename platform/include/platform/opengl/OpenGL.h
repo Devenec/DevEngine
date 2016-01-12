@@ -249,8 +249,8 @@ namespace Platform
 
 		// Version 1.5
 
-		using Intptr   = Int32;
-		using Sizeiptr = Int32;
+		using Intptr   = Int;
+		using Sizeiptr = Int;
 
 		using BeginQuery = void (DE_CALL_OPENGL*)(Enum target, Uint32 id);
 		using BindBuffer = void (DE_CALL_OPENGL*)(Enum target, Uint32 buffer);

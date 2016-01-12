@@ -109,7 +109,7 @@ void Window::Implementation::setIcon(const Image* image)
 	else
 		_icon = Icon(image);
 
-	SendMessageW(_windowHandle, WM_SETICON, ICON_BIG, reinterpret_cast<long>(_icon.handle()));
+	SendMessageW(_windowHandle, WM_SETICON, ICON_BIG, reinterpret_cast<Int>(_icon.handle()));
 }
 
 void Window::Implementation::setTitle(const String8& title) const
@@ -149,7 +149,7 @@ Core::Rectangle Window::Implementation::calculateWindowRectangle(const Core::Rec
 	windowRectangle.top = clientRectangle.y;
 	windowRectangle.right = windowRectangle.left + clientRectangle.width;
 	windowRectangle.bottom = windowRectangle.top + clientRectangle.height;
-	const Int32 style = GetWindowLongPtrW(_windowHandle, GWL_STYLE);
+	const Uint32 style = static_cast<Uint32>(GetWindowLongPtrW(_windowHandle, GWL_STYLE));
 	const Int32 result = AdjustWindowRectEx(&windowRectangle, style, FALSE, 0u);
 
 	if(result == 0)
@@ -192,14 +192,14 @@ void Window::Implementation::setFullscreenClientRectangle(const Bool inFullscree
 
 void Window::Implementation::setStyle(const Bool inFullscreen) const
 {
-	Int32 style = GetWindowLongPtrW(_windowHandle, GWL_STYLE);
+	Int style = GetWindowLongPtrW(_windowHandle, GWL_STYLE);
 
 	if(inFullscreen)
 		style &= ~WS_CAPTION;
 	else
 		style |= WS_CAPTION;
 
-	const Int32 result = SetWindowLongPtrW(_windowHandle, GWL_STYLE, style);
+	const Int result = SetWindowLongPtrW(_windowHandle, GWL_STYLE, style);
 
 	if(result == 0)
 	{

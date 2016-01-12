@@ -71,6 +71,8 @@ namespace Maths
 
 	inline Uint32 minimum(const Uint32 valueA, const Uint32 valueB);
 
+	inline Uint64 minimum(const Uint64 valueA, const Uint64 valueB); // TODO: add maximum counterpart?
+
 	inline Float32 minimum(const Float32 valueA, const Float32 valueB);
 
 	inline Float32 power(const Float32 base, const Float32 exponent);

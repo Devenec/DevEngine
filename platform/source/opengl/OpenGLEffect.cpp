@@ -177,9 +177,11 @@ private:
 	CharacterBuffer getInfoLog(const Uint32 logLength) const
 	{
 		CharacterBuffer logBuffer(logLength);
-		_openGL->getProgramInfoLog(_programHandle, logBuffer.size(), nullptr, logBuffer.data());
-		DE_CHECK_ERROR_OPENGL(_openGL);
 
+		_openGL->getProgramInfoLog(_programHandle, static_cast<Uint32>(logBuffer.size()), nullptr,
+			logBuffer.data());
+
+		DE_CHECK_ERROR_OPENGL(_openGL);
 		return logBuffer;
 	}
 };

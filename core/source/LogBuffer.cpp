@@ -36,7 +36,7 @@ static Bool isWhitespaceCharacter(const Char8 character);
 
 // Public
 
-const Uint32 LogBuffer::NON_POSITION = Numeric<Uint32>::maximum();
+const Uint LogBuffer::NON_POSITION = Numeric<Uint>::maximum();
 
 LogBuffer::LogBuffer(FlushFunction flushFunction)
 	: _flushFunction(flushFunction)
@@ -59,7 +59,7 @@ void LogBuffer::appendCharacter(const Char8 character)
 	_lineBuffer.append(1u, character);
 }
 
-void LogBuffer::appendCharacters(const Char8* characters, Uint32 characterCount)
+void LogBuffer::appendCharacters(const Char8* characters, Uint characterCount)
 {
 	if(characterCount == NON_POSITION)
 		characterCount = std::strlen(characters);
@@ -96,11 +96,11 @@ void LogBuffer::openFileStream() const
 	_fileStream.open(logFilepath, OpenMode::Write | OpenMode::Truncate);
 }
 
-Uint32 LogBuffer::appendToLineBuffer(const Char8* characters, const Char8* charactersEnd)
+Uint LogBuffer::appendToLineBuffer(const Char8* characters, const Char8* charactersEnd)
 {
 	const Char8* lineBreakPosition = std::find(characters, charactersEnd, '\n');
-	const Uint32 availableCapacity = Config::LOG_LINE_MAX_WIDTH - _lineBuffer.length();
-	Uint32 characterCount = minimum(availableCapacity, static_cast<Uint32>(charactersEnd - characters));
+	const Uint availableCapacity = Config::LOG_LINE_MAX_WIDTH - _lineBuffer.length();
+	Uint characterCount = minimum(availableCapacity, static_cast<Uint>(charactersEnd - characters));
 
 	if(lineBreakPosition != charactersEnd)
 		characterCount = lineBreakPosition - characters;
@@ -118,8 +118,8 @@ Uint32 LogBuffer::appendToLineBuffer(const Char8* characters, const Char8* chara
 
 void LogBuffer::appendLineBuffer()
 {
-	const Uint32 availableMainBufferCapacity = _mainBuffer.capacity() - _mainBuffer.length();
-	Uint32 lineBufferOffset = 0u;
+	const Uint availableMainBufferCapacity = _mainBuffer.capacity() - _mainBuffer.length();
+	Uint lineBufferOffset = 0u;
 
 	if(_lineBuffer.length() > availableMainBufferCapacity)
 	{
@@ -137,7 +137,10 @@ void LogBuffer::flushMainBuffer()
 	_flushFunction(_mainBuffer.c_str());
 
 	if(_fileStream.isOpen())
-		_fileStream.write(reinterpret_cast<const Uint8*>(_mainBuffer.c_str()), _mainBuffer.length());
+	{
+		_fileStream.write(reinterpret_cast<const Uint8*>(_mainBuffer.c_str()),
+			static_cast<Uint32>(_mainBuffer.length()));
+	}
 
 	_mainBuffer.clear();
 }

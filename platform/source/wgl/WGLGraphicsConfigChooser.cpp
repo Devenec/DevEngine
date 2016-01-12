@@ -152,8 +152,8 @@ ConfigAttributeList GraphicsConfigChooser::getConfigAttributes(const Int32 confi
 	ConfigAttributeList attributes;
 
 	const Int32 result =
-		WGL::getPixelFormatAttribivARB(_deviceContextHandle, configIndex, 0, attributes.size(),
-			CONFIG_ATTRIBUTE_IDS.data(), attributes.data());
+		WGL::getPixelFormatAttribivARB(_deviceContextHandle, configIndex, 0,
+			static_cast<Uint32>(attributes.size()), CONFIG_ATTRIBUTE_IDS.data(), attributes.data());
 
 	if(result == 0)
 	{

@@ -34,11 +34,11 @@ using namespace Graphics;
 
 static const Char8* COMPONENT_TAG = "[Graphics::PNGReader] ";
 
-static Void* allocateMemory(png_struct* pngStructure, Uint32 size);
+static Void* allocateMemory(png_struct* pngStructure, Uint size);
 static void deallocateMemory(png_struct* pngStructure, Void* pointer);
 static void handleError(png_struct* pngStructure, const Char8* message);
 static void handleWarning(png_struct* pngStructure, const Char8* message);
-static void readData(png_struct* pngStructure, Uint8* buffer, Uint32 size);
+static void readData(png_struct* pngStructure, Uint8* buffer, Uint size);
 
 
 // Public
@@ -85,7 +85,7 @@ ByteData PNGReader::readImage(FileStream& fileStream)
 	const Int32 transforms = PNG_TRANSFORM_EXPAND | PNG_TRANSFORM_PACKING | PNG_TRANSFORM_SCALE_16;
 	png_read_png(_pngStructure, _pngInfo, transforms, nullptr);
 	const Uint32 height = png_get_image_height(_pngStructure, _pngInfo);
-	const Uint32 rowByteCount = png_get_rowbytes(_pngStructure, _pngInfo);
+	const Uint rowByteCount = png_get_rowbytes(_pngStructure, _pngInfo);
 	ByteData data(height * rowByteCount);
 	data.shrink_to_fit();
 	Uint8** rows = png_get_rows(_pngStructure, _pngInfo);
@@ -146,7 +146,7 @@ void PNGReader::validateSignature(FileStream& fileStream)
 
 // External
 
-static Void* allocateMemory(png_struct* pngStructure, Uint32 size)
+static Void* allocateMemory(png_struct* pngStructure, Uint size)
 {
 	static_cast<Void>(pngStructure);
 	return DE_ALLOCATE(size);
@@ -172,7 +172,7 @@ static void handleWarning(png_struct* pngStructure, const Char8* message)
 	defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "PNG warning: " << message << '.' << Log::Flush();
 }
 
-static void readData(png_struct* pngStructure, Uint8* buffer, Uint32 size)
+static void readData(png_struct* pngStructure, Uint8* buffer, Uint size)
 {
 	FileStream* fileStream = static_cast<FileStream*>(png_get_io_ptr(pngStructure));
 
@@ -184,6 +184,7 @@ static void readData(png_struct* pngStructure, Uint8* buffer, Uint32 size)
 		DE_ERROR(0x0);
 	}
 
+	// TODO: make FileStream handle 64-bit sizes?
 	const Uint32 bytesRead = fileStream->read(buffer, size);
 
 	if(bytesRead < size)

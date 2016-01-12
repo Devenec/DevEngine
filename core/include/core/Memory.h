@@ -63,10 +63,10 @@
 
 namespace Core
 {
-	Void* allocateMemory(const Uint32 size, const Char8* file = nullptr, const Uint32 line = 0u,
+	Void* allocateMemory(const Uint size, const Char8* file = nullptr, const Uint32 line = 0u,
 		const Char8* function = nullptr);
 
-	void deallocateMemory(Void* pointer, const Uint32 size = 0u);
+	void deallocateMemory(Void* pointer, const Uint size = 0u);
 
 	template<typename T>
 	T* constructArray(T* pointer, const Uint32 size);

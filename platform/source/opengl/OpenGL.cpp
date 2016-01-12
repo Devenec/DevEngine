@@ -1594,15 +1594,15 @@ static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 
 static void initialiseMajorVersion(const String8& versionString)
 {
-	const Uint32 delimiterPosition = versionString.find('.');
+	const Uint delimiterPosition = versionString.find('.');
 	::versionMajor = std::strtol(versionString.substr(0u, delimiterPosition).c_str(), nullptr, 10);
 }
 
 static void initialiseMinorVersion(const String8& versionString)
 {
-	const Uint32 minorPosition = versionString.find('.') + 1u;
-	const Uint32 secondDelimiterPosition = versionString.find('.', minorPosition);
-	Uint32 versionEndPosition = versionString.find(' ', minorPosition);
+	const Uint minorPosition = versionString.find('.') + 1u;
+	const Uint secondDelimiterPosition = versionString.find('.', minorPosition);
+	Uint versionEndPosition = versionString.find(' ', minorPosition);
 
 	if(secondDelimiterPosition < versionEndPosition)
 		versionEndPosition = secondDelimiterPosition;
