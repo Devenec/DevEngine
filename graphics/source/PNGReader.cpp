@@ -184,10 +184,10 @@ static void readData(png_struct* pngStructure, Uint8* buffer, Uint size)
 		DE_ERROR(0x0);
 	}
 
-	// TODO: make FileStream handle 64-bit sizes?
-	const Uint32 bytesRead = fileStream->read(buffer, size);
+	const Uint32 bytesToRead = static_cast<Uint32>(size);
+	const Uint32 bytesRead = fileStream->read(buffer, bytesToRead);
 
-	if(bytesRead < size)
+	if(bytesRead < bytesToRead)
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to read the specified number of bytes." <<
 			Log::Flush();
