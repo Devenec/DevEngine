@@ -45,20 +45,6 @@
     <PlatformToolset>v140</PlatformToolset>
     <UseDebugLibraries>true</UseDebugLibraries>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
-    <CharacterSet>Unicode</CharacterSet>
-    <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='release|x64'">
-    <CharacterSet>Unicode</CharacterSet>
-    <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='production|Win32'">
     <CharacterSet>Unicode</CharacterSet>
     <ConfigurationType>Application</ConfigurationType>
@@ -73,33 +59,52 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <CharacterSet>Unicode</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
+    <Import Project="..\..\config\properties\common.props" />
     <Import Project="..\..\config\properties\x86-debug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <Import Project="..\..\config\properties\common.props" />
     <Import Project="..\..\config\properties\x64-debug.props" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
-    <Import Project="..\..\config\properties\x86-release.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|x64'">
-    <Import Project="..\..\config\properties\x86-release.props" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='production|Win32'">
+    <Import Project="..\..\config\properties\common.props" />
     <Import Project="..\..\config\properties\x86-production.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='production|x64'">
-    <Import Project="..\..\config\properties\x86-production.props" />
+    <Import Project="..\..\config\properties\common.props" />
+    <Import Project="..\..\config\properties\x64-production.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
+    <Import Project="..\..\config\properties\common.props" />
+    <Import Project="..\..\config\properties\x86-release.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <Import Project="..\..\config\properties\common.props" />
+    <Import Project="..\..\config\properties\x64-release.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader />
     </ClCompile>
     <Link>
       <AdditionalDependencies>DbgHelp.lib;content.lib;core.lib;graphics.lib;libpng.lib;OpenGL32.lib;platform.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -108,25 +113,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader />
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>DbgHelp.lib;content.lib;core.lib;graphics.lib;libpng.lib;OpenGL32.lib;platform.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader />
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>DbgHelp.lib;content.lib;core.lib;graphics.lib;libpng.lib;OpenGL32.lib;platform.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader />
     </ClCompile>
     <Link>
       <AdditionalDependencies>DbgHelp.lib;content.lib;core.lib;graphics.lib;libpng.lib;OpenGL32.lib;platform.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -135,7 +121,6 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='production|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader />
     </ClCompile>
     <Link>
       <AdditionalDependencies>DbgHelp.lib;content.lib;core.lib;graphics.lib;libpng.lib;OpenGL32.lib;platform.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -144,7 +129,22 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='production|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader />
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>DbgHelp.lib;content.lib;core.lib;graphics.lib;libpng.lib;OpenGL32.lib;platform.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>DbgHelp.lib;content.lib;core.lib;graphics.lib;libpng.lib;OpenGL32.lib;platform.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\content\include\;$(SolutionDir)..\core\include\;$(SolutionDir)..\graphics\include\;$(SolutionDir)..\platform\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>DbgHelp.lib;content.lib;core.lib;graphics.lib;libpng.lib;OpenGL32.lib;platform.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
