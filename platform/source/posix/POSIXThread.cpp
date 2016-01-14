@@ -1,5 +1,5 @@
 /**
- * @file platform/posix/POSIXThread.h
+ * @file platform/posix/POSIXThread.cpp
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,118 +18,100 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <pthread.h>
 #include <core/Log.h>
 #include <core/Memory.h>
-#include <core/Thread.h>
 #include <platform/posix/POSIX.h>
+#include <platform/posix/POSIXThread.h>
 
 using namespace Core;
 using namespace Platform;
 
 // External
 
-struct ThreadParameter
-{
-	Thread::ThreadEntryFunction entryFunction;
-	Void* userParameter;
-};
-
 static const Char8* COMPONENT_TAG = "[Core::Thread - POSIX] ";
 
 static pthread_attr_t createThreadAttributes(const Bool isJoinable);
 static void destroyThreadAttributes(pthread_attr_t& attributes);
-static Void* threadEntryFunction(Void* parameter);
 
 
 // Implementation
 
-class Thread::Implementation final
+// Public
+
+Thread::Implementation::Implementation()
+	: _id(0u),
+	  _isJoinable(false) { }
+
+void Thread::Implementation::detach()
 {
-public:
+	const Int32 result = pthread_detach(_threadHandle);
 
-	Implementation()
-		: _isJoinable(false) { }
-
-	Implementation(const Implementation& implementation) = delete;
-	Implementation(Implementation&& implementation) = delete;
-
-	~Implementation() = default;
-
-	void detach()
+	if(result != POSIX_RESULT_OK)
 	{
-		const Int32 result = pthread_detach(_threadHandle);
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to detach the thread." <<
+			Log::Flush();
 
-		if(result != POSIX_RESULT_OK)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to detach the thread." <<
-				Log::Flush();
-
-			DE_ERROR_POSIX_CODE(0x0, result);
-		}
-
-		_isJoinable = false;
+		DE_ERROR_POSIX_CODE(0x0, result);
 	}
 
-	Uint32 id() const
+	_isJoinable = false;
+}
+
+Int32 Thread::Implementation::join() const
+{
+	Void* exitValue;
+	const Int32 result = pthread_join(_threadHandle, &exitValue);
+
+	if(result != POSIX_RESULT_OK)
 	{
-		// TODO: get proper ID
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to join the thread." << Log::Flush();
+		DE_ERROR_POSIX_CODE(0x0, result);
 	}
 
-	Bool isJoinable() const
+	return reinterpret_cast<Int32>(exitValue);
+}
+
+void Thread::Implementation::run(ThreadEntryFunction entryFunction, Void* parameter, const Bool isJoinable)
+{
+	pthread_attr_t attributes = ::createThreadAttributes(isJoinable);
+	ThreadParameter* entryParameter = DE_NEW(ThreadParameter);
+	entryParameter->entryFunction = entryFunction;
+	entryParameter->userParameter = parameter;
+	entryParameter->thread = this;
+
+	const Int32 result = pthread_create(&_threadHandle, &attributes, Implementation::entryFunction,
+		entryParameter);
+
+	if(result != POSIX_RESULT_OK)
 	{
-		return _isJoinable;
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the thread." <<
+			Log::Flush();
+
+		DE_ERROR_POSIX_CODE(0x0, result);
 	}
 
-	Int32 join() const
-	{
-		Void* exitValue;
-		const Int32 result = pthread_join(_threadHandle, &exitValue);
+	_isJoinable = isJoinable;
+	::destroyThreadAttributes(attributes);
+}
 
-		if(result != POSIX_RESULT_OK)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to join the thread." << Log::Flush();
-			DE_ERROR_POSIX_CODE(0x0, result);
-		}
+// Static
 
-		return reinterpret_cast<Int32>(exitValue);
-	}
+// Thread::Implementation::currentID() is implemented in platform/source/linux/LinuxThread.cpp
 
-	void run(ThreadEntryFunction entryFunction, Void* parameter, const Bool isJoinable)
-	{
-		pthread_attr_t attributes = ::createThreadAttributes(isJoinable);
-		ThreadParameter* threadParameter = DE_NEW(ThreadParameter);
-		threadParameter->entryFunction = entryFunction;
-		threadParameter->userParameter = parameter;
+// Private
 
-		const Int32 result = pthread_create(&_threadHandle, &attributes, threadEntryFunction,
-			threadParameter);
+// Static
 
-		if(result != POSIX_RESULT_OK)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the thread." <<
-				Log::Flush();
+Void* Thread::Implementation::entryFunction(Void* parameter)
+{
+	ThreadParameter* entryParameterPointer = static_cast<ThreadParameter*>(parameter);
+	ThreadParameter entryParameter = *entryParameterPointer;
+	DE_DELETE(entryParameterPointer, ThreadParameter);
+	entryParameter.thread->_id = currentID();
+	const Int32 exitValue = entryParameter.entryFunction(entryParameter.userParameter);
 
-			DE_ERROR_POSIX_CODE(0x0, result);
-		}
-
-		_isJoinable = isJoinable;
-		::destroyThreadAttributes(attributes);
-	}
-
-	Implementation& operator =(const Implementation& implementation) = delete;
-	Implementation& operator =(Implementation&& implementation) = delete;
-
-	static Uint32 currentID()
-	{
-		// TODO: get proper ID
-	}
-
-private:
-
-	pthread_t _threadHandle;
-	Bool _isJoinable;
-};
+	return reinterpret_cast<Void*>(exitValue);
+}
 
 
 // Core::Thread
@@ -217,14 +199,4 @@ static void destroyThreadAttributes(pthread_attr_t& attributes)
 
 		DE_ERROR_POSIX_CODE(0x0, result);
 	}
-}
-
-static Void* threadEntryFunction(Void* parameter)
-{
-	ThreadParameter* threadParameter = static_cast<ThreadParameter*>(parameter);
-	ThreadParameter threadParameterCopy = *threadParameter;
-	DE_DELETE(threadParameter, ThreadParameter);
-	const Int32 exitValue = threadParameterCopy.entryFunction(threadParameterCopy.userParameter);
-
-	return reinterpret_cast<Void*>(exitValue);
 }

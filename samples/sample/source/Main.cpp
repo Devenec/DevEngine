@@ -170,7 +170,7 @@ private:
 
 			worldTransform =
 				Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
-			
+
 			Float32* data =
 				reinterpret_cast<Float32*>(_uniformBuffer->mapData(sizeof(Matrix4), sizeof(Matrix4)));
 

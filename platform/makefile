@@ -23,6 +23,7 @@ INCLUDE_DIRECTORIES = \
 SOURCE_DIRECTORIES = \
 	source \
 	source/glx \
+	source/linux \
 	source/null \
 	source/opengl \
 	source/posix \
@@ -36,6 +37,7 @@ SOURCE_FILES = \
 	glx/GLXGraphicsConfigChooser.cpp \
 	glx/GLXGraphicsContext.cpp \
 	glx/GLXGraphicsFunctionUtility.cpp \
+	linux/LinuxThread.cpp \
 	null/NullLogManager.cpp \
 	opengl/OpenGL.cpp \
 	opengl/OpenGLEffect.cpp \
