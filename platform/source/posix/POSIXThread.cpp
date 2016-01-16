@@ -68,7 +68,7 @@ Int32 Thread::Implementation::join() const
 		DE_ERROR_POSIX_CODE(0x0, result);
 	}
 
-	return reinterpret_cast<Int32>(exitValue);
+	return static_cast<Int32>(reinterpret_cast<Int>(exitValue));
 }
 
 void Thread::Implementation::run(ThreadEntryFunction entryFunction, Void* parameter, const Bool isJoinable)

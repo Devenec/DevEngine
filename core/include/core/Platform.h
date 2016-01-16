@@ -23,6 +23,7 @@
 // Supported processor architectures
 
 #define DE_ARCHITECTURE_X86 1
+#define DE_ARCHITECTURE_X64 2
 
 
 // Supported build configurations

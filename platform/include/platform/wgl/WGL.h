@@ -59,7 +59,7 @@ namespace Platform
 
 		// Standard
 
-		using Function = Int32 (DE_CALL_WGL*)();
+		using Function = Int (DE_CALL_WGL*)();
 
 		using CreateContext = HGLRC (DE_CALL_WGL*)(HDC hdc);
 		using DeleteContext = Int32 (DE_CALL_WGL*)(HGLRC hglrc);

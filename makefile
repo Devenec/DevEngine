@@ -6,7 +6,7 @@
 
 export C_COMPILER			  = clang
 export C++_COMPILER			  = clang++
-export TARGET_ARCHITECTURE	  = x86
+export TARGET_ARCHITECTURE	  = x64
 export TARGET_CONFIGURATION	  = debug
 export TARGET_PLATFORM		  = linux
 

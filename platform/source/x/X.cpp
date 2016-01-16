@@ -357,8 +357,9 @@ void X::setWindowProperty(const ::Window windowHandle, const Char8* propertyName
 void X::setWindowTitle(const ::Window windowHandle, const String8& title) const
 {
 	const Uint8* titleData = reinterpret_cast<const Uint8*>(title.c_str());
-	setWindowProperty(windowHandle, "_NET_WM_NAME", "UTF8_STRING", titleData, 8u, title.length() + 1u);
-	setWindowProperty(windowHandle, "WM_NAME", "UTF8_STRING", titleData, 8u, title.length() + 1u);
+	const Uint32 titleLength = static_cast<Uint32>(title.length()) + 1u;
+	setWindowProperty(windowHandle, "_NET_WM_NAME", "UTF8_STRING", titleData, 8u, titleLength);
+	setWindowProperty(windowHandle, "WM_NAME", "UTF8_STRING", titleData, 8u, titleLength);
 }
 
 void X::setWindowUserData(const ::Window windowHandle, Void* data) const

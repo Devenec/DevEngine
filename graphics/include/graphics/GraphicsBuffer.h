@@ -45,7 +45,7 @@ namespace Graphics
 
 		void demapData() const;
 
-		Uint8* mapData(const Uint32 size, const Uint32 offset = 0u) const;
+		Uint8* mapData(const Uint size, const Uint offset = 0u) const;
 
 		GraphicsBuffer& operator =(const GraphicsBuffer& graphicsBuffer) = delete;
 		GraphicsBuffer& operator =(GraphicsBuffer&& graphicsBuffer) = delete;
@@ -57,7 +57,7 @@ namespace Graphics
 		Implementation* _implementation;
 
 		GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
-			const Uint32 size, const AccessMode& accessMode);
+			const Uint size, const AccessMode& accessMode);
 
 		virtual ~GraphicsBuffer();
 

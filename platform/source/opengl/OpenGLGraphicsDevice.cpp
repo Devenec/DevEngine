@@ -68,8 +68,8 @@ public:
 		DE_CHECK_ERROR_OPENGL(_openGL);
 	}
 
-	GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size,
-		const AccessMode& accessMode) const
+	GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint size, const AccessMode& accessMode)
+		const
 	{
 		return DE_NEW(GraphicsBuffer)(_openGL, binding, size, accessMode);
 	}
@@ -79,8 +79,8 @@ public:
 		return DE_NEW(Effect)(_openGL);
 	}
 
-	IndexBuffer* createIndexBuffer(const Uint32 size, const IndexType& indexType,
-		const AccessMode& accessMode) const
+	IndexBuffer* createIndexBuffer(const Uint size, const IndexType& indexType, const AccessMode& accessMode)
+		const
 	{
 		return DE_NEW(IndexBuffer)(_openGL, size, indexType, accessMode);
 	}
@@ -110,7 +110,7 @@ public:
 		IndexBuffer* indexBuffer = _activeVertexBufferState->indexBuffer();
 		DE_ASSERT(indexBuffer != nullptr);
 		const Uint32 indexTypeId = static_cast<Uint32>(indexBuffer->indexType());
-		const Uint32 byteOffset = indexOffset * ((indexTypeId & 0x03) + 1u);
+		const Uint byteOffset = indexOffset * ((indexTypeId & 0x03) + 1u);
 
 		_openGL->drawElements(static_cast<Uint32>(primitiveType), indexCount, indexTypeId >> 2,
 			reinterpret_cast<Void*>(byteOffset));
@@ -199,7 +199,7 @@ void GraphicsDevice::clear(const Colour& colour) const
 	_implementation->clear(colour);
 }
 
-GraphicsBuffer* GraphicsDevice::createBuffer(const BufferBinding& binding, const Uint32 size,
+GraphicsBuffer* GraphicsDevice::createBuffer(const BufferBinding& binding, const Uint size,
 	const AccessMode& accessMode)
 {
 	GraphicsBuffer* buffer = _implementation->createBuffer(binding, size, accessMode);
@@ -216,7 +216,7 @@ Effect* GraphicsDevice::createEffect()
 	return effect;
 }
 
-IndexBuffer* GraphicsDevice::createIndexBuffer(const Uint32 size, const IndexType& indexType,
+IndexBuffer* GraphicsDevice::createIndexBuffer(const Uint size, const IndexType& indexType,
 	const AccessMode& accessMode)
 {
 	IndexBuffer* indexBuffer = _implementation->createIndexBuffer(size, indexType, accessMode);

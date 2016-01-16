@@ -46,11 +46,11 @@ namespace Debug
 
 		void deinitialise();
 
-		void deregisterAllocation(Void* pointer, const Uint32 size);
+		void deregisterAllocation(Void* pointer, const Uint size);
 
 		void initialise();
 
-		void registerAllocation(Void* pointer, const Uint32 size, const Char8* file, const Uint32 line,
+		void registerAllocation(Void* pointer, const Uint size, const Char8* file, const Uint32 line,
 			const Char8* function);
 
 		AllocationTracker& operator =(const AllocationTracker& allocationTracker) = delete;
@@ -63,14 +63,14 @@ namespace Debug
 			const Char8* file;
 			const Char8* function;
 
+			Uint size;
 			Uint32 line;
-			Uint32 size;
 
-			AllocationRecord(const Uint32 size, const Char8* file, const Uint32 line, const Char8* function)
+			AllocationRecord(const Uint size, const Char8* file, const Uint32 line, const Char8* function)
 				: file(file),
 				  function(function),
-				  line(line),
-				  size(size) { }
+				  size(size),
+				  line(line) { }
 		};
 
 		using AllocationRecordMap =

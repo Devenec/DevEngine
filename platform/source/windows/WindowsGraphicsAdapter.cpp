@@ -62,7 +62,7 @@ void GraphicsAdapter::Implementation::setDisplayMode(const DisplayMode& mode)
 	DE_ASSERT(iterator != _supportedDisplayModes.end());
 	DEVMODEW displayModeInfo = ::createDisplayModeInfo(mode);
 	changeDisplayMode(&displayModeInfo, CDS_FULLSCREEN);
-	_currentDisplayModeIndex = iterator - _supportedDisplayModes.begin();
+	_currentDisplayModeIndex = static_cast<Uint32>(iterator - _supportedDisplayModes.begin());
 }
 
 // Private

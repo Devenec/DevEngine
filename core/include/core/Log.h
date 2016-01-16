@@ -76,7 +76,7 @@ namespace Core
 		Log& operator <<(const Float64 floatingPoint);
 
 		Log& operator <<(const Char8 character);
-		
+
 		inline Log& operator <<(const Char8* characters);
 
 		Log& operator <<(const Void* pointer);

@@ -89,8 +89,8 @@ ExtensionNameList WGL::getExtensionNames(const GraphicsContextBase& graphicsCont
 
 	if(extensionNamesString.length() != 0u)
 	{
-		Uint32 currentPosition = 0u;
-		Uint32 spacePosition;
+		Uint currentPosition = 0u;
+		Uint spacePosition;
 
 		while((spacePosition = extensionNamesString.find(' ', currentPosition)) != String8::npos)
 		{

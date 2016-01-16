@@ -40,9 +40,9 @@ namespace Memory
 
 	protected:
 
-		static void deregisterAllocation(Void* pointer, const Uint32 size = 0u);
+		static void deregisterAllocation(Void* pointer, const Uint size = 0u);
 
-		static void registerAllocation(Void* pointer, const Uint32 size, const Char8* file = nullptr,
+		static void registerAllocation(Void* pointer, const Uint size, const Char8* file = nullptr,
 			const Uint32 line = 0u, const Char8* function = nullptr);
 	};
 }

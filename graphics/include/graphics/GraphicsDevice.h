@@ -56,12 +56,12 @@ namespace Graphics
 
 		void clear(const Colour& colour) const;
 
-		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint32 size,
+		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint size,
 			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		Effect* createEffect();
 
-		IndexBuffer* createIndexBuffer(const Uint32 size, const IndexType& indexType,
+		IndexBuffer* createIndexBuffer(const Uint size, const IndexType& indexType,
 			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
 
 		Shader* createShader(const ShaderType& type, const Core::String8& source);

@@ -32,7 +32,7 @@ namespace Core
 
 		using FlushFunction = void (*)(const Char8* message);
 
-		static const Uint32 NON_POSITION;
+		static const Uint NON_POSITION;
 
 		explicit LogBuffer(FlushFunction flushFunction);
 
@@ -43,7 +43,7 @@ namespace Core
 
 		void appendCharacter(const Char8 character);
 
-		void appendCharacters(const Char8* characters, Uint32 characterCount);
+		void appendCharacters(const Char8* characters, Uint characterCount);
 
 		inline void appendLineBreak();
 
@@ -61,7 +61,7 @@ namespace Core
 
 		void openFileStream() const;
 		inline void appendLineBreakAndIndent();
-		Uint32 appendToLineBuffer(const Char8* characters, const Char8* charactersEnd);
+		Uint appendToLineBuffer(const Char8* characters, const Char8* charactersEnd);
 		void appendLineBuffer();
 		void flushMainBuffer();
 	};

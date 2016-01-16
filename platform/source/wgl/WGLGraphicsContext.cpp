@@ -55,7 +55,8 @@ public:
 	Implementation(WindowHandle windowHandle, ConfigHandle configHandle)
 		: Base(static_cast<HWND>(windowHandle))
 	{
-		setConfig(reinterpret_cast<Int32>(configHandle));
+		const Int32 configIndex = static_cast<Int32>(reinterpret_cast<Int>(configHandle));
+		setConfig(configIndex);
 		initialise();
 	}
 

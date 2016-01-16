@@ -121,7 +121,7 @@ private:
 	static void setWindowUserData(HWND windowHandle, Window* window)
 	{
 		SetLastError(0u);
-		const Int32 result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<long>(window));
+		const Int result = SetWindowLongPtrW(windowHandle, GWLP_USERDATA, reinterpret_cast<Int>(window));
 
 		if(result == 0 && GetLastError() != 0u)
 		{
@@ -148,7 +148,7 @@ private:
 	static Window* getWindow(HWND windowHandle)
 	{
 		SetLastError(0u);
-		const Int32 userData = GetWindowLongPtrW(windowHandle, GWLP_USERDATA);
+		const Int userData = GetWindowLongPtrW(windowHandle, GWLP_USERDATA);
 
 		if(userData == 0 && GetLastError() != 0u)
 		{

@@ -18,14 +18,6 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Public
-
-void FileStream::seek(const Int64& position) const
-{
-	seek(SeekPosition::Begin, position);
-}
-
-
 // Core
 
 OpenMode operator &(OpenMode openModeA, const OpenMode& openModeB)

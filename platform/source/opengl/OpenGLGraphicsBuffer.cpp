@@ -39,12 +39,12 @@ static const Char8* COMPONENT_TAG = "[Graphics::GraphicsBuffer - OpenGL] ";
 // Public
 
 GraphicsBuffer::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle,
-	const BufferBinding& binding, const Uint32 size, const AccessMode& accessMode)
+	const BufferBinding& binding, const Uint size, const AccessMode& accessMode)
 	: _openGL(static_cast<OpenGL*>(graphicsInterfaceHandle)),
+	  _size(size),
 	  _binding(static_cast<Uint32>(binding)),
 	  _bufferHandle(0u),
-	  _flags(0u),
-	  _size(size)
+	  _flags(0u)
 {
 	initialiseAccessMode(accessMode);
 	createBuffer();
@@ -87,7 +87,7 @@ void GraphicsBuffer::Implementation::demapData() const
 	// TODO: restore old binding?
 }
 
-Uint8* GraphicsBuffer::Implementation::mapData(const Uint32 size, const Uint32 bufferOffset) const
+Uint8* GraphicsBuffer::Implementation::mapData(const Uint size, const Uint bufferOffset) const
 {
 	bind();
 	Void* data = _openGL->mapBufferRange(_binding, bufferOffset, size, _flags);
@@ -164,7 +164,7 @@ void GraphicsBuffer::demapData() const
 	_implementation->demapData();
 }
 
-Uint8* GraphicsBuffer::mapData(const Uint32 size, const Uint32 bufferOffset) const
+Uint8* GraphicsBuffer::mapData(const Uint size, const Uint bufferOffset) const
 {
 	return _implementation->mapData(size, bufferOffset);
 }
@@ -172,7 +172,7 @@ Uint8* GraphicsBuffer::mapData(const Uint32 size, const Uint32 bufferOffset) con
 // Protected
 
 GraphicsBuffer::GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
-	const Uint32 size, const AccessMode& accessMode)
+	const Uint size, const AccessMode& accessMode)
 	: _implementation(DE_NEW(Implementation)(graphicsInterfaceHandle, binding, size, accessMode)) { }
 
 GraphicsBuffer::~GraphicsBuffer()

@@ -125,7 +125,7 @@ private:
 	::Window createWindow(const Uint32 width, const Uint32 height)
 	{
 		XVisualInfo* visualInfo = _x.getGraphicsConfigVisualInfo(_graphicsConfigHandle);
-		Int32 windowAttributeMask = 0;
+		Uint32 windowAttributeMask = 0u;
 		XSetWindowAttributes windowAttributes = createWindowAttributes(windowAttributeMask);
 
 		const ::Window windowHandle =
@@ -152,7 +152,7 @@ private:
 		return static_cast<Graphics::Window*>(_x.getWindowUserData(windowHandle));
 	}
 
-	XSetWindowAttributes createWindowAttributes(Int32& attributeMask) const
+	XSetWindowAttributes createWindowAttributes(Uint32& attributeMask) const
 	{
 		XSetWindowAttributes attributes;
 		attributes.border_pixel = 0u;

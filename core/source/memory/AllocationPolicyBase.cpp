@@ -31,7 +31,7 @@ using namespace Memory;
 
 // Static
 
-void AllocationPolicyBase::deregisterAllocation(Void* pointer, const Uint32 size)
+void AllocationPolicyBase::deregisterAllocation(Void* pointer, const Uint size)
 {
 
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
@@ -48,7 +48,7 @@ void AllocationPolicyBase::deregisterAllocation(Void* pointer, const Uint32 size
 
 }
 
-void AllocationPolicyBase::registerAllocation(Void* pointer, const Uint32 size, const Char8* file,
+void AllocationPolicyBase::registerAllocation(Void* pointer, const Uint size, const Char8* file,
 	const Uint32 line, const Char8* function)
 {
 

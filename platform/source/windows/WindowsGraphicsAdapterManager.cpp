@@ -189,5 +189,5 @@ static Uint32 getCurrentDisplayModeIndex(const Char16* adapterName, DEVMODEW& mo
 	const DisplayMode displayMode = ::getDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);
 	DisplayModeList::const_iterator iterator = std::find(modes.begin(), modes.end(), displayMode);
 
-	return iterator - modes.begin();
+	return static_cast<Uint32>(iterator - modes.begin());
 }

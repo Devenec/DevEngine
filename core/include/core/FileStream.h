@@ -69,6 +69,9 @@ namespace Core
 
 	/**
 	 * A readable and/or writable file stream
+	 *
+	 * The maximum supported file size is Core::numeric<Uint32>::maximum(), but
+	 * some platforms may limit the size below that.
 	 */
 	class FileStream final
 	{
@@ -126,7 +129,7 @@ namespace Core
 		 * Gets the position of the file pointer, relative to the beginning of
 		 * the file.
 		 */
-		Int64 position() const;
+		Uint32 position() const;
 
 		/**
 		 * Reads the file.
@@ -146,12 +149,13 @@ namespace Core
 		/**
 		 * Sets the position of the file pointer.
 		 *
-		 * Calls seek(SeekPosition::Begin, position), see its declaration.
+		 * Positioning the file pointer outside the file boundaries (except one
+		 * byte past the end of the file) is undefined behaviour.
 		 *
 		 * @param position
 		 *   The new position, relative to the beginning of the file
 		 */
-		inline void seek(const Int64& position) const;
+		void seek(const Uint32 position) const;
 
 		/**
 		 * Sets the position of the file pointer.
@@ -164,12 +168,12 @@ namespace Core
 		 * @param offset
 		 *   The new position, relative to 'position'
 		 */
-		void seek(const SeekPosition& position, const Int64& offset) const;
+		void seek(const SeekPosition& position, const Int32 offset) const;
 
 		/**
 		 * Gets the size of the file.
 		 */
-		Int64 size() const;
+		Uint32 size() const;
 
 		/**
 		 * Writes to the file.

@@ -112,11 +112,11 @@ public:
 		_openMode = openMode;
 	}
 
-	Int64 position() const
+	Uint32 position() const
 	{
 		DE_ASSERT(isOpen());
-		const LARGE_INTEGER offset = ::createLargeInteger();
-		LARGE_INTEGER position;
+		const LARGE_INTEGER offset = LARGE_INTEGER();
+		LARGE_INTEGER position = LARGE_INTEGER();
 		const Int32 result = SetFilePointerEx(_fileHandle, offset, &position, FILE_CURRENT);
 
 		if(result == 0)
@@ -127,7 +127,7 @@ public:
 			DE_ERROR_WINDOWS(0x0);
 		}
 
-		return position.QuadPart;
+		return static_cast<Uint32>(position.QuadPart);
 	}
 
 	Uint32 read(Uint8* buffer, const Uint32 size) const
@@ -147,23 +147,22 @@ public:
 		return bytesRead;
 	}
 
-	void seek(const SeekPosition& position, const Int64& offset) const
+	void seek(const Uint32 position) const
 	{
-		DE_ASSERT(isOpen());
-		const LARGE_INTEGER seekOffset = ::createLargeInteger(offset);
-		const Int32 result = SetFilePointerEx(_fileHandle, seekOffset, nullptr, static_cast<Int32>(position));
-
-		if(result == 0)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to seek the file." << Log::Flush();
-			DE_ERROR_WINDOWS(0x0);
-		}
+		const LARGE_INTEGER seekOffset = ::createLargeInteger(position);
+		seek(SeekPosition::Begin, seekOffset);
 	}
 
-	Int64 size() const
+	void seek(const SeekPosition& position, const Int32 offset) const
+	{
+		const LARGE_INTEGER seekOffset = ::createLargeInteger(offset);
+		seek(position, seekOffset);
+	}
+
+	Uint32 size() const
 	{
 		DE_ASSERT(isOpen());
-		LARGE_INTEGER size;
+		LARGE_INTEGER size = LARGE_INTEGER();
 		const Int32 result = GetFileSizeEx(_fileHandle, &size);
 
 		if(result == 0)
@@ -174,7 +173,7 @@ public:
 			DE_ERROR_WINDOWS(0x0);
 		}
 
-		return size.QuadPart;
+		return static_cast<Uint32>(size.QuadPart);
 	}
 
 	Uint32 write(const Uint8* data, const Uint32 size) const
@@ -213,6 +212,18 @@ private:
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to flush the file buffer." <<
 				Log::Flush();
 
+			DE_ERROR_WINDOWS(0x0);
+		}
+	}
+
+	void seek(const SeekPosition& position, const LARGE_INTEGER& offset) const
+	{
+		DE_ASSERT(isOpen());
+		const Int32 result = SetFilePointerEx(_fileHandle, offset, nullptr, static_cast<Int32>(position));
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to seek the file." << Log::Flush();
 			DE_ERROR_WINDOWS(0x0);
 		}
 	}
@@ -257,7 +268,7 @@ void FileStream::open(const String8& filepath, const OpenMode& openMode) const
 	_implementation->open(filepath, openMode);
 }
 
-Int64 FileStream::position() const
+Uint32 FileStream::position() const
 {
 	return _implementation->position();
 }
@@ -267,12 +278,17 @@ Uint32 FileStream::read(Uint8* buffer, const Uint32 size) const
 	return _implementation->read(buffer, size);
 }
 
-void FileStream::seek(const SeekPosition& position, const Int64& offset) const
+void FileStream::seek(const Uint32 position) const
+{
+	_implementation->seek(position);
+}
+
+void FileStream::seek(const SeekPosition& position, const Int32 offset) const
 {
 	_implementation->seek(position, offset);
 }
 
-Int64 FileStream::size() const
+Uint32 FileStream::size() const
 {
 	return _implementation->size();
 }

@@ -49,7 +49,7 @@ namespace Graphics
 		void setIndexBuffer(IndexBuffer* buffer) const;
 
 		void setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements,
-			const Uint32 stride, const Uint32 offset = 0u) const;
+			const Uint32 stride, const Uint offset = 0u) const;
 
 		VertexBufferState& operator =(const VertexBufferState& vertexBufferState) = delete;
 		VertexBufferState& operator =(VertexBufferState&& vertexBufferState) = delete;

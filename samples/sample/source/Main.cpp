@@ -213,7 +213,7 @@ private:
 		colour = 0x000FFFFF;
 		VERTEX_DATA[15] = *reinterpret_cast<Float32*>(&colour);
 
-		const Uint32 bufferSize = sizeof(Float32) * VERTEX_DATA.size();
+		const Uint bufferSize = sizeof(Float32) * VERTEX_DATA.size();
 		_vertexBuffer = _graphicsDevice->createBuffer(BufferBinding::Vertex, bufferSize);
 		Float32* data = reinterpret_cast<Float32*>(_vertexBuffer->mapData(bufferSize));
 		std::copy(VERTEX_DATA.begin(), VERTEX_DATA.end(), data);
@@ -228,7 +228,7 @@ private:
 			 3u, 2u, 1u,
 		};
 
-		const Uint32 bufferSize = sizeof(Uint8) * INDEX_DATA.size();
+		const Uint bufferSize = sizeof(Uint8) * INDEX_DATA.size();
 		_indexBuffer = _graphicsDevice->createIndexBuffer(bufferSize, IndexType::Uint8);
 		Uint8* data = _vertexBuffer->mapData(bufferSize);
 		std::copy(INDEX_DATA.begin(), INDEX_DATA.end(), data);

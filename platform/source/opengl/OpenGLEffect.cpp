@@ -124,9 +124,9 @@ private:
 
 	void detachShaders() const
 	{
-		const Uint32 shaderCount = getParameter(OpenGL::ATTACHED_SHADERS);
+		const Int32 shaderCount = getParameter(OpenGL::ATTACHED_SHADERS);
 
-		if(shaderCount > 0u)
+		if(shaderCount > 0)
 		{
 			Vector<Uint32> shaderHandles(shaderCount);
 			_openGL->getAttachedShaders(_programHandle, shaderCount, nullptr, shaderHandles.data());
@@ -177,9 +177,11 @@ private:
 	CharacterBuffer getInfoLog(const Uint32 logLength) const
 	{
 		CharacterBuffer logBuffer(logLength);
-		_openGL->getProgramInfoLog(_programHandle, logBuffer.size(), nullptr, logBuffer.data());
-		DE_CHECK_ERROR_OPENGL(_openGL);
 
+		_openGL->getProgramInfoLog(_programHandle, static_cast<Int32>(logBuffer.size()), nullptr,
+			logBuffer.data());
+
+		DE_CHECK_ERROR_OPENGL(_openGL);
 		return logBuffer;
 	}
 };
