@@ -61,7 +61,7 @@ namespace Core
 		};
 
 		pthread_t _threadHandle;
-		Uint32 _id; // TODO: change to Uint for Linux x64 compatibility?
+		Uint32 _id;
 		Bool _isJoinable;
 
 		static Void* entryFunction(Void* parameter);

@@ -39,7 +39,6 @@ namespace Core
 
 		void detach() const;
 
-		// TODO: change to Uint for Linux x64 compatibility?
 		Uint32 id() const;
 
 		Bool isJoinable() const;
@@ -51,7 +50,6 @@ namespace Core
 		Thread& operator =(const Thread& thread) = delete;
 		Thread& operator =(Thread&& thread) = delete;
 
-		// TODO: change to Uint for Linux x64 compatibility?
 		static Uint32 currentID();
 
 	private:

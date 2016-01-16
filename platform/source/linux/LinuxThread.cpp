@@ -30,5 +30,5 @@ using namespace Core;
 
 Uint32 Thread::Implementation::currentID()
 {
-	return syscall(SYS_gettid);
+	return static_cast<Uint32>(syscall(SYS_gettid));
 }

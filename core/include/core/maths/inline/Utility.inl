@@ -110,6 +110,11 @@ Uint32 maximum(const Uint32 valueA, const Uint32 valueB)
 	return valueA < valueB ? valueB : valueA;
 }
 
+Uint64 maximum(const Uint64 valueA, const Uint64 valueB)
+{
+	return valueA < valueB ? valueB : valueA;
+}
+
 Float32 maximum(const Float32 valueA, const Float32 valueB)
 {
 	return valueA < valueB ? valueB : valueA;

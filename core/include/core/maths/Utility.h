@@ -65,13 +65,15 @@ namespace Maths
 
 	inline Uint32 maximum(const Uint32 valueA, const Uint32 valueB);
 
+	inline Uint64 maximum(const Uint64 valueA, const Uint64 valueB);
+
 	inline Float32 maximum(const Float32 valueA, const Float32 valueB);
 
 	inline Int32 minimum(const Int32 valueA, const Int32 valueB);
 
 	inline Uint32 minimum(const Uint32 valueA, const Uint32 valueB);
 
-	inline Uint64 minimum(const Uint64 valueA, const Uint64 valueB); // TODO: add maximum counterpart?
+	inline Uint64 minimum(const Uint64 valueA, const Uint64 valueB);
 
 	inline Float32 minimum(const Float32 valueA, const Float32 valueB);
 
