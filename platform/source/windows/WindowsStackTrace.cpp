@@ -112,7 +112,7 @@ private:
 
 		for(Uint32 i = 0u; i < entryCount; ++i)
 		{
-			const Uint64 address = reinterpret_cast<Uint64>(_symbolAddresses[i]);
+			const Uint64 address = reinterpret_cast<Uint>(_symbolAddresses[i]);
 			getSymbolInfo(address);
 			entries[i].filepath = toString8(_sourceInfo.FileName);
 			entries[i].functionName.assign(toString8(String16(_symbolInfo->Name, _symbolInfo->NameLen)));

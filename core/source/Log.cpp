@@ -142,7 +142,7 @@ Log& Log::operator <<(const Void* pointer)
 		Char8 buffer[19];
 
 		const Uint32 characterCount =
-			::toString("0x%X", buffer, sizeof(buffer), reinterpret_cast<Uint64>(pointer));
+			::toString("0x%X", buffer, sizeof(buffer), reinterpret_cast<Uint>(pointer));
 
 		_streamBuffer.appendCharacters(buffer, characterCount);
 	}
@@ -247,10 +247,10 @@ void Log::createUint64Format(Char8* formatBuffer) const
 template<typename... Parameters>
 static Uint32 toString(const Char8* format, Char8* buffer, const Uint32 bufferSize, Parameters... parameters)
 {
-	const Uint32 charactersWritten = std::snprintf(buffer, bufferSize, format, parameters...);
+	const Int32 charactersWritten = std::snprintf(buffer, bufferSize, format, parameters...);
 
-	if(charactersWritten < bufferSize)
-		return charactersWritten;
+	if(charactersWritten < 0)
+		return 0u;
 	else
-		return bufferSize;
+		return charactersWritten;
 }

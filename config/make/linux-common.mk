@@ -29,8 +29,10 @@ endif
 
 # Default compiler settings
 
-C_COMPILER_FLAGS   += $(BUILD_ARCHITECTURE_FLAG) -Wall
-C++_COMPILER_FLAGS += -fno-exceptions $(BUILD_ARCHITECTURE_FLAG) -std=c++11 -stdlib=libc++ -Wall
+C_COMPILER_FLAGS += $(BUILD_ARCHITECTURE_FLAG) -Wall -Wshorten-64-to-32
+
+C++_COMPILER_FLAGS += -fno-exceptions $(BUILD_ARCHITECTURE_FLAG) -std=c++11 -stdlib=libc++ -Wall \
+	-Wshorten-64-to-32
 
 
 # Default archiver settings

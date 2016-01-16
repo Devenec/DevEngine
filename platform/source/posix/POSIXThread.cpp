@@ -92,7 +92,7 @@ public:
 			DE_ERROR_POSIX_CODE(0x0, result);
 		}
 
-		return reinterpret_cast<Int32>(exitValue);
+		return static_cast<Int32>(reinterpret_cast<Int>(exitValue));
 	}
 
 	void run(ThreadEntryFunction entryFunction, Void* parameter, const Bool isJoinable)
@@ -224,7 +224,7 @@ static Void* threadEntryFunction(Void* parameter)
 	ThreadParameter* threadParameter = static_cast<ThreadParameter*>(parameter);
 	ThreadParameter threadParameterCopy = *threadParameter;
 	DE_DELETE(threadParameter, ThreadParameter);
-	const Int32 exitValue = threadParameterCopy.entryFunction(threadParameterCopy.userParameter);
+	const Int exitValue = threadParameterCopy.entryFunction(threadParameterCopy.userParameter);
 
 	return reinterpret_cast<Void*>(exitValue);
 }

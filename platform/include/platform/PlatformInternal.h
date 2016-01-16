@@ -53,6 +53,8 @@
 #if DE_COMPILER == DE_COMPILER_CLANG
 	#if defined(__i386) || defined(__i386__)
 		#define DE_ARCHITECTURE DE_ARCHITECTURE_X86
+	#elif defined(__x86_64) || defined(__x86_64__)
+		#define DE_ARCHITECTURE DE_ARCHITECTURE_X64
 	#else
 		#define DE_ARCHITECTURE 0
 	#endif

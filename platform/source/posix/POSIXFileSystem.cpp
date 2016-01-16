@@ -45,7 +45,7 @@ String8 FileSystem::getDefaultContentRootDirectory()
 {
 	Uint32 pathBufferSize = 256u;
 	Vector<Char8> pathBuffer(pathBufferSize);
-	Int32 bytesStored = 0;
+	ssize_t bytesStored = 0;
 
 	while(true)
 	{
@@ -63,10 +63,10 @@ String8 FileSystem::getDefaultContentRootDirectory()
 			break;
 		}
 
-		pathBufferSize *= 2;
-		pathBuffer.reserve(pathBufferSize);
+		pathBufferSize *= 2u;
+		pathBuffer.resize(pathBufferSize);
 	}
 
-	const String8 path(pathBuffer.data(), pathBuffer.size());
+	const String8 path(pathBuffer.data(), bytesStored);
 	return path.substr(0u, path.rfind('/') + 1u);
 }

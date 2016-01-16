@@ -47,7 +47,9 @@ public:
 
 	Implementation()
 		: _fileHandle(nullptr),
-		  _previousAction(PreviousAction::None) { }
+		  _size(0u),
+		  _previousAction(PreviousAction::None),
+		  _openMode() { }
 
 	Implementation(const Implementation& implementation) = delete;
 	Implementation(Implementation&& implementation) = delete;
@@ -121,10 +123,10 @@ public:
 		calculateSize();
 	}
 
-	Int64 position() const
+	Uint32 position() const
 	{
 		DE_ASSERT(isOpen());
-		const Int64 result = std::ftell(_fileHandle);
+		const Int result = std::ftell(_fileHandle);
 
 		if(result == -1)
 		{
@@ -134,7 +136,7 @@ public:
 			DE_ERROR_POSIX(0x0);
 		}
 
-		return result;
+		return static_cast<Uint32>(result);
 	}
 
 	Uint32 read(Uint8* buffer, const Uint32 size)
@@ -145,7 +147,7 @@ public:
 		if(_previousAction == PreviousAction::Write)
 			seek(SeekPosition::Current, 0);
 
-		const Uint32 bytesRead = std::fread(buffer, 1u, size, _fileHandle);
+		const Uint bytesRead = std::fread(buffer, 1u, size, _fileHandle);
 		const Int32 result = std::ferror(_fileHandle);
 
 		if(result != 0)
@@ -155,10 +157,10 @@ public:
 		}
 
 		_previousAction = PreviousAction::Read;
-		return bytesRead;
+		return static_cast<Uint32>(bytesRead);
 	}
 
-	void seek(const SeekPosition& position, const Int64& offset)
+	void seek(const SeekPosition& position, const Int32 offset)
 	{
 		DE_ASSERT(isOpen());
 		const Int32 origin = ::getSeekOrigin(position);
@@ -173,7 +175,7 @@ public:
 		_previousAction = PreviousAction::None;
 	}
 
-	Int64 size() const
+	Uint32 size() const
 	{
 		DE_ASSERT(isOpen());
 		return _size;
@@ -187,7 +189,7 @@ public:
 		if(_previousAction == PreviousAction::Read)
 			seek(SeekPosition::Current, 0);
 
-		const Uint32 bytesWritten = std::fwrite(data, 1u, size, _fileHandle);
+		const Uint bytesWritten = std::fwrite(data, 1u, size, _fileHandle);
 		const Int32 result = std::ferror(_fileHandle);
 
 		if(result != 0)
@@ -199,7 +201,7 @@ public:
 		}
 
 		_previousAction = PreviousAction::Write;
-		return bytesWritten;
+		return static_cast<Uint32>(bytesWritten);
 	}
 
 	Implementation& operator =(const Implementation& implementation) = delete;
@@ -215,7 +217,7 @@ private:
 	};
 
 	std::FILE* _fileHandle;
-	Int64 _size;
+	Uint32 _size;
 	PreviousAction _previousAction;
 	OpenMode _openMode;
 
@@ -266,7 +268,7 @@ void FileStream::open(const String8& filepath, const OpenMode& openMode) const
 	_implementation->open(filepath, openMode);
 }
 
-Int64 FileStream::position() const
+Uint32 FileStream::position() const
 {
 	return _implementation->position();
 }
@@ -276,12 +278,17 @@ Uint32 FileStream::read(Uint8* buffer, const Uint32 size) const
 	return _implementation->read(buffer, size);
 }
 
-void FileStream::seek(const SeekPosition& position, const Int64& offset) const
+void FileStream::seek(const Uint32 position) const
+{
+	_implementation->seek(SeekPosition::Begin, position);
+}
+
+void FileStream::seek(const SeekPosition& position, const Int32 offset) const
 {
 	_implementation->seek(position, offset);
 }
 
-Int64 FileStream::size() const
+Uint32 FileStream::size() const
 {
 	return _implementation->size();
 }

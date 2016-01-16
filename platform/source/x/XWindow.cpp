@@ -29,7 +29,7 @@ using namespace Platform;
 
 // External
 
-static Vector<Uint32> createIconData(const Image* image);
+static Vector<Uint> createIconData(const Image* image);
 
 
 // Implementation
@@ -70,10 +70,10 @@ void Graphics::Window::Implementation::setIcon(const Image* image)
 	}
 	else
 	{
-		const Vector<Uint32> iconData = ::createIconData(image);
+		const Vector<Uint> iconData = ::createIconData(image);
 
 		X::instance().setWindowProperty(_windowHandle, iconPropertyName, "CARDINAL",
-			reinterpret_cast<const Uint8*>(iconData.data()), 32u, iconData.size());
+			reinterpret_cast<const Uint8*>(iconData.data()), 32u, static_cast<Uint32>(iconData.size()));
 	}
 }
 
@@ -151,11 +151,11 @@ Graphics::Window::~Window()
 
 // External
 
-static Vector<Uint32> createIconData(const Image* image)
+static Vector<Uint> createIconData(const Image* image)
 {
 	const Uint32 elementCount = image->width() * image->height();
 	const ByteData& imageData = image->data();
-	Vector<Uint32> iconData(elementCount + 2u, 0u);
+	Vector<Uint> iconData(elementCount + 2u);
 	iconData[0] = image->width();
 	iconData[1] = image->height();
 

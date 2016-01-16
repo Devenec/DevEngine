@@ -19,6 +19,7 @@
  */
 
 #include <algorithm>
+#include <cstddef>
 #include <core/Error.h>
 #include <core/FileStream.h>
 #include <core/Log.h>
@@ -32,13 +33,15 @@ using namespace Graphics;
 
 // External
 
+using Size = std::size_t;
+
 static const Char8* COMPONENT_TAG = "[Graphics::PNGReader] ";
 
-static Void* allocateMemory(png_struct* pngStructure, Uint size);
+static Void* allocateMemory(png_struct* pngStructure, Size size);
 static void deallocateMemory(png_struct* pngStructure, Void* pointer);
 static void handleError(png_struct* pngStructure, const Char8* message);
 static void handleWarning(png_struct* pngStructure, const Char8* message);
-static void readData(png_struct* pngStructure, Uint8* buffer, Uint size);
+static void readData(png_struct* pngStructure, Uint8* buffer, Size size);
 
 
 // Public
@@ -146,7 +149,7 @@ void PNGReader::validateSignature(FileStream& fileStream)
 
 // External
 
-static Void* allocateMemory(png_struct* pngStructure, Uint size)
+static Void* allocateMemory(png_struct* pngStructure, Size size)
 {
 	static_cast<Void>(pngStructure);
 	return DE_ALLOCATE(size);
@@ -172,7 +175,7 @@ static void handleWarning(png_struct* pngStructure, const Char8* message)
 	defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "PNG warning: " << message << '.' << Log::Flush();
 }
 
-static void readData(png_struct* pngStructure, Uint8* buffer, Uint size)
+static void readData(png_struct* pngStructure, Uint8* buffer, Size size)
 {
 	FileStream* fileStream = static_cast<FileStream*>(png_get_io_ptr(pngStructure));
 

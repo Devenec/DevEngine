@@ -27,8 +27,8 @@ using namespace Core;
 
 // External
 
-static void runDevEngineMain(const Int32 argumentCount, Char8** arguments);
-static StartupParameters createStartupParameters(const Int32 argumentCount, Char8** arguments);
+static void runDevEngineMain(const Uint32 argumentCount, Char8** arguments);
+static StartupParameters createStartupParameters(const Uint32 argumentCount, Char8** arguments);
 
 #if defined(DE_CONFIG_DEVENGINE_MAIN)
 
@@ -44,17 +44,17 @@ Int32 main(Int32 argumentCount, Char8** arguments)
 
 #endif
 
-static void runDevEngineMain(const Int32 argumentCount, Char8** arguments)
+static void runDevEngineMain(const Uint32 argumentCount, Char8** arguments)
 {
 	StartupParameters startupParameters = ::createStartupParameters(argumentCount, arguments);
 	devEngineMain(startupParameters);
 }
 
-static StartupParameters createStartupParameters(const Int32 argumentCount, Char8** arguments)
+static StartupParameters createStartupParameters(const Uint32 argumentCount, Char8** arguments)
 {
 	StartupParameters startupParameters(argumentCount);
 
-	for(Int32 i = 0; i < argumentCount; ++i)
+	for(Uint32 i = 0u; i < argumentCount; ++i)
 		startupParameters[i] = arguments[i];
 
 	return startupParameters;

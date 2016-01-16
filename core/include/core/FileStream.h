@@ -155,7 +155,7 @@ namespace Core
 		 * @param position
 		 *   The new position, relative to the beginning of the file
 		 */
-		void seek(const Uint32& position) const;
+		void seek(const Uint32 position) const;
 
 		/**
 		 * Sets the position of the file pointer.
@@ -168,7 +168,7 @@ namespace Core
 		 * @param offset
 		 *   The new position, relative to 'position'
 		 */
-		void seek(const SeekPosition& position, const Int32& offset) const;
+		void seek(const SeekPosition& position, const Int32 offset) const;
 
 		/**
 		 * Gets the size of the file.

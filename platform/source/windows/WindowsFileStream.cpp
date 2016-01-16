@@ -153,7 +153,7 @@ public:
 		seek(SeekPosition::Begin, seekOffset);
 	}
 
-	void seek(const SeekPosition& position, const Int32& offset) const
+	void seek(const SeekPosition& position, const Int32 offset) const
 	{
 		const LARGE_INTEGER seekOffset = ::createLargeInteger(offset);
 		seek(position, seekOffset);
@@ -278,12 +278,12 @@ Uint32 FileStream::read(Uint8* buffer, const Uint32 size) const
 	return _implementation->read(buffer, size);
 }
 
-void FileStream::seek(const Uint32& position) const
+void FileStream::seek(const Uint32 position) const
 {
 	_implementation->seek(position);
 }
 
-void FileStream::seek(const SeekPosition& position, const Int32& offset) const
+void FileStream::seek(const SeekPosition& position, const Int32 offset) const
 {
 	_implementation->seek(position, offset);
 }

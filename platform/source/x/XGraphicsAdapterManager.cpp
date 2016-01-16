@@ -98,7 +98,7 @@ private:
 		_adapters.push_back(adapter);
 	}
 
-	Uint32 getAdapterDisplayModes(const Int32 adapterIndex, DisplayModeList& modes,
+	Uint32 getAdapterDisplayModes(const Uint32 adapterIndex, DisplayModeList& modes,
 		const Uint32 currentResolutionIndex, const Uint32 currentRefreshRate) const
 	{
 		X& x = X::instance();
@@ -106,15 +106,15 @@ private:
 		XRRScreenSize* resolutions = x.getGraphicsAdapterResolutions(adapterIndex, resolutionCount);
 		Uint32 currentModeIndex = 0u;
 
-		for(Int32 i = 0; i < resolutionCount; ++i)
+		for(Uint32 i = 0u; i < resolutionCount; ++i)
 		{
 			Uint32 refreshRateCount;
 			Int16* refreshRates = x.getGraphicsAdapterRefreshRates(adapterIndex, i, refreshRateCount);
 
-			for(Int32 j = 0; j < refreshRateCount; ++j)
+			for(Uint32 j = 0u; j < refreshRateCount; ++j)
 			{
 				if(i == currentResolutionIndex && refreshRates[j] == currentRefreshRate)
-					currentModeIndex = modes.size();
+					currentModeIndex = static_cast<Uint32>(modes.size());
 
 				DisplayMode mode(resolutions[i].width, resolutions[i].height, 0u, refreshRates[j]);
 				modes.push_back(mode);

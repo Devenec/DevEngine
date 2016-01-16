@@ -144,7 +144,7 @@ Shader::Implementation::CharacterBuffer Shader::Implementation::getInfoLog(const
 {
 	CharacterBuffer logBuffer(logLength);
 
-	_openGL->getShaderInfoLog(_shaderHandle, static_cast<Uint32>(logBuffer.size()), nullptr,
+	_openGL->getShaderInfoLog(_shaderHandle, static_cast<Int32>(logBuffer.size()), nullptr,
 		logBuffer.data());
 
 	DE_CHECK_ERROR_OPENGL(_openGL);

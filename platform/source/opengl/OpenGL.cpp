@@ -1595,20 +1595,23 @@ static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 static void initialiseMajorVersion(const String8& versionString)
 {
 	const Uint delimiterPosition = versionString.find('.');
-	::versionMajor = std::strtol(versionString.substr(0u, delimiterPosition).c_str(), nullptr, 10);
+	const String8 majorVersionString = versionString.substr(0u, delimiterPosition);
+	::versionMajor = static_cast<Uint32>(std::strtol(majorVersionString.c_str(), nullptr, 10));
 }
 
 static void initialiseMinorVersion(const String8& versionString)
 {
-	const Uint minorPosition = versionString.find('.') + 1u;
-	const Uint secondDelimiterPosition = versionString.find('.', minorPosition);
-	Uint versionEndPosition = versionString.find(' ', minorPosition);
+	const Uint minorVersionPosition = versionString.find('.') + 1u;
+	const Uint secondDelimiterPosition = versionString.find('.', minorVersionPosition);
+	Uint versionEndPosition = versionString.find(' ', minorVersionPosition);
 
 	if(secondDelimiterPosition < versionEndPosition)
 		versionEndPosition = secondDelimiterPosition;
 
-	const String8 minorString = versionString.substr(minorPosition, versionEndPosition - minorPosition);
-	::versionMinor = std::strtol(minorString.c_str(), nullptr, 10);
+	const String8 minorVersionString =
+		versionString.substr(minorVersionPosition, versionEndPosition - minorVersionPosition);
+
+	::versionMinor = static_cast<Uint32>(std::strtol(minorVersionString.c_str(), nullptr, 10));
 }
 
 /*static void DE_CALL_OPENGL processDebugMessage(const Uint32 messageSource, const Uint32 messageType,

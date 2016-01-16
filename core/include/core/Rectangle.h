@@ -28,12 +28,30 @@ namespace Core
 	{
 	public:
 
+		/**
+		 * The x position of the upper-left corner of the rectangle
+		 */
 		Int32 x;
 
+		/**
+		 * The y position of the upper-left corner of the rectangle
+		 */
 		Int32 y;
 
+		/**
+		 * The width of the rectangle
+		 *
+		 * Using a width larger than Core::numeric<Int32>::maximum() is
+		 * undefined.
+		 */
 		Uint32 width;
 
+		/**
+		 * The height of the rectangle
+		 *
+		 * Using a height larger than Core::numeric<Int32>::maximum() is
+		 * undefined.
+		 */
 		Uint32 height;
 
 		Rectangle() = default;
