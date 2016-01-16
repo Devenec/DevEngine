@@ -40,12 +40,6 @@ namespace Graphics
 		VertexBufferState(const VertexBufferState& vertexBufferState) = delete;
 		VertexBufferState(VertexBufferState&& vertexBufferState) = delete;
 
-		void bind() const;
-
-		void debind() const;
-
-		IndexBuffer* indexBuffer() const;
-
 		void setIndexBuffer(IndexBuffer* buffer) const;
 
 		void setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements,

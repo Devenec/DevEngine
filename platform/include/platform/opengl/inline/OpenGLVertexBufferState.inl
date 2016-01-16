@@ -1,5 +1,5 @@
 /**
- * @file graphics/Effect.h
+ * @file platform/opengl/inline/OpenGLVertexBufferState.inl
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,39 +18,19 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Public
 
-#include <graphics/GraphicsResource.h>
-
-namespace Graphics
+void VertexBufferState::Implementation::bind() const
 {
-	class Shader;
+	bind(_vertexArrayHandle);
+}
 
-	class Effect final : public GraphicsResource
-	{
-	public:
+void VertexBufferState::Implementation::debind() const
+{
+	bind(0u);
+}
 
-		Effect(const Effect& effect) = delete;
-		Effect(Effect&& effect) = delete;
-
-		void attachShader(Shader* shader) const;
-
-		void link() const;
-
-		void setUniformBlockBinding(const Uint32 blockIndex, const Uint32 bindingIndex) const;
-
-		Effect& operator =(const Effect& effect) = delete;
-		Effect& operator =(Effect&& effect) = delete;
-
-	private:
-
-		friend class GraphicsDevice;
-
-		class Implementation;
-
-		Implementation* _implementation;
-
-		Effect(GraphicsInterfaceHandle graphicsInterfaceHandle);
-		~Effect();
-	};
+IndexBuffer* VertexBufferState::Implementation::indexBuffer() const
+{
+	return _indexBuffer;
 }

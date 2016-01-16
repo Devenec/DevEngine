@@ -54,6 +54,8 @@ namespace Graphics
 		GraphicsDevice(const GraphicsDevice& graphicsDevice) = delete;
 		GraphicsDevice(GraphicsDevice&& graphicsDevice) = delete;
 
+		void bindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const;
+
 		void clear(const Colour& colour) const;
 
 		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint size,
@@ -67,6 +69,8 @@ namespace Graphics
 		Shader* createShader(const ShaderType& type, const Core::String8& source);
 
 		VertexBufferState* createVertexBufferState();
+
+		void debindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const;
 
 		void destroyResource(GraphicsResource* resource);
 

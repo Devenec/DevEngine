@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/OpenGLGraphicsBuffer.h
+ * @file platform/opengl/OpenGLVertexBufferState.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,15 +20,15 @@
 
 #pragma once
 
-#include <graphics/GraphicsBuffer.h>
+#include <graphics/VertexBufferState.h>
 
 namespace Graphics
 {
-	class GraphicsBuffer::Implementation final
+	class VertexBufferState::Implementation final
 	{
 	public:
 
-		Implementation(const BufferBinding& binding, const Uint size, const AccessMode& accessMode);
+		Implementation();
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
@@ -37,33 +37,31 @@ namespace Graphics
 
 		inline void bind() const;
 
-		inline Uint32 binding() const;
-
 		inline void debind() const;
 
-		void demapData() const;
+		inline IndexBuffer* indexBuffer() const;
 
-		inline Uint32 handle() const;
+		void setIndexBuffer(IndexBuffer* buffer);
 
-		inline Uint8* mapData() const;
-
-		Uint8* mapData(const Uint size, const Uint offset) const;
+		void setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements,
+			const Uint32 stride, const Uint offset) const;
 
 		Implementation& operator =(const Implementation& implementation) = delete;
 		Implementation& operator =(Implementation&& implementation) = delete;
 
 	private:
 
-		Uint _size;
-		Uint32 _binding;
-		Uint32 _bufferHandle;
-		Uint32 _flags;
+		IndexBuffer* _indexBuffer;
+		Uint32 _vertexArrayHandle;
 
-		void initialiseAccessMode(const AccessMode& accessMode);
-		void createBuffer();
-		void initialiseStorage() const;
-		void bind(const Uint32 bufferHandle) const;
+		void bind(const Uint32 vertexArrayHandle) const;
+
+		void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride,
+			const Uint bufferOffset) const;
+
+		void setVertexElementFormat(const VertexElement& element, const Uint elementOffset,
+			const Uint32 stride) const;
 	};
 
-#include "inline/OpenGLGraphicsBuffer.inl"
+#include "inline/OpenGLVertexBufferState.inl"
 }

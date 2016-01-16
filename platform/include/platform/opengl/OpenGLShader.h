@@ -24,19 +24,13 @@
 #include <core/Vector.h>
 #include <graphics/Shader.h>
 
-namespace Platform
-{
-	class OpenGL;
-}
-
 namespace Graphics
 {
 	class Shader::Implementation final
 	{
 	public:
 
-		Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type,
-			const Core::String8& source);
+		Implementation(const ShaderType& type, const Core::String8& source);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
@@ -52,7 +46,6 @@ namespace Graphics
 
 		using CharacterBuffer = Core::Vector<Char8>;
 
-		Platform::OpenGL* _openGL;
 		Uint32 _shaderHandle;
 
 		void createShader(const ShaderType& type);

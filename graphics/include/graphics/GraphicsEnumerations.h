@@ -22,6 +22,80 @@
 
 #include <core/Platform.h>
 
+/**
+ * The following enumerations are defined in the internal header file (the
+ * values are platform defined):
+ *
+ * enum class BufferBinding
+ * {
+ *   Index,
+ *   Uniform,
+ *   Vertex
+ * };
+ *
+ * enum class IndexType
+ * {
+ *   Uint8,
+ *   Uint16,
+ *   Uint32
+ * };
+ *
+ * enum class PrimitiveType
+ * {
+ *   Line,
+ *   LineLoop,
+ *   LineStrip,
+ *   Point,
+ *   Triangle,
+ *   TriangleFan,
+ *   TriangleStrip
+ * };
+ *
+ * enum class VertexElementType
+ * {
+ *   Float16,
+ *   Float16Vector2,
+ *   Float16Vector3,
+ *   Float16Vector4,
+ *   Float32,
+ *   Float32Vector2,
+ *   Float32Vector3,
+ *   Float32Vector4,
+ *   Float64,
+ *   Float64Vector2,
+ *   Float64Vector3,
+ *   Float64Vector4,
+ *   Int8,
+ *   Int8Vector2,
+ *   Int8Vector3,
+ *   Int8Vector4,
+ *   Int16,
+ *   Int16Vector2,
+ *   Int16Vector3,
+ *   Int16Vector4,
+ *   Int32,
+ *   Int32Vector2,
+ *   Int32Vector3,
+ *   Int32Vector4,
+ *   Int32_B10G10R10A2,
+ *   Int32_R10G10B10A2,
+ *   Uint8,
+ *   Uint8Vector2,
+ *   Uint8Vector3,
+ *   Uint8Vector4,
+ *   Uint16,
+ *   Uint16Vector2,
+ *   Uint16Vector3,
+ *   Uint16Vector4,
+ *   Uint32,
+ *   Uint32Vector2,
+ *   Uint32Vector3,
+ *   Uint32Vector4,
+ *   Uint32_B10G10R10A2,
+ *   Uint32_R10G10B10A2,
+ *   Uint32_R11G11B10_Float
+ * };
+ */
 #if DE_PLATFORM == DE_PLATFORM_LINUX || DE_PLATFORM == DE_PLATFORM_WINDOWS
 	#include <platform/opengl/OpenGLGraphicsEnumerations.h>
 #else

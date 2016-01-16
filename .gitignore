@@ -17,5 +17,3 @@ build/windows/
 
 
 # exceptions
-
-!samples/sample/*.user

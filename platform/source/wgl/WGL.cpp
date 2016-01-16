@@ -61,8 +61,6 @@ WGL::GetPixelFormatAttribIVARB WGL::getPixelFormatAttribivARB = nullptr;
 
 void WGL::initialise(const GraphicsContextBase& graphicsContext)
 {
-	// TODO: check current context state?
-
 	initialiseExtensions();
 	const ExtensionNameList extensionNames = getExtensionNames(graphicsContext);
 	logGraphicsExtensions("graphics context", extensionNames);

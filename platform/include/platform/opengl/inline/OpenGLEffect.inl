@@ -1,5 +1,5 @@
 /**
- * @file graphics/Effect.h
+ * @file platform/opengl/inline/OpenGLEffect.inl
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,39 +18,14 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Public
 
-#include <graphics/GraphicsResource.h>
-
-namespace Graphics
+void Effect::Implementation::bind() const
 {
-	class Shader;
+	bind(_programHandle);
+}
 
-	class Effect final : public GraphicsResource
-	{
-	public:
-
-		Effect(const Effect& effect) = delete;
-		Effect(Effect&& effect) = delete;
-
-		void attachShader(Shader* shader) const;
-
-		void link() const;
-
-		void setUniformBlockBinding(const Uint32 blockIndex, const Uint32 bindingIndex) const;
-
-		Effect& operator =(const Effect& effect) = delete;
-		Effect& operator =(Effect&& effect) = delete;
-
-	private:
-
-		friend class GraphicsDevice;
-
-		class Implementation;
-
-		Implementation* _implementation;
-
-		Effect(GraphicsInterfaceHandle graphicsInterfaceHandle);
-		~Effect();
-	};
+void Effect::Implementation::debind() const
+{
+	bind(0u);
 }

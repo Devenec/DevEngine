@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/OpenGLGraphicsBuffer.h
+ * @file platform/opengl/OpenGLEffect.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,50 +20,50 @@
 
 #pragma once
 
-#include <graphics/GraphicsBuffer.h>
+#include <core/Types.h>
+#include <core/Vector.h>
+#include <graphics/Effect.h>
 
 namespace Graphics
 {
-	class GraphicsBuffer::Implementation final
+	class Effect::Implementation final
 	{
 	public:
 
-		Implementation(const BufferBinding& binding, const Uint size, const AccessMode& accessMode);
+		Implementation();
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
 
 		~Implementation();
 
-		inline void bind() const;
+		void attachShader(Shader* shader) const;
 
-		inline Uint32 binding() const;
+		inline void bind() const;
 
 		inline void debind() const;
 
-		void demapData() const;
+		void link() const;
 
-		inline Uint32 handle() const;
-
-		inline Uint8* mapData() const;
-
-		Uint8* mapData(const Uint size, const Uint offset) const;
+		void setUniformBlockBinding(const Uint32 blockIndex, const Uint32 bindingIndex) const;
 
 		Implementation& operator =(const Implementation& implementation) = delete;
 		Implementation& operator =(Implementation&& implementation) = delete;
 
 	private:
 
-		Uint _size;
-		Uint32 _binding;
-		Uint32 _bufferHandle;
-		Uint32 _flags;
+		using CharacterBuffer = Core::Vector<Char8>;
 
-		void initialiseAccessMode(const AccessMode& accessMode);
-		void createBuffer();
-		void initialiseStorage() const;
-		void bind(const Uint32 bufferHandle) const;
+		Uint32 _programHandle;
+
+		void bind(const Uint32 programHandle) const;
+		void checkLinkingStatus() const;
+		void detachShaders() const;
+		Int32 getParameter(const Uint32 parameterName) const;
+		void outputLinkerFailureLog() const;
+		void outputLinkerSuccessLog() const;
+		CharacterBuffer getInfoLog(const Uint32 logLength) const;
 	};
 
-#include "inline/OpenGLGraphicsBuffer.inl"
+#include "inline/OpenGLEffect.inl"
 }

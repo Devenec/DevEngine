@@ -189,6 +189,9 @@ GraphicsDeviceManager::~GraphicsDeviceManager()
 
 GraphicsDevice* GraphicsDeviceManager::createDevice(Graphics::Window* window)
 {
+	if(_devices.size() > 0u)
+		return _devices.front();
+
 	GraphicsDevice* device = _implementation->createDeviceObject(window);
 	logGraphicsDeviceCreation(device);
 	_devices.push_back(device);
@@ -198,6 +201,9 @@ GraphicsDevice* GraphicsDeviceManager::createDevice(Graphics::Window* window)
 
 void GraphicsDeviceManager::createWindow(const Uint32 windowWidth, const Uint32 windowHeight)
 {
+	if(!_windows.empty())
+		return;
+
 	Graphics::Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
 	logWindowCreation(window);
 	_windows.push_back(window);

@@ -231,7 +231,6 @@ namespace Platform
 		void getStandardFunctions() const;
 		void checkSupport() const;
 		void initialiseExtensions() const;
-		void clearFunctions() const;
 		void unloadLibrary() const;
 		Graphics::ExtensionNameList getExtensionNames() const;
 		void checkExtensionsSupport(const Graphics::ExtensionNameList& extensionNames) const;

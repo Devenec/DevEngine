@@ -166,12 +166,12 @@ private:
 	{
 		switch(message)
 		{
-			case WM_CLOSE:
-				getWindow(windowHandle)->_implementation->close();
-				break;
-
 			case ::CREATE_WINDOW_MESSAGE:
 				processWindowCreation(windowHandle);
+				break;
+
+			case WM_CLOSE:
+				getWindow(windowHandle)->_implementation->close();
 				break;
 
 			case WM_SETCURSOR:
@@ -217,6 +217,9 @@ GraphicsDeviceManager::~GraphicsDeviceManager()
 
 GraphicsDevice* GraphicsDeviceManager::createDevice(Window* window)
 {
+	if(_devices.size() > 0u)
+		return _devices.front();
+
 	GraphicsDevice* device = _implementation->createDeviceObject(window);
 	logGraphicsDeviceCreation(device);
 	_devices.push_back(device);
@@ -226,6 +229,9 @@ GraphicsDevice* GraphicsDeviceManager::createDevice(Window* window)
 
 void GraphicsDeviceManager::createWindow(const Uint32 windowWidth, const Uint32 windowHeight)
 {
+	if(!_windows.empty())
+		return;
+
 	Window* window = _implementation->createWindowObject(windowWidth, windowHeight);
 	logWindowCreation(window);
 	_windows.push_back(window);

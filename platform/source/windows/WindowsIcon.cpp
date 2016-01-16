@@ -118,8 +118,8 @@ static void checkImageFormat(const ImageFormat& format)
 	switch(format)
 	{
 		case ImageFormat::R8:
-		case ImageFormat::RGB8:
 		case ImageFormat::RA8:
+		case ImageFormat::RGB8:
 		case ImageFormat::RGBA8:
 			break;
 

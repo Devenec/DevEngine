@@ -31,6 +31,9 @@
 #include <graphics/Viewport.h>
 #include <platform/GraphicsContext.h>
 #include <platform/opengl/OpenGL.h>
+#include <platform/opengl/OpenGLEffect.h>
+#include <platform/opengl/OpenGLGraphicsBuffer.h>
+#include <platform/opengl/OpenGLVertexBufferState.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -42,7 +45,7 @@ class GraphicsDevice::Implementation final
 {
 public:
 
-	Implementation(GraphicsContext* graphicsContext)
+	explicit Implementation(GraphicsContext* graphicsContext)
 		: _activeEffect(nullptr),
 		  _activeVertexBufferState(nullptr),
 		  _graphicsContext(graphicsContext),
@@ -61,45 +64,58 @@ public:
 		DE_DELETE(_graphicsContext, GraphicsContext);
 	}
 
+	void bindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const
+	{
+		GraphicsBuffer::Implementation* bufferImplementation = buffer->_implementation;
+		OpenGL::bindBufferBase(bufferImplementation->binding(), bindingIndex, bufferImplementation->handle());
+		DE_CHECK_ERROR_OPENGL();
+	}
+
 	void clear(const Colour& colour) const
 	{
-		_openGL->clearColor(colour.red, colour.green, colour.blue, colour.alpha);
-		_openGL->clear(OpenGL::COLOR_BUFFER_BIT);
-		DE_CHECK_ERROR_OPENGL(_openGL);
+		OpenGL::clearColor(colour.red, colour.green, colour.blue, colour.alpha);
+		OpenGL::clear(OpenGL::COLOR_BUFFER_BIT);
+		DE_CHECK_ERROR_OPENGL();
 	}
 
 	GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint size, const AccessMode& accessMode)
 		const
 	{
-		return DE_NEW(GraphicsBuffer)(_openGL, binding, size, accessMode);
+		return DE_NEW(GraphicsBuffer)(nullptr, binding, size, accessMode);
 	}
 
 	Effect* createEffect() const
 	{
-		return DE_NEW(Effect)(_openGL);
+		return DE_NEW(Effect)(nullptr);
 	}
 
 	IndexBuffer* createIndexBuffer(const Uint size, const IndexType& indexType, const AccessMode& accessMode)
 		const
 	{
-		return DE_NEW(IndexBuffer)(_openGL, size, indexType, accessMode);
+		return DE_NEW(IndexBuffer)(nullptr, size, indexType, accessMode);
 	}
 
 	Shader* createShader(const ShaderType& type, const String8& source) const
 	{
-		return DE_NEW(Shader)(_openGL, type, source);
+		return DE_NEW(Shader)(nullptr, type, source);
 	}
 
 	VertexBufferState* createVertexBufferState() const
 	{
-		return DE_NEW(VertexBufferState)(_openGL);
+		return DE_NEW(VertexBufferState)(nullptr);
+	}
+
+	void debindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const
+	{
+		OpenGL::bindBufferBase(buffer->_implementation->binding(), bindingIndex, 0u);
+		DE_CHECK_ERROR_OPENGL();
 	}
 
 	void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount, const Uint32 vertexOffset) const
 	{
 		initialiseDrawing();
-		_openGL->drawArrays(static_cast<Uint32>(primitiveType), vertexOffset, vertexCount);
-		DE_CHECK_ERROR_OPENGL(_openGL);
+		OpenGL::drawArrays(static_cast<Uint32>(primitiveType), vertexOffset, vertexCount);
+		DE_CHECK_ERROR_OPENGL();
 		deinitialiseDrawing();
 	}
 
@@ -107,15 +123,15 @@ public:
 		const
 	{
 		initialiseDrawing();
-		IndexBuffer* indexBuffer = _activeVertexBufferState->indexBuffer();
+		IndexBuffer* indexBuffer = _activeVertexBufferState->_implementation->indexBuffer();
 		DE_ASSERT(indexBuffer != nullptr);
 		const Uint32 indexTypeId = static_cast<Uint32>(indexBuffer->indexType());
 		const Uint byteOffset = indexOffset * ((indexTypeId & 0x03) + 1u);
 
-		_openGL->drawElements(static_cast<Uint32>(primitiveType), indexCount, indexTypeId >> 2,
+		OpenGL::drawElements(static_cast<Uint32>(primitiveType), indexCount, indexTypeId >> 2,
 			reinterpret_cast<Void*>(byteOffset));
 
-		DE_CHECK_ERROR_OPENGL(_openGL);
+		DE_CHECK_ERROR_OPENGL();
 		deinitialiseDrawing();
 	}
 
@@ -133,8 +149,8 @@ public:
 	{
 		_viewport = viewport;
 		const Rectangle& bounds = viewport.bounds();
-		_openGL->viewport(bounds.x, bounds.y, bounds.width, bounds.height);
-		DE_CHECK_ERROR_OPENGL(_openGL);
+		OpenGL::viewport(bounds.x, bounds.y, bounds.width, bounds.height);
+		DE_CHECK_ERROR_OPENGL();
 	}
 
 	void swapBuffers() const
@@ -166,26 +182,24 @@ private:
 
 	void initialiseViewport()
 	{
-		Int32 viewportValues[4];
-		_openGL->getIntegerv(OpenGL::VIEWPORT, viewportValues);
-		DE_CHECK_ERROR_OPENGL(_openGL);
-
-		_viewport.setBounds(Rectangle(viewportValues[0], viewportValues[1], viewportValues[2],
-			viewportValues[3]));
+		Int32 viewport[4];
+		OpenGL::getIntegerv(OpenGL::VIEWPORT, viewport);
+		DE_CHECK_ERROR_OPENGL();
+		_viewport.setBounds(Rectangle(viewport[0], viewport[1], viewport[2], viewport[3]));
 	}
 
 	void initialiseDrawing() const
 	{
 		DE_ASSERT(_activeEffect != nullptr);
 		DE_ASSERT(_activeVertexBufferState != nullptr);
-		_activeEffect->use();
-		_activeVertexBufferState->bind();
+		_activeEffect->_implementation->bind();
+		_activeVertexBufferState->_implementation->bind();
 	}
 
 	void deinitialiseDrawing() const
 	{
-		_activeVertexBufferState->debind();
-		_activeEffect->disuse();
+		_activeVertexBufferState->_implementation->debind();
+		_activeEffect->_implementation->debind();
 	}
 };
 
@@ -193,6 +207,11 @@ private:
 // Graphics::GraphicsDevice
 
 // Public
+
+void GraphicsDevice::bindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const
+{
+	_implementation->bindBufferIndexed(buffer, bindingIndex);
+}
 
 void GraphicsDevice::clear(const Colour& colour) const
 {
@@ -239,6 +258,11 @@ VertexBufferState* GraphicsDevice::createVertexBufferState()
 	_resources.push_back(vertexBufferState);
 
 	return vertexBufferState;
+}
+
+void GraphicsDevice::debindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const
+{
+	_implementation->debindBufferIndexed(buffer, bindingIndex);
 }
 
 void GraphicsDevice::draw(const PrimitiveType& primitiveType, const Uint32 vertexCount,

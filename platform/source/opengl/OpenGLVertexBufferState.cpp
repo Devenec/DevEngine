@@ -21,11 +21,11 @@
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
 #include <graphics/IndexBuffer.h>
-#include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
 #include <platform/opengl/OpenGLGraphicsEnumerations.h>
+#include <platform/opengl/OpenGLVertexBufferState.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -39,140 +39,95 @@ static Uint32 getVertexElementSize(const VertexElement& element);
 
 // Implementation
 
-class VertexBufferState::Implementation final
+// Public
+
+VertexBufferState::Implementation::Implementation()
+	: _indexBuffer(nullptr),
+	  _vertexArrayHandle(0u)
 {
-public:
+	OpenGL::genVertexArrays(1, &_vertexArrayHandle);
+	DE_CHECK_ERROR_OPENGL();
+}
 
-	explicit Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle)
-		: _indexBuffer(nullptr),
-		  _openGL(static_cast<OpenGL*>(graphicsInterfaceHandle)),
-		  _vertexArrayHandle(0u)
+VertexBufferState::Implementation::~Implementation()
+{
+	OpenGL::deleteVertexArrays(1, &_vertexArrayHandle);
+	DE_CHECK_ERROR_OPENGL();
+}
+
+void VertexBufferState::Implementation::setIndexBuffer(IndexBuffer* buffer)
+{
+	bind();
+
+	if(buffer == nullptr)
+		_indexBuffer->_implementation->debind();
+	else
+		buffer->_implementation->bind();
+
+	debind();
+	_indexBuffer = buffer;
+}
+
+void VertexBufferState::Implementation::setVertexBuffer(const GraphicsBuffer* buffer,
+	const VertexElementList& vertexElements, const Uint32 stride, const Uint offset) const
+{
+	DE_ASSERT(buffer->_implementation->binding() == static_cast<Uint32>(BufferBinding::Vertex));
+	Uint32 bufferHandle = 0u;
+
+	if(buffer != nullptr)
+		bufferHandle = buffer->_implementation->handle();
+
+	bind();
+	buffer->_implementation->bind();
+	setVertexLayout(vertexElements, stride, offset);
+	buffer->_implementation->debind();
+	debind();
+}
+
+// Private
+
+void VertexBufferState::Implementation::bind(const Uint32 vertexArrayHandle) const
+{
+	OpenGL::bindVertexArray(vertexArrayHandle);
+	DE_CHECK_ERROR_OPENGL();
+}
+
+void VertexBufferState::Implementation::setVertexLayout(const VertexElementList& vertexElements,
+	const Uint32 stride, const Uint bufferOffset) const
+{
+	Uint elementOffset = bufferOffset;
+
+	for(VertexElementList::const_iterator i = vertexElements.begin(), end = vertexElements.end();
+		i != end; ++i)
 	{
-		_openGL->genVertexArrays(1, &_vertexArrayHandle);
-		DE_CHECK_ERROR_OPENGL(_openGL);
+		if(i->offset != VertexElement::AFTER_PREVIOUS)
+			elementOffset += i->offset;
+
+		setVertexElementFormat(*i, elementOffset, stride);
+		elementOffset += ::getVertexElementSize(*i);
 	}
+}
 
-	Implementation(const Implementation& implementation) = delete;
-	Implementation(Implementation&& implementation) = delete;
+void VertexBufferState::Implementation::setVertexElementFormat(const VertexElement& element,
+	const Uint elementOffset, const Uint32 stride) const
+{
+	Bool normalise;
+	const Uint32 componentCount = ::getVertexElementComponentCount(element, normalise);
+	const Uint32 elementType = static_cast<Uint32>(element.type) >> 3;
+	OpenGL::enableVertexAttribArray(element.index);
+	DE_CHECK_ERROR_OPENGL();
+	const Void* bufferOffset = reinterpret_cast<Void*>(elementOffset);
 
-	~Implementation()
-	{
-		_openGL->deleteVertexArrays(1, &_vertexArrayHandle);
-		DE_CHECK_ERROR_OPENGL(_openGL);
-	}
+	OpenGL::vertexAttribPointer(element.index, componentCount, elementType, normalise, stride,
+		bufferOffset);
 
-	void bind() const
-	{
-		bind(_vertexArrayHandle);
-	}
-
-	void debind() const
-	{
-		bind(0u);
-	}
-
-	IndexBuffer* indexBuffer() const
-	{
-		return _indexBuffer;
-	}
-
-	void setIndexBuffer(IndexBuffer* buffer)
-	{
-		bind();
-
-		if(buffer == nullptr)
-			_indexBuffer->_implementation->debind(); // TODO: restore old binding?
-		else
-			buffer->_implementation->bind();
-
-		debind(); // TODO: restore old binding?
-		_indexBuffer = buffer;
-	}
-
-	void setVertexBuffer(const GraphicsBuffer* buffer, const VertexElementList& vertexElements,
-		const Uint32 stride, const Uint offset) const
-	{
-		DE_ASSERT(buffer->_implementation->binding() == static_cast<Uint32>(BufferBinding::Vertex));
-		Uint32 bufferHandle = 0u;
-
-		if(buffer != nullptr)
-			bufferHandle = buffer->_implementation->handle();
-
-		bind();
-		buffer->bind();
-		setVertexLayout(vertexElements, stride, offset);
-		buffer->debind();
-		debind();
-		// TODO: restore old bindings?
-	}
-
-	Implementation& operator =(const Implementation& implementation) = delete;
-	Implementation& operator =(Implementation&& implementation) = delete;
-
-private:
-
-	IndexBuffer* _indexBuffer;
-	Platform::OpenGL* _openGL;
-	Uint32 _vertexArrayHandle;
-
-	void bind(const Uint32 vertexArrayHandle) const
-	{
-		_openGL->bindVertexArray(vertexArrayHandle);
-		DE_CHECK_ERROR_OPENGL(_openGL);
-	}
-
-	void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride,
-		const Uint bufferOffset) const
-	{
-		Uint elementOffset = bufferOffset;
-
-		for(VertexElementList::const_iterator i = vertexElements.begin(), end = vertexElements.end();
-			i != end; ++i)
-		{
-			if(i->offset != VertexElement::AFTER_PREVIOUS)
-				elementOffset += i->offset;
-
-			setVertexElementFormat(*i, elementOffset, stride);
-			elementOffset += ::getVertexElementSize(*i);
-		}
-	}
-
-	void setVertexElementFormat(const VertexElement& element, const Uint elementOffset, const Uint32 stride)
-		const
-	{
-		Bool normalise;
-		const Uint32 componentCount = ::getVertexElementComponentCount(element, normalise);
-		const Uint32 elementType = static_cast<Uint32>(element.type) >> 3;
-		_openGL->enableVertexAttribArray(element.index);
-		DE_CHECK_ERROR_OPENGL(_openGL);
-		const Void* bufferOffset = reinterpret_cast<Void*>(elementOffset);
-
-		_openGL->vertexAttribPointer(element.index, componentCount, elementType, normalise, stride,
-			bufferOffset);
-
-		DE_CHECK_ERROR_OPENGL(_openGL);
-	}
-};
+	DE_CHECK_ERROR_OPENGL();
+}
 
 
 // Graphics::VertexBufferState
 
 // Public
-
-void VertexBufferState::bind() const
-{
-	_implementation->bind();
-}
-
-void VertexBufferState::debind() const
-{
-	_implementation->debind();
-}
-
-IndexBuffer* VertexBufferState::indexBuffer() const
-{
-	return _implementation->indexBuffer();
-}
 
 void VertexBufferState::setIndexBuffer(IndexBuffer* indexBuffer) const
 {
@@ -188,7 +143,10 @@ void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer, const Vert
 // Private
 
 VertexBufferState::VertexBufferState(GraphicsInterfaceHandle graphicsInterfaceHandle)
-	: _implementation(DE_NEW(Implementation)(graphicsInterfaceHandle)) { }
+	: _implementation(DE_NEW(Implementation)())
+{
+	static_cast<Void>(graphicsInterfaceHandle);
+}
 
 VertexBufferState::~VertexBufferState()
 {

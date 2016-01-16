@@ -79,7 +79,6 @@ GLX::GLX()
 
 GLX::~GLX()
 {
-	clearFunctions();
 	//unloadLibrary(); // TODO: unloading the library causes XCloseDisplay() to crash at X.cpp, find out why
 }
 
@@ -160,22 +159,6 @@ void GLX::initialiseExtensions() const
 	logGraphicsExtensions("graphics context", extensionNames);
 	checkExtensionsSupport(extensionNames);
 	getExtensionFunctions();
-}
-
-void GLX::clearFunctions() const
-{
-	createContextAttribsARB = nullptr;
-	getProcAddress = nullptr;
-	makeContextCurrent = nullptr;
-	getVisualFromFBConfig = nullptr;
-	getFBConfigAttrib = nullptr;
-	chooseFBConfig = nullptr;
-	queryExtensionsString = nullptr;
-	swapBuffers = nullptr;
-	queryVersion = nullptr;
-	queryExtension = nullptr;
-	isDirect = nullptr;
-	destroyContext = nullptr;
 }
 
 void GLX::unloadLibrary() const

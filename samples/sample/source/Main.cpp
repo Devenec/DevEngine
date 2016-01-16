@@ -146,6 +146,7 @@ private:
 		_effect->attachShader(vertexShader);
 		_effect->attachShader(fragmentShader);
 		_effect->link();
+		_effect->setUniformBlockBinding(0u, 0u);
 		_graphicsDevice->destroyResource(fragmentShader);
 		_graphicsDevice->destroyResource(vertexShader);
 		initialiseVertexBuffer();
@@ -215,7 +216,7 @@ private:
 
 		const Uint bufferSize = sizeof(Float32) * VERTEX_DATA.size();
 		_vertexBuffer = _graphicsDevice->createBuffer(BufferBinding::Vertex, bufferSize);
-		Float32* data = reinterpret_cast<Float32*>(_vertexBuffer->mapData(bufferSize));
+		Float32* data = reinterpret_cast<Float32*>(_vertexBuffer->mapData());
 		std::copy(VERTEX_DATA.begin(), VERTEX_DATA.end(), data);
 		_vertexBuffer->demapData();
 	}
@@ -230,7 +231,7 @@ private:
 
 		const Uint bufferSize = sizeof(Uint8) * INDEX_DATA.size();
 		_indexBuffer = _graphicsDevice->createIndexBuffer(bufferSize, IndexType::Uint8);
-		Uint8* data = _vertexBuffer->mapData(bufferSize);
+		Uint8* data = _vertexBuffer->mapData();
 		std::copy(INDEX_DATA.begin(), INDEX_DATA.end(), data);
 		_vertexBuffer->demapData();
 	}
@@ -269,7 +270,7 @@ private:
 		Float32* data = reinterpret_cast<Float32*>(_uniformBuffer->mapData(sizeof(Matrix4)));
 		std::copy(projectionTransform.data(), projectionTransform.data() + 16, data);
 		_uniformBuffer->demapData();
-		_uniformBuffer->bindIndexed(0u);
+		_graphicsDevice->bindBufferIndexed(_uniformBuffer, 0u);
 	}
 
 	static void onWindowCreated(Window* window)

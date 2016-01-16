@@ -51,10 +51,8 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType);
 
 // Public
 
-Shader::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle,
-	const ShaderType& type, const Core::String8& source)
-	: _openGL(static_cast<OpenGL*>(graphicsInterfaceHandle)),
-	  _shaderHandle(0u)
+Shader::Implementation::Implementation(const ShaderType& type, const Core::String8& source)
+	: _shaderHandle(0u)
 {
 	createShader(type);
 	compileShader(source);
@@ -63,16 +61,16 @@ Shader::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterface
 
 Shader::Implementation::~Implementation()
 {
-	_openGL->deleteShader(_shaderHandle);
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	OpenGL::deleteShader(_shaderHandle);
+	DE_CHECK_ERROR_OPENGL();
 }
 
 // Private
 
 void Shader::Implementation::createShader(const ShaderType& type)
 {
-	_shaderHandle = _openGL->createShader(::getShaderTypeId(type));
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	_shaderHandle = OpenGL::createShader(::getShaderTypeId(type));
+	DE_CHECK_ERROR_OPENGL();
 
 	if(_shaderHandle == 0u)
 	{
@@ -86,10 +84,10 @@ void Shader::Implementation::createShader(const ShaderType& type)
 void Shader::Implementation::compileShader(const String8& source) const
 {
 	const Char8* sourceCharacters = source.c_str();
-	_openGL->shaderSource(_shaderHandle, 1, &sourceCharacters, nullptr);
-	DE_CHECK_ERROR_OPENGL(_openGL);
-	_openGL->compileShader(_shaderHandle);
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	OpenGL::shaderSource(_shaderHandle, 1, &sourceCharacters, nullptr);
+	DE_CHECK_ERROR_OPENGL();
+	OpenGL::compileShader(_shaderHandle);
+	DE_CHECK_ERROR_OPENGL();
 }
 
 void Shader::Implementation::checkCompilationStatus() const
@@ -110,8 +108,8 @@ void Shader::Implementation::checkCompilationStatus() const
 Int32 Shader::Implementation::getParameter(const Uint32 parameterName) const
 {
 	Int32 parameter;
-	_openGL->getShaderiv(_shaderHandle, parameterName, &parameter);
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	OpenGL::getShaderiv(_shaderHandle, parameterName, &parameter);
+	DE_CHECK_ERROR_OPENGL();
 
 	return parameter;
 }
@@ -144,10 +142,10 @@ Shader::Implementation::CharacterBuffer Shader::Implementation::getInfoLog(const
 {
 	CharacterBuffer logBuffer(logLength);
 
-	_openGL->getShaderInfoLog(_shaderHandle, static_cast<Int32>(logBuffer.size()), nullptr,
+	OpenGL::getShaderInfoLog(_shaderHandle, static_cast<Int32>(logBuffer.size()), nullptr,
 		logBuffer.data());
 
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	DE_CHECK_ERROR_OPENGL();
 	return logBuffer;
 }
 
@@ -157,7 +155,10 @@ Shader::Implementation::CharacterBuffer Shader::Implementation::getInfoLog(const
 // Private
 
 Shader::Shader(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type, const String8& source)
-	: _implementation(DE_NEW(Implementation)(graphicsInterfaceHandle, type, source)) { }
+	: _implementation(DE_NEW(Implementation)(type, source))
+{
+	static_cast<Void>(graphicsInterfaceHandle);
+}
 
 Shader::~Shader()
 {

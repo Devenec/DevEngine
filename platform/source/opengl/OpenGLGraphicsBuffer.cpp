@@ -38,10 +38,9 @@ static const Char8* COMPONENT_TAG = "[Graphics::GraphicsBuffer - OpenGL] ";
 
 // Public
 
-GraphicsBuffer::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle,
-	const BufferBinding& binding, const Uint size, const AccessMode& accessMode)
-	: _openGL(static_cast<OpenGL*>(graphicsInterfaceHandle)),
-	  _size(size),
+GraphicsBuffer::Implementation::Implementation(const BufferBinding& binding, const Uint size,
+	const AccessMode& accessMode)
+	: _size(size),
 	  _binding(static_cast<Uint32>(binding)),
 	  _bufferHandle(0u),
 	  _flags(0u)
@@ -53,27 +52,15 @@ GraphicsBuffer::Implementation::Implementation(GraphicsInterfaceHandle graphicsI
 
 GraphicsBuffer::Implementation::~Implementation()
 {
-	_openGL->deleteBuffers(1, &_bufferHandle);
-	DE_CHECK_ERROR_OPENGL(_openGL);
-}
-
-void GraphicsBuffer::Implementation::bindIndexed(const Uint32 bindingIndex) const
-{
-	_openGL->bindBufferBase(_binding, bindingIndex, _bufferHandle);
-	DE_CHECK_ERROR_OPENGL(_openGL);
-}
-
-void GraphicsBuffer::Implementation::debindIndexed(const Uint32 bindingIndex) const
-{
-	_openGL->bindBufferBase(_binding, bindingIndex, 0u);
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	OpenGL::deleteBuffers(1, &_bufferHandle);
+	DE_CHECK_ERROR_OPENGL();
 }
 
 void GraphicsBuffer::Implementation::demapData() const
 {
 	bind();
-	const Uint32 result = _openGL->unmapBuffer(_binding);
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	const Uint32 result = OpenGL::unmapBuffer(_binding);
+	DE_CHECK_ERROR_OPENGL();
 
 	if(result == 0u)
 	{
@@ -84,14 +71,13 @@ void GraphicsBuffer::Implementation::demapData() const
 	}
 
 	debind();
-	// TODO: restore old binding?
 }
 
 Uint8* GraphicsBuffer::Implementation::mapData(const Uint size, const Uint bufferOffset) const
 {
 	bind();
-	Void* data = _openGL->mapBufferRange(_binding, bufferOffset, size, _flags);
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	Void* data = OpenGL::mapBufferRange(_binding, bufferOffset, size, _flags);
+	DE_CHECK_ERROR_OPENGL();
 
 	if(data == nullptr)
 	{
@@ -99,17 +85,11 @@ Uint8* GraphicsBuffer::Implementation::mapData(const Uint size, const Uint buffe
 		DE_ERROR(0x0);
 	}
 
-	debind(); // TODO: restore old binding?
+	debind();
 	return static_cast<Uint8*>(data);
 }
 
 // Private
-
-void GraphicsBuffer::Implementation::bind(const Uint32 bufferHandle) const
-{
-	_openGL->bindBuffer(_binding, bufferHandle);
-	DE_CHECK_ERROR_OPENGL(_openGL);
-}
 
 void GraphicsBuffer::Implementation::initialiseAccessMode(const AccessMode& accessMode)
 {
@@ -122,16 +102,22 @@ void GraphicsBuffer::Implementation::initialiseAccessMode(const AccessMode& acce
 
 void GraphicsBuffer::Implementation::createBuffer()
 {
-	_openGL->genBuffers(1, &_bufferHandle);
-	DE_CHECK_ERROR_OPENGL(_openGL);
+	OpenGL::genBuffers(1, &_bufferHandle);
+	DE_CHECK_ERROR_OPENGL();
 }
 
 void GraphicsBuffer::Implementation::initialiseStorage() const
 {
 	bind();
-	_openGL->bufferData(_binding, _size, nullptr, OpenGL::STATIC_DRAW);
-	DE_CHECK_ERROR_OPENGL(_openGL);
-	debind(); // TODO: restore old binding?
+	OpenGL::bufferData(_binding, _size, nullptr, OpenGL::STATIC_DRAW);
+	DE_CHECK_ERROR_OPENGL();
+	debind();
+}
+
+void GraphicsBuffer::Implementation::bind(const Uint32 bufferHandle) const
+{
+	OpenGL::bindBuffer(_binding, bufferHandle);
+	DE_CHECK_ERROR_OPENGL();
 }
 
 
@@ -139,29 +125,14 @@ void GraphicsBuffer::Implementation::initialiseStorage() const
 
 // Public
 
-void GraphicsBuffer::bind() const
-{
-	_implementation->bind();
-}
-
-void GraphicsBuffer::bindIndexed(const Uint32 bindingIndex) const
-{
-	_implementation->bindIndexed(bindingIndex);
-}
-
-void GraphicsBuffer::debind() const
-{
-	_implementation->debind();
-}
-
-void GraphicsBuffer::debindIndexed(const Uint32 bindingIndex) const
-{
-	_implementation->debindIndexed(bindingIndex);
-}
-
 void GraphicsBuffer::demapData() const
 {
 	_implementation->demapData();
+}
+
+Uint8* GraphicsBuffer::mapData() const
+{
+	return _implementation->mapData();
 }
 
 Uint8* GraphicsBuffer::mapData(const Uint size, const Uint bufferOffset) const
@@ -173,7 +144,10 @@ Uint8* GraphicsBuffer::mapData(const Uint size, const Uint bufferOffset) const
 
 GraphicsBuffer::GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
 	const Uint size, const AccessMode& accessMode)
-	: _implementation(DE_NEW(Implementation)(graphicsInterfaceHandle, binding, size, accessMode)) { }
+	: _implementation(DE_NEW(Implementation)(binding, size, accessMode))
+{
+	static_cast<Void>(graphicsInterfaceHandle);
+}
 
 GraphicsBuffer::~GraphicsBuffer()
 {
