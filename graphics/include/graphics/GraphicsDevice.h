@@ -23,7 +23,6 @@
 #include <core/List.h>
 #include <core/String.h>
 #include <core/Types.h>
-#include <graphics/AccessMode.h>
 
 namespace Platform
 {
@@ -33,7 +32,9 @@ namespace Platform
 
 namespace Graphics
 {
+	enum class AccessMode;
 	enum class BufferBinding;
+	enum class BufferUsage;
 	enum class IndexType;
 	enum class PrimitiveType;
 	enum class ShaderType;
@@ -59,12 +60,12 @@ namespace Graphics
 		void clear(const Colour& colour) const;
 
 		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint size,
-			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
+			const AccessMode& accessMode, const BufferUsage& usage);
 
 		Effect* createEffect();
 
 		IndexBuffer* createIndexBuffer(const Uint size, const IndexType& indexType,
-			const AccessMode& accessMode = AccessMode::Read | AccessMode::Write);
+			const AccessMode& accessMode, const BufferUsage& usage);
 
 		Shader* createShader(const ShaderType& type, const Core::String8& source);
 

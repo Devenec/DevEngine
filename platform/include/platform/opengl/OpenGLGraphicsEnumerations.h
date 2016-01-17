@@ -29,6 +29,13 @@ namespace Graphics
 		Vertex	= 0x8892
 	};
 
+	enum class BufferUsage
+	{
+		Dynamic = 0x88E8,
+		Static	= 0x88E4,
+		Stream	= 0x88E0
+	};
+
 	enum class IndexType
 	{
 		Uint8  = 0x5004,

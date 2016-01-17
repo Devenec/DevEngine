@@ -29,6 +29,7 @@
 #include <core/maths/Matrix4.h>
 #include <core/maths/Utility.h>
 #include <core/maths/Vector3.h>
+#include <graphics/AccessMode.h>
 #include <graphics/Colour.h>
 #include <graphics/Effect.h>
 #include <graphics/GraphicsAdapterManager.h>
@@ -215,7 +216,10 @@ private:
 		VERTEX_DATA[15] = *reinterpret_cast<Float32*>(&colour);
 
 		const Uint bufferSize = sizeof(Float32) * VERTEX_DATA.size();
-		_vertexBuffer = _graphicsDevice->createBuffer(BufferBinding::Vertex, bufferSize);
+
+		_vertexBuffer = _graphicsDevice->createBuffer(BufferBinding::Vertex, bufferSize, AccessMode::Write,
+			BufferUsage::Static);
+
 		Float32* data = reinterpret_cast<Float32*>(_vertexBuffer->mapData());
 		std::copy(VERTEX_DATA.begin(), VERTEX_DATA.end(), data);
 		_vertexBuffer->demapData();
@@ -230,7 +234,10 @@ private:
 		};
 
 		const Uint bufferSize = sizeof(Uint8) * INDEX_DATA.size();
-		_indexBuffer = _graphicsDevice->createIndexBuffer(bufferSize, IndexType::Uint8);
+
+		_indexBuffer = _graphicsDevice->createIndexBuffer(bufferSize, IndexType::Uint8, AccessMode::Write,
+			BufferUsage::Static);
+
 		Uint8* data = _vertexBuffer->mapData();
 		std::copy(INDEX_DATA.begin(), INDEX_DATA.end(), data);
 		_vertexBuffer->demapData();
@@ -265,7 +272,8 @@ private:
 		);
 
 		_uniformBuffer =
-			_graphicsDevice->createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32), AccessMode::Write);
+			_graphicsDevice->createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32), AccessMode::Write,
+				BufferUsage::Stream);
 
 		Float32* data = reinterpret_cast<Float32*>(_uniformBuffer->mapData(sizeof(Matrix4)));
 		std::copy(projectionTransform.data(), projectionTransform.data() + 16, data);

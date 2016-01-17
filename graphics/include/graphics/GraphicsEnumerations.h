@@ -33,6 +33,13 @@
  *   Vertex
  * };
  *
+ * enum class BufferUsage
+ * {
+ *   Dynamic,
+ *   Static,
+ *   Stream
+ * };
+ *
  * enum class IndexType
  * {
  *   Uint8,

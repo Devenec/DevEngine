@@ -24,6 +24,7 @@
 #include <graphics/AccessMode.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
+#include <platform/opengl/OpenGLGraphicsEnumerations.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -39,7 +40,7 @@ static const Char8* COMPONENT_TAG = "[Graphics::GraphicsBuffer - OpenGL] ";
 // Public
 
 GraphicsBuffer::Implementation::Implementation(const BufferBinding& binding, const Uint size,
-	const AccessMode& accessMode)
+	const AccessMode& accessMode, const BufferUsage& usage)
 	: _size(size),
 	  _binding(static_cast<Uint32>(binding)),
 	  _bufferHandle(0u),
@@ -47,7 +48,7 @@ GraphicsBuffer::Implementation::Implementation(const BufferBinding& binding, con
 {
 	initialiseAccessMode(accessMode);
 	createBuffer();
-	initialiseStorage();
+	initialiseStorage(accessMode, usage);
 }
 
 GraphicsBuffer::Implementation::~Implementation()
@@ -106,10 +107,11 @@ void GraphicsBuffer::Implementation::createBuffer()
 	DE_CHECK_ERROR_OPENGL();
 }
 
-void GraphicsBuffer::Implementation::initialiseStorage() const
+void GraphicsBuffer::Implementation::initialiseStorage(const AccessMode& accessMode, const BufferUsage& usage)
+	const
 {
 	bind();
-	OpenGL::bufferData(_binding, _size, nullptr, OpenGL::STATIC_DRAW);
+	OpenGL::bufferData(_binding, _size, nullptr, getUsageValue(accessMode, usage));
 	DE_CHECK_ERROR_OPENGL();
 	debind();
 }
@@ -118,6 +120,20 @@ void GraphicsBuffer::Implementation::bind(const Uint32 bufferHandle) const
 {
 	OpenGL::bindBuffer(_binding, bufferHandle);
 	DE_CHECK_ERROR_OPENGL();
+}
+
+Uint32 GraphicsBuffer::Implementation::getUsageValue(const AccessMode& accessMode, const BufferUsage& usage)
+	const
+{
+	Uint32 value = static_cast<Int32>(usage);
+
+	if((accessMode & AccessMode::Read) == AccessMode::Read &&
+		(accessMode & AccessMode::Write) != AccessMode::Write)
+	{
+		++value;
+	}
+
+	return value;
 }
 
 
@@ -143,8 +159,8 @@ Uint8* GraphicsBuffer::mapData(const Uint size, const Uint bufferOffset) const
 // Protected
 
 GraphicsBuffer::GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
-	const Uint size, const AccessMode& accessMode)
-	: _implementation(DE_NEW(Implementation)(binding, size, accessMode))
+	const Uint size, const AccessMode& accessMode, const BufferUsage& usage)
+	: _implementation(DE_NEW(Implementation)(binding, size, accessMode, usage))
 {
 	static_cast<Void>(graphicsInterfaceHandle);
 }

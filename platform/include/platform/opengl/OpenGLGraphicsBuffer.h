@@ -28,7 +28,8 @@ namespace Graphics
 	{
 	public:
 
-		Implementation(const BufferBinding& binding, const Uint size, const AccessMode& accessMode);
+		Implementation(const BufferBinding& binding, const Uint size, const AccessMode& accessMode,
+			const BufferUsage& usage);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
@@ -61,8 +62,9 @@ namespace Graphics
 
 		void initialiseAccessMode(const AccessMode& accessMode);
 		void createBuffer();
-		void initialiseStorage() const;
+		void initialiseStorage(const AccessMode& accessMode, const BufferUsage& usage) const;
 		void bind(const Uint32 bufferHandle) const;
+		Uint32 getUsageValue(const AccessMode& accessMode, const BufferUsage& usage) const;
 	};
 
 #include "inline/OpenGLGraphicsBuffer.inl"

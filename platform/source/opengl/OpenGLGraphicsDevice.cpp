@@ -78,10 +78,10 @@ public:
 		DE_CHECK_ERROR_OPENGL();
 	}
 
-	GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint size, const AccessMode& accessMode)
-		const
+	GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint size, const AccessMode& accessMode,
+		const BufferUsage& usage) const
 	{
-		return DE_NEW(GraphicsBuffer)(nullptr, binding, size, accessMode);
+		return DE_NEW(GraphicsBuffer)(nullptr, binding, size, accessMode, usage);
 	}
 
 	Effect* createEffect() const
@@ -89,10 +89,10 @@ public:
 		return DE_NEW(Effect)(nullptr);
 	}
 
-	IndexBuffer* createIndexBuffer(const Uint size, const IndexType& indexType, const AccessMode& accessMode)
-		const
+	IndexBuffer* createIndexBuffer(const Uint size, const IndexType& indexType, const AccessMode& accessMode,
+		const BufferUsage& usage) const
 	{
-		return DE_NEW(IndexBuffer)(nullptr, size, indexType, accessMode);
+		return DE_NEW(IndexBuffer)(nullptr, size, indexType, accessMode, usage);
 	}
 
 	Shader* createShader(const ShaderType& type, const String8& source) const
@@ -219,9 +219,9 @@ void GraphicsDevice::clear(const Colour& colour) const
 }
 
 GraphicsBuffer* GraphicsDevice::createBuffer(const BufferBinding& binding, const Uint size,
-	const AccessMode& accessMode)
+	const AccessMode& accessMode, const BufferUsage& usage)
 {
-	GraphicsBuffer* buffer = _implementation->createBuffer(binding, size, accessMode);
+	GraphicsBuffer* buffer = _implementation->createBuffer(binding, size, accessMode, usage);
 	_resources.push_back(buffer);
 
 	return buffer;
@@ -236,9 +236,9 @@ Effect* GraphicsDevice::createEffect()
 }
 
 IndexBuffer* GraphicsDevice::createIndexBuffer(const Uint size, const IndexType& indexType,
-	const AccessMode& accessMode)
+	const AccessMode& accessMode, const BufferUsage& usage)
 {
-	IndexBuffer* indexBuffer = _implementation->createIndexBuffer(size, indexType, accessMode);
+	IndexBuffer* indexBuffer = _implementation->createIndexBuffer(size, indexType, accessMode, usage);
 	_resources.push_back(indexBuffer);
 
 	return indexBuffer;

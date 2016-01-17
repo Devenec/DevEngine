@@ -47,7 +47,7 @@ namespace Graphics
 		IndexType _indexType;
 
 		IndexBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const Uint size,
-			const IndexType& indexType, const AccessMode& accessMode);
+			const IndexType& indexType, const AccessMode& accessMode, const BufferUsage& usage);
 
 		~IndexBuffer() = default;
 	};

@@ -27,6 +27,7 @@ namespace Graphics
 {
 	enum class AccessMode;
 	enum class BufferBinding;
+	enum class BufferUsage;
 
 	class GraphicsBuffer : public GraphicsResource
 	{
@@ -51,7 +52,7 @@ namespace Graphics
 		Implementation* _implementation;
 
 		GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
-			const Uint size, const AccessMode& accessMode);
+			const Uint size, const AccessMode& accessMode, const BufferUsage& usage);
 
 		virtual ~GraphicsBuffer();
 
