@@ -18,11 +18,15 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Array.h>
 #include <core/Error.h>
 #include <core/Log.h>
+#include <core/Memory.h>
+#include <core/Types.h>
+#include <core/Vector.h>
 #include <graphics/GraphicsConfig.h>
+#include <platform/GraphicsConfigChooser.h>
 #include <platform/wgl/WGL.h>
-#include <platform/wgl/WGLGraphicsConfigChooser.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
@@ -31,43 +35,146 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsConfigChooser - WGL] ";
+using ConfigAttributeList = Array<Int32, 7u>;
 
-static const Array<Int32, 9u> REQUIRED_CONFIG_ATTRIBUTES
-{{
-	WGL::DOUBLE_BUFFER_ARB,	 1,
-	WGL::DRAW_TO_WINDOW_ARB, 1,
-	WGL::PIXEL_TYPE_ARB,	 WGL::TYPE_RGBA_ARB,
-	WGL::SUPPORT_OPENGL_ARB, 1,
-	0
-}};
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsConfigChooser - WGL] ";
 
 static Bool isConfigLess(const ConfigAttributeList& configAttributesA,
 	const ConfigAttributeList& configAttributesB);
 
 
-// Public
+// Implementation
 
-GraphicsConfigChooser::GraphicsConfigChooser(HDC deviceContextHandle)
-	: _deviceContextHandle(deviceContextHandle) { }
-
-Int32 GraphicsConfigChooser::chooseConfig(GraphicsConfig& chosenConfig) const
+class GraphicsConfigChooser::Implementation final
 {
-	const Uint32 configCount = getConfigCount();
-	const ConfigIndexList configIndices = getConfigIndices(configCount);
-	ConfigAttributeList configAttributes;
-	const Int32 chosenConfigIndex = chooseBestConfig(configIndices, configAttributes);
+public:
 
-	chosenConfig =
-		GraphicsConfig(configAttributes[5], configAttributes[4], configAttributes[2], configAttributes[1],
-			configAttributes[3], configAttributes[6]);
+	Implementation(WindowHandle windowHandle)
+		: _deviceContextHandle(nullptr)
+	{
+		_deviceContextHandle = getWindowDeviceContextHandle(static_cast<HWND>(windowHandle));
+	}
 
-	return chosenConfigIndex;
-}
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
 
-// Private
+	~Implementation() = default;
 
-const ConfigAttributeList GraphicsConfigChooser::CONFIG_ATTRIBUTE_IDS
+	ConfigHandle chooseConfig(GraphicsConfig& chosenConfig) const
+	{
+		const Uint32 configCount = getConfigCount();
+		const ConfigIndexList configIndices = getConfigIndices(configCount);
+		ConfigAttributeList configAttributes;
+		const Int configIndex = chooseBestConfig(configIndices, configAttributes);
+
+		chosenConfig =
+			GraphicsConfig(configAttributes[5], configAttributes[4], configAttributes[2], configAttributes[1],
+				configAttributes[3], configAttributes[6]);
+
+		return reinterpret_cast<ConfigHandle>(configIndex);
+	}
+
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
+
+private:
+
+	using ConfigIndexList = Vector<Int32>;
+	using RequiredConfigAttributeList = Array<Int32, 9u>;
+
+	static const ConfigAttributeList CONFIG_ATTRIBUTE_IDS;
+	static const RequiredConfigAttributeList REQUIRED_CONFIG_ATTRIBUTES;
+
+	HDC _deviceContextHandle;
+
+	Uint32 getConfigCount() const
+	{
+		const Int32 attributeName = WGL::NUMBER_PIXEL_FORMATS_ARB;
+		Int32 configCount;
+
+		const Int32 result =
+			WGL::getPixelFormatAttribivARB(_deviceContextHandle, 0, 0, 1u, &attributeName, &configCount);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG <<
+				"Failed to get the number of configurations." << Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+
+		return configCount;
+	}
+	
+	ConfigIndexList getConfigIndices(const Uint32 configCount) const
+	{
+		ConfigIndexList configIndices(configCount);
+		Uint32 matchingConfigCount;
+
+		const Int32 result =
+			WGL::choosePixelFormatARB(_deviceContextHandle, REQUIRED_CONFIG_ATTRIBUTES.data(), nullptr,
+				configCount, configIndices.data(), &matchingConfigCount);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get matching configurations." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+		else if(matchingConfigCount == 0u)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found."
+				<< Log::Flush();
+
+			DE_ERROR(0x0);
+		}
+
+		configIndices.resize(matchingConfigCount);
+		return configIndices;
+	}
+
+	Int32 chooseBestConfig(const ConfigIndexList& configIndices, ConfigAttributeList& configAttributes) const
+	{
+		Int32 bestConfigIndex = configIndices.front();
+		configAttributes = getConfigAttributes(bestConfigIndex);
+
+		for(ConfigIndexList::const_iterator i = configIndices.begin() + 1u, end = configIndices.end();
+			i != end; ++i)
+		{
+			const ConfigAttributeList compareConfigAttributes = getConfigAttributes(*i);
+
+			if(::isConfigLess(configAttributes, compareConfigAttributes))
+			{
+				bestConfigIndex = *i;
+				configAttributes = compareConfigAttributes;
+			}
+		}
+
+		return bestConfigIndex;
+	}
+
+	ConfigAttributeList getConfigAttributes(const Int32 configIndex) const
+	{
+		ConfigAttributeList attributes;
+
+		const Int32 result =
+			WGL::getPixelFormatAttribivARB(_deviceContextHandle, configIndex, 0,
+				static_cast<Uint32>(attributes.size()), CONFIG_ATTRIBUTE_IDS.data(), attributes.data());
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get configuration attributes." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+
+		return attributes;
+	}
+};
+
+const ConfigAttributeList GraphicsConfigChooser::Implementation::CONFIG_ATTRIBUTE_IDS
 {{
 	WGL::ACCELERATION_ARB,
 	WGL::ALPHA_BITS_ARB,
@@ -78,92 +185,32 @@ const ConfigAttributeList GraphicsConfigChooser::CONFIG_ATTRIBUTE_IDS
 	WGL::STENCIL_BITS_ARB
 }};
 
-Uint32 GraphicsConfigChooser::getConfigCount() const
+const GraphicsConfigChooser::Implementation::RequiredConfigAttributeList
+GraphicsConfigChooser::Implementation::REQUIRED_CONFIG_ATTRIBUTES
+{{
+	WGL::DOUBLE_BUFFER_ARB,	 1,
+	WGL::DRAW_TO_WINDOW_ARB, 1,
+	WGL::PIXEL_TYPE_ARB,	 WGL::TYPE_RGBA_ARB,
+	WGL::SUPPORT_OPENGL_ARB, 1,
+	0
+}};
+
+
+// Platform::GraphicsConfigChooser
+
+// Public
+
+GraphicsConfigChooser::GraphicsConfigChooser(WindowHandle windowHandle)
+	: _implementation(DE_NEW(Implementation)(windowHandle)) { }
+
+GraphicsConfigChooser::~GraphicsConfigChooser()
 {
-	const Int32 attributeName = WGL::NUMBER_PIXEL_FORMATS_ARB;
-	Int32 configCount;
-
-	const Int32 result =
-		WGL::getPixelFormatAttribivARB(_deviceContextHandle, 0, 0, 1u, &attributeName, &configCount);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the number of configurations." <<
-			Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0);
-	}
-
-	return configCount;
+	DE_DELETE(_implementation, Implementation);
 }
 
-GraphicsConfigChooser::ConfigIndexList GraphicsConfigChooser::getConfigIndices(const Uint32 configCount)
-	const
+ConfigHandle GraphicsConfigChooser::chooseConfig(Graphics::GraphicsConfig& chosenConfig) const
 {
-	ConfigIndexList configIndices(configCount);
-	Uint32 matchingConfigCount;
-
-	const Int32 result =
-		WGL::choosePixelFormatARB(_deviceContextHandle, ::REQUIRED_CONFIG_ATTRIBUTES.data(), nullptr,
-			configCount, configIndices.data(), &matchingConfigCount);
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get matching configurations." <<
-			Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0);
-	}
-	else if(matchingConfigCount == 0u)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found."
-			<< Log::Flush();
-
-		DE_ERROR(0x0);
-	}
-
-	configIndices.resize(matchingConfigCount);
-	return configIndices;
-}
-
-Int32 GraphicsConfigChooser::chooseBestConfig(const ConfigIndexList& configIndices,
-	ConfigAttributeList& configAttributes) const
-{
-	Int32 bestConfigIndex = configIndices.front();
-	configAttributes = getConfigAttributes(bestConfigIndex);
-
-	for(ConfigIndexList::const_iterator i = configIndices.begin() + 1u, end = configIndices.end(); i != end;
-		++i)
-	{
-		const ConfigAttributeList compareConfigAttributes = getConfigAttributes(*i);
-
-		if(::isConfigLess(configAttributes, compareConfigAttributes))
-		{
-			bestConfigIndex = *i;
-			configAttributes = compareConfigAttributes;
-		}
-	}
-
-	return bestConfigIndex;
-}
-
-ConfigAttributeList GraphicsConfigChooser::getConfigAttributes(const Int32 configIndex) const
-{
-	ConfigAttributeList attributes;
-
-	const Int32 result =
-		WGL::getPixelFormatAttribivARB(_deviceContextHandle, configIndex, 0,
-			static_cast<Uint32>(attributes.size()), CONFIG_ATTRIBUTE_IDS.data(), attributes.data());
-
-	if(result == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get configuration attributes." <<
-			Log::Flush();
-
-		DE_ERROR_WINDOWS(0x0);
-	}
-
-	return attributes;
+	return _implementation->chooseConfig(chosenConfig);
 }
 
 

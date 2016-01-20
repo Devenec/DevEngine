@@ -67,7 +67,6 @@ GLX::GetProcAddress GLX::getProcAddress = nullptr;
 
 GLX::CreateContextAttribsARB GLX::createContextAttribsARB = nullptr;
 
-
 GLX::GLX()
 	: _libraryHandle(nullptr)
 {

@@ -37,11 +37,10 @@ namespace Platform
 
 		~TemporaryGraphicsContext() = default;
 
-		TemporaryGraphicsContext& operator =(const TemporaryGraphicsContext& temporaryGraphicsContext)
-			= delete;
+		TemporaryGraphicsContext& operator =(const TemporaryGraphicsContext& temporaryGraphicsContext) =
+			delete;
 
-		TemporaryGraphicsContext& operator =(TemporaryGraphicsContext&& temporaryGraphicsContext)
-			= delete;
+		TemporaryGraphicsContext& operator =(TemporaryGraphicsContext&& temporaryGraphicsContext) = delete;
 
 	private:
 

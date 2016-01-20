@@ -1551,7 +1551,6 @@ namespace Platform
 			void (DE_CALL_OPENGL*)(Uint32 vaobj, Uint32 first, Sizei count, const Uint32* buffers,
 				const Intptr* offsets, const Sizei* strides);
 
-
 		// Version 1.0
 
 		static BlendFunc blendFunc;

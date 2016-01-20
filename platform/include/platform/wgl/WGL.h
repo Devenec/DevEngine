@@ -43,6 +43,7 @@
 #pragma once
 
 #include <core/Platform.h>
+#include <core/Singleton.h>
 #include <core/Types.h>
 #include <graphics/LogUtility.h>
 #include <platform/windows/WindowsGraphics.h>
@@ -53,7 +54,7 @@ namespace Platform
 {
 	class GraphicsContextBase;
 
-	class WGL final
+	class WGL final : public Core::Singleton<WGL>
 	{
 	public:
 
@@ -89,7 +90,6 @@ namespace Platform
 		using GetPixelFormatAttribIVARB =
 			Int32 (DE_CALL_WGL*)(HDC hdc, Int32 piValues, Int32 iLayerPlane, Uint32 nAttributes,
 				const Int32* piAttributes, Int32* attributeValues);
-
 
 		// Standard
 
@@ -183,22 +183,21 @@ namespace Platform
 		static GetPixelFormatAttribFVARB getPixelFormatAttribfvARB;
 		static GetPixelFormatAttribIVARB getPixelFormatAttribivARB;
 
-
-		WGL() = delete;
+		WGL() = default;
 
 		WGL(const WGL& wGL) = delete;
 		WGL(WGL&& wGL) = delete;
 
-		~WGL() = delete;
+		~WGL() = default;
 
 		WGL& operator =(const WGL& wGL) = delete;
 		WGL& operator =(WGL&& wGL) = delete;
 
-		static void initialise(const GraphicsContextBase& graphicsContext);
+		void initialise(const GraphicsContextBase& graphicsContext) const;
 
 	private:
 
-		static void initialiseExtensions();
+		static void initialiseExtensionSupport();
 		static Graphics::ExtensionNameList getExtensionNames(const GraphicsContextBase& graphicsContext);
 		static void checkExtensionsSupport(const Graphics::ExtensionNameList& extensionNames);
 		static void getExtensionFunctions();

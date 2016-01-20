@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/WGLGraphicsDeviceFactory.h
+ * @file platform/windows/WindowsGraphicsInterfaceManager.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -23,34 +23,32 @@
 #include <core/Types.h>
 #include <platform/windows/WindowsGraphics.h>
 
-namespace Graphics
-{
-	class GraphicsDevice;
-	class Window;
-}
-
 namespace Platform
 {
-	class GraphicsContext;
-
-	class GraphicsDeviceFactory final
+	class GraphicsInterfaceManager final
 	{
 	public:
 
-		GraphicsDeviceFactory() = default;
+		GraphicsInterfaceManager();
 
-		GraphicsDeviceFactory(const GraphicsDeviceFactory& graphicsDeviceFactory) = delete;
-		GraphicsDeviceFactory(GraphicsDeviceFactory&& graphicsDeviceFactory) = delete;
+		GraphicsInterfaceManager(const GraphicsInterfaceManager& graphicsInterfaceManager) = delete;
+		GraphicsInterfaceManager(GraphicsInterfaceManager&& graphicsInterfaceManager) = delete;
 
-		~GraphicsDeviceFactory() = default;
+		~GraphicsInterfaceManager();
 
-		Graphics::GraphicsDevice* createDevice(Graphics::Window* window);
+		void initialiseInterface(HWND temporaryWindowHandle) const;
 
-		GraphicsDeviceFactory& operator =(const GraphicsDeviceFactory& graphicsDeviceFactory) = delete;
-		GraphicsDeviceFactory& operator =(GraphicsDeviceFactory&& graphicsDeviceFactory) = delete;
+		Bool interfaceRequiresInitialisation() const;
+
+		GraphicsInterfaceManager& operator =(const GraphicsInterfaceManager& graphicsInterfaceManager) =
+			delete;
+
+		GraphicsInterfaceManager& operator =(GraphicsInterfaceManager&& graphicsInterfaceManager) = delete;
 
 	private:
 
-		Int32 chooseGraphicsConfig(HDC deviceContextHandle) const;
+		class Implementation;
+
+		Implementation* _implementation;
 	};
 }

@@ -25,9 +25,9 @@
 #include <graphics/GraphicsDeviceManager.h>
 #include <graphics/LogUtility.h>
 #include <graphics/Window.h>
+#include <platform/GraphicsConfigChooser.h>
 #include <platform/GraphicsContext.h>
 #include <platform/glx/GLX.h>
-#include <platform/glx/GLXGraphicsConfigChooser.h>
 #include <platform/x/X.h>
 #include <platform/x/XWindow.h>
 
@@ -39,9 +39,6 @@ using namespace Platform;
 
 static const Char8* WINDOW_DEFAULT_TITLE = "DevEngine Application";
 
-static GLX::FBConfig chooseGraphicsConfig();
-static void logGraphicsConfig(GLX::FBConfig configHandle);
-
 
 // Implementation
 
@@ -52,12 +49,13 @@ public:
 	Implementation(WindowCreatedHandler windowCreatedHandler)
 		: _createMessageAtom(0u),
 		  _destroyMessageAtom(0u),
-		  _graphicsConfigHandle(::chooseGraphicsConfig()),
+		  _graphicsConfigHandle(nullptr),
 		  _windowCreatedHandler(windowCreatedHandler),
 		  _x(X::instance())
 	{
 		_createMessageAtom = _x.createAtom("DE_CREATE_WINDOW");
 		_destroyMessageAtom = _x.createAtom("WM_DELETE_WINDOW");
+		chooseGraphicsConfig();
 	}
 
 	Implementation(const Implementation& implementation) = delete;
@@ -67,7 +65,7 @@ public:
 
 	GraphicsDevice* createDeviceObject(Graphics::Window* window) const
 	{
-		logGraphicsConfig(_graphicsConfigHandle);
+		logChosenGraphicsConfig(_graphicsConfig);
 		GraphicsContext* graphicsContext = DE_NEW(GraphicsContext)(window->handle(), _graphicsConfigHandle);
 
 		return DE_NEW(GraphicsDevice)(graphicsContext);
@@ -115,12 +113,19 @@ public:
 
 private:
 
+	GraphicsConfig _graphicsConfig;
+	GLX::FBConfig _graphicsConfigHandle;
 	Atom _createMessageAtom;
 	Atom _destroyMessageAtom;
 	GLX _glX;
-	GLX::FBConfig _graphicsConfigHandle;
 	WindowCreatedHandler _windowCreatedHandler;
 	X& _x;
+
+	void chooseGraphicsConfig()
+	{
+		GraphicsConfigChooser configChooser(nullptr);
+		_graphicsConfigHandle = configChooser.chooseConfig(_graphicsConfig);
+	}
 
 	::Window createWindow(const Uint32 width, const Uint32 height)
 	{
@@ -238,20 +243,4 @@ void GraphicsDeviceManager::destroyWindows()
 {
 	for(WindowList::const_iterator i = _windows.begin(), end = _windows.end(); i != end; ++i)
 		_implementation->destroyWindow(*i);
-}
-
-
-// External
-
-static GLX::FBConfig chooseGraphicsConfig()
-{
-	GraphicsConfigChooser graphicsConfigChooser;
-	return graphicsConfigChooser.chooseConfig();
-}
-
-static void logGraphicsConfig(GLX::FBConfig configHandle)
-{
-	GraphicsConfigChooser graphicsConfigChooser;
-	GraphicsConfig config = graphicsConfigChooser.getConfig(configHandle);
-	logChosenGraphicsConfig(config);
 }

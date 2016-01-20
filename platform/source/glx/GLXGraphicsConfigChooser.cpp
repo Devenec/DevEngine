@@ -18,10 +18,16 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Array.h>
 #include <core/Error.h>
 #include <core/Log.h>
+#include <core/Memory.h>
+#include <core/Types.h>
+#include <core/Vector.h>
 #include <graphics/GraphicsConfig.h>
-#include <platform/glx/GLXGraphicsConfigChooser.h>
+#include <platform/GraphicsConfigChooser.h>
+#include <platform/glx/GLX.h>
+#include <platform/x/X.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -29,49 +35,103 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG = "[Platform::GraphicsConfigChooser - GLX] ";
+using ConfigAttributeList = Array<Int32, 6u>;
 
-static const Array<Int32, 9u> REQUIRED_CONFIG_ATTRIBUTES
-{{
-	GLX::DOUBLEBUFFER,	1,
-	GLX::DRAWABLE_TYPE, GLX::WINDOW_BIT,
-	GLX::RENDER_TYPE,	GLX::RGBA_BIT,
-	GLX::X_VISUAL_TYPE, GLX::TRUE_COLOR,
-	0
-}};
+static const Char8* COMPONENT_TAG = "[Platform::GraphicsConfigChooser - GLX] ";
 
 static Bool isConfigLess(const ConfigAttributeList& configAttributesA,
 	const ConfigAttributeList& configAttributesB);
 
+// Implementation
 
-// Public
-
-GraphicsConfigChooser::GraphicsConfigChooser()
-	: _x(X::instance()) { }
-
-GLX::FBConfig GraphicsConfigChooser::chooseConfig() const
+class GraphicsConfigChooser::Implementation final
 {
-	Uint32 configCount = 0;
-	GLX::FBConfig* configHandles = getConfigs(configCount);
-	ConfigAttributeList configAttributes;
-	GLX::FBConfig bestConfigHandle = chooseBestConfig(configHandles, configCount, configAttributes);
-	XFree(configHandles);
+public:
 
-	return bestConfigHandle;
-}
+	Implementation()
+		: _x(X::instance()) { }
 
-GraphicsConfig GraphicsConfigChooser::getConfig(GLX::FBConfig configHandle) const
-{
-	ConfigAttributeList configAttributes = getConfigAttributes(configHandle);
+	Implementation(const Implementation& implementation) = delete;
+	Implementation(Implementation&& implementation) = delete;
 
-	return
-		GraphicsConfig(configAttributes[4], configAttributes[3], configAttributes[1], configAttributes[0],
-			configAttributes[2], configAttributes[5]);
-}
+	~Implementation() = default;
 
-// Private
+	ConfigHandle chooseConfig(GraphicsConfig& chosenConfig) const
+	{
+		Uint32 configCount = 0u;
+		GLX::FBConfig* configHandles = getConfigs(configCount);
+		ConfigAttributeList configAttributes;
+		GLX::FBConfig configHandle = chooseBestConfig(configHandles, configCount, configAttributes);
+		XFree(configHandles);
 
-const ConfigAttributeList GraphicsConfigChooser::CONFIG_ATTRIBUTE_IDS
+		chosenConfig =
+			GraphicsConfig(configAttributes[4], configAttributes[3], configAttributes[1], configAttributes[0],
+				configAttributes[2], configAttributes[5]);
+
+		return configHandle;
+	}
+
+	Implementation& operator =(const Implementation& implementation) = delete;
+	Implementation& operator =(Implementation&& implementation) = delete;
+
+private:
+
+	using ConfigIndexList = Vector<Int32>;
+	using RequiredConfigAttributeList = Array<Int32, 9u>;
+
+	static const ConfigAttributeList CONFIG_ATTRIBUTE_IDS;
+	static const RequiredConfigAttributeList REQUIRED_CONFIG_ATTRIBUTES;
+
+	X& _x;
+
+	GLX::FBConfig* getConfigs(Uint32& configCount) const
+	{
+		GLX::FBConfig* configHandles = _x.getGraphicsConfigs(::REQUIRED_CONFIG_ATTRIBUTES.data(),
+			configCount);
+
+		if(configCount == 0)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found." <<
+				Log::Flush();
+
+			DE_ERROR(0x0);
+		}
+
+		return configHandles;
+	}
+
+	GLX::FBConfig chooseBestConfig(GLX::FBConfig* configHandles, const Uint32 configCount,
+		ConfigAttributeList& configAttributes) const
+	{
+		GLX::FBConfig bestConfigHandle = configHandles[0u];
+		configAttributes = getConfigAttributes(bestConfigHandle);
+
+		for(Uint32 i = 1u; i < configCount; ++i)
+		{
+			const ConfigAttributeList compareConfigAttributes = getConfigAttributes(configHandles[i]);
+
+			if(::isConfigLess(configAttributes, compareConfigAttributes))
+			{
+				bestConfigHandle = configHandles[i];
+				configAttributes = compareConfigAttributes;
+			}
+		}
+
+		return bestConfigHandle;
+	}
+
+	ConfigAttributeList getConfigAttributes(GLX::FBConfig configHandle) const
+	{
+		ConfigAttributeList attributes;
+
+		for(Uint32 i = 0u; i < attributes.size(); ++i)
+			attributes[i] = _x.getGraphicsConfigAttribute(configHandle, CONFIG_ATTRIBUTE_IDS[i]);
+
+		return attributes;
+	}
+};
+
+const ConfigAttributeList GraphicsConfigChooser::Implementation::CONFIG_ATTRIBUTE_IDS
 {{
 	GLX::ALPHA_SIZE,
 	GLX::BLUE_SIZE,
@@ -81,49 +141,35 @@ const ConfigAttributeList GraphicsConfigChooser::CONFIG_ATTRIBUTE_IDS
 	GLX::STENCIL_SIZE
 }};
 
-GLX::FBConfig* GraphicsConfigChooser::getConfigs(Uint32& configCount) const
+const GraphicsConfigChooser::Implementation::RequiredConfigAttributeList
+GraphicsConfigChooser::Implementation::REQUIRED_CONFIG_ATTRIBUTES
+{{
+	GLX::DOUBLEBUFFER,	1,
+	GLX::DRAWABLE_TYPE, GLX::WINDOW_BIT,
+	GLX::RENDER_TYPE,	GLX::RGBA_BIT,
+	GLX::X_VISUAL_TYPE, GLX::TRUE_COLOR,
+	0
+}};
+
+
+// Platform::GraphicsConfigChooser
+
+// Public
+
+GraphicsConfigChooser::GraphicsConfigChooser(WindowHandle windowHandle)
+	: _implementation(DE_NEW(Implementation)())
 {
-	GLX::FBConfig* configHandles = _x.getGraphicsConfigs(::REQUIRED_CONFIG_ATTRIBUTES.data(), configCount);
-
-	if(configCount == 0)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "No matching configurations were found." <<
-			Log::Flush();
-
-		DE_ERROR(0x0);
-	}
-
-	return configHandles;
+	static_cast<Void>(windowHandle);
 }
 
-GLX::FBConfig GraphicsConfigChooser::chooseBestConfig(GLX::FBConfig* configHandles, const Uint32 configCount,
-	ConfigAttributeList& configAttributes) const
+GraphicsConfigChooser::~GraphicsConfigChooser()
 {
-	GLX::FBConfig bestConfigHandle = configHandles[0u];
-	configAttributes = getConfigAttributes(bestConfigHandle);
-
-	for(Uint32 i = 1u; i < configCount; ++i)
-	{
-		const ConfigAttributeList compareConfigAttributes = getConfigAttributes(configHandles[i]);
-
-		if(::isConfigLess(configAttributes, compareConfigAttributes))
-		{
-			bestConfigHandle = configHandles[i];
-			configAttributes = compareConfigAttributes;
-		}
-	}
-
-	return bestConfigHandle;
+	DE_DELETE(_implementation, Implementation);
 }
 
-ConfigAttributeList GraphicsConfigChooser::getConfigAttributes(GLX::FBConfig configHandle) const
+ConfigHandle GraphicsConfigChooser::chooseConfig(Graphics::GraphicsConfig& chosenConfig) const
 {
-	ConfigAttributeList attributes;
-
-	for(Uint32 i = 0u; i < attributes.size(); ++i)
-		attributes[i] = _x.getGraphicsConfigAttribute(configHandle, CONFIG_ATTRIBUTE_IDS[i]);
-
-	return attributes;
+	return _implementation->chooseConfig(chosenConfig);
 }
 
 

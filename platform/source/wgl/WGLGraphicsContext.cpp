@@ -21,6 +21,7 @@
 #include <core/Array.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/Types.h>
 #include <platform/GraphicsContext.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>

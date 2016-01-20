@@ -41,6 +41,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\platform\GraphicsConfigChooser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\GraphicsContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -56,6 +59,9 @@
     <ClInclude Include="include\platform\opengl\OpenGL.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\opengl\OpenGLEffect.h">
+      <Filter>Header Files\opengl</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
@@ -65,16 +71,13 @@
     <ClInclude Include="include\platform\opengl\OpenGLShader.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\opengl\OpenGLVertexBufferState.h">
+      <Filter>Header Files\opengl</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\wgl\WGL.h">
       <Filter>Header Files\wgl</Filter>
     </ClInclude>
-    <ClInclude Include="include\platform\wgl\WGLGraphicsConfigChooser.h">
-      <Filter>Header Files\wgl</Filter>
-    </ClInclude>
     <ClInclude Include="include\platform\wgl\WGLGraphicsContextBase.h">
-      <Filter>Header Files\wgl</Filter>
-    </ClInclude>
-    <ClInclude Include="include\platform\wgl\WGLGraphicsDeviceFactory.h">
       <Filter>Header Files\wgl</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\wgl\WGLTemporaryGraphicsContext.h">
@@ -89,6 +92,9 @@
     <ClInclude Include="include\platform\windows\WindowsGraphicsAdapter.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\windows\WindowsGraphicsInterfaceManager.h">
+      <Filter>Header Files\windows</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\windows\WindowsIcon.h">
       <Filter>Header Files\windows</Filter>
     </ClInclude>
@@ -100,10 +106,16 @@
     <None Include="include\platform\inline\GraphicsFunctionUtility.inl">
       <Filter>Header Files\inline</Filter>
     </None>
+    <None Include="include\platform\opengl\inline\OpenGLEffect.inl">
+      <Filter>Header Files\opengl\inline</Filter>
+    </None>
     <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl">
       <Filter>Header Files\opengl\inline</Filter>
     </None>
     <None Include="include\platform\opengl\inline\OpenGLShader.inl">
+      <Filter>Header Files\opengl\inline</Filter>
+    </None>
+    <None Include="include\platform\opengl\inline\OpenGLVertexBufferState.inl">
       <Filter>Header Files\opengl\inline</Filter>
     </None>
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl">
@@ -156,10 +168,10 @@
     <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
-    <ClCompile Include="source\wgl\WGLGraphicsDeviceFactory.cpp">
+    <ClCompile Include="source\wgl\WGLGraphicsFunctionUtility.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
-    <ClCompile Include="source\wgl\WGLGraphicsFunctionUtility.cpp">
+    <ClCompile Include="source\wgl\WGLGraphicsInterfaceManager.cpp">
       <Filter>Source Files\wgl</Filter>
     </ClCompile>
     <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp">

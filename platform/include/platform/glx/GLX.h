@@ -94,7 +94,6 @@ namespace Platform
 			Context (*)(Display* dpy, FBConfig config, Context share_context, Int32 direct,
 				const Int32* attrib_list);
 
-
 		// Version 1.0
 
 		static const Int32 USE_GL			= 0x01;
@@ -211,7 +210,6 @@ namespace Platform
 		static const Int32 CONTEXT_CORE_PROFILE_BIT_ARB			 = 0x0001;
 		static const Int32 CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB = 0x0002;
 		static const Int32 CONTEXT_PROFILE_MASK_ARB				 = 0x9126;
-
 
 		GLX();
 

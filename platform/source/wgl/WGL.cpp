@@ -56,12 +56,9 @@ WGL::ChoosePixelFormatARB WGL::choosePixelFormatARB = nullptr;
 WGL::GetPixelFormatAttribFVARB WGL::getPixelFormatAttribfvARB = nullptr;
 WGL::GetPixelFormatAttribIVARB WGL::getPixelFormatAttribivARB = nullptr;
 
-
-// Static
-
-void WGL::initialise(const GraphicsContextBase& graphicsContext)
+void WGL::initialise(const GraphicsContextBase& graphicsContext) const
 {
-	initialiseExtensions();
+	initialiseExtensionSupport();
 	const ExtensionNameList extensionNames = getExtensionNames(graphicsContext);
 	logGraphicsExtensions("graphics context", extensionNames);
 	checkExtensionsSupport(extensionNames);
@@ -72,12 +69,14 @@ void WGL::initialise(const GraphicsContextBase& graphicsContext)
 
 // Static
 
-void WGL::initialiseExtensions()
+void WGL::initialiseExtensionSupport()
 {
 	GraphicsFunctionUtility functionUtility;
 
 	getExtensionsStringARB =
 		functionUtility.getExtensionFunction<GetExtensionsStringARB>("wglGetExtensionsStringARB");
+
+	// TODO: check for errors (nullptr)
 }
 
 ExtensionNameList WGL::getExtensionNames(const GraphicsContextBase& graphicsContext)

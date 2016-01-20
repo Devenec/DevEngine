@@ -139,29 +139,33 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\platform\GraphicsConfigChooser.h" />
     <ClInclude Include="include\platform\GraphicsContext.h" />
     <ClInclude Include="include\platform\GraphicsFunctionUtility.h" />
+    <ClInclude Include="include\platform\opengl\OpenGLEffect.h" />
+    <ClInclude Include="include\platform\opengl\OpenGLVertexBufferState.h" />
     <ClInclude Include="include\platform\Utility.h" />
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsEnumerations.h" />
     <ClInclude Include="include\platform\opengl\OpenGLShader.h" />
     <ClInclude Include="include\platform\PlatformInternal.h" />
-    <ClInclude Include="include\platform\wgl\WGLGraphicsConfigChooser.h" />
-    <ClInclude Include="include\platform\wgl\WGLGraphicsDeviceFactory.h" />
     <ClInclude Include="include\platform\wgl\WGL.h" />
     <ClInclude Include="include\platform\wgl\WGLGraphicsContextBase.h" />
     <ClInclude Include="include\platform\wgl\WGLTemporaryGraphicsContext.h" />
     <ClInclude Include="include\platform\windows\Windows.h" />
     <ClInclude Include="include\platform\windows\WindowsGraphics.h" />
     <ClInclude Include="include\platform\windows\WindowsGraphicsAdapter.h" />
+    <ClInclude Include="include\platform\windows\WindowsGraphicsInterfaceManager.h" />
     <ClInclude Include="include\platform\windows\WindowsIcon.h" />
     <ClInclude Include="include\platform\windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\platform\inline\GraphicsFunctionUtility.inl" />
+    <None Include="include\platform\opengl\inline\OpenGLEffect.inl" />
     <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl" />
     <None Include="include\platform\opengl\inline\OpenGLShader.inl" />
+    <None Include="include\platform\opengl\inline\OpenGLVertexBufferState.inl" />
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl" />
     <None Include="include\platform\windows\inline\WindowsGraphicsAdapter.inl" />
     <None Include="include\platform\windows\inline\WindowsIcon.inl" />
@@ -180,7 +184,7 @@
     <ClCompile Include="source\wgl\WGLGraphicsConfigChooser.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContext.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsContextBase.cpp" />
-    <ClCompile Include="source\wgl\WGLGraphicsDeviceFactory.cpp" />
+    <ClCompile Include="source\wgl\WGLGraphicsInterfaceManager.cpp" />
     <ClCompile Include="source\wgl\WGLGraphicsFunctionUtility.cpp" />
     <ClCompile Include="source\wgl\WGLTemporaryGraphicsContext.cpp" />
     <ClCompile Include="source\windows\WindowsFileSystem.cpp" />

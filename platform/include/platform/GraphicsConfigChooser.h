@@ -1,5 +1,5 @@
 /**
- * @file platform/wgl/WGLGraphicsConfigChooser.h
+ * @file platform/GraphicsConfigChooser.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,10 +20,8 @@
 
 #pragma once
 
-#include <core/Array.h>
-#include <core/Types.h>
-#include <core/Vector.h>
-#include <platform/windows/WindowsGraphics.h>
+#include <graphics/GraphicsConfig.h>
+#include <graphics/Window.h>
 
 namespace Graphics
 {
@@ -32,38 +30,26 @@ namespace Graphics
 
 namespace Platform
 {
-	using ConfigAttributeList = Core::Array<Int32, 7u>;
-
 	class GraphicsConfigChooser final
 	{
 	public:
 
-		GraphicsConfigChooser(HDC deviceContextHandle);
+		explicit GraphicsConfigChooser(Graphics::WindowHandle windowHandle);
 
 		GraphicsConfigChooser(const GraphicsConfigChooser& graphicsConfigChooser) = delete;
 		GraphicsConfigChooser(GraphicsConfigChooser&& graphicsConfigChooser) = delete;
 
-		~GraphicsConfigChooser() = default;
+		~GraphicsConfigChooser();
 
-		Int32 chooseConfig(Graphics::GraphicsConfig& chosenConfig) const;
+		Graphics::ConfigHandle chooseConfig(Graphics::GraphicsConfig& chosenConfig) const;
 
 		GraphicsConfigChooser& operator =(const GraphicsConfigChooser& graphicsConfigChooser) = delete;
 		GraphicsConfigChooser& operator =(GraphicsConfigChooser&& graphicsConfigChooser) = delete;
 
 	private:
 
-		using ConfigIndexList = Core::Vector<Int32>;
+		class Implementation;
 
-		static const ConfigAttributeList CONFIG_ATTRIBUTE_IDS;
-
-		HDC _deviceContextHandle;
-
-		Uint32 getConfigCount() const;
-		ConfigIndexList getConfigIndices(const Uint32 configCount) const;
-
-		Int32 chooseBestConfig(const ConfigIndexList& configIndices, ConfigAttributeList& configAttributes)
-			const;
-
-		ConfigAttributeList getConfigAttributes(const Int32 configIndex) const;
+		Implementation* _implementation;
 	};
 }

@@ -24,6 +24,8 @@
 
 namespace Graphics
 {
+	using ConfigHandle = Void*;
+
 	class GraphicsConfig final
 	{
 	public:

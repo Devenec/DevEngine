@@ -29,14 +29,14 @@
 #include <graphics/GraphicsDeviceManager.h>
 #include <graphics/LogUtility.h>
 #include <graphics/Window.h>
-#include <platform/wgl/WGL.h>
-#include <platform/wgl/WGLGraphicsDeviceFactory.h>
-#include <platform/wgl/WGLTemporaryGraphicsContext.h>
+#include <platform/GraphicsConfigChooser.h>
+#include <platform/GraphicsContext.h>
 
 #define OEMRESOURCE
 #include <platform/windows/Windows.h> // Must be the first header to include Windows.h
 #undef OEMRESOURCE
 
+#include <platform/windows/WindowsGraphicsInterfaceManager.h>
 #include <platform/windows/WindowsWindow.h>
 
 using namespace Core;
@@ -55,7 +55,6 @@ static HWND createWindow(const Uint32 width = 640u, const Uint32 height = 480u);
 static Core::Rectangle createWindowRectangle(const Uint32 width, const Uint32 height);
 static void deregisterWindowClass();
 static void destroyWindow(HWND windowHandle);
-static void initialiseWGL();
 static HCURSOR loadPointer();
 static void processWindowMessages();
 static void registerWindowClass(const WNDCLASSEX& windowClassInfo);
@@ -72,7 +71,9 @@ public:
 		: _windowCreatedHandler(windowCreatedHandler)
 	{
 		initialiseWindowClass();
-		::initialiseWGL();
+		
+		if(_graphicsInterfaceManager.interfaceRequiresInitialisation())
+			initialiseGraphicsInterface();
 	}
 
 	Implementation(const Implementation& implementation) = delete;
@@ -85,8 +86,13 @@ public:
 
 	GraphicsDevice* createDeviceObject(Window* window) const
 	{
-		GraphicsDeviceFactory graphicsDeviceFactory;
-		return graphicsDeviceFactory.createDevice(window);
+		GraphicsConfigChooser configChooser(window->handle());
+		GraphicsConfig chosenConfig;
+		ConfigHandle configHandle = configChooser.chooseConfig(chosenConfig);
+		logChosenGraphicsConfig(chosenConfig);
+		GraphicsContext* graphicsContext = DE_NEW(GraphicsContext)(window->handle(), configHandle);
+
+		return DE_NEW(GraphicsDevice)(graphicsContext);
 	}
 
 	Window* createWindowObject(const Uint32 width, const Uint32 height) const
@@ -111,6 +117,14 @@ public:
 private:
 
 	WindowCreatedHandler _windowCreatedHandler;
+	GraphicsInterfaceManager _graphicsInterfaceManager;
+
+	void initialiseGraphicsInterface()
+	{
+		HWND temporaryWindowHandle = ::createWindow();
+		_graphicsInterfaceManager.initialiseInterface(temporaryWindowHandle);
+		::destroyWindow(temporaryWindowHandle);
+	}
 
 	static void initialiseWindowClass()
 	{
@@ -336,18 +350,6 @@ static void destroyWindow(HWND windowHandle)
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to destroy a window." << Log::Flush();
 		DE_ERROR_WINDOWS(0x0);
 	}
-}
-
-static void initialiseWGL()
-{
-	HWND temporaryWindowHandle = ::createWindow();
-
-	{
-		TemporaryGraphicsContext temporaryGraphicsContext(temporaryWindowHandle);
-		WGL::initialise(temporaryGraphicsContext);
-	}
-
-	::destroyWindow(temporaryWindowHandle);
 }
 
 static HCURSOR loadPointer()

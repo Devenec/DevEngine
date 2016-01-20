@@ -20,18 +20,16 @@
 
 #pragma once
 
-#include <core/Types.h>
+#include <graphics/GraphicsConfig.h>
 #include <graphics/Window.h>
 
 namespace Platform
 {
-	using ConfigHandle = Void*;
-
 	class GraphicsContext final
 	{
 	public:
 
-		GraphicsContext(Graphics::WindowHandle windowHandle, ConfigHandle configHandle);
+		GraphicsContext(Graphics::WindowHandle windowHandle, Graphics::ConfigHandle configHandle);
 
 		GraphicsContext(const GraphicsContext& graphicsContext) = delete;
 		GraphicsContext(GraphicsContext&& graphicsContext) = delete;
