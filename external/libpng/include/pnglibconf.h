@@ -1,8 +1,8 @@
-/* libpng 1.6.19 STANDARD API DEFINITION */
+/* libpng 1.6.21 STANDARD API DEFINITION */
 
 /* pnglibconf.h - library build configuration */
 
-/* Libpng version 1.6.19 - November 12, 2015 */
+/* Libpng version 1.6.21 - January 15, 2016 */
 
 /* Copyright (c) 1998-2015 Glenn Randers-Pehrson */
 
@@ -12,6 +12,7 @@
 
 #ifndef PNGLCONF_H
 #define PNGLCONF_H
+
 /* options */
 #define PNG_16BIT_SUPPORTED
 #define PNG_ALIGNED_MEMORY_SUPPORTED
@@ -180,6 +181,7 @@
 #define PNG_tRNS_SUPPORTED
 #define PNG_zTXt_SUPPORTED
 /* end of options */
+
 /* settings */
 #define PNG_API_RULE 0
 #define PNG_DEFAULT_READ_MACROS 1
@@ -208,4 +210,5 @@
 #define PNG_sCAL_PRECISION 5
 #define PNG_sRGB_PROFILE_CHECKS 2
 /* end of settings */
+
 #endif /* PNGLCONF_H */
