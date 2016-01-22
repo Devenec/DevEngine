@@ -47,9 +47,9 @@ class GraphicsDeviceManager::Implementation final
 public:
 
 	Implementation(WindowCreatedHandler windowCreatedHandler)
-		: _createMessageAtom(0u),
+		: _graphicsConfigHandle(nullptr),
+		  _createMessageAtom(0u),
 		  _destroyMessageAtom(0u),
-		  _graphicsConfigHandle(nullptr),
 		  _windowCreatedHandler(windowCreatedHandler),
 		  _x(X::instance())
 	{
@@ -114,7 +114,7 @@ public:
 private:
 
 	GraphicsConfig _graphicsConfig;
-	GLX::FBConfig _graphicsConfigHandle;
+	ConfigHandle _graphicsConfigHandle;
 	Atom _createMessageAtom;
 	Atom _destroyMessageAtom;
 	GLX _glX;
@@ -129,7 +129,9 @@ private:
 
 	::Window createWindow(const Uint32 width, const Uint32 height)
 	{
-		XVisualInfo* visualInfo = _x.getGraphicsConfigVisualInfo(_graphicsConfigHandle);
+		XVisualInfo* visualInfo =
+			_x.getGraphicsConfigVisualInfo(static_cast<GLX::FBConfig>(_graphicsConfigHandle));
+
 		Uint32 windowAttributeMask = 0u;
 		XSetWindowAttributes windowAttributes = createWindowAttributes(windowAttributeMask);
 

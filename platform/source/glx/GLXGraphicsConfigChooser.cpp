@@ -86,8 +86,7 @@ private:
 
 	GLX::FBConfig* getConfigs(Uint32& configCount) const
 	{
-		GLX::FBConfig* configHandles = _x.getGraphicsConfigs(::REQUIRED_CONFIG_ATTRIBUTES.data(),
-			configCount);
+		GLX::FBConfig* configHandles = _x.getGraphicsConfigs(REQUIRED_CONFIG_ATTRIBUTES.data(), configCount);
 
 		if(configCount == 0)
 		{

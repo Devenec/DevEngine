@@ -26,6 +26,7 @@
 #include <platform/x/X.h>
 
 using namespace Core;
+using namespace Graphics;
 using namespace Platform;
 
 // External
@@ -48,7 +49,7 @@ class GraphicsContext::Implementation final
 {
 public:
 
-	Implementation(Graphics::WindowHandle windowHandle, ConfigHandle configHandle)
+	Implementation(WindowHandle windowHandle, ConfigHandle configHandle)
 		: _graphicsContextHandle(nullptr),
 		  _windowHandle(reinterpret_cast<::Window>(windowHandle))
 	{
@@ -105,7 +106,7 @@ private:
 
 // Public
 
-GraphicsContext::GraphicsContext(Graphics::WindowHandle windowHandle, ConfigHandle configHandle)
+GraphicsContext::GraphicsContext(WindowHandle windowHandle, ConfigHandle configHandle)
 	: _implementation(nullptr)
 {
 	_implementation = DE_NEW(Implementation)(windowHandle, configHandle);
