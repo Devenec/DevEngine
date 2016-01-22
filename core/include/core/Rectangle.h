@@ -41,22 +41,20 @@ namespace Core
 		/**
 		 * The width of the rectangle
 		 *
-		 * Using a width larger than Core::numeric<Int32>::maximum() is
-		 * undefined.
+		 * Using a negative width is undefined.
 		 */
-		Uint32 width;
+		Int32 width;
 
 		/**
 		 * The height of the rectangle
 		 *
-		 * Using a height larger than Core::numeric<Int32>::maximum() is
-		 * undefined.
+		 * Using a negative height is undefined.
 		 */
-		Uint32 height;
+		Int32 height;
 
 		Rectangle() = default;
 
-		Rectangle(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height);
+		Rectangle(const Int32 x, const Int32 y, const Int32 width, const Int32 height);
 
 		Rectangle(const Rectangle& rectangle) = default;
 

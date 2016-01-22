@@ -41,8 +41,10 @@ class GraphicsFunctionUtility::Implementation final
 public:
 
 	Implementation()
-		: _libraryHandle(GetModuleHandleW(::LIBRARY_FILENAME))
+		: _libraryHandle(nullptr)
 	{
+		_libraryHandle = GetModuleHandleW(::LIBRARY_FILENAME);
+
 		if(_libraryHandle == nullptr)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the library handle to " <<
@@ -86,7 +88,10 @@ private:
 // Public
 
 GraphicsFunctionUtility::GraphicsFunctionUtility()
-	: _implementation(DE_NEW(Implementation)()) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)();
+}
 
 GraphicsFunctionUtility::~GraphicsFunctionUtility()
 {

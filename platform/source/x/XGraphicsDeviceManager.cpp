@@ -183,7 +183,10 @@ private:
 // Public
 
 GraphicsDeviceManager::GraphicsDeviceManager(WindowCreatedHandler windowCreatedHandler)
-	: _implementation(DE_NEW(Implementation)(windowCreatedHandler)) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)(windowCreatedHandler);
+}
 
 GraphicsDeviceManager::~GraphicsDeviceManager()
 {

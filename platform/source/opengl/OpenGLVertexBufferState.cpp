@@ -117,10 +117,7 @@ void VertexBufferState::Implementation::setVertexElementFormat(const VertexEleme
 	OpenGL::enableVertexAttribArray(element.index);
 	DE_CHECK_ERROR_OPENGL();
 	const Void* bufferOffset = reinterpret_cast<Void*>(elementOffset);
-
-	OpenGL::vertexAttribPointer(element.index, componentCount, elementType, normalise, stride,
-		bufferOffset);
-
+	OpenGL::vertexAttribPointer(element.index, componentCount, elementType, normalise, stride, bufferOffset);
 	DE_CHECK_ERROR_OPENGL();
 }
 
@@ -143,9 +140,10 @@ void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer, const Vert
 // Private
 
 VertexBufferState::VertexBufferState(GraphicsInterfaceHandle graphicsInterfaceHandle)
-	: _implementation(DE_NEW(Implementation)())
+	: _implementation(nullptr)
 {
 	static_cast<Void>(graphicsInterfaceHandle);
+	_implementation = DE_NEW(Implementation)();
 }
 
 VertexBufferState::~VertexBufferState()
@@ -159,7 +157,7 @@ VertexBufferState::~VertexBufferState()
 static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise)
 {
 	normalise = element.normalise;
-	Uint32 componentCount = static_cast<Int32>(element.type) & 0x07;
+	Uint32 componentCount = static_cast<Uint32>(element.type) & 0x07;
 
 	if(componentCount > 4u)
 	{

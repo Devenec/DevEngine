@@ -141,7 +141,10 @@ void Graphics::Window::show() const
 // Private
 
 Graphics::Window::Window(WindowHandle windowHandle)
-	: _implementation(DE_NEW(Implementation)(windowHandle)) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)(windowHandle);
+}
 
 Graphics::Window::~Window()
 {

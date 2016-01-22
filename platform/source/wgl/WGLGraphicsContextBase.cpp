@@ -69,8 +69,11 @@ void GraphicsContextBase::swapBuffers() const
 // Protected
 
 GraphicsContextBase::GraphicsContextBase(HWND windowHandle)
-	: _deviceContextHandle(getWindowDeviceContextHandle(windowHandle)),
-	  _graphicsContextHandle(nullptr) { }
+	: _deviceContextHandle(nullptr),
+	  _graphicsContextHandle(nullptr)
+{
+	_deviceContextHandle = getWindowDeviceContextHandle(windowHandle);
+}
 
 GraphicsContextBase::~GraphicsContextBase()
 {

@@ -58,7 +58,10 @@ private:
 // Public
 
 GraphicsInterfaceManager::GraphicsInterfaceManager()
-	: _implementation(DE_NEW(Implementation)()) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)();
+}
 
 GraphicsInterfaceManager::~GraphicsInterfaceManager()
 {

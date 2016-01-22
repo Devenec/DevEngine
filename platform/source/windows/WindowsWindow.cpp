@@ -285,7 +285,10 @@ void Window::show() const
 // Private
 
 Window::Window(WindowHandle windowHandle)
-	: _implementation(DE_NEW(Implementation)(windowHandle)) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)(windowHandle);
+}
 
 Window::~Window()
 {

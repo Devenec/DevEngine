@@ -24,7 +24,7 @@ using namespace Core;
 
 // Public
 
-Rectangle::Rectangle(const Int32 x, const Int32 y, const Uint32 width, const Uint32 height)
+Rectangle::Rectangle(const Int32 x, const Int32 y, const Int32 width, const Int32 height)
 	: x(x),
 	  y(y),
 	  width(width),

@@ -22,7 +22,7 @@
 
 Int32 Rectangle::bottom() const
 {
-	return y + static_cast<Int32>(height);
+	return y + height;
 }
 
 Int32 Rectangle::left() const
@@ -32,7 +32,7 @@ Int32 Rectangle::left() const
 
 Int32 Rectangle::right() const
 {
-	return x + static_cast<Int32>(width);
+	return x + width;
 }
 
 Int32 Rectangle::top() const

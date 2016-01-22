@@ -2222,10 +2222,10 @@ void OpenGL::logInfo()
 
 ExtensionNameList OpenGL::getExtensionNames()
 {
-	const Int32 extensionCount = getInteger(OpenGL::NUM_EXTENSIONS);
+	const Uint32 extensionCount = getInteger(OpenGL::NUM_EXTENSIONS);
 	ExtensionNameList extensionNames;
 
-	for(Int32 i = 0; i < extensionCount; ++i)
+	for(Uint32 i = 0u; i < extensionCount; ++i)
 	{
 		const Char8* extensionName = reinterpret_cast<const Char8*>(getStringi(OpenGL::EXTENSIONS, i));
 		DE_CHECK_ERROR_OPENGL();

@@ -305,7 +305,10 @@ void GraphicsDevice::swapBuffers() const
 // Private
 
 GraphicsDevice::GraphicsDevice(GraphicsContext* graphicsContext)
-	: _implementation(DE_NEW(Implementation)(graphicsContext)) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)(graphicsContext);
+}
 
 GraphicsDevice::~GraphicsDevice()
 {

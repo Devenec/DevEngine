@@ -30,8 +30,8 @@ using namespace Core;
 
 Core::Rectangle Platform::createRectangle(const RECT& rectangle)
 {
-	const Uint32 width = rectangle.right - rectangle.left;
-	const Uint32 height = rectangle.bottom - rectangle.top;
+	const Int32 width = rectangle.right - rectangle.left;
+	const Int32 height = rectangle.bottom - rectangle.top;
 
 	return Core::Rectangle(rectangle.left, rectangle.top, width, height);
 }

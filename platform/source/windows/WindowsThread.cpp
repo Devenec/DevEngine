@@ -170,7 +170,10 @@ private:
 // Public
 
 Thread::Thread()
-	: _implementation(DE_NEW(Implementation)()) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)();
+}
 
 Thread::~Thread()
 {

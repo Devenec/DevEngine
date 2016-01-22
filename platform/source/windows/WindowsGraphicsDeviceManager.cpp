@@ -220,7 +220,10 @@ private:
 // Public
 
 GraphicsDeviceManager::GraphicsDeviceManager(WindowCreatedHandler windowCreatedHandler)
-	: _implementation(DE_NEW(Implementation)(windowCreatedHandler)) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)(windowCreatedHandler);
+}
 
 GraphicsDeviceManager::~GraphicsDeviceManager()
 {
@@ -310,8 +313,8 @@ static Core::Rectangle createWindowRectangle(const Uint32 width, const Uint32 he
 	const DisplayMode& currentDisplayMode = graphicsAdapterManager.adapters()[0]->currentDisplayMode();
 
 	RECT rectangle;
-	rectangle.left = (currentDisplayMode.width() - width) / 2;
-	rectangle.top = (currentDisplayMode.height() - height) / 2;
+	rectangle.left = (currentDisplayMode.width() - width) / 2u;
+	rectangle.top = (currentDisplayMode.height() - height) / 2u;
 	rectangle.right = rectangle.left + width;
 	rectangle.bottom = rectangle.top + height;
 

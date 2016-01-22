@@ -75,7 +75,7 @@ void Shader::Implementation::createShader(const ShaderType& type)
 	if(_shaderHandle == 0u)
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the " <<
-			::SHADER_TYPE_NAMES[static_cast<Int32>(type)] << " shader." << Log::Flush();
+			::SHADER_TYPE_NAMES[static_cast<Uint32>(type)] << " shader." << Log::Flush();
 
 		DE_ERROR(0x0);
 	}
@@ -155,9 +155,10 @@ Shader::Implementation::CharacterBuffer Shader::Implementation::getInfoLog(const
 // Private
 
 Shader::Shader(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type, const String8& source)
-	: _implementation(DE_NEW(Implementation)(type, source))
+	: _implementation(nullptr)
 {
 	static_cast<Void>(graphicsInterfaceHandle);
+	_implementation = DE_NEW(Implementation)(type, source);
 }
 
 Shader::~Shader()

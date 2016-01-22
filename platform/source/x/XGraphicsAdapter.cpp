@@ -39,10 +39,11 @@ GraphicsAdapter::Implementation::Implementation(const Uint32 adapterIndex, const
 	  _supportedDisplayModes(supportedDisplayModes),
 	  _config(config),
 	  _configTimestamp(0u),
-	  _rootWindowHandle(X::instance().getRootWindowHandle(adapterIndex)),
+	  _rootWindowHandle(0u),
 	  _currentDisplayModeIndex(currentDisplayModeIndex),
 	  _initialDisplayModeIndex(currentDisplayModeIndex)
 {
+	_rootWindowHandle = X::instance().getRootWindowHandle(adapterIndex);
 	XRRConfigTimes(config, &_configTimestamp);
 }
 

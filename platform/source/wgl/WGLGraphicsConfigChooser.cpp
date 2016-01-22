@@ -201,7 +201,10 @@ GraphicsConfigChooser::Implementation::REQUIRED_CONFIG_ATTRIBUTES
 // Public
 
 GraphicsConfigChooser::GraphicsConfigChooser(WindowHandle windowHandle)
-	: _implementation(DE_NEW(Implementation)(windowHandle)) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)(windowHandle);
+}
 
 GraphicsConfigChooser::~GraphicsConfigChooser()
 {

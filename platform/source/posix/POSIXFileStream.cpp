@@ -235,7 +235,10 @@ private:
 // Public
 
 FileStream::FileStream()
-	: _implementation(DE_NEW(Implementation)()) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)();
+}
 
 FileStream::FileStream(const String8& filepath, const OpenMode& openMode)
 	: FileStream()

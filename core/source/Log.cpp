@@ -49,7 +49,7 @@ void Log::write(const LogLevel& logLevel, const String8& message)
 {
 	if(logLevel >= _filterLevel)
 	{
-		writeToConsole(::LOG_LEVEL_NAMES[static_cast<Int32>(logLevel)]);
+		writeToConsole(::LOG_LEVEL_NAMES[static_cast<Uint32>(logLevel)]);
 		writeToConsole(::LOG_LEVEL_SEPARATOR);
 		writeToConsole(message.c_str());
 		writeToConsole("\n");
@@ -81,10 +81,7 @@ Log& Log::operator <<(const Int32 integer)
 		else
 		{
 			Char8 buffer[12];
-
-			const Uint32 characterCount =
-				::toString("%d", buffer, sizeof(buffer), static_cast<Uint32>(integer));
-
+			const Uint32 characterCount = ::toString("%d", buffer, sizeof(buffer), integer);
 			_streamBuffer.appendCharacters(buffer, characterCount);
 		}
 	}
@@ -104,10 +101,7 @@ Log& Log::operator <<(const Int64 integer)
 		else
 		{
 			Char8 buffer[22];
-
-			const Uint32 characterCount =
-				::toString("%lld", buffer, sizeof(buffer), static_cast<Uint64>(integer));
-
+			const Uint32 characterCount = ::toString("%lld", buffer, sizeof(buffer), integer);
 			_streamBuffer.appendCharacters(buffer, characterCount);
 		}
 	}
@@ -180,7 +174,7 @@ Log::Log()
 
 void Log::appendStreamLevel(const LogLevel& level)
 {
-	const Char8* levelName = ::LOG_LEVEL_NAMES[static_cast<Int32>(level)];
+	const Char8* levelName = ::LOG_LEVEL_NAMES[static_cast<Uint32>(level)];
 	_streamBuffer.appendCharacters(levelName, LogBuffer::NON_POSITION);
 	_streamBuffer.appendCharacters(::LOG_LEVEL_SEPARATOR, LogBuffer::NON_POSITION);
 }

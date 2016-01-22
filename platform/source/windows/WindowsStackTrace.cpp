@@ -46,7 +46,7 @@ public:
 	explicit Implementation(const Uint32 maxEntryCount)
 		: _symbolAddresses(maxEntryCount),
 		  _processHandle(GetCurrentProcess()),
-		  _symbolInfo(reinterpret_cast<SYMBOL_INFOW*>(_symbolInfoMemory.data())),
+		  _symbolInfo(nullptr),
 		  _maxEntryCount(maxEntryCount)
 	{
 		if(maxEntryCount > Numeric<Uint16>::maximum())
@@ -59,6 +59,7 @@ public:
 		}
 
 		_sourceInfo.SizeOfStruct = sizeof(IMAGEHLP_LINEW64);
+		_symbolInfo = reinterpret_cast<SYMBOL_INFOW*>(_symbolInfoMemory.data());
 		_symbolInfo->MaxNameLen = ::MAX_FUNCTION_NAME_LENGTH;
 		_symbolInfo->SizeOfStruct = sizeof(SYMBOL_INFOW);
 	}
@@ -150,7 +151,10 @@ private:
 // Public
 
 StackTrace::StackTrace(const Uint32 maxEntryCount)
-	: _implementation(DE_NEW(Implementation)(maxEntryCount)) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)(maxEntryCount);
+}
 
 StackTrace::~StackTrace()
 {

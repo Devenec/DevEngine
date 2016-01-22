@@ -28,7 +28,9 @@ using namespace Core;
 // Public
 
 ContentManager::ContentManager()
-	: _contentRootDirectory(FileSystem::getDefaultContentRootDirectory()) { }
+{
+	_contentRootDirectory = FileSystem::getDefaultContentRootDirectory();
+}
 
 ContentManager::~ContentManager()
 {

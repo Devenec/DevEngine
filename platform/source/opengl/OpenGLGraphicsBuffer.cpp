@@ -125,7 +125,7 @@ void GraphicsBuffer::Implementation::bind(const Uint32 bufferHandle) const
 Uint32 GraphicsBuffer::Implementation::getUsageValue(const AccessMode& accessMode, const BufferUsage& usage)
 	const
 {
-	Uint32 value = static_cast<Int32>(usage);
+	Uint32 value = static_cast<Uint32>(usage);
 
 	if((accessMode & AccessMode::Read) == AccessMode::Read &&
 		(accessMode & AccessMode::Write) != AccessMode::Write)
@@ -160,9 +160,10 @@ Uint8* GraphicsBuffer::mapData(const Uint size, const Uint bufferOffset) const
 
 GraphicsBuffer::GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
 	const Uint size, const AccessMode& accessMode, const BufferUsage& usage)
-	: _implementation(DE_NEW(Implementation)(binding, size, accessMode, usage))
+	: _implementation(nullptr)
 {
 	static_cast<Void>(graphicsInterfaceHandle);
+	_implementation = DE_NEW(Implementation)(binding, size, accessMode, usage);
 }
 
 GraphicsBuffer::~GraphicsBuffer()

@@ -157,9 +157,10 @@ GraphicsConfigChooser::Implementation::REQUIRED_CONFIG_ATTRIBUTES
 // Public
 
 GraphicsConfigChooser::GraphicsConfigChooser(WindowHandle windowHandle)
-	: _implementation(DE_NEW(Implementation)())
+	: _implementation(nullptr)
 {
 	static_cast<Void>(windowHandle);
+	_implementation = DE_NEW(Implementation)();
 }
 
 GraphicsConfigChooser::~GraphicsConfigChooser()

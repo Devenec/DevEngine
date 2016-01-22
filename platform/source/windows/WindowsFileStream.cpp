@@ -219,7 +219,7 @@ private:
 	void seek(const SeekPosition& position, const LARGE_INTEGER& offset) const
 	{
 		DE_ASSERT(isOpen());
-		const Int32 result = SetFilePointerEx(_fileHandle, offset, nullptr, static_cast<Int32>(position));
+		const Int32 result = SetFilePointerEx(_fileHandle, offset, nullptr, static_cast<Uint32>(position));
 
 		if(result == 0)
 		{
@@ -235,7 +235,10 @@ private:
 // Public
 
 FileStream::FileStream()
-	: _implementation(DE_NEW(Implementation)()) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)();
+}
 
 FileStream::FileStream(const String8& filepath, const OpenMode& openMode)
 	: FileStream()

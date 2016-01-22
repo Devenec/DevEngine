@@ -106,7 +106,10 @@ private:
 // Public
 
 GraphicsContext::GraphicsContext(Graphics::WindowHandle windowHandle, ConfigHandle configHandle)
-	: _implementation(DE_NEW(Implementation)(windowHandle, configHandle)) { }
+	: _implementation(nullptr)
+{
+	_implementation = DE_NEW(Implementation)(windowHandle, configHandle);
+}
 
 GraphicsContext::~GraphicsContext()
 {

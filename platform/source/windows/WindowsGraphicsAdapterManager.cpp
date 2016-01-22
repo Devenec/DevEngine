@@ -114,8 +114,9 @@ private:
 // Public
 
 GraphicsAdapterManager::GraphicsAdapterManager()
-	: _implementation(DE_NEW(Implementation)())
+	: _implementation(nullptr)
 {
+	_implementation = DE_NEW(Implementation)();
 	logGraphicsAdapters(_implementation->adapters());
 }
 

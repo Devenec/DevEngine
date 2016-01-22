@@ -188,9 +188,10 @@ void Effect::setUniformBlockBinding(const Uint32 blockIndex, const Uint32 bindin
 // Private
 
 Effect::Effect(GraphicsInterfaceHandle graphicsInterfaceHandle)
-	: _implementation(DE_NEW(Implementation)())
+	: _implementation(nullptr)
 {
 	static_cast<Void>(graphicsInterfaceHandle);
+	_implementation = DE_NEW(Implementation)();
 }
 
 Effect::~Effect()
