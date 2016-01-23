@@ -3636,10 +3636,17 @@ namespace Platform
 
 	private:
 
-		static void initialiseVersion();
-		static void checkSupport();
-		static void getStandardFunctions();
-		static void logInfo();
+		Uint32 _versionMajor;
+		Uint32 _versionMinor;
+
+		void initialiseVersion();
+		void checkSupport() const;
+		void getStandardFunctions() const;
+		void logInfo() const;
+
+		static void getVersion(const Uint32 name, Uint32& major, Uint32& minor);
+		static const Char8* getCharacters(const Uint32 name);
+		static const Char8* getCharacters(const Uint32 name, const Uint32 index);
 		static Graphics::ExtensionNameList getExtensionNames();
 	};
 }

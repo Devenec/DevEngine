@@ -21,6 +21,8 @@
 #include <core/Array.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/Platform.h>
+#include <core/Types.h>
 #include <platform/GraphicsContext.h>
 #include <platform/glx/GLX.h>
 #include <platform/x/X.h>
@@ -33,9 +35,15 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG = "[Platform::GraphicsContext - GLX] ";
 
+#if DE_BUILD == DE_BUILD_DEBUG
+static const Int32 CONTEXT_FLAGS = GLX::CONTEXT_DEBUG_BIT_ARB;
+#else
+static const Int32 CONTEXT_FLAGS = 0;
+#endif
+
 static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 {{
-	GLX::CONTEXT_FLAGS_ARB,			GLX::CONTEXT_DEBUG_BIT_ARB,
+	GLX::CONTEXT_FLAGS_ARB,			::CONTEXT_FLAGS,
 	GLX::CONTEXT_MAJOR_VERSION_ARB, 3,
 	GLX::CONTEXT_MINOR_VERSION_ARB, 3,
 	GLX::CONTEXT_PROFILE_MASK_ARB,	GLX::CONTEXT_CORE_PROFILE_BIT_ARB,

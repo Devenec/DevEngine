@@ -21,6 +21,7 @@
 #include <core/Array.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/Platform.h>
 #include <core/Types.h>
 #include <platform/GraphicsContext.h>
 #include <platform/wgl/WGL.h>
@@ -35,9 +36,15 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG = "[Platform::GraphicsContext - WGL] ";
 
+#if DE_BUILD == DE_BUILD_DEBUG
+static const Int32 CONTEXT_FLAGS = WGL::CONTEXT_DEBUG_BIT_ARB;
+#else
+static const Int32 CONTEXT_FLAGS = 0;
+#endif
+
 static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
 {{
-	WGL::CONTEXT_FLAGS_ARB,			WGL::CONTEXT_DEBUG_BIT_ARB,
+	WGL::CONTEXT_FLAGS_ARB,			::CONTEXT_FLAGS,
 	WGL::CONTEXT_MAJOR_VERSION_ARB, 3,
 	WGL::CONTEXT_MINOR_VERSION_ARB, 3,
 	WGL::CONTEXT_PROFILE_MASK_ARB,	WGL::CONTEXT_CORE_PROFILE_BIT_ARB,
