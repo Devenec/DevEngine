@@ -20,6 +20,10 @@
 
 #pragma once
 
+#include <core/Config.h>
+
+#if defined(DE_CONFIG_DEVENGINE_MAIN)
+
 #include <core/String.h>
 #include <core/Vector.h>
 
@@ -35,3 +39,5 @@ namespace Core
  *   Command line parameters
  */
 extern void devEngineMain(const Core::StartupParameters& startupParameters);
+
+#endif

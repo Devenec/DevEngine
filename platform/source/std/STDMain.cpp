@@ -18,9 +18,11 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <core/Application.h>
-#include <core/Config.h>
 #include <core/Main.h>
+
+#if defined(DE_CONFIG_DEVENGINE_MAIN)
+
+#include <core/Application.h>
 #include <core/Types.h>
 
 using namespace Core;
@@ -29,8 +31,6 @@ using namespace Core;
 
 static void runDevEngineMain(const Uint32 argumentCount, Char8** arguments);
 static StartupParameters createStartupParameters(const Uint32 argumentCount, Char8** arguments);
-
-#if defined(DE_CONFIG_DEVENGINE_MAIN)
 
 Int32 main(Int32 argumentCount, Char8** arguments)
 {
@@ -41,8 +41,6 @@ Int32 main(Int32 argumentCount, Char8** arguments)
 
 	return 0;
 }
-
-#endif
 
 static void runDevEngineMain(const Uint32 argumentCount, Char8** arguments)
 {
@@ -59,3 +57,5 @@ static StartupParameters createStartupParameters(const Uint32 argumentCount, Cha
 
 	return startupParameters;
 }
+
+#endif

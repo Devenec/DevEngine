@@ -59,7 +59,7 @@
 
 #if defined(DE_INTERNAL_BUILD_DEVELOPMENT)
 	#define DE_CHECK_ERROR_OPENGL() \
-		OpenGL::checkForErrors(DE_FILE, DE_LINE, DE_FUNCTION)
+		Platform::OpenGL::checkForErrors(DE_FILE, DE_LINE, DE_FUNCTION)
 #else
 	#define DE_CHECK_ERROR_OPENGL() \
 		DE_NO_OPERATION

@@ -33,7 +33,6 @@ using namespace Memory;
 
 void AllocationPolicyBase::deregisterAllocation(Void* pointer, const Uint size)
 {
-
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 
 	if(pointer != nullptr)
@@ -45,13 +44,11 @@ void AllocationPolicyBase::deregisterAllocation(Void* pointer, const Uint size)
 	static_cast<Void>(size);
 
 #endif
-
 }
 
 void AllocationPolicyBase::registerAllocation(Void* pointer, const Uint size, const Char8* file,
 	const Uint32 line, const Char8* function)
 {
-
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 
 	Debug::AllocationTracker::instance().registerAllocation(pointer, size, file, line, function);
@@ -65,5 +62,4 @@ void AllocationPolicyBase::registerAllocation(Void* pointer, const Uint size, co
 	static_cast<Void>(function);
 
 #endif
-
 }

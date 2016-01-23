@@ -40,5 +40,4 @@ void Application::initialise()
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 	_allocationTracker.initialise();
 #endif
-
 }

@@ -57,7 +57,6 @@ Void* Core::allocateMemory(const Uint size, const Char8* file, const Uint32 line
 
 void Core::deallocateMemory(Void* pointer, const Uint size)
 {
-
 #if defined(DE_INTERNAL_CONFIG_TRACK_ALLOCATIONS)
 
 	if(pointer != nullptr)
