@@ -35,9 +35,8 @@ for custom content types.
 
 ### Upcoming Features
 
-- x64 support
 - Proper memory management
-- Multithreading support
+- Proper multithreading support
 
 
 ### Supported Platforms
@@ -72,7 +71,7 @@ need to be rebuilt and some time is saved.
 
 ### Third Party Source Code Included
 
-- [libpng] 1.6.19
+- [libpng] 1.6.21
 - [GLX, OpenGL and WGL API] header files
 - [zlib] 1.2.8
 
