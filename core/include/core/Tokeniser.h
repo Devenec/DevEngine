@@ -26,7 +26,7 @@
 
 namespace Core
 {
-	struct Token
+	struct Token final
 	{
 		enum class Type
 		{
@@ -40,7 +40,7 @@ namespace Core
 
 	using TokenList = Vector<Token>;
 
-	class Tokeniser
+	class Tokeniser final
 	{
 	public:
 

@@ -18,6 +18,14 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Public
+
+const String8& FileStream::filepath() const
+{
+	return _filepath;
+}
+
+
 // Core
 
 OpenMode operator &(OpenMode openModeA, const OpenMode& openModeB)

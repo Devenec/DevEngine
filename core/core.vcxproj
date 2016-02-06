@@ -200,6 +200,7 @@
   <ItemGroup>
     <ClCompile Include="source\Application.cpp" />
     <ClCompile Include="source\Error.cpp" />
+    <ClCompile Include="source\FileSystem.cpp" />
     <ClCompile Include="source\Log.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='debug|x64'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>

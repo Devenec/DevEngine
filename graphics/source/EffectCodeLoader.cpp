@@ -18,8 +18,13 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Error.h>
 #include <core/FileStream.h>
+#include <core/FileSystem.h>
+#include <core/Log.h>
 #include <core/Memory.h>
+#include <core/String.h>
+#include <core/Types.h>
 #include <graphics/EffectCode.h>
 #include <graphics/EffectCodeLoader.h>
 #include <graphics/EffectSourceCodeReader.h>
@@ -28,11 +33,23 @@ using namespace Content;
 using namespace Core;
 using namespace Graphics;
 
+static const Char8* COMPONENT_TAG = "[Graphics::EffectCodeLoader] ";
+
+
 // Public
 
 EffectCode* EffectCodeLoader::load(FileStream& fileStream)
 {
-	// TODO: check file extension (add filename getter to fileStream)
+	const String8 fileExtension = FileSystem::getFileExtension(fileStream.filepath());
+
+	if(fileExtension != "glsl")
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "The effect file '" << fileStream.filepath() <<
+			"' has an unsupported extension (" << fileExtension << ")." << Log::Flush();
+
+		DE_ERROR(0x0);
+	}
+
 	EffectSourceCodeReader codeReader;
 	return codeReader.readCode(fileStream);
 }

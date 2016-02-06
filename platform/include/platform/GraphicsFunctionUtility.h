@@ -40,7 +40,7 @@ namespace Platform
 		~GraphicsFunctionUtility();
 
 		template<typename T>
-		inline T getExtensionFunction(const Char8* name) const;
+		inline T getExtensionFunction(const Char8* name, const Bool isRequired = true) const;
 
 		template<typename T>
 		inline T getStandardFunction(const Char8* name) const;
@@ -59,7 +59,7 @@ namespace Platform
 
 		Implementation* _implementation;
 
-		Function getExtensionFunctionInternal(const Char8* name) const;
+		Function getExtensionFunctionInternal(const Char8* name, const Bool isRequired) const;
 		Function getStandardFunctionInternal(const Char8* name) const;
 	};
 

@@ -25,6 +25,17 @@ SOURCE_DIRECTORIES = \
 	source/memory
 
 SOURCE_FILES = \
+	Application.cpp \
+	Error.cpp \
+	FileSystem.cpp \
+	Log.cpp \
+	LogBuffer.cpp \
+	LogManager.cpp \
+	Memory.cpp \
+	Rectangle.cpp \
+	String.cpp \
+	Tokeniser.cpp \
+	Types.cpp \
 	debug/AllocationTracker.cpp \
 	debug/Assert.cpp \
 	maths/Angle.cpp \
@@ -33,17 +44,6 @@ SOURCE_FILES = \
 	maths/Vector3.cpp \
 	maths/Vector4.cpp \
 	memory/AllocationPolicy.cpp \
-	memory/AllocationPolicyBase.cpp \
-	Application.cpp \
-	Error.cpp \
-	Log.cpp \
-	LogBuffer.cpp \
-	LogManager.cpp \
-	Memory.cpp \
-	Rectangle.cpp \
-	String.cpp \
-	Tokeniser.cpp \
-	Types.cpp
-
+	memory/AllocationPolicyBase.cpp
 
 include $(MAKE_DIRECTORY)/linux-build.mk

@@ -213,6 +213,9 @@
     <ClCompile Include="source\Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\FileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="source\Log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

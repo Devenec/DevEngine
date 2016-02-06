@@ -40,12 +40,12 @@ GraphicsFunctionUtility::~GraphicsFunctionUtility() { }
 
 // Private
 
-GraphicsFunctionUtility::Function GraphicsFunctionUtility::getExtensionFunctionInternal(const Char8* name)
-	const
+GraphicsFunctionUtility::Function GraphicsFunctionUtility::getExtensionFunctionInternal(const Char8* name,
+	const Bool isRequired) const
 {
 	Function function = GLX::getProcAddress(reinterpret_cast<const Uint8*>(name));
 
-	if(function == nullptr)
+	if(isRequired && function == nullptr)
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the address of the function " <<
 			name << '.';
@@ -59,5 +59,5 @@ GraphicsFunctionUtility::Function GraphicsFunctionUtility::getExtensionFunctionI
 GraphicsFunctionUtility::Function GraphicsFunctionUtility::getStandardFunctionInternal(const Char8* name)
 	const
 {
-	return getExtensionFunctionInternal(name);
+	return getExtensionFunctionInternal(name, true);
 }

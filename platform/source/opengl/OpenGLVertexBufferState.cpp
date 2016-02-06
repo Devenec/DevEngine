@@ -116,8 +116,10 @@ void VertexBufferState::Implementation::setVertexElementFormat(const VertexEleme
 	const Uint32 elementType = static_cast<Uint32>(element.type) >> 3;
 	OpenGL::enableVertexAttribArray(element.index);
 	DE_CHECK_ERROR_OPENGL();
-	const Void* bufferOffset = reinterpret_cast<Void*>(elementOffset);
-	OpenGL::vertexAttribPointer(element.index, componentCount, elementType, normalise, stride, bufferOffset);
+
+	OpenGL::vertexAttribPointer(element.index, componentCount, elementType, normalise, stride,
+		reinterpret_cast<Void*>(elementOffset));
+
 	DE_CHECK_ERROR_OPENGL();
 }
 

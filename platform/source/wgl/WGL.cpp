@@ -18,6 +18,7 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Log.h>
 #include <platform/GraphicsFunctionUtility.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
@@ -74,9 +75,15 @@ void WGL::initialiseExtensionSupport()
 	GraphicsFunctionUtility functionUtility;
 
 	getExtensionsStringARB =
-		functionUtility.getExtensionFunction<GetExtensionsStringARB>("wglGetExtensionsStringARB");
+		functionUtility.getExtensionFunction<GetExtensionsStringARB>("wglGetExtensionsStringARB", false);
 
-	// TODO: check for errors (nullptr)
+	if(getExtensionsStringARB == nullptr)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to initialise the extension support." <<
+			Log::Flush();
+
+		DE_ERROR_WINDOWS(0x0);
+	}
 }
 
 ExtensionNameList WGL::getExtensionNames(const GraphicsContextBase& graphicsContext)

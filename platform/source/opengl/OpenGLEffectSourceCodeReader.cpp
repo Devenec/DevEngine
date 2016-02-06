@@ -47,7 +47,7 @@ public:
 
 	EffectCode* readCode(FileStream& fileStream)
 	{
-		Vector<Char8> data(fileStream.size());
+		Vector<Char8> data(fileStream.fileSize());
 		fileStream.read(reinterpret_cast<Uint8*>(data.data()), static_cast<Uint32>(data.size()));
 		const String8 tokenStream(data.data(), data.size());
 		Tokeniser tokeniser("\t\n!%&()*+,-./:;<=>?[]^{|}~");

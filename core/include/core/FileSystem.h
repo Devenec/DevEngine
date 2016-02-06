@@ -40,6 +40,8 @@ namespace Core
 
 		static String8 getDefaultContentRootDirectory();
 
+		static String8 getFileExtension(const String8 filepath);
+
 		FileSystem& operator =(const FileSystem& fileSystem) = delete;
 		FileSystem& operator =(FileSystem&& fileSystem) = delete;
 	};

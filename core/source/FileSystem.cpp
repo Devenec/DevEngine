@@ -1,5 +1,5 @@
 /**
- * @file platform/inline/GraphicsFunctionUtility.inl
+ * @file core/FileSystem.cpp
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,16 +18,18 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/FileSystem.h>
+
+using namespace Core;
+
+// Some members are defined in platform/*/*FileSystem.cpp
+
 // Public
 
-template<typename T>
-T GraphicsFunctionUtility::getExtensionFunction(const Char8* name, const Bool isRequired) const
-{
-	return reinterpret_cast<T>(getExtensionFunctionInternal(name, isRequired));
-}
+// Static
 
-template<typename T>
-T GraphicsFunctionUtility::getStandardFunction(const Char8* name) const
+String8 FileSystem::getFileExtension(const String8 filepath)
 {
-	return reinterpret_cast<T>(getStandardFunctionInternal(name));
+	const Uint fileExtensionPosition = filepath.find_last_of('.') + 1u;
+	return filepath.substr(fileExtensionPosition);
 }

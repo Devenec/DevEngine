@@ -47,7 +47,7 @@ public:
 
 	Implementation()
 		: _fileHandle(nullptr),
-		  _size(0u),
+		  _fileSize(0u),
 		  _previousAction(PreviousAction::None),
 		  _openMode() { }
 
@@ -78,10 +78,16 @@ public:
 		}
 	}
 
+	Uint32 fileSize() const
+	{
+		DE_ASSERT(isOpen());
+		return _fileSize;
+	}
+
 	Bool isPastEndOfFile() const
 	{
 		DE_ASSERT(isOpen());
-		return position() >= size();
+		return position() >= fileSize();
 	}
 
 	Bool isOpen() const
@@ -109,7 +115,7 @@ public:
 		}
 
 		const char* handleAccessMode = ::getFileHandleAccessMode(openMode);
-		_fileHandle = ::fdopen(fileDescriptor, handleAccessMode);
+		_fileHandle = fdopen(fileDescriptor, handleAccessMode);
 
 		if(_fileHandle == nullptr)
 		{
@@ -175,12 +181,6 @@ public:
 		_previousAction = PreviousAction::None;
 	}
 
-	Uint32 size() const
-	{
-		DE_ASSERT(isOpen());
-		return _size;
-	}
-
 	Uint32 write(const Uint8* data, const Uint32 size)
 	{
 		DE_ASSERT(data != nullptr);
@@ -217,14 +217,14 @@ private:
 	};
 
 	std::FILE* _fileHandle;
-	Uint32 _size;
+	Uint32 _fileSize;
 	PreviousAction _previousAction;
 	OpenMode _openMode;
 
 	void calculateSize()
 	{
 		seek(SeekPosition::End, 0);
-		_size = position();
+		_fileSize = position();
 		seek(SeekPosition::Begin, 0);
 	}
 };
@@ -243,6 +243,7 @@ FileStream::FileStream()
 FileStream::FileStream(const String8& filepath, const OpenMode& openMode)
 	: FileStream()
 {
+	_filepath = filepath;
 	_implementation->open(filepath, openMode);
 }
 
@@ -254,6 +255,11 @@ FileStream::~FileStream()
 void FileStream::close() const
 {
 	_implementation->close();
+}
+
+Uint32 FileStream::fileSize() const
+{
+	return _implementation->fileSize();
 }
 
 Bool FileStream::isPastEndOfFile() const
@@ -289,11 +295,6 @@ void FileStream::seek(const Uint32 position) const
 void FileStream::seek(const SeekPosition& position, const Int32 offset) const
 {
 	_implementation->seek(position, offset);
-}
-
-Uint32 FileStream::size() const
-{
-	return _implementation->size();
 }
 
 Uint32 FileStream::write(const Uint8* data, const Uint32 size) const

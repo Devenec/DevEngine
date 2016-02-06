@@ -106,6 +106,16 @@ namespace Core
 		void close() const;
 
 		/**
+		 * Gets the path of the file.
+		 */
+		inline const String8& filepath() const;
+
+		/**
+		 * Gets the size of the file.
+		 */
+		Uint32 fileSize() const;
+
+		/**
 		 * Indicates whether the file pointer is past the end of the file.
 		 */
 		Bool isPastEndOfFile() const;
@@ -171,11 +181,6 @@ namespace Core
 		void seek(const SeekPosition& position, const Int32 offset) const;
 
 		/**
-		 * Gets the size of the file.
-		 */
-		Uint32 size() const;
-
-		/**
 		 * Writes to the file.
 		 *
 		 * Starting a write outside the file boundaries (except one byte past the
@@ -197,6 +202,7 @@ namespace Core
 
 		class Implementation;
 
+		String8 _filepath;
 		Implementation* _implementation;
 	};
 

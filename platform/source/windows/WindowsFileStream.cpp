@@ -75,10 +75,27 @@ public:
 		}
 	}
 
+	Uint32 fileSize() const
+	{
+		DE_ASSERT(isOpen());
+		LARGE_INTEGER size = LARGE_INTEGER();
+		const Int32 result = GetFileSizeEx(_fileHandle, &size);
+
+		if(result == 0)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the file size." <<
+				Log::Flush();
+
+			DE_ERROR_WINDOWS(0x0);
+		}
+
+		return static_cast<Uint32>(size.QuadPart);
+	}
+
 	Bool isPastEndOfFile() const
 	{
 		DE_ASSERT(isOpen());
-		return position() >= size();
+		return position() >= fileSize();
 	}
 
 	Bool isOpen() const
@@ -159,23 +176,6 @@ public:
 		seek(position, seekOffset);
 	}
 
-	Uint32 size() const
-	{
-		DE_ASSERT(isOpen());
-		LARGE_INTEGER size = LARGE_INTEGER();
-		const Int32 result = GetFileSizeEx(_fileHandle, &size);
-
-		if(result == 0)
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the file size." <<
-				Log::Flush();
-
-			DE_ERROR_WINDOWS(0x0);
-		}
-
-		return static_cast<Uint32>(size.QuadPart);
-	}
-
 	Uint32 write(const Uint8* data, const Uint32 size) const
 	{
 		DE_ASSERT(data != nullptr);
@@ -243,6 +243,7 @@ FileStream::FileStream()
 FileStream::FileStream(const String8& filepath, const OpenMode& openMode)
 	: FileStream()
 {
+	_filepath = filepath;
 	_implementation->open(filepath, openMode);
 }
 
@@ -254,6 +255,11 @@ FileStream::~FileStream()
 void FileStream::close() const
 {
 	_implementation->close();
+}
+
+Uint32 FileStream::fileSize() const
+{
+	return _implementation->fileSize();
 }
 
 Bool FileStream::isPastEndOfFile() const
@@ -289,11 +295,6 @@ void FileStream::seek(const Uint32 position) const
 void FileStream::seek(const SeekPosition& position, const Int32 offset) const
 {
 	_implementation->seek(position, offset);
-}
-
-Uint32 FileStream::size() const
-{
-	return _implementation->size();
 }
 
 Uint32 FileStream::write(const Uint8* data, const Uint32 size) const
