@@ -117,7 +117,7 @@ private:
 
 	}
 
-	void update()
+	void update() const
 	{
 		Vector3 axis(0.0f, 1.0f, 1.0f);
 		axis.normalise();

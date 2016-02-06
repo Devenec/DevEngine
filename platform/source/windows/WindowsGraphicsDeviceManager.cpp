@@ -67,11 +67,11 @@ class GraphicsDeviceManager::Implementation final
 {
 public:
 
-	Implementation(WindowCreatedHandler windowCreatedHandler)
+	explicit Implementation(WindowCreatedHandler windowCreatedHandler)
 		: _windowCreatedHandler(windowCreatedHandler)
 	{
 		initialiseWindowClass();
-		
+
 		if(_graphicsInterfaceManager.interfaceRequiresInitialisation())
 			initialiseGraphicsInterface();
 	}
@@ -119,7 +119,7 @@ private:
 	WindowCreatedHandler _windowCreatedHandler;
 	GraphicsInterfaceManager _graphicsInterfaceManager;
 
-	void initialiseGraphicsInterface()
+	void initialiseGraphicsInterface() const
 	{
 		HWND temporaryWindowHandle = ::createWindow();
 		_graphicsInterfaceManager.initialiseInterface(temporaryWindowHandle);
@@ -361,8 +361,8 @@ static HCURSOR loadPointer()
 
 	if(pointerHandle == nullptr)
 		return nullptr;
-	else
-		return static_cast<HCURSOR>(pointerHandle);
+
+	return static_cast<HCURSOR>(pointerHandle);
 }
 
 static void processWindowMessages()

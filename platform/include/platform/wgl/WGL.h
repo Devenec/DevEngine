@@ -185,13 +185,13 @@ namespace Platform
 
 		WGL() = default;
 
-		WGL(const WGL& wGL) = delete;
-		WGL(WGL&& wGL) = delete;
+		WGL(const WGL& wgl) = delete;
+		WGL(WGL&& wgl) = delete;
 
 		~WGL() = default;
 
-		WGL& operator =(const WGL& wGL) = delete;
-		WGL& operator =(WGL&& wGL) = delete;
+		WGL& operator =(const WGL& wgl) = delete;
+		WGL& operator =(WGL&& wgl) = delete;
 
 		void initialise(const GraphicsContextBase& graphicsContext) const;
 

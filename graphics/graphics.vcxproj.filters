@@ -112,9 +112,6 @@
     <None Include="include\graphics\inline\IndexBuffer.inl">
       <Filter>Header Files\inline</Filter>
     </None>
-    <None Include="include\graphics\inline\PNGReader.inl">
-      <Filter>Header Files\inline</Filter>
-    </None>
     <None Include="include\graphics\inline\Viewport.inl">
       <Filter>Header Files\inline</Filter>
     </None>

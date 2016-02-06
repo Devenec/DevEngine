@@ -22,7 +22,6 @@
 
 #include <new>
 #include <core/ConfigInternal.h>
-#include <core/Platform.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
 #include <core/debug/Assert.h>

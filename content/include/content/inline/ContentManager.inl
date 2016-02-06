@@ -38,8 +38,8 @@ T* ContentManager::load(const Core::String8& filepath)
 
 	if(iterator == _loadedContent.end())
 		return loadContent<T>(contentFilepath);
-	else
-		return static_cast<T*>(iterator->second);
+
+	return static_cast<T*>(iterator->second);
 }
 
 // Private

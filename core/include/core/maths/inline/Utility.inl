@@ -61,8 +61,8 @@ Int32 clamp(const Int32 value, const Int32 min, const Int32 max)
 		return min;
 	else if(value > max)
 		return max;
-	else
-		return value;
+
+	return value;
 }
 
 Uint32 clamp(const Uint32 value, const Uint32 min, const Uint32 max)
@@ -71,8 +71,8 @@ Uint32 clamp(const Uint32 value, const Uint32 min, const Uint32 max)
 		return min;
 	else if(value > max)
 		return max;
-	else
-		return value;
+
+	return value;
 }
 
 Float32 clamp(const Float32 value, const Float32 min, const Float32 max)
@@ -81,8 +81,8 @@ Float32 clamp(const Float32 value, const Float32 min, const Float32 max)
 		return min;
 	else if(value > max)
 		return max;
-	else
-		return value;
+
+	return value;
 }
 
 Float32 cosine(const Float32 value)
@@ -162,8 +162,8 @@ Int32 sign(const Int32 value)
 		return -1;
 	else if(value > 0)
 		return 1;
-	else
-		return 0;
+
+	return 0;
 }
 
 Float32 sign(const Float32 value)
@@ -172,8 +172,8 @@ Float32 sign(const Float32 value)
 		return -1.0f;
 	else if(value > 0.0f)
 		return 1.0f;
-	else
-		return 0.0f;
+
+	return 0.0f;
 }
 
 Float32 sine(const Float32 value)

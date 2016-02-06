@@ -36,7 +36,7 @@ namespace Graphics
 
 		using WindowCreatedHandler = std::function<void(Window*)>;
 
-		GraphicsDeviceManager(WindowCreatedHandler windowCreatedHandler);
+		explicit GraphicsDeviceManager(WindowCreatedHandler windowCreatedHandler);
 
 		GraphicsDeviceManager(const GraphicsDeviceManager& graphicsDeviceManager) = delete;
 		GraphicsDeviceManager(GraphicsDeviceManager&& graphicsDeviceManager) = delete;

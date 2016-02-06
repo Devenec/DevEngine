@@ -46,7 +46,8 @@ class Thread::Implementation final
 public:
 
 	Implementation()
-		: _threadHandle(nullptr) { }
+		: _threadHandle(nullptr),
+		  _isJoinable(true) { }
 
 	Implementation(const Implementation& implementation) = delete;
 	Implementation(Implementation&& implementation) = delete;

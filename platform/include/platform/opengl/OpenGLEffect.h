@@ -56,13 +56,14 @@ namespace Graphics
 
 		Uint32 _programHandle;
 
-		void bind(const Uint32 programHandle) const;
 		void checkLinkingStatus() const;
 		void detachShaders() const;
 		Int32 getParameter(const Uint32 parameterName) const;
 		void outputLinkerFailureLog() const;
 		void outputLinkerSuccessLog() const;
 		CharacterBuffer getInfoLog(const Uint32 logLength) const;
+
+		static void bind(const Uint32 programHandle);
 	};
 
 #include "inline/OpenGLEffect.inl"

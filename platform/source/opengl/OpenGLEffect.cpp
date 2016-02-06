@@ -81,12 +81,6 @@ void Effect::Implementation::setUniformBlockBinding(const Uint32 blockIndex, con
 
 // Private
 
-void Effect::Implementation::bind(const Uint32 programHandle) const
-{
-	OpenGL::useProgram(programHandle);
-	DE_CHECK_ERROR_OPENGL();
-}
-
 void Effect::Implementation::checkLinkingStatus() const
 {
 	const Int32 linkingStatus = getParameter(OpenGL::LINK_STATUS);
@@ -164,6 +158,14 @@ Effect::Implementation::CharacterBuffer Effect::Implementation::getInfoLog(const
 
 	DE_CHECK_ERROR_OPENGL();
 	return logBuffer;
+}
+
+// Static
+
+void Effect::Implementation::bind(const Uint32 programHandle)
+{
+	OpenGL::useProgram(programHandle);
+	DE_CHECK_ERROR_OPENGL();
 }
 
 

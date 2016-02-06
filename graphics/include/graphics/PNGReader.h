@@ -21,7 +21,6 @@
 #pragma once
 
 #include <png.h>
-#include <core/Types.h>
 #include <core/Utility.h>
 
 namespace Core
@@ -32,6 +31,7 @@ namespace Core
 namespace Graphics
 {
 	enum class ImageFormat;
+	class Image;
 
 	class PNGReader final
 	{
@@ -44,13 +44,7 @@ namespace Graphics
 
 		~PNGReader();
 
-		ImageFormat imageFormat() const;
-
-		inline const Uint32 imageHeight() const;
-
-		inline const Uint32 imageWidth() const;
-
-		Core::ByteList readImage(Core::FileStream& fileStream);
+		Image* readImage(Core::FileStream& fileStream);
 
 		PNGReader& operator =(const PNGReader& pngReader) = delete;
 		PNGReader& operator =(PNGReader&& pngReader) = delete;
@@ -63,7 +57,7 @@ namespace Graphics
 		void initialiseStructure();
 		void initialiseInfo();
 		void validateSignature(Core::FileStream& fileStream);
+		Image* createImage(const Core::ByteList& data) const;
+		ImageFormat PNGReader::getImageFormat() const;
 	};
-
-#include "inline/PNGReader.inl"
 }

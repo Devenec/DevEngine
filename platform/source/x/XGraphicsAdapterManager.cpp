@@ -79,7 +79,7 @@ private:
 
 	GraphicsAdapter::Implementation* createAdapterImplementation(const Uint32 adapterIndex) const
 	{
-		XRRScreenConfiguration* adapterConfig = X::instance().getGraphicsAdapterConfig(adapterIndex);
+		XRRScreenConfiguration* adapterConfig = _x.getGraphicsAdapterConfig(adapterIndex);
 		const Uint32 currentResolutionIndex = ::getCurrentAdapterResolutionIndex(adapterConfig);
 		const Uint32 currentRefreshRate = XRRConfigCurrentRate(adapterConfig);
 		DisplayModeList displayModes;

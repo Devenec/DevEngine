@@ -64,7 +64,8 @@ namespace Graphics
 		void createBuffer();
 		void initialiseStorage(const AccessMode& accessMode, const BufferUsage& usage) const;
 		void bind(const Uint32 bufferHandle) const;
-		Uint32 getUsageValue(const AccessMode& accessMode, const BufferUsage& usage) const;
+
+		static Uint32 getUsageValue(const AccessMode& accessMode, const BufferUsage& usage);
 	};
 
 #include "inline/OpenGLGraphicsBuffer.inl"

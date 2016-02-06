@@ -49,7 +49,7 @@ class GraphicsConfigChooser::Implementation final
 {
 public:
 
-	Implementation(WindowHandle windowHandle)
+	explicit Implementation(WindowHandle windowHandle)
 		: _deviceContextHandle(nullptr)
 	{
 		_deviceContextHandle = getWindowDeviceContextHandle(static_cast<HWND>(windowHandle));
@@ -105,7 +105,7 @@ private:
 
 		return configCount;
 	}
-	
+
 	ConfigIndexList getConfigIndices(const Uint32 configCount) const
 	{
 		ConfigIndexList configIndices(configCount);
@@ -223,18 +223,14 @@ static Bool isConfigLess(const ConfigAttributeList& configAttributesA,
 	const ConfigAttributeList& configAttributesB)
 {
 	if(configAttributesA[0] != configAttributesB[0])
-	{
 		return configAttributesA[0] < configAttributesB[0];
-	}
-	else
-	{
-		return
-			configAttributesA[0] < configAttributesB[0] ||
-			configAttributesA[1] < configAttributesB[1] ||
-			configAttributesA[2] < configAttributesB[2] ||
-			configAttributesA[3] < configAttributesB[3] ||
-			configAttributesA[4] < configAttributesB[4] ||
-			configAttributesA[5] < configAttributesB[5] ||
-			configAttributesA[6] < configAttributesB[6];
-	}
+
+	return
+		configAttributesA[0] < configAttributesB[0] ||
+		configAttributesA[1] < configAttributesB[1] ||
+		configAttributesA[2] < configAttributesB[2] ||
+		configAttributesA[3] < configAttributesB[3] ||
+		configAttributesA[4] < configAttributesB[4] ||
+		configAttributesA[5] < configAttributesB[5] ||
+		configAttributesA[6] < configAttributesB[6];
 }

@@ -32,23 +32,23 @@ namespace Maths
 	public:
 
 		static const Vector3 BACKWARD;
-		
+
 		static const Vector3 DOWN;
 
 		static const Vector3 FORWARD;
-		
+
 		static const Vector3 LEFT;
-		
+
 		static const Vector3 RIGHT;
-		
+
 		static const Vector3 UNIT_X;
-		
+
 		static const Vector3 UNIT_Y;
-		
+
 		static const Vector3 UNIT_Z;
 
 		static const Vector3 UP;
-		
+
 		static const Vector3 ZERO;
 
 		Float32 x;

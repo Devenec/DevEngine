@@ -29,6 +29,6 @@ Bool Platform::isVersionLess(const Uint32 majorA, const Uint32 minorA, const Uin
 		return true;
 	else if(majorA == majorB)
 		return minorA < minorB;
-	else
-		return false;
+
+	return false;
 }

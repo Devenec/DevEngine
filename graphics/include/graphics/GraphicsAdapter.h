@@ -55,7 +55,7 @@ namespace Graphics
 
 		Implementation* _implementation;
 
-		GraphicsAdapter(Implementation* implementation);
+		explicit GraphicsAdapter(Implementation* implementation);
 		~GraphicsAdapter();
 	};
 }

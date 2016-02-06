@@ -30,15 +30,15 @@ namespace Maths
 	class Vector4 final
 	{
 	public:
-		
+
 		static const Vector4 UNIT_X;
-		
+
 		static const Vector4 UNIT_Y;
-		
+
 		static const Vector4 UNIT_Z;
 
 		static const Vector4 UNIT_W;
-		
+
 		static const Vector4 ZERO;
 
 		Float32 x;

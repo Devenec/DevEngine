@@ -242,17 +242,13 @@ Bool X::isGLXSupported(Uint32& versionMajor, Uint32& versionMinor) const
 	Int32 result = GLX::queryExtension(_connection, nullptr, nullptr);
 
 	if(result == 0)
-	{
 		return false;
-	}
-	else
-	{
-		result =
-			GLX::queryVersion(_connection, reinterpret_cast<Int32*>(&versionMajor),
-				reinterpret_cast<Int32*>(&versionMinor));
 
-		return result != 0;
-	}
+	result =
+		GLX::queryVersion(_connection, reinterpret_cast<Int32*>(&versionMajor),
+			reinterpret_cast<Int32*>(&versionMinor));
+
+	return result != 0;
 }
 
 void X::makeGraphicsContextCurrent(GLX::Drawable drawableHandle, GLX::Context contextHandle) const

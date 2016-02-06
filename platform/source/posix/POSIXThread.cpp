@@ -40,7 +40,7 @@ static void destroyThreadAttributes(pthread_attr_t& attributes);
 
 Thread::Implementation::Implementation()
 	: _id(0u),
-	  _isJoinable(false) { }
+	  _isJoinable(true) { }
 
 void Thread::Implementation::detach()
 {

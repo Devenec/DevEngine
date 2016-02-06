@@ -21,7 +21,6 @@
 #pragma once
 
 #include <core/Types.h>
-#include <core/UtilityMacros.h>
 
 namespace Core
 {
@@ -34,10 +33,10 @@ namespace Core
 	public:
 
 		Numeric() = delete;
-		
+
 		Numeric(const Numeric& numeric) = delete;
 		Numeric(Numeric&& numeric) = delete;
-		
+
 		~Numeric() = delete;
 
 		Numeric& operator =(const Numeric& numeric) = delete;

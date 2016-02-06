@@ -56,7 +56,7 @@ namespace Graphics
 
 		Implementation* _implementation;
 
-		VertexBufferState(GraphicsInterfaceHandle graphicsInterfaceHandle);
+		explicit VertexBufferState(GraphicsInterfaceHandle graphicsInterfaceHandle);
 		~VertexBufferState();
 	};
 }

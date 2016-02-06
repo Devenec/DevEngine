@@ -95,9 +95,9 @@ public:
 
 private:
 
-	Core::String8 _fragmentShaderSource;
-	Core::String8 _vertexShaderSource;
-	Core::String8* _activeShaderSource;
+	String8 _fragmentShaderSource;
+	String8 _vertexShaderSource;
+	String8* _activeShaderSource;
 
 	EffectCode* createCode() const
 	{

@@ -27,7 +27,6 @@
 #include <platform/opengl/OpenGLGraphicsEnumerations.h>
 #include <platform/opengl/OpenGLVertexBufferState.h>
 
-using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
@@ -71,11 +70,8 @@ void VertexBufferState::Implementation::setIndexBuffer(IndexBuffer* buffer)
 void VertexBufferState::Implementation::setVertexBuffer(const GraphicsBuffer* buffer,
 	const VertexElementList& vertexElements, const Uint32 stride, const Uint offset) const
 {
+	DE_ASSERT(buffer != nullptr); // TODO: allow resetting the vertex attributes?
 	DE_ASSERT(buffer->_implementation->binding() == static_cast<Uint32>(BufferBinding::Vertex));
-	Uint32 bufferHandle = 0u;
-
-	if(buffer != nullptr)
-		bufferHandle = buffer->_implementation->handle();
 
 	bind();
 	buffer->_implementation->bind();
@@ -86,14 +82,16 @@ void VertexBufferState::Implementation::setVertexBuffer(const GraphicsBuffer* bu
 
 // Private
 
-void VertexBufferState::Implementation::bind(const Uint32 vertexArrayHandle) const
+// Static
+
+void VertexBufferState::Implementation::bind(const Uint32 vertexArrayHandle)
 {
 	OpenGL::bindVertexArray(vertexArrayHandle);
 	DE_CHECK_ERROR_OPENGL();
 }
 
 void VertexBufferState::Implementation::setVertexLayout(const VertexElementList& vertexElements,
-	const Uint32 stride, const Uint bufferOffset) const
+	const Uint32 stride, const Uint bufferOffset)
 {
 	Uint elementOffset = bufferOffset;
 
@@ -109,7 +107,7 @@ void VertexBufferState::Implementation::setVertexLayout(const VertexElementList&
 }
 
 void VertexBufferState::Implementation::setVertexElementFormat(const VertexElement& element,
-	const Uint elementOffset, const Uint32 stride) const
+	const Uint elementOffset, const Uint32 stride)
 {
 	Bool normalise;
 	const Uint32 componentCount = ::getVertexElementComponentCount(element, normalise);

@@ -104,7 +104,7 @@ namespace Graphics
 		GraphicsResourceList _resources;
 		Implementation* _implementation;
 
-		GraphicsDevice(Platform::GraphicsContext* graphicsContext);
+		explicit GraphicsDevice(Platform::GraphicsContext* graphicsContext);
 		~GraphicsDevice();
 
 		void destroyResources() const;

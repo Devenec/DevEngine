@@ -56,7 +56,7 @@ namespace Core
 
 		inline void setfilterLevel(const LogLevel& level);
 
-		void write(const LogLevel& logLevel, const String8& message);
+		void write(const LogLevel& logLevel, const String8& message) const;
 
 		Log& operator =(const Log& log) = delete;
 		Log& operator =(Log&& log) = delete;

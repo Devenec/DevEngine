@@ -36,7 +36,7 @@ namespace Core
 	 * Character array for the Char8 type
 	 */
 	using String8 = StringTemplate<Char8>;
-	
+
 	/**
 	 * Character array for the Char16 type
 	 */

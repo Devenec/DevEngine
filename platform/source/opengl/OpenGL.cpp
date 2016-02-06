@@ -22,6 +22,7 @@
 #include <core/Array.h>
 #include <core/Error.h>
 #include <core/Log.h>
+#include <core/String.h>
 #include <core/debug/Assert.h>
 #include <platform/GraphicsFunctionUtility.h>
 #include <platform/Utility.h>

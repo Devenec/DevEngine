@@ -20,8 +20,6 @@
 
 #include <core/FileStream.h>
 #include <core/Memory.h>
-#include <core/Types.h>
-#include <graphics/Image.h>
 #include <graphics/ImageLoader.h>
 #include <graphics/PNGReader.h>
 
@@ -34,9 +32,7 @@ using namespace Graphics;
 Image* ImageLoader::load(FileStream& fileStream)
 {
 	PNGReader pngReader;
-	const ByteList imageData = pngReader.readImage(fileStream);
-
-	return DE_NEW(Image)(pngReader.imageWidth(), pngReader.imageHeight(), pngReader.imageFormat(), imageData);
+	return pngReader.readImage(fileStream);
 }
 
 

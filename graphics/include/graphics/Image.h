@@ -40,11 +40,11 @@ namespace Graphics
 
 		inline const Core::ByteList& data() const;
 
-		inline const ImageFormat format() const;
+		inline ImageFormat format() const;
 
-		inline const Uint32 height() const;
+		inline Uint32 height() const;
 
-		inline const Uint32 width() const;
+		inline Uint32 width() const;
 
 		Image& operator =(const Image& image) = delete;
 		Image& operator =(Image&& image) = delete;

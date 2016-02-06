@@ -28,7 +28,6 @@
 #include <platform/windows/Windows.h>
 #include <platform/windows/WindowsGraphicsAdapter.h>
 
-using namespace Core;
 using namespace Graphics;
 
 // External
@@ -96,8 +95,7 @@ private:
 		return result != 0;
 	}
 
-	GraphicsAdapter::Implementation* createAdapterImplementation(DISPLAY_DEVICEW& adapterInfo)
-		const
+	static GraphicsAdapter::Implementation* createAdapterImplementation(DISPLAY_DEVICEW& adapterInfo)
 	{
 		DisplayModeList displayModes;
 		const Uint32 currentDisplayModeIndex = ::getDisplayModes(adapterInfo.DeviceName, displayModes);
@@ -154,15 +152,11 @@ static DisplayMode getDisplayMode(const Char16* adapterName, const Uint32 modeIn
 	const Int32 result = EnumDisplaySettingsW(adapterName, modeIndex, &modeInfo);
 
 	if(result == 0)
-	{
 		return DisplayMode();
-	}
-	else
-	{
-		return
-			DisplayMode(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight, modeInfo.dmBitsPerPel,
-				modeInfo.dmDisplayFrequency);
-	}
+
+	return
+		DisplayMode(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight, modeInfo.dmBitsPerPel,
+			modeInfo.dmDisplayFrequency);
 }
 
 static Uint32 getDisplayModes(const Char16* adapterName, DisplayModeList& modes)

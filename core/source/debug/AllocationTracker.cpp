@@ -102,8 +102,9 @@ void AllocationTracker::checkForMemoryLeaks() const
 	DE_ASSERT(_allocationRecords.size() == 0u);
 }
 
+// Static
+
 void AllocationTracker::logAllocationRecord(const Void* address, const AllocationRecord& allocationRecord)
-	const
 {
 	defaultLog << StreamFormat::Hexadecimal << address << StreamFormat::Decimal << " (" <<
 		allocationRecord.size << " bytes) at ";

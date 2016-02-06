@@ -45,10 +45,8 @@
 #include <core/ConfigInternal.h>
 #include <core/Platform.h>
 #include <core/Singleton.h>
-#include <core/String.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
-#include <core/Vector.h>
 #include <graphics/LogUtility.h>
 
 #if DE_COMPILER == DE_COMPILER_MSVC
@@ -3624,13 +3622,13 @@ namespace Platform
 
 		OpenGL();
 
-		OpenGL(const OpenGL& openGL) = delete;
-		OpenGL(OpenGL&& openGL) = delete;
+		OpenGL(const OpenGL& openGl) = delete;
+		OpenGL(OpenGL&& openGl) = delete;
 
 		~OpenGL() = default;
 
-		OpenGL& operator =(const OpenGL& openGL) = delete;
-		OpenGL& operator =(OpenGL&& openGL) = delete;
+		OpenGL& operator =(const OpenGL& openGl) = delete;
+		OpenGL& operator =(OpenGL&& openGl) = delete;
 
 		static void checkForErrors(const Char8* file, const Uint32 line, const Char8* function);
 

@@ -97,22 +97,22 @@ Bool operator !=(const Angle& angleA, const Angle& angleB)
 {
 	return !(angleA == angleB);
 }
-	
+
 Bool operator <(const Angle& angleA, const Angle& angleB)
 {
 	return angleA.size() < angleB.size();
 }
-	
+
 Bool operator <=(const Angle& angleA, const Angle& angleB)
 {
 	return !(angleA > angleB);
 }
-	
+
 Bool operator >(const Angle& angleA, const Angle& angleB)
 {
 	return angleB < angleA;
 }
-	
+
 Bool operator >=(const Angle& angleA, const Angle& angleB)
 {
 	return !(angleA < angleB);

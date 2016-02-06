@@ -44,7 +44,7 @@ namespace Core
 	{
 	public:
 
-		Tokeniser(const String8& delimiterCharacters = String8(),
+		explicit Tokeniser(const String8& delimiterCharacters = String8(),
 			const String8& whitespaceCharacters = String8());
 
 		Tokeniser(const Tokeniser& tokeniser) = delete;

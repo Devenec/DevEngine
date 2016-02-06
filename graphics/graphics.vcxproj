@@ -173,7 +173,6 @@
     <None Include="include\graphics\inline\GraphicsConfig.inl" />
     <None Include="include\graphics\inline\Image.inl" />
     <None Include="include\graphics\inline\IndexBuffer.inl" />
-    <None Include="include\graphics\inline\PNGReader.inl" />
     <None Include="include\graphics\inline\Viewport.inl" />
   </ItemGroup>
   <ItemGroup>

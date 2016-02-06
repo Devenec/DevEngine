@@ -31,7 +31,6 @@
 #include <platform/x/X.h>
 #include <platform/x/XWindow.h>
 
-using namespace Core;
 using namespace Graphics;
 using namespace Platform;
 
@@ -46,7 +45,7 @@ class GraphicsDeviceManager::Implementation final
 {
 public:
 
-	Implementation(WindowCreatedHandler windowCreatedHandler)
+	explicit Implementation(WindowCreatedHandler windowCreatedHandler)
 		: _graphicsConfigHandle(nullptr),
 		  _createMessageAtom(0u),
 		  _destroyMessageAtom(0u),

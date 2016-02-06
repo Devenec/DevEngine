@@ -21,7 +21,6 @@
 #pragma once
 
 #include <content/ContentBase.h>
-#include <core/Types.h>
 #include <core/Utility.h>
 
 namespace Graphics

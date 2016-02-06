@@ -31,9 +31,9 @@ namespace Maths
 	public:
 
 		static const Vector2 UNIT_X;
-		
+
 		static const Vector2 UNIT_Y;
-		
+
 		static const Vector2 ZERO;
 
 		Float32 x;

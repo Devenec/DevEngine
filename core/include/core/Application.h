@@ -30,7 +30,7 @@
 
 namespace Core
 {
-	class Application final
+	class Application final : public Singleton<Application>
 	{
 	public:
 

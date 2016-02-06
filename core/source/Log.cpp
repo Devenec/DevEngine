@@ -45,7 +45,7 @@ static Uint32 toString(const Char8* format, Char8* buffer, const Uint32 bufferSi
 
 // Public
 
-void Log::write(const LogLevel& logLevel, const String8& message)
+void Log::write(const LogLevel& logLevel, const String8& message) const
 {
 	if(logLevel >= _filterLevel)
 	{
@@ -245,6 +245,6 @@ static Uint32 toString(const Char8* format, Char8* buffer, const Uint32 bufferSi
 
 	if(charactersWritten < 0)
 		return 0u;
-	else
-		return charactersWritten;
+
+	return charactersWritten;
 }

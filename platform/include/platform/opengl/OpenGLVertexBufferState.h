@@ -54,13 +54,13 @@ namespace Graphics
 		IndexBuffer* _indexBuffer;
 		Uint32 _vertexArrayHandle;
 
-		void bind(const Uint32 vertexArrayHandle) const;
+		static void bind(const Uint32 vertexArrayHandle);
 
-		void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride,
-			const Uint bufferOffset) const;
+		static void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride,
+			const Uint bufferOffset);
 
-		void setVertexElementFormat(const VertexElement& element, const Uint elementOffset,
-			const Uint32 stride) const;
+		static void setVertexElementFormat(const VertexElement& element, const Uint elementOffset,
+			const Uint32 stride);
 	};
 
 #include "inline/OpenGLVertexBufferState.inl"

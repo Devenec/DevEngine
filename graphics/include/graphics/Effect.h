@@ -47,7 +47,7 @@ namespace Graphics
 
 		Implementation* _implementation;
 
-		Effect(GraphicsInterfaceHandle graphicsInterfaceHandle);
+		explicit Effect(GraphicsInterfaceHandle graphicsInterfaceHandle);
 		~Effect();
 	};
 }

@@ -213,13 +213,13 @@ namespace Platform
 
 		GLX();
 
-		GLX(const GLX& glX) = delete;
-		GLX(GLX&& glX) = delete;
+		GLX(const GLX& glx) = delete;
+		GLX(GLX&& glx) = delete;
 
 		~GLX();
 
-		GLX& operator =(const GLX& glX) = delete;
-		GLX& operator =(GLX&& glX) = delete;
+		GLX& operator =(const GLX& glx) = delete;
+		GLX& operator =(GLX&& glx) = delete;
 
 	private:
 

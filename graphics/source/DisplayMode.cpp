@@ -50,6 +50,6 @@ Bool Graphics::operator <(const DisplayMode& displayModeA, const DisplayMode& di
 		return displayModeA.colourDepth() < displayModeB.colourDepth();
 	else if(displayModeA.refreshRate() != displayModeB.refreshRate())
 		return displayModeA.refreshRate() < displayModeB.refreshRate();
-	else
-		return false;
+
+	return false;
 }

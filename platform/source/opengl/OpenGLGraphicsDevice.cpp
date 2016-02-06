@@ -51,7 +51,7 @@ public:
 		: _activeEffect(nullptr),
 		  _activeVertexBufferState(nullptr),
 		  _graphicsContext(graphicsContext),
-		  _openGL(nullptr)
+		  _openGl(nullptr)
 	{
 		initialiseOpenGL();
 		initialiseViewport();
@@ -62,7 +62,7 @@ public:
 
 	~Implementation()
 	{
-		DE_DELETE(_openGL, OpenGL);
+		DE_DELETE(_openGl, OpenGL);
 		DE_DELETE(_graphicsContext, GraphicsContext);
 	}
 
@@ -174,12 +174,12 @@ private:
 	Effect* _activeEffect;
 	VertexBufferState* _activeVertexBufferState;
 	GraphicsContext* _graphicsContext;
-	OpenGL* _openGL;
+	OpenGL* _openGl;
 
 	void initialiseOpenGL()
 	{
 		_graphicsContext->makeCurrent();
-		_openGL = DE_NEW(OpenGL)();
+		_openGl = DE_NEW(OpenGL)();
 	}
 
 	void initialiseViewport()

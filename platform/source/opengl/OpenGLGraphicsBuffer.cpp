@@ -122,8 +122,9 @@ void GraphicsBuffer::Implementation::bind(const Uint32 bufferHandle) const
 	DE_CHECK_ERROR_OPENGL();
 }
 
+// Static
+
 Uint32 GraphicsBuffer::Implementation::getUsageValue(const AccessMode& accessMode, const BufferUsage& usage)
-	const
 {
 	Uint32 value = static_cast<Uint32>(usage);
 

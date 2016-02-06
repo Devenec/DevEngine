@@ -81,7 +81,8 @@ namespace Debug
 		Bool _isInitialised;
 
 		void checkForMemoryLeaks() const;
-		void logAllocationRecord(const Void* address, const AllocationRecord& allocationRecord) const;
+
+		static void logAllocationRecord(const Void* address, const AllocationRecord& allocationRecord);
 	};
 }
 

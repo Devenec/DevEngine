@@ -25,17 +25,17 @@ const Core::ByteList& Image::data() const
 	return _data;
 }
 
-const ImageFormat Image::format() const
+ImageFormat Image::format() const
 {
 	return _format;
 }
 
-const Uint32 Image::height() const
+Uint32 Image::height() const
 {
 	return _height;
 }
 
-const Uint32 Image::width() const
+Uint32 Image::width() const
 {
 	return _width;
 }

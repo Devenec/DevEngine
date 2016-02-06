@@ -24,7 +24,9 @@
 #include <core/FileStream.h>
 #include <core/Log.h>
 #include <core/Memory.h>
+#include <core/Types.h>
 #include <core/debug/Assert.h>
+#include <graphics/Image.h>
 #include <graphics/ImageFormat.h>
 #include <graphics/PNGReader.h>
 
@@ -59,29 +61,7 @@ PNGReader::~PNGReader()
 	png_destroy_read_struct(&_pngStructure, &_pngInfo, nullptr);
 }
 
-ImageFormat PNGReader::imageFormat() const
-{
-	switch(png_get_color_type(_pngStructure, _pngInfo))
-	{
-		case PNG_COLOR_TYPE_GRAY:
-			return ImageFormat::R8;
-
-		case PNG_COLOR_TYPE_GRAY_ALPHA:
-			return ImageFormat::RA8;
-
-		case PNG_COLOR_TYPE_RGB:
-			return ImageFormat::RGB8;
-
-		case PNG_COLOR_TYPE_RGB_ALPHA:
-			return ImageFormat::RGBA8;
-
-		default:
-			DE_ASSERT(false);
-			return ImageFormat();
-	}
-}
-
-ByteList PNGReader::readImage(FileStream& fileStream)
+Image* PNGReader::readImage(FileStream& fileStream)
 {
 	validateSignature(fileStream);
 	png_set_read_fn(_pngStructure, &fileStream, ::readData);
@@ -96,7 +76,7 @@ ByteList PNGReader::readImage(FileStream& fileStream)
 	for(Uint32 i = 0u; i < height; ++i)
 		std::copy(rows[i], rows[i] + rowByteCount, data.data() + i * rowByteCount);
 
-	return data;
+	return createImage(data);
 }
 
 // Private
@@ -144,6 +124,36 @@ void PNGReader::validateSignature(FileStream& fileStream)
 	}
 
 	png_set_sig_bytes(_pngStructure, 8);
+}
+
+Image* PNGReader::createImage(const ByteList& data) const
+{
+	const Uint32 width = png_get_image_width(_pngStructure, _pngInfo);
+	const Uint32 height = png_get_image_height(_pngStructure, _pngInfo);
+
+	return DE_NEW(Image)(width, height, getImageFormat(), data);
+}
+
+ImageFormat PNGReader::getImageFormat() const
+{
+	switch(png_get_color_type(_pngStructure, _pngInfo))
+	{
+		case PNG_COLOR_TYPE_GRAY:
+			return ImageFormat::R8;
+
+		case PNG_COLOR_TYPE_GRAY_ALPHA:
+			return ImageFormat::RA8;
+
+		case PNG_COLOR_TYPE_RGB:
+			return ImageFormat::RGB8;
+
+		case PNG_COLOR_TYPE_RGB_ALPHA:
+			return ImageFormat::RGBA8;
+
+		default:
+			DE_ASSERT(false);
+			return ImageFormat();
+	}
 }
 
 
