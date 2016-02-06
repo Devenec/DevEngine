@@ -20,8 +20,6 @@
 
 #pragma once
 
-#include <core/Platform.h>
-
 /**
  * Boolean
  *
@@ -90,27 +88,23 @@ using Char8 = char;
 using Char16 = wchar_t;
 
 /**
- * Void
+ * Void type
  *
  * Used mainly with void pointers.
  */
 using Void = void;
 
+
+#include <platform/TypesInternal.h>
+
 /**
- * Int - Signed integer, 32 bits on 32-bit architectures and 64 bits on 64-bit
- * architectures.
- *
- * Uint - Unsigned integer, 32 bits on 32-bit architectures and 64 bits on
+ * Signed 32-bit integer on 32-bit architectures and signed 64-bit integer on
  * 64-bit architectures.
  */
-#if DE_ARCHITECTURE == DE_ARCHITECTURE_X86
+using Int = IntInternal;
 
-using Int  = Int32;
-using Uint = Uint32;
-
-#elif DE_ARCHITECTURE == DE_ARCHITECTURE_X64
-
-using Int  = Int64;
-using Uint = Uint64;
-
-#endif
+/**
+ * Unsigned 32-bit integer on 32-bit architectures and unsigned 64-bit integer
+ * on 64-bit architectures.
+ */
+using Uint = UintInternal;

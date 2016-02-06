@@ -32,6 +32,7 @@ SOURCE_DIRECTORIES = \
 
 SOURCE_FILES = \
 	GraphicsFunctionUtility.cpp \
+	TypesInternal.cpp \
 	Utility.cpp \
 	glx/GLX.cpp \
 	glx/GLXGraphicsConfigChooser.cpp \

@@ -53,6 +53,9 @@
     <ClInclude Include="include\platform\PlatformInternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\TypesInternal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\Utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -133,6 +136,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\GraphicsFunctionUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TypesInternal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Utility.cpp">

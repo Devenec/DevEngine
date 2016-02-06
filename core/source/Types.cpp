@@ -33,11 +33,5 @@ static_assert(sizeof(Float64) == 8, "The size of Float64 is incorrect.");
 static_assert(sizeof(Char8) == 1, "The size of Char8 is incorrect.");
 //static_assert(sizeof(Char16) == 2, "The size of Char16 is incorrect.");
 
-#if DE_ARCHITECTURE == DE_ARCHITECTURE_X86
-static_assert(sizeof(Void*) == 4, "The size of pointer (Void*) is incorrect.");
-#elif DE_ARCHITECTURE == DE_ARCHITECTURE_X64
-static_assert(sizeof(Void*) == 8, "The size of pointer (Void*) is incorrect.");
-#endif
-
 enum class Enumeration { };
-static_assert(sizeof(Enumeration) == 4, "The size of enumeration (enum class) is incorrect");
+static_assert(sizeof(Enumeration) == 4, "The size of enumeration (enum class) is incorrect.");

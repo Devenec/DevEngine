@@ -143,6 +143,7 @@
     <ClInclude Include="include\platform\GraphicsContext.h" />
     <ClInclude Include="include\platform\GraphicsFunctionUtility.h" />
     <ClInclude Include="include\platform\PlatformInternal.h" />
+    <ClInclude Include="include\platform\TypesInternal.h" />
     <ClInclude Include="include\platform\Utility.h" />
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
     <ClInclude Include="include\platform\opengl\OpenGLEffect.h" />
@@ -173,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\GraphicsFunctionUtility.cpp" />
+    <ClCompile Include="source\TypesInternal.cpp" />
     <ClCompile Include="source\Utility.cpp" />
     <ClCompile Include="source\opengl\OpenGL.cpp" />
     <ClCompile Include="source\opengl\OpenGLEffect.cpp" />

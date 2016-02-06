@@ -51,26 +51,44 @@
 #define DE_PLATFORM_WINDOWS 2
 
 
-/**
- * The following macros are defined in the internal header file:
- *
- * DE_ARCHITECTURE
- *   Specifies the target processor architecture. The value is one of the
- *   DE_ARCHITECTURE_* values defined above.
- *
- * DE_BUILD
- *   Specifies the build configuration. The value is one of the DE_BUILD_*
- *   values defined above.
- *
- * DE_COMPILER
- *   Specifies the compiler. The value is one of the DE_COMPILER_* values
- *   defined above.
- *
- * DE_COMPILER_VERSION
- *   Specifies the version of the compiler. Is 0 when not supported.
- *
- * DE_PLATFORM
- *   Specifies the target platform. The value is one of the DE_PLATFORM_*
- *   values defined above.
- */
 #include <platform/PlatformInternal.h>
+
+/**
+ * Processor architecture
+ *
+ * Specifies the target processor architecture. The value is one of the
+ * DE_ARCHITECTURE_* values defined above.
+ */
+#define DE_ARCHITECTURE DE_INTERNAL_ARCHITECTURE
+
+/**
+ * Build configuration
+ *
+ * Specifies the target build configuration. The value is one of the DE_BUILD_*
+ * values defined above.
+ */
+#define DE_BUILD DE_INTERNAL_BUILD
+
+/**
+ * Compiler
+ *
+ * Specifies the current compiler. The value is one of the DE_COMPILER_* values
+ * defined above.
+ */
+#define DE_COMPILER DE_INTERNAL_COMPILER
+
+/**
+ * Compiler version
+ *
+ * Specifies the version of the current compiler, in compiler specific format.
+ * The value is 0 if the compiler doesn't provide its version.
+ */
+#define DE_COMPILER_VERSION DE_INTERNAL_COMPILER_VERSION
+
+/**
+ * Platform
+ *
+ * Specifies the target platform. The value is one of the DE_PLATFORM_*
+ * values defined above.
+ */
+#define DE_PLATFORM DE_INTERNAL_PLATFORM
