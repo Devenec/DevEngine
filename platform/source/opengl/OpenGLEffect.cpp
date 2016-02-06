@@ -104,15 +104,16 @@ void Effect::Implementation::checkLinkingStatus() const
 
 void Effect::Implementation::detachShaders() const
 {
+	using ShaderHandleList = Vector<Uint32>;
 	const Int32 shaderCount = getParameter(OpenGL::ATTACHED_SHADERS);
 
 	if(shaderCount > 0)
 	{
-		Vector<Uint32> shaderHandles(shaderCount);
+		ShaderHandleList shaderHandles(shaderCount);
 		OpenGL::getAttachedShaders(_programHandle, shaderCount, nullptr, shaderHandles.data());
 		DE_CHECK_ERROR_OPENGL();
 
-		for(Vector<Uint32>::const_iterator i = shaderHandles.begin(), end = shaderHandles.end(); i != end;
+		for(ShaderHandleList::const_iterator i = shaderHandles.begin(), end = shaderHandles.end(); i != end;
 			++i)
 		{
 			OpenGL::detachShader(_programHandle, *i);
@@ -169,16 +170,6 @@ Effect::Implementation::CharacterBuffer Effect::Implementation::getInfoLog(const
 // Graphics::Effect
 
 // Public
-
-void Effect::attachShader(Shader* shader) const
-{
-	_implementation->attachShader(shader);
-}
-
-void Effect::link() const
-{
-	_implementation->link();
-}
 
 void Effect::setUniformBlockBinding(const Uint32 blockIndex, const Uint32 bindingIndex) const
 {

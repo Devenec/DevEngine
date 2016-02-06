@@ -1,5 +1,5 @@
 /**
- * @file graphics/Shader.h
+ * @file graphics/EffectSourceCodeReader.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,43 +20,35 @@
 
 #pragma once
 
-#include <core/Utility.h>
-#include <graphics/GraphicsResource.h>
+namespace Core
+{
+	class FileStream;
+}
 
 namespace Graphics
 {
-	enum class ShaderType
-	{
-		Compute,
-		Fragment,
-		Geometry,
-		TessellationControl,
-		TessellationEvaluation,
-		Vertex
-	};
+	class EffectCode;
 
-	class Shader final : public GraphicsResource
+	class EffectSourceCodeReader final
 	{
 	public:
 
-		Shader(const Shader& shader) = delete;
-		Shader(Shader&& shader) = delete;
+		EffectSourceCodeReader();
 
-		Shader& operator =(const Shader& shader) = delete;
-		Shader& operator =(Shader&& shader) = delete;
+		EffectSourceCodeReader(const EffectSourceCodeReader& effectSourceCodeReader) = delete;
+		EffectSourceCodeReader(EffectSourceCodeReader&& effectSourceCodeReader) = delete;
+
+		~EffectSourceCodeReader();
+
+		EffectCode* readCode(Core::FileStream& fileStream) const;
+
+		EffectSourceCodeReader& operator =(const EffectSourceCodeReader& effectSourceCodeReader) = delete;
+		EffectSourceCodeReader& operator =(EffectSourceCodeReader&& effectSourceCodeReader) = delete;
 
 	private:
-
-		friend class Effect;
-		friend class GraphicsDevice;
 
 		class Implementation;
 
 		Implementation* _implementation;
-
-		Shader(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type,
-			const Core::ByteList& shaderCode);
-
-		~Shader();
 	};
 }

@@ -22,7 +22,7 @@
 
 #include <png.h>
 #include <core/Types.h>
-#include <core/Vector.h>
+#include <core/Utility.h>
 
 namespace Core
 {
@@ -32,8 +32,6 @@ namespace Core
 namespace Graphics
 {
 	enum class ImageFormat;
-
-	using ByteData = Core::Vector<Uint8>;
 
 	class PNGReader final
 	{
@@ -52,7 +50,7 @@ namespace Graphics
 
 		inline const Uint32 imageWidth() const;
 
-		ByteData readImage(Core::FileStream& fileStream);
+		Core::ByteList readImage(Core::FileStream& fileStream);
 
 		PNGReader& operator =(const PNGReader& pngReader) = delete;
 		PNGReader& operator =(PNGReader&& pngReader) = delete;

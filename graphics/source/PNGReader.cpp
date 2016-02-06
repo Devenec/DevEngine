@@ -81,7 +81,7 @@ ImageFormat PNGReader::imageFormat() const
 	}
 }
 
-ByteData PNGReader::readImage(FileStream& fileStream)
+ByteList PNGReader::readImage(FileStream& fileStream)
 {
 	validateSignature(fileStream);
 	png_set_read_fn(_pngStructure, &fileStream, ::readData);
@@ -89,7 +89,7 @@ ByteData PNGReader::readImage(FileStream& fileStream)
 	png_read_png(_pngStructure, _pngInfo, transforms, nullptr);
 	const Uint32 height = png_get_image_height(_pngStructure, _pngInfo);
 	const Uint rowByteCount = png_get_rowbytes(_pngStructure, _pngInfo);
-	ByteData data(height * rowByteCount);
+	ByteList data(height * rowByteCount);
 	data.shrink_to_fit();
 	Uint8** rows = png_get_rows(_pngStructure, _pngInfo);
 

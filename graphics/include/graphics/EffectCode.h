@@ -1,5 +1,5 @@
 /**
- * @file graphics/Shader.h
+ * @file graphics/EffectCode.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,43 +20,39 @@
 
 #pragma once
 
+#include <content/ContentBase.h>
+#include <core/Types.h>
 #include <core/Utility.h>
-#include <graphics/GraphicsResource.h>
 
 namespace Graphics
 {
-	enum class ShaderType
-	{
-		Compute,
-		Fragment,
-		Geometry,
-		TessellationControl,
-		TessellationEvaluation,
-		Vertex
-	};
-
-	class Shader final : public GraphicsResource
+	class EffectCode final : public Content::ContentBase
 	{
 	public:
 
-		Shader(const Shader& shader) = delete;
-		Shader(Shader&& shader) = delete;
+		EffectCode() = default;
 
-		Shader& operator =(const Shader& shader) = delete;
-		Shader& operator =(Shader&& shader) = delete;
+		EffectCode(const EffectCode& effectCode) = delete;
+		EffectCode(EffectCode&& effectCode) = delete;
+
+		~EffectCode() = default;
+
+		inline const Core::ByteList& fragmentShaderCode() const;
+
+		inline void setFragmentShaderCode(const Core::ByteList& code);
+
+		inline void setVertexShaderCode(const Core::ByteList& code);
+
+		inline const Core::ByteList& vertexShaderCode() const;
+
+		EffectCode& operator =(const EffectCode& effectCode) = delete;
+		EffectCode& operator =(EffectCode&& effectCode) = delete;
 
 	private:
 
-		friend class Effect;
-		friend class GraphicsDevice;
-
-		class Implementation;
-
-		Implementation* _implementation;
-
-		Shader(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type,
-			const Core::ByteList& shaderCode);
-
-		~Shader();
+		Core::ByteList _fragmentShaderCode;
+		Core::ByteList _vertexShaderCode;
 	};
+
+#include "inline/EffectCode.inl"
 }

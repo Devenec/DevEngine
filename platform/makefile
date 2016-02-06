@@ -41,6 +41,7 @@ SOURCE_FILES = \
 	null/NullLogManager.cpp \
 	opengl/OpenGL.cpp \
 	opengl/OpenGLEffect.cpp \
+	opengl/OpenGLEffectSourceCodeReader.cpp \
 	opengl/OpenGLGraphicsBuffer.cpp \
 	opengl/OpenGLGraphicsDevice.cpp \
 	opengl/OpenGLShader.cpp \

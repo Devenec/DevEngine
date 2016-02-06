@@ -21,7 +21,6 @@
 #pragma once
 
 #include <core/List.h>
-#include <core/String.h>
 #include <core/Types.h>
 
 namespace Platform
@@ -41,6 +40,7 @@ namespace Graphics
 
 	class Colour;
 	class Effect;
+	class EffectCode;
 	class GraphicsBuffer;
 	class GraphicsResource;
 	class IndexBuffer;
@@ -62,12 +62,10 @@ namespace Graphics
 		GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint size,
 			const AccessMode& accessMode, const BufferUsage& usage);
 
-		Effect* createEffect();
+		Effect* createEffect(EffectCode* effectCode);
 
 		IndexBuffer* createIndexBuffer(const Uint size, const IndexType& indexType,
 			const AccessMode& accessMode, const BufferUsage& usage);
-
-		Shader* createShader(const ShaderType& type, const Core::String8& source);
 
 		VertexBufferState* createVertexBufferState();
 

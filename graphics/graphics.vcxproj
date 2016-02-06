@@ -143,13 +143,16 @@
     <ClInclude Include="include\graphics\Colour.h" />
     <ClInclude Include="include\graphics\DisplayMode.h" />
     <ClInclude Include="include\graphics\Effect.h" />
+    <ClInclude Include="include\graphics\EffectCode.h" />
+    <ClInclude Include="include\graphics\EffectCodeLoader.h" />
+    <ClInclude Include="include\graphics\EffectSourceCodeReader.h" />
     <ClInclude Include="include\graphics\GraphicsAdapter.h" />
     <ClInclude Include="include\graphics\GraphicsAdapterManager.h" />
     <ClInclude Include="include\graphics\GraphicsBuffer.h" />
     <ClInclude Include="include\graphics\GraphicsConfig.h" />
     <ClInclude Include="include\graphics\GraphicsDevice.h" />
-    <ClInclude Include="include\graphics\GraphicsEnumerations.h" />
     <ClInclude Include="include\graphics\GraphicsDeviceManager.h" />
+    <ClInclude Include="include\graphics\GraphicsEnumerations.h" />
     <ClInclude Include="include\graphics\GraphicsResource.h" />
     <ClInclude Include="include\graphics\Image.h" />
     <ClInclude Include="include\graphics\ImageFormat.h" />
@@ -166,6 +169,7 @@
   <ItemGroup>
     <None Include="include\graphics\inline\AccessMode.inl" />
     <None Include="include\graphics\inline\DisplayMode.inl" />
+    <None Include="include\graphics\inline\EffectCode.inl" />
     <None Include="include\graphics\inline\GraphicsConfig.inl" />
     <None Include="include\graphics\inline\Image.inl" />
     <None Include="include\graphics\inline\IndexBuffer.inl" />
@@ -175,6 +179,7 @@
   <ItemGroup>
     <ClCompile Include="source\Colour.cpp" />
     <ClCompile Include="source\DisplayMode.cpp" />
+    <ClCompile Include="source\EffectCodeLoader.cpp" />
     <ClCompile Include="source\GraphicsConfig.cpp" />
     <ClCompile Include="source\GraphicsDevice.cpp" />
     <ClCompile Include="source\GraphicsDeviceManager.cpp" />

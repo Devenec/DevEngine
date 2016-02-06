@@ -274,7 +274,7 @@ static void setColourBitmapData(const Image* image, Uint8* dataBuffer, const Boo
 {
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 componentCount = hasAlpha ? 4u : 3u;
-	const ByteData& imageData = image->data();
+	const ByteList& imageData = image->data();
 
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{
@@ -292,7 +292,7 @@ static void setGreyBitmapData(const Image* image, Uint8* dataBuffer, const Bool 
 	const Uint32 pixelCount = image->width() * image->height();
 	const Uint32 sourceComponentCount = hasAlpha ? 2u : 1u;
 	const Uint32 destinationComponentCount = hasAlpha ? 4u : 3u;
-	const ByteData& imageData = image->data();
+	const ByteList& imageData = image->data();
 
 	for(Uint32 i = 0u; i < pixelCount; ++i)
 	{

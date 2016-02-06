@@ -51,11 +51,11 @@ static Uint32 getShaderTypeId(const ShaderType& shaderType);
 
 // Public
 
-Shader::Implementation::Implementation(const ShaderType& type, const Core::String8& source)
+Shader::Implementation::Implementation(const ShaderType& type, const ByteList& shaderCode)
 	: _shaderHandle(0u)
 {
 	createShader(type);
-	compileShader(source);
+	compileShader(reinterpret_cast<const Char8*>(shaderCode.data()));
 	checkCompilationStatus();
 }
 
@@ -81,10 +81,9 @@ void Shader::Implementation::createShader(const ShaderType& type)
 	}
 }
 
-void Shader::Implementation::compileShader(const String8& source) const
+void Shader::Implementation::compileShader(const Char8* shaderSource) const
 {
-	const Char8* sourceCharacters = source.c_str();
-	OpenGL::shaderSource(_shaderHandle, 1, &sourceCharacters, nullptr);
+	OpenGL::shaderSource(_shaderHandle, 1, &shaderSource, nullptr);
 	DE_CHECK_ERROR_OPENGL();
 	OpenGL::compileShader(_shaderHandle);
 	DE_CHECK_ERROR_OPENGL();
@@ -154,11 +153,12 @@ Shader::Implementation::CharacterBuffer Shader::Implementation::getInfoLog(const
 
 // Private
 
-Shader::Shader(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type, const String8& source)
+Shader::Shader(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type,
+	const ByteList& shaderCode)
 	: _implementation(nullptr)
 {
 	static_cast<Void>(graphicsInterfaceHandle);
-	_implementation = DE_NEW(Implementation)(type, source);
+	_implementation = DE_NEW(Implementation)(type, shaderCode);
 }
 
 Shader::~Shader()

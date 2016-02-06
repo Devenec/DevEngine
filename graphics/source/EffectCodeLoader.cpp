@@ -1,5 +1,5 @@
 /**
- * @file graphics/inline/Image.inl
+ * @file graphics/EffectCodeLoader.cpp
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,24 +18,29 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/FileStream.h>
+#include <core/Memory.h>
+#include <graphics/EffectCode.h>
+#include <graphics/EffectCodeLoader.h>
+#include <graphics/EffectSourceCodeReader.h>
+
+using namespace Content;
+using namespace Core;
+using namespace Graphics;
+
 // Public
 
-const Core::ByteList& Image::data() const
+EffectCode* EffectCodeLoader::load(FileStream& fileStream)
 {
-	return _data;
+	// TODO: check file extension (add filename getter to fileStream)
+	EffectSourceCodeReader codeReader;
+	return codeReader.readCode(fileStream);
 }
 
-const ImageFormat Image::format() const
-{
-	return _format;
-}
+// External
 
-const Uint32 Image::height() const
+template<>
+ContentLoader<EffectCode>* ContentLoader<EffectCode>::createLoader()
 {
-	return _height;
-}
-
-const Uint32 Image::width() const
-{
-	return _width;
+	return DE_NEW(EffectCodeLoader)();
 }

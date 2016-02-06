@@ -34,7 +34,7 @@ using namespace Graphics;
 Image* ImageLoader::load(FileStream& fileStream)
 {
 	PNGReader pngReader;
-	const ByteData imageData = pngReader.readImage(fileStream);
+	const ByteList imageData = pngReader.readImage(fileStream);
 
 	return DE_NEW(Image)(pngReader.imageWidth(), pngReader.imageHeight(), pngReader.imageFormat(), imageData);
 }

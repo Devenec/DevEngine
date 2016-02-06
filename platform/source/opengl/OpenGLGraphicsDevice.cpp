@@ -20,9 +20,11 @@
 
 #include <core/Memory.h>
 #include <core/Rectangle.h>
+#include <core/Utility.h>
 #include <core/debug/Assert.h>
 #include <graphics/Colour.h>
 #include <graphics/Effect.h>
+#include <graphics/EffectCode.h>
 #include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsDevice.h>
 #include <graphics/IndexBuffer.h>
@@ -95,9 +97,9 @@ public:
 		return DE_NEW(IndexBuffer)(nullptr, size, indexType, accessMode, usage);
 	}
 
-	Shader* createShader(const ShaderType& type, const String8& source) const
+	Shader* createShader(const ShaderType& type, const ByteList& shaderCode) const
 	{
-		return DE_NEW(Shader)(nullptr, type, source);
+		return DE_NEW(Shader)(nullptr, type, shaderCode);
 	}
 
 	VertexBufferState* createVertexBufferState() const
@@ -227,9 +229,19 @@ GraphicsBuffer* GraphicsDevice::createBuffer(const BufferBinding& binding, const
 	return buffer;
 }
 
-Effect* GraphicsDevice::createEffect()
+Effect* GraphicsDevice::createEffect(EffectCode* effectCode)
 {
+	Shader* vertexShader = _implementation->createShader(ShaderType::Vertex, effectCode->vertexShaderCode());
+
+	Shader* fragmentShader =
+		_implementation->createShader(ShaderType::Fragment, effectCode->fragmentShaderCode());
+
 	Effect* effect = _implementation->createEffect();
+	effect->_implementation->attachShader(vertexShader);
+	effect->_implementation->attachShader(fragmentShader);
+	effect->_implementation->link();
+	DE_DELETE(fragmentShader, Shader);
+	DE_DELETE(vertexShader, Shader);
 	_resources.push_back(effect);
 
 	return effect;
@@ -242,14 +254,6 @@ IndexBuffer* GraphicsDevice::createIndexBuffer(const Uint size, const IndexType&
 	_resources.push_back(indexBuffer);
 
 	return indexBuffer;
-}
-
-Shader* GraphicsDevice::createShader(const ShaderType& type, const String8& source)
-{
-	Shader* shader = _implementation->createShader(type, source);
-	_resources.push_back(shader);
-
-	return shader;
 }
 
 VertexBufferState* GraphicsDevice::createVertexBufferState()

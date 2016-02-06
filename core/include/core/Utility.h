@@ -1,5 +1,5 @@
 /**
- * @file graphics/inline/Image.inl
+ * @file core/Utility.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,24 +18,12 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Public
+#pragma once
 
-const Core::ByteList& Image::data() const
-{
-	return _data;
-}
+#include <core/Types.h>
+#include <core/Vector.h>
 
-const ImageFormat Image::format() const
+namespace Core
 {
-	return _format;
-}
-
-const Uint32 Image::height() const
-{
-	return _height;
-}
-
-const Uint32 Image::width() const
-{
-	return _width;
+	using ByteList = Vector<Uint8>;
 }

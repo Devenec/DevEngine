@@ -24,6 +24,7 @@
 
 namespace Graphics
 {
+	class EffectCode;
 	class Shader;
 
 	class Effect final : public GraphicsResource
@@ -32,10 +33,6 @@ namespace Graphics
 
 		Effect(const Effect& effect) = delete;
 		Effect(Effect&& effect) = delete;
-
-		void attachShader(Shader* shader) const;
-
-		void link() const;
 
 		void setUniformBlockBinding(const Uint32 blockIndex, const Uint32 bindingIndex) const;
 

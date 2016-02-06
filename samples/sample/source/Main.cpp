@@ -32,6 +32,7 @@
 #include <graphics/AccessMode.h>
 #include <graphics/Colour.h>
 #include <graphics/Effect.h>
+#include <graphics/EffectCode.h>
 #include <graphics/GraphicsAdapterManager.h>
 #include <graphics/GraphicsBuffer.h>
 #include <graphics/GraphicsDevice.h>
@@ -39,7 +40,6 @@
 #include <graphics/GraphicsEnumerations.h>
 #include <graphics/Image.h>
 #include <graphics/IndexBuffer.h>
-#include <graphics/Shader.h>
 #include <graphics/VertexBufferState.h>
 #include <graphics/VertexElement.h>
 #include <graphics/Window.h>
@@ -48,42 +48,6 @@ using namespace Content;
 using namespace Core;
 using namespace Graphics;
 using namespace Maths;
-
-static const Char8* VERTEX_SHADER_SOURCE
-(
-	"#version 330\n"
-	"\n"
-	"layout(location = 0) in vec4 inPosition;\n"
-	"layout(location = 1) in vec3 inColour;\n"
-	"\n"
-	//"layout(binding = 0) uniform Transforms\n"
-	"uniform Transforms\n"
-	"{\n"
-	"	mat4 projection;\n"
-	"	mat4 world;\n"
-	"} transforms;\n"
-	"\n"
-	"out vec3 colour;\n"
-	"\n"
-	"void main()\n"
-	"{\n"
-	"	colour = inColour;\n"
-	"	gl_Position = transforms.projection * transforms.world * inPosition;\n"
-	"}\n"
-);
-
-static const Char8* FRAGMENT_SHADER_SOURCE
-(
-	"#version 330\n"
-	"\n"
-	"in vec3 colour;\n"
-	"out vec4 outColour;\n"
-	"\n"
-	"void main()\n"
-	"{\n"
-	"	outColour = vec4(colour, 1.0);\n"
-	"}\n"
-);
 
 class App final : public Singleton<App>
 {
@@ -141,21 +105,16 @@ private:
 		_window->show();
 
 		_graphicsDevice = _graphicsDeviceManager.createDevice(_window);
-		Shader* vertexShader = _graphicsDevice->createShader(ShaderType::Vertex, VERTEX_SHADER_SOURCE);
-		Shader* fragmentShader = _graphicsDevice->createShader(ShaderType::Fragment, FRAGMENT_SHADER_SOURCE);
-		_effect = _graphicsDevice->createEffect();
-		_effect->attachShader(vertexShader);
-		_effect->attachShader(fragmentShader);
-		_effect->link();
+		EffectCode* effectCode = _contentManager.load<EffectCode>("assets/effect.glsl");
+		_effect = _graphicsDevice->createEffect(effectCode);
 		_effect->setUniformBlockBinding(0u, 0u);
-		_graphicsDevice->destroyResource(fragmentShader);
-		_graphicsDevice->destroyResource(vertexShader);
 		initialiseVertexBuffer();
 		initialiseIndexBuffer();
 		initialiseVertexBufferState();
 		_graphicsDevice->setEffect(_effect);
 		_graphicsDevice->setVertexBufferState(_vertexBufferState);
 		initialiseUniformBuffer();
+
 	}
 
 	void update()

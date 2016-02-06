@@ -144,6 +144,9 @@
     <ClCompile Include="source\opengl\OpenGLEffect.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
+    <ClCompile Include="source\opengl\OpenGLEffectSourceCodeReader.cpp">
+      <Filter>Source Files\opengl</Filter>
+    </ClCompile>
     <ClCompile Include="source\opengl\OpenGLGraphicsBuffer.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>

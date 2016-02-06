@@ -27,6 +27,7 @@ SOURCE_DIRECTORIES = \
 SOURCE_FILES = \
 	Colour.cpp \
 	DisplayMode.cpp \
+	EffectCodeLoader.cpp \
 	GraphicsConfig.cpp \
 	GraphicsDevice.cpp \
 	GraphicsDeviceManager.cpp \

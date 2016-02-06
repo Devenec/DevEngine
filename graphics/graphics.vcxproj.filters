@@ -26,6 +26,15 @@
     <ClInclude Include="include\graphics\Effect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\graphics\EffectCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\EffectCodeLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\graphics\EffectSourceCodeReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\graphics\GraphicsAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -91,6 +100,9 @@
     <None Include="include\graphics\inline\DisplayMode.inl">
       <Filter>Header Files\inline</Filter>
     </None>
+    <None Include="include\graphics\inline\EffectCode.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
     <None Include="include\graphics\inline\GraphicsConfig.inl">
       <Filter>Header Files\inline</Filter>
     </None>
@@ -112,6 +124,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\DisplayMode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\EffectCodeLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\GraphicsConfig.cpp">

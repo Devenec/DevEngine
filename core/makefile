@@ -42,6 +42,7 @@ SOURCE_FILES = \
 	Memory.cpp \
 	Rectangle.cpp \
 	String.cpp \
+	Tokeniser.cpp \
 	Types.cpp
 
 

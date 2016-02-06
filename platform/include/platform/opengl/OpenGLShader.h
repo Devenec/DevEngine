@@ -30,7 +30,7 @@ namespace Graphics
 	{
 	public:
 
-		Implementation(const ShaderType& type, const Core::String8& source);
+		Implementation(const ShaderType& type, const Core::ByteList& shaderCode);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
@@ -49,7 +49,7 @@ namespace Graphics
 		Uint32 _shaderHandle;
 
 		void createShader(const ShaderType& type);
-		void compileShader(const Core::String8& source) const;
+		void compileShader(const Char8* shaderSource) const;
 		void checkCompilationStatus() const;
 		Int32 getParameter(const Uint32 parameterName) const;
 		void outputCompilerFailureLog() const;

@@ -1,5 +1,5 @@
 /**
- * @file graphics/Shader.h
+ * @file graphics/EffectCodeLoader.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,43 +20,31 @@
 
 #pragma once
 
-#include <core/Utility.h>
-#include <graphics/GraphicsResource.h>
+#include <content/ContentLoader.h>
+
+namespace Core
+{
+	class FileStream;
+}
 
 namespace Graphics
 {
-	enum class ShaderType
-	{
-		Compute,
-		Fragment,
-		Geometry,
-		TessellationControl,
-		TessellationEvaluation,
-		Vertex
-	};
+	class EffectCode;
 
-	class Shader final : public GraphicsResource
+	class EffectCodeLoader final : public Content::ContentLoader<EffectCode>
 	{
 	public:
 
-		Shader(const Shader& shader) = delete;
-		Shader(Shader&& shader) = delete;
+		EffectCodeLoader() = default;
 
-		Shader& operator =(const Shader& shader) = delete;
-		Shader& operator =(Shader&& shader) = delete;
+		EffectCodeLoader(const EffectCodeLoader& effectCodeLoader) = delete;
+		EffectCodeLoader(EffectCodeLoader&& effectCodeLoader) = delete;
 
-	private:
+		~EffectCodeLoader() = default;
 
-		friend class Effect;
-		friend class GraphicsDevice;
+		EffectCode* load(Core::FileStream& fileStream) override;
 
-		class Implementation;
-
-		Implementation* _implementation;
-
-		Shader(GraphicsInterfaceHandle graphicsInterfaceHandle, const ShaderType& type,
-			const Core::ByteList& shaderCode);
-
-		~Shader();
+		EffectCodeLoader& operator =(const EffectCodeLoader& effectCodeLoader) = delete;
+		EffectCodeLoader& operator =(EffectCodeLoader&& effectCodeLoader) = delete;
 	};
 }

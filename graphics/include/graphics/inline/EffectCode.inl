@@ -1,5 +1,5 @@
 /**
- * @file graphics/inline/Image.inl
+ * @file graphics/EffectCode.inl
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,22 +20,22 @@
 
 // Public
 
-const Core::ByteList& Image::data() const
+const Core::ByteList& EffectCode::fragmentShaderCode() const
 {
-	return _data;
+	return _fragmentShaderCode;
 }
 
-const ImageFormat Image::format() const
+void EffectCode::setFragmentShaderCode(const Core::ByteList& code)
 {
-	return _format;
+	_fragmentShaderCode = code;
 }
 
-const Uint32 Image::height() const
+void EffectCode::setVertexShaderCode(const Core::ByteList& code)
 {
-	return _height;
+	_vertexShaderCode = code;
 }
 
-const Uint32 Image::width() const
+const Core::ByteList& EffectCode::vertexShaderCode() const
 {
-	return _width;
+	return _vertexShaderCode;
 }

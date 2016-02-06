@@ -157,7 +157,7 @@ Graphics::Window::~Window()
 static Vector<Uint> createIconData(const Image* image)
 {
 	const Uint32 elementCount = image->width() * image->height();
-	const ByteData& imageData = image->data();
+	const ByteList& imageData = image->data();
 	Vector<Uint> iconData(elementCount + 2u);
 	iconData[0] = image->width();
 	iconData[1] = image->height();

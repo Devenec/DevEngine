@@ -22,25 +22,23 @@
 
 #include <content/ContentBase.h>
 #include <core/Types.h>
-#include <core/Vector.h>
+#include <core/Utility.h>
 #include <graphics/ImageFormat.h>
 
 namespace Graphics
 {
-	using ByteData = Core::Vector<Uint8>;
-
 	class Image final : public Content::ContentBase
 	{
 	public:
 
-		Image(const Uint32 width, const Uint32 height, const ImageFormat& format, const ByteData& data);
+		Image(const Uint32 width, const Uint32 height, const ImageFormat& format, const Core::ByteList& data);
 
 		Image(const Image& image) = delete;
 		Image(Image&& image) = delete;
 
 		~Image() = default;
 
-		inline const ByteData& data() const;
+		inline const Core::ByteList& data() const;
 
 		inline const ImageFormat format() const;
 
@@ -53,7 +51,7 @@ namespace Graphics
 
 	private:
 
-		ByteData _data;
+		Core::ByteList _data;
 		ImageFormat _format;
 		Uint32 _height;
 		Uint32 _width;
