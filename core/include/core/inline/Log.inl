@@ -30,8 +30,6 @@ void Log::setfilterLevel(const LogLevel& level)
 	_filterLevel = level;
 }
 
-// Operators
-
 Log& Log::operator <<(const Uint32 integer)
 {
 	if(_streamLevel >= _filterLevel)

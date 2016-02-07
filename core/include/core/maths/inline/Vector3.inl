@@ -43,8 +43,6 @@ Vector2 Vector3::xy() const
 	return Vector2(x, y);
 }
 
-// Operators
-
 Vector3 Vector3::operator -() const
 {
 	return Vector3(-x, -y, -z);

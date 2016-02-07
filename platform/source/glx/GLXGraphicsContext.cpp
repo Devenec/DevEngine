@@ -24,7 +24,9 @@
 #include <core/Platform.h>
 #include <core/Types.h>
 #include <platform/GraphicsContext.h>
+#include <platform/Version.h>
 #include <platform/glx/GLX.h>
+#include <platform/opengl/OpenGL.h>
 #include <platform/x/X.h>
 
 using namespace Core;
@@ -41,11 +43,14 @@ static const Int32 CONTEXT_FLAGS = GLX::CONTEXT_DEBUG_BIT_ARB;
 static const Int32 CONTEXT_FLAGS = 0;
 #endif
 
-static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
+static const Uint32 MAJOR_VERSION_ATTRIBUTE_INDEX = 3u;
+static const Uint32 MINOR_VERSION_ATTRIBUTE_INDEX = 5u;
+
+static Array<Int32, 9u> CONTEXT_ATTRIBUTES
 {{
 	GLX::CONTEXT_FLAGS_ARB,			::CONTEXT_FLAGS,
-	GLX::CONTEXT_MAJOR_VERSION_ARB, 3,
-	GLX::CONTEXT_MINOR_VERSION_ARB, 3,
+	GLX::CONTEXT_MAJOR_VERSION_ARB, 0,
+	GLX::CONTEXT_MINOR_VERSION_ARB, 0,
 	GLX::CONTEXT_PROFILE_MASK_ARB,	GLX::CONTEXT_CORE_PROFILE_BIT_ARB,
 	0
 }};
@@ -61,10 +66,7 @@ public:
 		: _graphicsContextHandle(nullptr),
 		  _windowHandle(reinterpret_cast<::Window>(windowHandle))
 	{
-		_graphicsContextHandle =
-			X::instance().createGraphicsContext(static_cast<GLX::FBConfig>(configHandle),
-				::CONTEXT_ATTRIBUTES.data(), true);
-
+		createContext(static_cast<GLX::FBConfig>(configHandle));
 		checkContext();
 	}
 
@@ -99,6 +101,26 @@ private:
 	GLX::Context _graphicsContextHandle;
 	::Window _windowHandle;
 
+	void createContext(GLX::FBConfig configHandle)
+	{
+		for(Uint i = OpenGL::SUPPORTED_VERSIONS.size(); i > 0u; --i)
+		{
+			_graphicsContextHandle =
+				createContextWithVersion(configHandle, OpenGL::SUPPORTED_VERSIONS[i - 1u]);
+
+			if(_graphicsContextHandle != nullptr)
+				break;
+		}
+
+		if(_graphicsContextHandle == nullptr)
+		{
+			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create the context." <<
+				Log::Flush();
+
+			DE_ERROR_X(0x0);
+		}
+	}
+
 	void checkContext() const
 	{
 		if(!X::instance().isGraphicsContextDirect(_graphicsContextHandle))
@@ -106,6 +128,14 @@ private:
 			defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "The context is not direct." <<
 				Log::Flush();
 		}
+	}
+
+	GLX::Context createContextWithVersion(GLX::FBConfig configHandle, const Version& version) const
+	{
+		::CONTEXT_ATTRIBUTES[::MAJOR_VERSION_ATTRIBUTE_INDEX] = version.majorNumber();
+		::CONTEXT_ATTRIBUTES[::MINOR_VERSION_ATTRIBUTE_INDEX] = version.minorNumber();
+
+		return X::instance().createGraphicsContext(configHandle, ::CONTEXT_ATTRIBUTES.data(), true);
 	}
 };
 

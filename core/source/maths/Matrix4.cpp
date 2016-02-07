@@ -103,8 +103,6 @@ Matrix4 Matrix4::transpose() const
 	);
 }
 
-// Operators
-
 Matrix4& Matrix4::operator +=(const Matrix4& matrix)
 {
 	_columns[0] += matrix._columns[0];

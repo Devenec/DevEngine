@@ -38,8 +38,6 @@ void Vector2::normalise()
 	operator /=(length());
 }
 
-// Operators
-
 Vector2 Vector2::operator -() const
 {
 	return Vector2(-x, -y);

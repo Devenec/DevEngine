@@ -22,7 +22,7 @@
 #include <core/Error.h>
 #include <core/Log.h>
 #include <platform/GraphicsFunctionUtility.h>
-#include <platform/Utility.h>
+#include <platform/Version.h>
 #include <platform/glx/GLX.h>
 #include <platform/x/X.h>
 
@@ -32,10 +32,9 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG			   = "[Platform::GLX] ";
-static const Char8* LIBRARY_FILENAME		   = "libGL.so";
-static const Int32 MIN_SUPPORTED_VERSION_MAJOR = 1;
-static const Int32 MIN_SUPPORTED_VERSION_MINOR = 4;
+static const Char8* COMPONENT_TAG		   = "[Platform::GLX] ";
+static const Char8* LIBRARY_FILENAME	   = "libGL.so";
+static const Version MIN_SUPPORTED_VERSION = Version(1u, 4u);
 
 
 // Public
@@ -124,31 +123,26 @@ void GLX::getStandardFunctions() const
 
 void GLX::checkSupport() const
 {
-	Uint32 versionMajor = 0u;
-	Uint32 versionMinor = 0u;
-	const Bool isSupported = X::instance().isGLXSupported(versionMajor, versionMinor);
+	const Version glxVersion = X::instance().getGLXVersion();
 
-	if(isSupported)
-	{
-		if(isVersionLess(versionMajor, versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR,
-			::MIN_SUPPORTED_VERSION_MINOR))
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "GLX version " << versionMajor << '.' <<
-				versionMinor << " is not supported. The minimum supported version is " <<
-				::MIN_SUPPORTED_VERSION_MAJOR << '.' << ::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
-
-			DE_ERROR(0x0);
-		}
-		else
-		{
-			defaultLog << LogLevel::Info << "Using GLX version " << versionMajor << '.' << versionMinor <<
-				'.' << Log::Flush();
-		}
-	}
-	else
+	if(glxVersion == Version(0u, 0u))
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "GLX is not supported." << Log::Flush();
 		DE_ERROR_X(0x0);
+	}
+	else if(glxVersion < ::MIN_SUPPORTED_GLX_VERSION)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "GLX version " << glxVersion.majorNumber() <<
+			'.' << glxVersion.minorNumber() << " is not supported. The minimum supported version is " <<
+			::MIN_SUPPORTED_GLX_VERSION.majorNumber() << '.' << ::MIN_SUPPORTED_GLX_VERSION.minorNumber() <<
+			'.' << Log::Flush();
+
+		DE_ERROR(0x0);
+	}
+	else
+	{
+		defaultLog << LogLevel::Info << "Using GLX version " << glxVersion.majorNumber() << '.' <<
+			glxVersion.minorNumber() << '.' << Log::Flush();
 	}
 }
 
@@ -199,6 +193,7 @@ void GLX::checkExtensionsSupport(const ExtensionNameList& extensionNames) const
 {
 	const ExtensionNameSet extensionNameSet(extensionNames.begin(), extensionNames.end());
 	GraphicsFunctionUtility::checkExtensionSupport(extensionNameSet, "GLX_ARB_create_context");
+	GraphicsFunctionUtility::checkExtensionSupport(extensionNameSet, "GLX_ARB_create_context_profile");
 }
 
 void GLX::getExtensionFunctions() const

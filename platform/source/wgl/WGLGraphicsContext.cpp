@@ -24,6 +24,8 @@
 #include <core/Platform.h>
 #include <core/Types.h>
 #include <platform/GraphicsContext.h>
+#include <platform/Version.h>
+#include <platform/opengl/OpenGL.h>
 #include <platform/wgl/WGL.h>
 #include <platform/wgl/WGLGraphicsContextBase.h>
 #include <platform/windows/Windows.h>
@@ -42,11 +44,14 @@ static const Int32 CONTEXT_FLAGS = WGL::CONTEXT_DEBUG_BIT_ARB;
 static const Int32 CONTEXT_FLAGS = 0;
 #endif
 
-static const Array<Int32, 9u> CONTEXT_ATTRIBUTES
+static const Uint32 MAJOR_VERSION_ATTRIBUTE_INDEX = 3u;
+static const Uint32 MINOR_VERSION_ATTRIBUTE_INDEX = 5u;
+
+static Array<Int32, 9u> CONTEXT_ATTRIBUTES
 {{
 	WGL::CONTEXT_FLAGS_ARB,			::CONTEXT_FLAGS,
-	WGL::CONTEXT_MAJOR_VERSION_ARB, 3,
-	WGL::CONTEXT_MINOR_VERSION_ARB, 3,
+	WGL::CONTEXT_MAJOR_VERSION_ARB, 0,
+	WGL::CONTEXT_MINOR_VERSION_ARB, 0,
 	WGL::CONTEXT_PROFILE_MASK_ARB,	WGL::CONTEXT_CORE_PROFILE_BIT_ARB,
 	0
 }};
@@ -65,7 +70,7 @@ public:
 	{
 		const Int32 configIndex = static_cast<Int32>(reinterpret_cast<Int>(configHandle));
 		setConfig(configIndex);
-		initialise();
+		createContext();
 	}
 
 	Implementation(const Implementation& implementation) = delete;
@@ -80,10 +85,15 @@ private:
 
 	using Base = GraphicsContextBase;
 
-	void initialise()
+	void createContext()
 	{
-		_graphicsContextHandle =
-			WGL::createContextAttribsARB(_deviceContextHandle, nullptr, ::CONTEXT_ATTRIBUTES.data());
+		for(Uint i = OpenGL::SUPPORTED_VERSIONS.size(); i > 0u; --i)
+		{
+			_graphicsContextHandle = createContextWithVersion(OpenGL::SUPPORTED_VERSIONS[i - 1u]);
+
+			if(_graphicsContextHandle != nullptr)
+				break;
+		}
 
 		if(_graphicsContextHandle == nullptr)
 		{
@@ -92,6 +102,14 @@ private:
 
 			DE_ERROR_WINDOWS(0x0);
 		}
+	}
+
+	HGLRC createContextWithVersion(const Version& version) const
+	{
+		::CONTEXT_ATTRIBUTES[::MAJOR_VERSION_ATTRIBUTE_INDEX] = version.majorNumber();
+		::CONTEXT_ATTRIBUTES[::MINOR_VERSION_ATTRIBUTE_INDEX] = version.minorNumber();
+
+		return WGL::createContextAttribsARB(_deviceContextHandle, nullptr, ::CONTEXT_ATTRIBUTES.data());
 	}
 };
 

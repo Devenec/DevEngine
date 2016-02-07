@@ -122,11 +122,6 @@ namespace Platform
 		static const Int32 ERROR_INVALID_PROFILE_ARB			 = 0x2096;
 		static const Int32 CONTEXT_PROFILE_MASK_ARB				 = 0x9126;
 
-		// WGL_ARB_multisample
-
-		static const Int32 SAMPLE_BUFFERS_ARB = 0x2041;
-		static const Int32 SAMPLES_ARB		  = 0x2042;
-
 		// WGL_ARB_pixel_format
 
 		static const Int32 NUMBER_PIXEL_FORMATS_ARB	   = 0x2000;

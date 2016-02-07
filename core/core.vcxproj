@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="include\core\Application.h" />
     <ClInclude Include="include\core\Array.h" />
+    <ClInclude Include="include\core\Bitset.h" />
     <ClInclude Include="include\core\Config.h" />
     <ClInclude Include="include\core\ConfigInternal.h" />
     <ClInclude Include="include\core\Error.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="include\core\memory\STDAllocator.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\core\inline\Bitset.inl" />
     <None Include="include\core\inline\FileStream.inl" />
     <None Include="include\core\inline\Log.inl" />
     <None Include="include\core\inline\LogBuffer.inl" />
@@ -199,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Application.cpp" />
+    <ClCompile Include="source\Bitset.cpp" />
     <ClCompile Include="source\Error.cpp" />
     <ClCompile Include="source\FileSystem.cpp" />
     <ClCompile Include="source\Log.cpp">

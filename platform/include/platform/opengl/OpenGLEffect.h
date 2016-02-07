@@ -41,14 +41,14 @@ namespace Graphics
 
 		inline void bind() const;
 
-		inline void debind() const;
-
 		void link() const;
 
 		void setUniformBlockBinding(const Uint32 blockIndex, const Uint32 bindingIndex) const;
 
 		Implementation& operator =(const Implementation& implementation) = delete;
 		Implementation& operator =(Implementation&& implementation) = delete;
+
+		static inline void debind();
 
 	private:
 

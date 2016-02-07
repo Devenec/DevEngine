@@ -45,8 +45,6 @@ Vector4::Vector4(const Vector2& vector2, const Float32 z, const Float32 w)
 Vector4::Vector4(const Vector3& vector3, const Float32 w)
 	: Vector4(vector3.x, vector3.y, vector3.z, w) { }
 
-// Operators
-
 Vector4& Vector4::operator +=(const Vector4& vector)
 {
 	x += vector.x;

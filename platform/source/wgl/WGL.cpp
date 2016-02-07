@@ -112,6 +112,7 @@ void WGL::checkExtensionsSupport(const ExtensionNameList& extensionNames)
 {
 	const ExtensionNameSet extensionNameSet(extensionNames.begin(), extensionNames.end());
 	GraphicsFunctionUtility::checkExtensionSupport(extensionNameSet, "WGL_ARB_create_context");
+	GraphicsFunctionUtility::checkExtensionSupport(extensionNameSet, "WGL_ARB_create_context_profile");
 	GraphicsFunctionUtility::checkExtensionSupport(extensionNameSet, "WGL_ARB_pixel_format");
 }
 

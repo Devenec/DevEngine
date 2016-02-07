@@ -21,7 +21,7 @@
 #include <cstdlib>
 #include <core/Error.h>
 #include <core/Log.h>
-#include <platform/Utility.h>
+#include <platform/Version.h>
 #include <platform/x/X.h>
 
 using namespace Core;
@@ -29,9 +29,8 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG					  = "[Platform::X] ";
-static const Int32 MIN_SUPPORTED_XRANDR_VERSION_MAJOR = 1;
-static const Int32 MIN_SUPPORTED_XRANDR_VERSION_MINOR = 1;
+static const Char8* COMPONENT_TAG				  = "[Platform::X] ";
+static const Version MIN_SUPPORTED_XRANDR_VERSION = Version(1u, 1u);
 
 static Int32 handleError(Display* xConnection, XErrorEvent* errorInfo);
 static Int32 handleIOError(Display* xConnection);
@@ -54,23 +53,6 @@ X::X()
 X::~X()
 {
 	XCloseDisplay(_connection);
-}
-
-GLX::Context X::createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes,
-	const Bool isDirect) const
-{
-	GLX::Context contextHandle =
-		GLX::createContextAttribsARB(_connection, configHandle, nullptr, isDirect, attributes);
-
-	if(contextHandle == nullptr)
-	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to create a graphics context." <<
-			Log::Flush();
-
-		DE_ERROR_X(0x0);
-	}
-
-	return contextHandle;
 }
 
 Cursor X::createHiddenPointer(const ::Window windowHandle) const
@@ -122,6 +104,23 @@ void X::destroyWindowUserData(const ::Window windowHandle) const
 
 		DE_ERROR_X(0x0);
 	}
+}
+
+Version X::getGLXVersion() const
+{
+	Int32 result = GLX::queryExtension(_connection, nullptr, nullptr);
+
+	if(result == 0)
+		return Version(0u, 0u);
+
+	Int32 majorVersion;
+	Int32 minorVersion;
+	result = GLX::queryVersion(_connection, &majorVersion &minorVersion);
+
+	if(result == 0)
+		return Version(0u, 0u);
+
+	return Version(majorVersion, minorVersion);
 }
 
 XRRScreenConfiguration* X::getGraphicsAdapterConfig(const Uint32 adapterIndex) const
@@ -235,20 +234,6 @@ void X::invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line
 	XSync(_connection, False);
 	DE_DEBUGGER_BREAK();
 	std::abort();
-}
-
-Bool X::isGLXSupported(Uint32& versionMajor, Uint32& versionMinor) const
-{
-	Int32 result = GLX::queryExtension(_connection, nullptr, nullptr);
-
-	if(result == 0)
-		return false;
-
-	result =
-		GLX::queryVersion(_connection, reinterpret_cast<Int32*>(&versionMajor),
-			reinterpret_cast<Int32*>(&versionMinor));
-
-	return result != 0;
 }
 
 void X::makeGraphicsContextCurrent(GLX::Drawable drawableHandle, GLX::Context contextHandle) const
@@ -396,36 +381,27 @@ void X::initialiseConnection()
 
 void X::checkXRandRSupport() const
 {
-	Int32 baseEventType;
-	Int32 baseErrorCode;
-	const Int32 result = XRRQueryExtension(_connection, &baseEventType, &baseErrorCode);
+	const Version xrandrVersion = getXRandRVersion();
 
-	if(result == 0)
+	if(xrandrVersion == Version(0u, 0u))
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "XRandR is not supported." << Log::Flush();
 		DE_ERROR_X(0x0);
 	}
+	else if(xrandrVersion < ::MIN_SUPPORTED_XRANDR_VERSION)
+	{
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "XRandR version " <<
+			xrandrVersion.majorNumber() << '.' << xrandrVersion.minorNumber() <<
+			" is not supported. The minimum supported version is " <<
+			::MIN_SUPPORTED_XRANDR_VERSION.majorNumber() << '.' <<
+			::MIN_SUPPORTED_XRANDR_VERSION.minorNumber() << '.' << Log::Flush();
+
+		DE_ERROR(0x0);
+	}
 	else
 	{
-		Int32 versionMajor = 0;
-		Int32 versionMinor = 0;
-		XRRQueryVersion(_connection, &versionMajor, &versionMinor);
-
-		if(isVersionLess(versionMajor, versionMinor, MIN_SUPPORTED_XRANDR_VERSION_MAJOR,
-			MIN_SUPPORTED_XRANDR_VERSION_MINOR))
-		{
-			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "XRandR version " << versionMajor << '.' <<
-				versionMinor << " is not supported. The minimum supported version is " <<
-				MIN_SUPPORTED_XRANDR_VERSION_MAJOR << '.' << MIN_SUPPORTED_XRANDR_VERSION_MINOR << '.' <<
-				Log::Flush();
-
-			DE_ERROR(0x0);
-		}
-		else
-		{
-			defaultLog << LogLevel::Info << "Using XRandR version " << versionMajor << '.' << versionMinor <<
-				'.' << Log::Flush();
-		}
+		defaultLog << LogLevel::Info << "Using XRandR version " << xrandrVersion.majorNumber() << '.' <<
+			xrandrVersion.minorNumber() << '.' << Log::Flush();
 	}
 }
 
@@ -443,6 +419,25 @@ XWindowAttributes X::getWindowAttributes(const ::Window windowHandle) const
 	}
 
 	return windowAttributes;
+}
+
+Version X::getXRandRVersion() const
+{
+	Int32 baseEventType;
+	Int32 baseErrorCode;
+	Int32 result = XRRQueryExtension(_connection, &baseEventType, &baseErrorCode);
+
+	if(result == 0)
+		return Version(0u, 0u);
+
+	Int32 majorVersion = 0;
+	Int32 minorVersion = 0;
+	result = XRRQueryVersion(_connection, &majorVersion, &minorVersion);
+
+	if(result == 0)
+		return Version(0u, 0u);
+
+	return Version(majorVersion, minorVersion);
 }
 
 

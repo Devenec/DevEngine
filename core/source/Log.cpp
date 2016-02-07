@@ -56,8 +56,6 @@ void Log::write(const LogLevel& logLevel, const String8& message) const
 	}
 }
 
-// Operators
-
 Log& Log::operator <<(const Bool boolean)
 {
 	if(_streamLevel >= _filterLevel)

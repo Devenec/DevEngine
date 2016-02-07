@@ -1,5 +1,5 @@
-/**
- * @file platform/opengl/inline/OpenGLEffect.inl
+﻿/**
+ * @file core/Bitset.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,16 +18,39 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Public
+#pragma once
 
-void Effect::Implementation::bind() const
+#include <core/Types.h>
+#include <core/debug/Assert.h>
+
+namespace Core
 {
-	bind(_programHandle);
-}
+	class Bitset final
+	{
+	public:
 
-// Static
+		Bitset();
 
-void Effect::Implementation::debind()
-{
-	bind(0u);
+		explicit Bitset(const Uint32 value);
+
+		Bitset(const Bitset& bitset) = default;
+		Bitset(Bitset&& bitset) = default;
+
+		~Bitset() = default;
+
+		Bool isSet(const Uint32 index) const;
+
+		inline void reset();
+
+		void set(const Uint32 index, const Bool value);
+
+		Bitset& operator =(const Bitset& bitset) = default;
+		Bitset& operator =(Bitset&& bitset) = default;
+
+	private:
+
+		Uint32 _value;
+	};
+
+#include "inline/Bitset.inl"
 }

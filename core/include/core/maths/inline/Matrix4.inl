@@ -25,8 +25,6 @@ const Float32* Matrix4::data() const
 	return &_columns[0][0];
 }
 
-// Operators
-
 Matrix4 Matrix4::operator -() const
 {
 	return Matrix4(-_columns[0], -_columns[1], -_columns[2], -_columns[3]);

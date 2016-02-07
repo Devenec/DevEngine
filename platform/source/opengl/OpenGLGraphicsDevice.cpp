@@ -18,7 +18,9 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <core/Bitset.h>
 #include <core/Memory.h>
+#include <core/Platform.h>
 #include <core/Rectangle.h>
 #include <core/Utility.h>
 #include <core/debug/Assert.h>
@@ -113,16 +115,18 @@ public:
 		DE_CHECK_ERROR_OPENGL();
 	}
 
-	void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount, const Uint32 vertexOffset) const
+	void draw(const PrimitiveType& primitiveType, const Uint32 vertexCount, const Uint32 vertexOffset)
 	{
 		initialiseDrawing();
 		OpenGL::drawArrays(static_cast<Uint32>(primitiveType), vertexOffset, vertexCount);
 		DE_CHECK_ERROR_OPENGL();
+
+#if DE_BUILD == DE_BUILD_DEBUG
 		deinitialiseDrawing();
+#endif
 	}
 
 	void drawIndexed(const PrimitiveType& primitiveType, const Uint32 indexCount, const Uint32 indexOffset)
-		const
 	{
 		initialiseDrawing();
 		IndexBuffer* indexBuffer = _activeVertexBufferState->_implementation->indexBuffer();
@@ -134,25 +138,28 @@ public:
 			reinterpret_cast<Void*>(byteOffset));
 
 		DE_CHECK_ERROR_OPENGL();
+
+#if DE_BUILD == DE_BUILD_DEBUG
 		deinitialiseDrawing();
+#endif
 	}
 
 	void setEffect(Effect* effect)
 	{
 		_activeEffect = effect;
+		setComponentState(ComponentID::Effect, false);
 	}
 
 	void setVertexBufferState(VertexBufferState* vertexBufferState)
 	{
 		_activeVertexBufferState = vertexBufferState;
+		setComponentState(ComponentID::VertexBufferState, false);
 	}
 
 	void setViewport(const Viewport& viewport)
 	{
 		_viewport = viewport;
-		const Rectangle& bounds = viewport.bounds();
-		OpenGL::viewport(bounds.x, bounds.y, bounds.width, bounds.height);
-		DE_CHECK_ERROR_OPENGL();
+		setComponentState(ComponentID::Viewport, false);
 	}
 
 	void swapBuffers() const
@@ -170,11 +177,19 @@ public:
 
 private:
 
+	enum class ComponentID
+	{
+		Effect,
+		VertexBufferState,
+		Viewport
+	};
+
 	Viewport _viewport;
 	Effect* _activeEffect;
 	VertexBufferState* _activeVertexBufferState;
 	GraphicsContext* _graphicsContext;
 	OpenGL* _openGl;
+	Core::Bitset _componentStates;
 
 	void initialiseOpenGL()
 	{
@@ -188,20 +203,60 @@ private:
 		OpenGL::getIntegerv(OpenGL::VIEWPORT, viewport);
 		DE_CHECK_ERROR_OPENGL();
 		_viewport.setBounds(Rectangle(viewport[0], viewport[1], viewport[2], viewport[3]));
+		setComponentState(ComponentID::Viewport, true);
 	}
 
-	void initialiseDrawing() const
+	void initialiseDrawing()
 	{
 		DE_ASSERT(_activeEffect != nullptr);
 		DE_ASSERT(_activeVertexBufferState != nullptr);
-		_activeEffect->_implementation->bind();
-		_activeVertexBufferState->_implementation->bind();
+
+		if(shouldUpdateComponent(ComponentID::Effect))
+			initialiseEffectForDrawing();
+
+		if(shouldUpdateComponent(ComponentID::VertexBufferState))
+			initialiseVertexBufferStateForDrawing();
+
+		if(shouldUpdateComponent(ComponentID::Viewport))
+			initialiseViewportForDrawing();
 	}
 
-	void deinitialiseDrawing() const
+	void deinitialiseDrawing()
 	{
 		_activeVertexBufferState->_implementation->debind();
-		_activeEffect->_implementation->debind();
+		setComponentState(ComponentID::VertexBufferState, false);
+		Effect::Implementation::debind();
+		setComponentState(ComponentID::Effect, false);
+	}
+
+	void setComponentState(const ComponentID& componentId, const Bool isUpToDate)
+	{
+		_componentStates.set(static_cast<Uint32>(componentId), isUpToDate);
+	}
+
+	Bool shouldUpdateComponent(const ComponentID& componentId) const
+	{
+		return !_componentStates.isSet(static_cast<Uint32>(componentId));
+	}
+
+	void initialiseEffectForDrawing()
+	{
+		_activeEffect->_implementation->bind();
+		setComponentState(ComponentID::Effect, true);
+	}
+
+	void initialiseVertexBufferStateForDrawing()
+	{
+		_activeVertexBufferState->_implementation->bind();
+		setComponentState(ComponentID::VertexBufferState, true);
+	}
+
+	void initialiseViewportForDrawing()
+	{
+		const Rectangle& bounds = _viewport.bounds();
+		OpenGL::viewport(bounds.x, bounds.y, bounds.width, bounds.height);
+		DE_CHECK_ERROR_OPENGL();
+		setComponentState(ComponentID::Viewport, true);
 	}
 };
 

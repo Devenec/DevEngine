@@ -39,6 +39,8 @@
 
 namespace Platform
 {
+	class Version;
+
 	class X final : public Core::Singleton<X>
 	{
 	public:
@@ -52,7 +54,7 @@ namespace Platform
 
 		inline Atom createAtom(const Char8* name) const;
 
-		GLX::Context createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes,
+		inline GLX::Context createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes,
 			const Bool isDirect) const;
 
 		Cursor createHiddenPointer(const ::Window windowHandle) const;
@@ -71,6 +73,8 @@ namespace Platform
 		void destroyWindowUserData(const ::Window windowHandle) const;
 
 		inline const Char8* getExtensionNameString() const;
+
+		Version getGLXVersion() const;
 
 		XRRScreenConfiguration* getGraphicsAdapterConfig(const Uint32 adapterIndex) const;
 
@@ -102,8 +106,6 @@ namespace Platform
 
 		void invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
 			const;
-
-		Bool isGLXSupported(Uint32& versionMajor, Uint32& versionMinor) const;
 
 		inline Bool isGraphicsContextDirect(GLX::Context contextHandle) const;
 
@@ -149,6 +151,7 @@ namespace Platform
 		void initialiseConnection();
 		void checkXRandRSupport() const;
 		XWindowAttributes getWindowAttributes(const ::Window windowHandle) const;
+		Version getXRandRVersion() const;
 	};
 
 #include "inline/X.inl"

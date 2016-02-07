@@ -18,7 +18,10 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <climits>
 #include <core/Types.h>
+
+static_assert(CHAR_BIT == 8, "The number of bits in a byte is incorrect.");
 
 static_assert(sizeof(Int8) == 1, "The size of Int8 is incorrect.");
 static_assert(sizeof(Uint8) == 1, "The size of Uint8 is incorrect.");

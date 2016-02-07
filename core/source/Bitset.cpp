@@ -1,5 +1,5 @@
-/**
- * @file platform/Utility.cpp
+﻿/**
+ * @file core/Bitset.cpp
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,17 +18,36 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <platform/Utility.h>
+#include <core/Bitset.h>
 
-// Platform
+using namespace Core;
 
-Bool Platform::isVersionLess(const Uint32 majorA, const Uint32 minorA, const Uint32 majorB,
-	const Uint32 minorB)
+// External
+
+static const Uint32 BIT_COUNT = BITS_IN_BYTE * sizeof(Uint32);
+
+
+// Public
+
+Bitset::Bitset()
+	: _value(0u) { }
+
+Bitset::Bitset(const Uint32 value)
+	: _value(value) { }
+
+Bool Bitset::isSet(const Uint32 index) const
 {
-	if(majorA < majorB)
-		return true;
-	else if(majorA == majorB)
-		return minorA < minorB;
+	DE_ASSERT(index < BIT_COUNT);
+	return (_value & (1u << index)) == 1u;
+}
 
-	return false;
+void Bitset::set(const Uint32 index, const Bool value)
+{
+	DE_ASSERT(index < BIT_COUNT);
+	const Uint32 mask = 1u << index;
+
+	if(value)
+		_value |= mask;
+	else
+		_value &= ~mask;
 }

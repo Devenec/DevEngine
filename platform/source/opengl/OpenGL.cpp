@@ -18,14 +18,9 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cstdlib>
-#include <core/Array.h>
 #include <core/Error.h>
 #include <core/Log.h>
-#include <core/String.h>
-#include <core/debug/Assert.h>
 #include <platform/GraphicsFunctionUtility.h>
-#include <platform/Utility.h>
 #include <platform/opengl/OpenGL.h>
 
 using namespace Core;
@@ -71,11 +66,6 @@ static const Array<const Char8*, 7u> ERROR_NAMES
 	"Invalid framebuffer operation"
 }};
 
-static const Uint32 MIN_SUPPORTED_VERSION_MAJOR = 3u;
-static const Uint32 MIN_SUPPORTED_VERSION_MINOR = 3u;
-
-static Uint32 parseMajorVersionNumber(const String8& versionString);
-static Uint32 parseMinorVersionNumber(const String8& versionString);
 static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function);
 
 
@@ -802,9 +792,19 @@ Int32 OpenGL::getInteger(const Uint32 name)
 	return value;
 }
 
+const Array<Version, 7u> OpenGL::SUPPORTED_VERSIONS
+{{
+	Version(3u, 3u),
+	Version(4u, 0u),
+	Version(4u, 1u),
+	Version(4u, 2u),
+	Version(4u, 3u),
+	Version(4u, 4u),
+	Version(4u, 5u)
+}};
+
 OpenGL::OpenGL()
-	: _versionMajor(0u),
-	  _versionMinor(0u)
+	: _version(0u, 0u)
 {
 	initialiseVersion();
 	checkSupport();
@@ -829,17 +829,17 @@ void OpenGL::initialiseVersion()
 	GraphicsFunctionUtility functionUtility;
 	getError = functionUtility.getStandardFunction<GetError>("glGetError");
 	getString = functionUtility.getStandardFunction<GetString>("glGetString");
-	getVersion(VERSION, _versionMajor, _versionMinor);
+	_version = Version::createFromString(getCharacters(VERSION));
 }
 
 void OpenGL::checkSupport() const
 {
-	if(isVersionLess(_versionMajor, _versionMinor, ::MIN_SUPPORTED_VERSION_MAJOR,
-		::MIN_SUPPORTED_VERSION_MINOR))
+	if(_version < SUPPORTED_VERSIONS[0])
 	{
-		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "OpenGL version " << _versionMajor << '.' <<
-		_versionMinor << " is not supported. The minimum supported version is " <<
-		::MIN_SUPPORTED_VERSION_MAJOR << '.' << ::MIN_SUPPORTED_VERSION_MINOR << '.' << Log::Flush();
+		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "OpenGL version " << _version.majorNumber() <<
+			'.' << _version.minorNumber() << " is not supported. The minimum supported version is " <<
+			SUPPORTED_VERSIONS[0].majorNumber() << '.' << SUPPORTED_VERSIONS[0].minorNumber() << '.' <<
+			Log::Flush();
 
 		DE_ERROR(0x0);
 	}
@@ -1359,7 +1359,7 @@ void OpenGL::getStandardFunctions() const
 	vertexAttribP4ui = functionUtility.getExtensionFunction<VertexAttribP4UI>("glVertexAttribP4ui");
 	vertexAttribP4uiv = functionUtility.getExtensionFunction<VertexAttribP4UIV>("glVertexAttribP4uiv");
 
-	if(_versionMajor >= 4u)
+	if(_version.majorNumber() >= 4u)
 	{
 		// Version 4.0
 
@@ -1454,7 +1454,7 @@ void OpenGL::getStandardFunctions() const
 		uniformSubroutinesuiv =
 			functionUtility.getExtensionFunction<UniformSubroutineSUIV>("glUniformSubroutinesuiv");
 
-		if(_versionMinor >= 1u)
+		if(_version.minorNumber() >= 1u)
 		{
 			// Version 4.1
 
@@ -1687,7 +1687,7 @@ void OpenGL::getStandardFunctions() const
 				functionUtility.getExtensionFunction<ViewportIndexedFV>("glViewportIndexedfv");
 		}
 
-		if(_versionMinor >= 2u)
+		if(_version.minorNumber() >= 2u)
 		{
 			// Version 4.2
 
@@ -1726,7 +1726,7 @@ void OpenGL::getStandardFunctions() const
 			texStorage3D = functionUtility.getExtensionFunction<TexStorage3D>("glTexStorage3D");
 		}
 
-		if(_versionMinor >= 3u)
+		if(_version.minorNumber() >= 3u)
 		{
 			// Version 4.3
 
@@ -1849,7 +1849,7 @@ void OpenGL::getStandardFunctions() const
 				functionUtility.getExtensionFunction<VertexBindingDivisor>("glVertexBindingDivisor");
 		}
 
-		if(_versionMinor >= 4u)
+		if(_version.minorNumber() >= 4u)
 		{
 			// Version 4.4
 
@@ -1870,7 +1870,7 @@ void OpenGL::getStandardFunctions() const
 			clearTexSubImage = functionUtility.getExtensionFunction<ClearTexSubImage>("glClearTexSubImage");
 		}
 
-		if(_versionMinor >= 5u)
+		if(_version.minorNumber() >= 5u)
 		{
 			// Version 4.5
 
@@ -2211,28 +2211,20 @@ void OpenGL::getStandardFunctions() const
 
 void OpenGL::logInfo() const
 {
-	Uint32 shadingVersionMajor;
-	Uint32 shadingVersionMinor;
-	getVersion(SHADING_LANGUAGE_VERSION, shadingVersionMajor, shadingVersionMinor);
+	const Version shadingVersion = Version::createFromString(getCharacters(SHADING_LANGUAGE_VERSION));
 	const Char8* vendor = getCharacters(VENDOR);
 	const Char8* renderer = getCharacters(RENDERER);
 
 	defaultLog << LogLevel::Info << "Initialised OpenGL rendering\n\nVersion:                  " <<
-		_versionMajor << '.' << _versionMinor <<  "\nShading language version: " << shadingVersionMajor <<
-		'.' << shadingVersionMinor << "\nVendor:                   " << vendor <<
-		"\nRenderer:                 " << renderer << '\n' << Log::Flush();
+		_version.majorNumber() << '.' << _version.minorNumber() <<  "\nShading language version: " <<
+		shadingVersion.majorNumber() << '.' << shadingVersion.minorNumber() <<
+		"\nVendor:                   " << vendor << "\nRenderer:                 " << renderer << '\n' <<
+		Log::Flush();
 
 	logGraphicsExtensions("graphics interface", getExtensionNames());
 }
 
 // Static
-
-void OpenGL::getVersion(const Uint32 name, Uint32& major, Uint32& minor)
-{
-	const String8 versionString(getCharacters(name));
-	major = ::parseMajorVersionNumber(versionString);
-	minor = ::parseMinorVersionNumber(versionString);
-}
 
 const Char8* OpenGL::getCharacters(const Uint32 name)
 {
@@ -2321,29 +2313,6 @@ static const Char8* getDebugMessageTypeName(const Uint32 messageType)
 			return ::DEBUG_MESSAGE_TYPE_NAMES[9];
 	}
 }*/
-
-static Uint32 parseMajorVersionNumber(const String8& versionString)
-{
-	const Uint delimiterPosition = versionString.find('.');
-	const String8 majorVersionString = versionString.substr(0u, delimiterPosition);
-
-	return static_cast<Uint32>(std::strtol(majorVersionString.c_str(), nullptr, 10));
-}
-
-static Uint32 parseMinorVersionNumber(const String8& versionString)
-{
-	const Uint minorVersionPosition = versionString.find('.') + 1u;
-	const Uint secondDelimiterPosition = versionString.find('.', minorVersionPosition);
-	Uint versionEndPosition = versionString.find(' ', minorVersionPosition);
-
-	if(secondDelimiterPosition < versionEndPosition)
-		versionEndPosition = secondDelimiterPosition;
-
-	const String8 minorVersionString =
-		versionString.substr(minorVersionPosition, versionEndPosition - minorVersionPosition);
-
-	return static_cast<Uint32>(std::strtol(minorVersionString.c_str(), nullptr, 10));
-}
 
 static void reportError(const Uint32 errorCode, const Char8* file, const Uint32 line, const Char8* function)
 {

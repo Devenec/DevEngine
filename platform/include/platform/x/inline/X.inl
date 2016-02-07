@@ -25,6 +25,12 @@ Atom X::createAtom(const Char8* name) const
 	return XInternAtom(_connection, name, False);
 }
 
+GLX::Context X::createGraphicsContext(GLX::FBConfig configHandle, const Int32* attributes,
+	const Bool isDirect) const
+{
+	return GLX::createContextAttribsARB(_connection, configHandle, nullptr, isDirect, attributes);
+}
+
 void X::destroyGraphicsContext(GLX::Context contextHandle) const
 {
 	GLX::destroyContext(_connection, contextHandle);

@@ -108,3 +108,9 @@ using Int = IntInternal;
  * on 64-bit architectures.
  */
 using Uint = UintInternal;
+
+
+namespace Core
+{
+	static constexpr Uint32 BITS_IN_BYTE = 8u;
+}

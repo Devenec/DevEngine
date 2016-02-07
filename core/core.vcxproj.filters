@@ -44,6 +44,9 @@
     <ClInclude Include="include\core\Array.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\Bitset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\core\Config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -163,6 +166,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="include\core\inline\Bitset.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
     <None Include="include\core\inline\FileStream.inl">
       <Filter>Header Files\inline</Filter>
     </None>
@@ -208,6 +214,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Bitset.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Error.cpp">

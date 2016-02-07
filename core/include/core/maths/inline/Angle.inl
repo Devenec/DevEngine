@@ -30,8 +30,6 @@ Float32 Angle::size() const
 	return _size;
 }
 
-// Operators
-
 Angle Angle::operator -() const
 {
 	return Angle(-_size);

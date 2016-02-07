@@ -1,5 +1,5 @@
 /**
- * @file platform/Utility.h
+ * @file core/inline/Bitset.inl
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,11 +18,9 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+// Public
 
-#include <core/Types.h>
-
-namespace Platform
+void Bitset::reset()
 {
-	Bool isVersionLess(const Uint32 majorA, const Uint32 minorA, const Uint32 majorB, const Uint32 minorB);
+	_value = 0u;
 }

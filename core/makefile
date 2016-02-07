@@ -26,6 +26,7 @@ SOURCE_DIRECTORIES = \
 
 SOURCE_FILES = \
 	Application.cpp \
+	Bitset.cpp \
 	Error.cpp \
 	FileSystem.cpp \
 	Log.cpp \

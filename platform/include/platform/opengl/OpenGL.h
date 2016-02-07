@@ -42,12 +42,14 @@
 
 #pragma once
 
+#include <core/Array.h>
 #include <core/ConfigInternal.h>
 #include <core/Platform.h>
 #include <core/Singleton.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
 #include <graphics/LogUtility.h>
+#include <platform/Version.h>
 
 #if DE_COMPILER == DE_COMPILER_MSVC
 	#define DE_CALL_OPENGL DE_INTERNAL_CALL_STDCALL
@@ -3620,6 +3622,8 @@ namespace Platform
 
 		static Int32 getInteger(const Uint32 name);
 
+		static const Core::Array<Version, 7u> SUPPORTED_VERSIONS;
+
 		OpenGL();
 
 		OpenGL(const OpenGL& openGl) = delete;
@@ -3634,15 +3638,13 @@ namespace Platform
 
 	private:
 
-		Uint32 _versionMajor;
-		Uint32 _versionMinor;
+		Version _version;
 
 		void initialiseVersion();
 		void checkSupport() const;
 		void getStandardFunctions() const;
 		void logInfo() const;
 
-		static void getVersion(const Uint32 name, Uint32& major, Uint32& minor);
 		static const Char8* getCharacters(const Uint32 name);
 		static const Char8* getCharacters(const Uint32 name, const Uint32 index);
 		static Graphics::ExtensionNameList getExtensionNames();

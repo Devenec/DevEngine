@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/inline/OpenGLEffect.inl
+ * @file platform/inline/Version.inl
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,14 +20,36 @@
 
 // Public
 
-void Effect::Implementation::bind() const
+Uint32 Version::majorNumber() const
 {
-	bind(_programHandle);
+	return _majorNumber;
 }
 
-// Static
-
-void Effect::Implementation::debind()
+Uint32 Version::minorNumber() const
 {
-	bind(0u);
+	return _minorNumber;
+}
+
+void Version::setMajorNumber(const Uint32 majorNumber)
+{
+	_majorNumber = majorNumber;
+}
+
+void Version::setMinorNumber(const Uint32 minorNumber)
+{
+	_minorNumber = minorNumber;
+}
+
+
+// Platform
+
+Bool operator ==(const Version& versionA, const Version& versionB)
+{
+	return
+		versionA.majorNumber() == versionB.majorNumber() && versionA.minorNumber() == versionB.minorNumber();
+}
+
+Bool operator !=(const Version& versionA, const Version& versionB)
+{
+	return !(versionA == versionB);
 }

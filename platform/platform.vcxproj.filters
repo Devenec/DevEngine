@@ -56,7 +56,7 @@
     <ClInclude Include="include\platform\TypesInternal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\platform\Utility.h">
+    <ClInclude Include="include\platform\Version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\opengl\OpenGL.h">
@@ -109,6 +109,9 @@
     <None Include="include\platform\inline\GraphicsFunctionUtility.inl">
       <Filter>Header Files\inline</Filter>
     </None>
+    <None Include="include\platform\inline\Version.inl">
+      <Filter>Header Files\inline</Filter>
+    </None>
     <None Include="include\platform\opengl\inline\OpenGLEffect.inl">
       <Filter>Header Files\opengl\inline</Filter>
     </None>
@@ -141,7 +144,7 @@
     <ClCompile Include="source\TypesInternal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utility.cpp">
+    <ClCompile Include="source\Version.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\opengl\OpenGL.cpp">
