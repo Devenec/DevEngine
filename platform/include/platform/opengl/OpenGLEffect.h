@@ -39,7 +39,7 @@ namespace Graphics
 
 		void attachShader(Shader* shader) const;
 
-		inline void bind() const;
+		inline Uint32 handle() const;
 
 		void link() const;
 
@@ -47,8 +47,6 @@ namespace Graphics
 
 		Implementation& operator =(const Implementation& implementation) = delete;
 		Implementation& operator =(Implementation&& implementation) = delete;
-
-		static inline void debind();
 
 	private:
 
@@ -62,8 +60,6 @@ namespace Graphics
 		void outputLinkerFailureLog() const;
 		void outputLinkerSuccessLog() const;
 		CharacterBuffer getInfoLog(const Uint32 logLength) const;
-
-		static void bind(const Uint32 programHandle);
 	};
 
 #include "inline/OpenGLEffect.inl"

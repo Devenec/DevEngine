@@ -71,7 +71,10 @@ public:
 	void bindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const
 	{
 		GraphicsBuffer::Implementation* bufferImplementation = buffer->_implementation;
-		OpenGL::bindBufferBase(bufferImplementation->binding(), bindingIndex, bufferImplementation->handle());
+
+		OpenGL::bindBufferBase(static_cast<Uint32>(bufferImplementation->binding()), bindingIndex,
+			bufferImplementation->handle());
+
 		DE_CHECK_ERROR_OPENGL();
 	}
 
@@ -111,7 +114,7 @@ public:
 
 	void debindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const
 	{
-		OpenGL::bindBufferBase(buffer->_implementation->binding(), bindingIndex, 0u);
+		OpenGL::bindBufferBase(static_cast<Uint32>(buffer->_implementation->binding()), bindingIndex, 0u);
 		DE_CHECK_ERROR_OPENGL();
 	}
 
@@ -225,7 +228,7 @@ private:
 	{
 		_activeVertexBufferState->_implementation->debind();
 		setComponentState(ComponentID::VertexBufferState, false);
-		Effect::Implementation::debind();
+		bindEffect(0u);
 		setComponentState(ComponentID::Effect, false);
 	}
 
@@ -241,7 +244,8 @@ private:
 
 	void initialiseEffectForDrawing()
 	{
-		_activeEffect->_implementation->bind();
+		const Uint32 programHandle = _activeEffect->_implementation->handle();
+		bindEffect(programHandle);
 		setComponentState(ComponentID::Effect, true);
 	}
 
@@ -257,6 +261,12 @@ private:
 		OpenGL::viewport(bounds.x, bounds.y, bounds.width, bounds.height);
 		DE_CHECK_ERROR_OPENGL();
 		setComponentState(ComponentID::Viewport, true);
+	}
+
+	static void bindEffect(const Uint32 programHandle)
+	{
+		OpenGL::useProgram(programHandle);
+		DE_CHECK_ERROR_OPENGL();
 	}
 };
 

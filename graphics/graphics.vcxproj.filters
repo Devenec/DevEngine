@@ -141,9 +141,6 @@
     <ClCompile Include="source\ImageLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\LogUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

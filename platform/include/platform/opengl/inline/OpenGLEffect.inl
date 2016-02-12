@@ -20,14 +20,7 @@
 
 // Public
 
-void Effect::Implementation::bind() const
+inline Uint32 Effect::Implementation::handle() const
 {
-	bind(_programHandle);
-}
-
-// Static
-
-void Effect::Implementation::debind()
-{
-	bind(0u);
+	return _programHandle;
 }

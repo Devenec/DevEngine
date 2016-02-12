@@ -184,7 +184,6 @@
     <ClCompile Include="source\GraphicsDeviceManager.cpp" />
     <ClCompile Include="source\Image.cpp" />
     <ClCompile Include="source\ImageLoader.cpp" />
-    <ClCompile Include="source\IndexBuffer.cpp" />
     <ClCompile Include="source\LogUtility.cpp" />
     <ClCompile Include="source\PNGReader.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='debug|Win32'">4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>

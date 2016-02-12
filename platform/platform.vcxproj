@@ -148,7 +148,9 @@
     <ClInclude Include="include\platform\opengl\OpenGL.h" />
     <ClInclude Include="include\platform\opengl\OpenGLEffect.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h" />
+    <ClInclude Include="include\platform\opengl\OpenGLGraphicsBufferBase.h" />
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsEnumerations.h" />
+    <ClInclude Include="include\platform\opengl\OpenGLIndexBuffer.h" />
     <ClInclude Include="include\platform\opengl\OpenGLShader.h" />
     <ClInclude Include="include\platform\opengl\OpenGLVertexBufferState.h" />
     <ClInclude Include="include\platform\wgl\WGL.h" />
@@ -165,7 +167,7 @@
     <None Include="include\platform\inline\GraphicsFunctionUtility.inl" />
     <None Include="include\platform\inline\Version.inl" />
     <None Include="include\platform\opengl\inline\OpenGLEffect.inl" />
-    <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl" />
+    <None Include="include\platform\opengl\inline\OpenGLGraphicsBufferBase.inl" />
     <None Include="include\platform\opengl\inline\OpenGLShader.inl" />
     <None Include="include\platform\opengl\inline\OpenGLVertexBufferState.inl" />
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl" />
@@ -181,7 +183,9 @@
     <ClCompile Include="source\opengl\OpenGLEffect.cpp" />
     <ClCompile Include="source\opengl\OpenGLEffectSourceCodeReader.cpp" />
     <ClCompile Include="source\opengl\OpenGLGraphicsBuffer.cpp" />
+    <ClCompile Include="source\opengl\OpenGLGraphicsBufferBase.cpp" />
     <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp" />
+    <ClCompile Include="source\opengl\OpenGLIndexBuffer.cpp" />
     <ClCompile Include="source\opengl\OpenGLShader.cpp" />
     <ClCompile Include="source\opengl\OpenGLVertexBufferState.cpp" />
     <ClCompile Include="source\wgl\WGL.cpp" />

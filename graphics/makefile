@@ -33,7 +33,6 @@ SOURCE_FILES = \
 	GraphicsDeviceManager.cpp \
 	Image.cpp \
 	ImageLoader.cpp \
-	IndexBuffer.cpp \
 	LogUtility.cpp \
 	PNGReader.cpp \
 	Viewport.cpp

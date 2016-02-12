@@ -24,6 +24,7 @@
 #include <graphics/VertexElement.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
+#include <platform/opengl/OpenGLIndexBuffer.h>
 #include <platform/opengl/OpenGLGraphicsEnumerations.h>
 #include <platform/opengl/OpenGLVertexBufferState.h>
 
@@ -71,7 +72,7 @@ void VertexBufferState::Implementation::setVertexBuffer(const GraphicsBuffer* bu
 	const VertexElementList& vertexElements, const Uint32 stride, const Uint offset) const
 {
 	DE_ASSERT(buffer != nullptr); // TODO: allow resetting the vertex attributes?
-	DE_ASSERT(buffer->_implementation->binding() == static_cast<Uint32>(BufferBinding::Vertex));
+	DE_ASSERT(buffer->_implementation->binding() == BufferBinding::Vertex);
 
 	bind();
 	buffer->_implementation->bind();

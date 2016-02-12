@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/inline/OpenGLGraphicsBuffer.inl
+ * @file platform/opengl/OpenGLIndexBuffer.h
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,29 +18,29 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Public
+#pragma once
 
-void GraphicsBuffer::Implementation::bind() const
-{
-	bind(_bufferHandle);
-}
+#include <graphics/IndexBuffer.h>
+#include <platform/opengl/OpenGLGraphicsBufferBase.h>
 
-Uint32 GraphicsBuffer::Implementation::binding() const
+namespace Graphics
 {
-	return _binding;
-}
+	class IndexBuffer::Implementation final : public Platform::GraphicsBufferBase
+	{
+	public:
 
-void GraphicsBuffer::Implementation::debind() const
-{
-	bind(0u);
-}
+		Implementation(const Uint size, const AccessMode& accessMode, const BufferUsage& usage);
 
-Uint32 GraphicsBuffer::Implementation::handle() const
-{
-	return _bufferHandle;
-}
+		Implementation(const Implementation& implementation) = delete;
+		Implementation(Implementation&& implementation) = delete;
 
-Uint8* GraphicsBuffer::Implementation::mapData() const
-{
-	return mapData(_size, 0u);
+		~Implementation() = default;
+
+		Implementation& operator =(const Implementation& implementation) = delete;
+		Implementation& operator =(Implementation&& implementation) = delete;
+
+	private:
+
+		using Base = Platform::GraphicsBufferBase;
+	};
 }

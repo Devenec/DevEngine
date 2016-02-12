@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file platform/Version.cpp
  *
  * DevEngine
@@ -44,7 +44,7 @@ Version Version::createFromString(const String8& versionString)
 	const String8 minorString = versionString.substr(firstDelimiterPosition + 1, minorStringLength);
 	const Uint32 majorNumber = static_cast<Uint32>(std::strtol(majorString.c_str(), nullptr, 10));
 	const Uint32 minorNumber = static_cast<Uint32>(std::strtol(minorString.c_str(), nullptr, 10));
-	
+
 	return Version(majorNumber, minorNumber);
 }
 

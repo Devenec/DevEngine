@@ -1,5 +1,5 @@
 /**
- * @file graphics/IndexBuffer.cpp
+ * @file platform/opengl/inline/OpenGLGraphicsBufferBase.inl
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -18,14 +18,29 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <graphics/GraphicsEnumerations.h>
-#include <graphics/IndexBuffer.h>
+// Public
 
-using namespace Graphics;
+void GraphicsBufferBase::bind() const
+{
+	bind(_bufferHandle);
+}
 
-// Private
+Graphics::BufferBinding GraphicsBufferBase::binding() const
+{
+	return static_cast<Graphics::BufferBinding>(_binding);
+}
 
-IndexBuffer::IndexBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const Uint size,
-	const IndexType& indexType, const AccessMode& accessMode, const BufferUsage& usage)
-	: GraphicsBuffer(graphicsInterfaceHandle, BufferBinding::Index, size, accessMode, usage),
-	  _indexType(indexType) { }
+void GraphicsBufferBase::debind() const
+{
+	bind(0u);
+}
+
+Uint32 GraphicsBufferBase::handle() const
+{
+	return _bufferHandle;
+}
+
+Uint8* GraphicsBufferBase::mapData() const
+{
+	return mapData(_size, 0u);
+}

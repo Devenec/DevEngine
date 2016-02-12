@@ -68,7 +68,13 @@
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsBuffer.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
+    <ClInclude Include="include\platform\opengl\OpenGLGraphicsBufferBase.h">
+      <Filter>Header Files\opengl</Filter>
+    </ClInclude>
     <ClInclude Include="include\platform\opengl\OpenGLGraphicsEnumerations.h">
+      <Filter>Header Files\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="include\platform\opengl\OpenGLIndexBuffer.h">
       <Filter>Header Files\opengl</Filter>
     </ClInclude>
     <ClInclude Include="include\platform\opengl\OpenGLShader.h">
@@ -115,7 +121,7 @@
     <None Include="include\platform\opengl\inline\OpenGLEffect.inl">
       <Filter>Header Files\opengl\inline</Filter>
     </None>
-    <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl">
+    <None Include="include\platform\opengl\inline\OpenGLGraphicsBufferBase.inl">
       <Filter>Header Files\opengl\inline</Filter>
     </None>
     <None Include="include\platform\opengl\inline\OpenGLShader.inl">
@@ -159,7 +165,13 @@
     <ClCompile Include="source\opengl\OpenGLGraphicsBuffer.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
+    <ClCompile Include="source\opengl\OpenGLGraphicsBufferBase.cpp">
+      <Filter>Source Files\opengl</Filter>
+    </ClCompile>
     <ClCompile Include="source\opengl\OpenGLGraphicsDevice.cpp">
+      <Filter>Source Files\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="source\opengl\OpenGLIndexBuffer.cpp">
       <Filter>Source Files\opengl</Filter>
     </ClCompile>
     <ClCompile Include="source\opengl\OpenGLShader.cpp">

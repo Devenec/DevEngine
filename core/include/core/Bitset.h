@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file core/Bitset.h
  *
  * DevEngine

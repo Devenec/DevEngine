@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file platform/Version.h
  *
  * DevEngine

@@ -160,14 +160,6 @@ Effect::Implementation::CharacterBuffer Effect::Implementation::getInfoLog(const
 	return logBuffer;
 }
 
-// Static
-
-void Effect::Implementation::bind(const Uint32 programHandle)
-{
-	OpenGL::useProgram(programHandle);
-	DE_CHECK_ERROR_OPENGL();
-}
-
 
 // Graphics::Effect
 

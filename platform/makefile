@@ -44,7 +44,9 @@ SOURCE_FILES = \
 	opengl/OpenGLEffect.cpp \
 	opengl/OpenGLEffectSourceCodeReader.cpp \
 	opengl/OpenGLGraphicsBuffer.cpp \
+	opengl/OpenGLGraphicsBufferBase.cpp \
 	opengl/OpenGLGraphicsDevice.cpp \
+	opengl/OpenGLIndexBuffer.cpp \
 	opengl/OpenGLShader.cpp \
 	opengl/OpenGLVertexBufferState.cpp \
 	posix/POSIX.cpp \

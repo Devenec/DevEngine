@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/OpenGLGraphicsBuffer.cpp
+ * @file platform/opengl/OpenGLIndexBuffer.cpp
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -19,7 +19,8 @@
  */
 
 #include <core/Memory.h>
-#include <platform/opengl/OpenGLGraphicsBuffer.h>
+#include <platform/opengl/OpenGLGraphicsEnumerations.h>
+#include <platform/opengl/OpenGLIndexBuffer.h>
 
 using namespace Graphics;
 
@@ -27,41 +28,42 @@ using namespace Graphics;
 
 // Public
 
-GraphicsBuffer::Implementation::Implementation(const BufferBinding& binding, const Uint size,
-	const AccessMode& accessMode, const BufferUsage& usage)
-	: Base(binding, size, accessMode, usage) { }
+IndexBuffer::Implementation::Implementation(const Uint size, const AccessMode& accessMode,
+	const BufferUsage& usage)
+	: Base(BufferBinding::Index, size, accessMode, usage) { }
 
 
-// Graphics::GraphicsBuffer
+// Graphics::IndexBuffer
 
 // Public
 
-void GraphicsBuffer::demapData() const
+void IndexBuffer::demapData() const
 {
 	_implementation->demapData();
 }
 
-Uint8* GraphicsBuffer::mapData() const
+Uint8* IndexBuffer::mapData() const
 {
 	return _implementation->mapData();
 }
 
-Uint8* GraphicsBuffer::mapData(const Uint size, const Uint bufferOffset) const
+Uint8* IndexBuffer::mapData(const Uint size, const Uint bufferOffset) const
 {
 	return _implementation->mapData(size, bufferOffset);
 }
 
 // Private
 
-GraphicsBuffer::GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
-	const Uint size, const AccessMode& accessMode, const BufferUsage& usage)
-	: _implementation(nullptr)
+IndexBuffer::IndexBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const Uint size,
+	const IndexType& indexType, const AccessMode& accessMode, const BufferUsage& usage)
+	: _implementation(nullptr),
+	  _indexType(indexType)
 {
 	static_cast<Void>(graphicsInterfaceHandle);
-	_implementation = DE_NEW(Implementation)(binding, size, accessMode, usage);
+	_implementation = DE_NEW(Implementation)(size, accessMode, usage);
 }
 
-GraphicsBuffer::~GraphicsBuffer()
+IndexBuffer::~IndexBuffer()
 {
 	DE_DELETE(_implementation, Implementation);
 }

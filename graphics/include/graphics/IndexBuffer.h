@@ -20,20 +20,29 @@
 
 #pragma once
 
-#include <graphics/GraphicsBuffer.h>
+#include <core/Types.h>
+#include <graphics/GraphicsResource.h>
 
 namespace Graphics
 {
+	enum class AccessMode;
+	enum class BufferUsage;
 	enum class IndexType;
 
-	class IndexBuffer final : public GraphicsBuffer
+	class IndexBuffer final : public GraphicsResource
 	{
 	public:
 
 		IndexBuffer(const IndexBuffer& indexBuffer) = delete;
 		IndexBuffer(IndexBuffer&& indexBuffer) = delete;
 
+		void demapData() const;
+
 		inline IndexType indexType() const;
+
+		Uint8* mapData() const;
+
+		Uint8* mapData(const Uint size, const Uint offset = 0u) const;
 
 		IndexBuffer& operator =(const IndexBuffer& indexBuffer) = delete;
 		IndexBuffer& operator =(IndexBuffer&& indexBuffer) = delete;
@@ -41,15 +50,17 @@ namespace Graphics
 	private:
 
 		friend class GraphicsDevice;
+		friend class VertexBufferState;
 
-		using Base = GraphicsBuffer;
+		class Implementation;
 
+		Implementation* _implementation;
 		IndexType _indexType;
 
 		IndexBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const Uint size,
 			const IndexType& indexType, const AccessMode& accessMode, const BufferUsage& usage);
 
-		~IndexBuffer() = default;
+		~IndexBuffer();
 	};
 
 #include "inline/IndexBuffer.inl"

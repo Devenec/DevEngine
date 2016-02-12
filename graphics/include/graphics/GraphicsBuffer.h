@@ -29,7 +29,7 @@ namespace Graphics
 	enum class BufferBinding;
 	enum class BufferUsage;
 
-	class GraphicsBuffer : public GraphicsResource
+	class GraphicsBuffer final : public GraphicsResource
 	{
 	public:
 
@@ -45,7 +45,10 @@ namespace Graphics
 		GraphicsBuffer& operator =(const GraphicsBuffer& graphicsBuffer) = delete;
 		GraphicsBuffer& operator =(GraphicsBuffer&& graphicsBuffer) = delete;
 
-	protected:
+	private:
+
+		friend class GraphicsDevice;
+		friend class VertexBufferState;
 
 		class Implementation;
 
@@ -54,11 +57,6 @@ namespace Graphics
 		GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
 			const Uint size, const AccessMode& accessMode, const BufferUsage& usage);
 
-		virtual ~GraphicsBuffer();
-
-	private:
-
-		friend class GraphicsDevice;
-		friend class VertexBufferState;
+		~GraphicsBuffer();
 	};
 }
