@@ -165,13 +165,13 @@ private:
 			 0.0f
 		};
 
-		Uint32 colour = 0x000003FF;
+		Uint32 colour = 0xC00003FF;
 		VERTEX_DATA[3] = *reinterpret_cast<Float32*>(&colour);
-		colour = 0x000FFC00;
+		colour = 0xC00FFC00;
 		VERTEX_DATA[7] = *reinterpret_cast<Float32*>(&colour);
-		colour = 0x3FF00000;
+		colour = 0xFFF00000;
 		VERTEX_DATA[11] = *reinterpret_cast<Float32*>(&colour);
-		colour = 0x000FFFFF;
+		colour = 0xC00FFFFF;
 		VERTEX_DATA[15] = *reinterpret_cast<Float32*>(&colour);
 
 		const Uint bufferSize = sizeof(Float32) * VERTEX_DATA.size();
@@ -207,7 +207,7 @@ private:
 		VertexElementList vertexElements
 		{
 			VertexElement(0u, VertexElementType::Float32Vector3),
-			VertexElement(1u, VertexElementType::Uint32_R10G10B10A2)
+			VertexElement(1u, VertexElementType::Uint32_A2R10G10B10, true)
 		};
 
 		_vertexBufferState = _graphicsDevice->createVertexBufferState();

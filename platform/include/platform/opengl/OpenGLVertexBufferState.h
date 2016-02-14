@@ -21,6 +21,7 @@
 #pragma once
 
 #include <graphics/VertexBufferState.h>
+#include <platform/opengl/OpenGL.h>
 
 namespace Graphics
 {
@@ -28,16 +29,16 @@ namespace Graphics
 	{
 	public:
 
-		Implementation();
+		explicit Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
 
 		~Implementation();
 
-		inline void bind() const;
+		inline Uint32 bind() const;
 
-		inline void debind() const;
+		inline Uint32 debind(const Uint32 previousVertexArrayHandle) const;
 
 		inline IndexBuffer* indexBuffer() const;
 
@@ -52,9 +53,8 @@ namespace Graphics
 	private:
 
 		IndexBuffer* _indexBuffer;
+		Platform::OpenGL* _openGl;
 		Uint32 _vertexArrayHandle;
-
-		static void bind(const Uint32 vertexArrayHandle);
 
 		static void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride,
 			const Uint bufferOffset);

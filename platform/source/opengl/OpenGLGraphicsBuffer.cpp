@@ -19,6 +19,7 @@
  */
 
 #include <core/Memory.h>
+#include <core/Platform.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
 
 using namespace Graphics;
@@ -27,9 +28,39 @@ using namespace Graphics;
 
 // Public
 
-GraphicsBuffer::Implementation::Implementation(const BufferBinding& binding, const Uint size,
-	const AccessMode& accessMode, const BufferUsage& usage)
-	: Base(binding, size, accessMode, usage) { }
+GraphicsBuffer::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle,
+	const BufferBinding& binding, const Uint size, const AccessMode& accessMode, const BufferUsage& usage)
+	: Base(graphicsInterfaceHandle, binding, size, accessMode)
+{
+	bind();
+	initialiseStorage(accessMode, usage);
+
+#if DE_BUILD == DE_BUILD_DEBUG
+	debind();
+#endif
+}
+
+void GraphicsBuffer::Implementation::demapData() const
+{
+	bind();
+	Base::demapData();
+
+#if DE_BUILD == DE_BUILD_DEBUG
+	debind();
+#endif
+}
+
+Uint8* GraphicsBuffer::Implementation::mapData(const Uint size, const Uint offset) const
+{
+	bind();
+	Uint8* data = Base::mapData(size, offset);
+
+#if DE_BUILD == DE_BUILD_DEBUG
+	debind();
+#endif
+
+	return data;
+}
 
 
 // Graphics::GraphicsBuffer
@@ -57,8 +88,7 @@ GraphicsBuffer::GraphicsBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, 
 	const Uint size, const AccessMode& accessMode, const BufferUsage& usage)
 	: _implementation(nullptr)
 {
-	static_cast<Void>(graphicsInterfaceHandle);
-	_implementation = DE_NEW(Implementation)(binding, size, accessMode, usage);
+	_implementation = DE_NEW(Implementation)(graphicsInterfaceHandle, binding, size, accessMode, usage);
 }
 
 GraphicsBuffer::~GraphicsBuffer()

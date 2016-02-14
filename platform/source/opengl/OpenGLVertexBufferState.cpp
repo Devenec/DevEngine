@@ -22,7 +22,7 @@
 #include <core/debug/Assert.h>
 #include <graphics/IndexBuffer.h>
 #include <graphics/VertexElement.h>
-#include <platform/opengl/OpenGL.h>
+#include <platform/PlatformInternal.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
 #include <platform/opengl/OpenGLIndexBuffer.h>
 #include <platform/opengl/OpenGLGraphicsEnumerations.h>
@@ -33,7 +33,7 @@ using namespace Platform;
 
 // External
 
-static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise);
+static Uint32 getVertexElementComponentCount(const VertexElementType& elementType, Bool& normalise);
 static Uint32 getVertexElementSize(const VertexElement& element);
 
 
@@ -41,8 +41,9 @@ static Uint32 getVertexElementSize(const VertexElement& element);
 
 // Public
 
-VertexBufferState::Implementation::Implementation()
+VertexBufferState::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle)
 	: _indexBuffer(nullptr),
+	  _openGl(static_cast<OpenGL*>(graphicsInterfaceHandle)),
 	  _vertexArrayHandle(0u)
 {
 	OpenGL::genVertexArrays(1, &_vertexArrayHandle);
@@ -57,39 +58,37 @@ VertexBufferState::Implementation::~Implementation()
 
 void VertexBufferState::Implementation::setIndexBuffer(IndexBuffer* buffer)
 {
-	bind();
+	const Uint32 previousVertexArrayHandle = bind();
 
 	if(buffer == nullptr)
 		_indexBuffer->_implementation->debind();
 	else
 		buffer->_implementation->bind();
 
-	debind();
+	debind(previousVertexArrayHandle);
 	_indexBuffer = buffer;
 }
 
 void VertexBufferState::Implementation::setVertexBuffer(const GraphicsBuffer* buffer,
 	const VertexElementList& vertexElements, const Uint32 stride, const Uint offset) const
 {
-	DE_ASSERT(buffer != nullptr); // TODO: allow resetting the vertex attributes?
+	DE_ASSERT(buffer != nullptr);
 	DE_ASSERT(buffer->_implementation->binding() == BufferBinding::Vertex);
 
-	bind();
+	const Uint32 previousVertexArrayHandle = bind();
 	buffer->_implementation->bind();
 	setVertexLayout(vertexElements, stride, offset);
+
+#if DE_BUILD == DE_BUILD_DEBUG
 	buffer->_implementation->debind();
-	debind();
+#endif
+
+	debind(previousVertexArrayHandle);
 }
 
 // Private
 
 // Static
-
-void VertexBufferState::Implementation::bind(const Uint32 vertexArrayHandle)
-{
-	OpenGL::bindVertexArray(vertexArrayHandle);
-	DE_CHECK_ERROR_OPENGL();
-}
 
 void VertexBufferState::Implementation::setVertexLayout(const VertexElementList& vertexElements,
 	const Uint32 stride, const Uint bufferOffset)
@@ -110,8 +109,8 @@ void VertexBufferState::Implementation::setVertexLayout(const VertexElementList&
 void VertexBufferState::Implementation::setVertexElementFormat(const VertexElement& element,
 	const Uint elementOffset, const Uint32 stride)
 {
-	Bool normalise;
-	const Uint32 componentCount = ::getVertexElementComponentCount(element, normalise);
+	Bool normalise = element.normalise;
+	const Uint32 componentCount = ::getVertexElementComponentCount(element.type, normalise);
 	const Uint32 elementType = static_cast<Uint32>(element.type) >> 3;
 	OpenGL::enableVertexAttribArray(element.index);
 	DE_CHECK_ERROR_OPENGL();
@@ -143,8 +142,7 @@ void VertexBufferState::setVertexBuffer(const GraphicsBuffer* buffer, const Vert
 VertexBufferState::VertexBufferState(GraphicsInterfaceHandle graphicsInterfaceHandle)
 	: _implementation(nullptr)
 {
-	static_cast<Void>(graphicsInterfaceHandle);
-	_implementation = DE_NEW(Implementation)();
+	_implementation = DE_NEW(Implementation)(graphicsInterfaceHandle);
 }
 
 VertexBufferState::~VertexBufferState()
@@ -155,21 +153,17 @@ VertexBufferState::~VertexBufferState()
 
 // External
 
-static Uint32 getVertexElementComponentCount(const VertexElement& element, Bool& normalise)
+static Uint32 getVertexElementComponentCount(const VertexElementType& elementType, Bool& normalise)
 {
-	normalise = element.normalise;
-	Uint32 componentCount = static_cast<Uint32>(element.type) & 0x07;
+	const Int32 elementTypeId = static_cast<Int32>(elementType);
 
-	if(componentCount > 4u)
+	if((elementTypeId & 0x04) == 0x04)
 	{
-		--componentCount;
 		normalise = true;
+		return OpenGL::BGRA;
 	}
 
-	if(componentCount == 5u)
-		componentCount = OpenGL::BGRA;
-
-	return componentCount;
+	return (elementTypeId & 0x03) + 1u;
 }
 
 static Uint32 getVertexElementSize(const VertexElement& element)
@@ -188,14 +182,13 @@ static Uint32 getVertexElementSize(const VertexElement& element)
 		case VertexElementType::Int8Vector4:
 		case VertexElementType::Int16Vector2:
 		case VertexElementType::Int32:
-		case VertexElementType::Int32_B10G10R10A2:
-		case VertexElementType::Int32_R10G10B10A2:
+		case VertexElementType::Int32_A2B10G10R10:
+		case VertexElementType::Int32_A2R10G10B10:
 		case VertexElementType::Uint8Vector4:
 		case VertexElementType::Uint16Vector2:
 		case VertexElementType::Uint32:
-		case VertexElementType::Uint32_B10G10R10A2:
-		case VertexElementType::Uint32_R10G10B10A2:
-		case VertexElementType::Uint32_R11G11B10_Float:
+		case VertexElementType::Uint32_A2B10G10R10:
+		case VertexElementType::Uint32_A2R10G10B10:
 			return 4u;
 
 		case VertexElementType::Float16Vector3:

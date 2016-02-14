@@ -166,8 +166,11 @@
   <ItemGroup>
     <None Include="include\platform\inline\GraphicsFunctionUtility.inl" />
     <None Include="include\platform\inline\Version.inl" />
+    <None Include="include\platform\opengl\inline\OpenGL.inl" />
     <None Include="include\platform\opengl\inline\OpenGLEffect.inl" />
+    <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl" />
     <None Include="include\platform\opengl\inline\OpenGLGraphicsBufferBase.inl" />
+    <None Include="include\platform\opengl\inline\OpenGLIndexBuffer.inl" />
     <None Include="include\platform\opengl\inline\OpenGLShader.inl" />
     <None Include="include\platform\opengl\inline\OpenGLVertexBufferState.inl" />
     <None Include="include\platform\wgl\inline\WGLGraphicsContextBase.inl" />

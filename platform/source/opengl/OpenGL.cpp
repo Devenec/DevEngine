@@ -781,17 +781,6 @@ OpenGL::VertexArrayElementBuffer OpenGL::vertexArrayElementBuffer = nullptr;
 OpenGL::VertexArrayVertexBuffer OpenGL::vertexArrayVertexBuffer = nullptr;
 OpenGL::VertexArrayVertexBuffers OpenGL::vertexArrayVertexBuffers = nullptr;
 
-// Custom
-
-Int32 OpenGL::getInteger(const Uint32 name)
-{
-	Int32 value = 0;
-	getIntegerv(name, &value);
-	DE_CHECK_ERROR_OPENGL();
-
-	return value;
-}
-
 const Array<Version, 7u> OpenGL::SUPPORTED_VERSIONS
 {{
 	Version(3u, 3u),
@@ -804,12 +793,56 @@ const Array<Version, 7u> OpenGL::SUPPORTED_VERSIONS
 }};
 
 OpenGL::OpenGL()
-	: _version(0u, 0u)
+	: _version(0u, 0u),
+	  _activeVertexArrayHandle(0u),
+	  _defaultVertexArrayHandle(0u)
 {
+	_activeGraphicsBuffers.fill(0u);
 	initialiseVersion();
 	checkSupport();
 	getStandardFunctions();
 	logInfo();
+	createDefaultVertexArray();
+}
+
+OpenGL::~OpenGL()
+{
+	deleteVertexArrays(1, &_defaultVertexArrayHandle);
+	DE_CHECK_ERROR_OPENGL();
+}
+
+void OpenGL::bindGraphicsBuffer(const Uint32 binding, const Uint32 bufferHandle)
+{
+	const Uint32 bindingIndex = binding & 0x0F;
+
+	if(_activeGraphicsBuffers[bindingIndex] != bufferHandle)
+	{
+		bindBuffer(binding >> 4, bufferHandle);
+		DE_CHECK_ERROR_OPENGL();
+		_activeGraphicsBuffers[bindingIndex] = bufferHandle;
+	}
+}
+
+Uint32 OpenGL::bindVertexArrayCustom(const Uint32 vertexArrayHandle)
+{
+#if DE_BUILD == DE_BUILD_DEBUG
+
+	if(vertexArrayHandle == _activeVertexArrayHandle)
+		return _activeVertexArrayHandle;
+
+#else
+
+	if(vertexArrayHandle == _activeVertexArrayHandle || vertexArrayHandle == 0u)
+		return _activeVertexArrayHandle;
+
+#endif
+
+	const Uint32 previousVertexArrayHandle = _activeVertexArrayHandle;
+	bindVertexArray(vertexArrayHandle);
+	DE_CHECK_ERROR_OPENGL();
+	_activeVertexArrayHandle = vertexArrayHandle;
+
+	return previousVertexArrayHandle;
 }
 
 // Static
@@ -2224,6 +2257,12 @@ void OpenGL::logInfo() const
 	logGraphicsExtensions("graphics interface", getExtensionNames());
 }
 
+void OpenGL::createDefaultVertexArray()
+{
+	genVertexArrays(1, &_defaultVertexArrayHandle);
+	DE_CHECK_ERROR_OPENGL();
+}
+
 // Static
 
 const Char8* OpenGL::getCharacters(const Uint32 name)
@@ -2254,6 +2293,15 @@ ExtensionNameList OpenGL::getExtensionNames()
 	}
 
 	return extensionNames;
+}
+
+Int32 OpenGL::getInteger(const Uint32 name)
+{
+	Int32 value = 0;
+	getIntegerv(name, &value);
+	DE_CHECK_ERROR_OPENGL();
+
+	return value;
 }
 
 

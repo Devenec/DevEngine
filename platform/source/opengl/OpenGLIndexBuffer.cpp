@@ -19,18 +19,67 @@
  */
 
 #include <core/Memory.h>
+#include <core/Platform.h>
+#include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsEnumerations.h>
 #include <platform/opengl/OpenGLIndexBuffer.h>
 
 using namespace Graphics;
+using namespace Platform;
 
 // Implementation
 
 // Public
 
-IndexBuffer::Implementation::Implementation(const Uint size, const AccessMode& accessMode,
-	const BufferUsage& usage)
-	: Base(BufferBinding::Index, size, accessMode, usage) { }
+IndexBuffer::Implementation::Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const Uint size,
+	const AccessMode& accessMode, const BufferUsage& usage)
+	: Base(graphicsInterfaceHandle, BufferBinding::Index, size, accessMode)
+{
+	const Uint32 previousVertexArrayHandle = bindToDefaultVertexArray();
+	initialiseStorage(accessMode, usage);
+	debindFromDefaultVertexArray(previousVertexArrayHandle);
+}
+
+void IndexBuffer::Implementation::demapData() const
+{
+	const Uint32 previousVertexArrayHandle = bindToDefaultVertexArray();
+	Base::demapData();
+	debindFromDefaultVertexArray(previousVertexArrayHandle);
+}
+
+Uint8* IndexBuffer::Implementation::mapData(const Uint size, const Uint offset) const
+{
+	const Uint32 previousVertexArrayHandle = bindToDefaultVertexArray();
+	Uint8* data = Base::mapData(size, offset);
+	debindFromDefaultVertexArray(previousVertexArrayHandle);
+
+	return data;
+}
+
+// Private
+
+Uint32 IndexBuffer::Implementation::bindToDefaultVertexArray() const
+{
+	const Uint32 previousVertexArrayHandle = _openGl->bindDefaultVertexArray();
+	bind();
+
+	return previousVertexArrayHandle;
+}
+
+void IndexBuffer::Implementation::debindFromDefaultVertexArray(const Uint32 previousVertexArrayHandle) const
+{
+#if DE_BUILD == DE_BUILD_DEBUG
+	debind();
+#endif
+
+	_openGl->bindVertexArrayCustom(previousVertexArrayHandle);
+}
+
+void IndexBuffer::Implementation::bind(const Uint32 bufferHandle) const
+{
+	OpenGL::bindBuffer(_binding >> 4, bufferHandle);
+	DE_CHECK_ERROR_OPENGL();
+}
 
 
 // Graphics::IndexBuffer
@@ -59,8 +108,7 @@ IndexBuffer::IndexBuffer(GraphicsInterfaceHandle graphicsInterfaceHandle, const 
 	: _implementation(nullptr),
 	  _indexType(indexType)
 {
-	static_cast<Void>(graphicsInterfaceHandle);
-	_implementation = DE_NEW(Implementation)(size, accessMode, usage);
+	_implementation = DE_NEW(Implementation)(graphicsInterfaceHandle, size, accessMode, usage);
 }
 
 IndexBuffer::~IndexBuffer()

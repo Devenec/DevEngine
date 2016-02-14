@@ -118,10 +118,19 @@
     <None Include="include\platform\inline\Version.inl">
       <Filter>Header Files\inline</Filter>
     </None>
+    <None Include="include\platform\opengl\inline\OpenGL.inl">
+      <Filter>Header Files\opengl\inline</Filter>
+    </None>
     <None Include="include\platform\opengl\inline\OpenGLEffect.inl">
       <Filter>Header Files\opengl\inline</Filter>
     </None>
+    <None Include="include\platform\opengl\inline\OpenGLGraphicsBuffer.inl">
+      <Filter>Header Files\opengl\inline</Filter>
+    </None>
     <None Include="include\platform\opengl\inline\OpenGLGraphicsBufferBase.inl">
+      <Filter>Header Files\opengl\inline</Filter>
+    </None>
+    <None Include="include\platform\opengl\inline\OpenGLIndexBuffer.inl">
       <Filter>Header Files\opengl\inline</Filter>
     </None>
     <None Include="include\platform\opengl\inline\OpenGLShader.inl">

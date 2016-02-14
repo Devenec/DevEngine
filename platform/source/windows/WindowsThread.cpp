@@ -20,8 +20,8 @@
 
 #include <core/Log.h>
 #include <core/Memory.h>
-#include <core/Platform.h>
 #include <core/Thread.h>
+#include <platform/PlatformInternal.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;

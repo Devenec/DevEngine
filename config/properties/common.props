@@ -43,7 +43,7 @@
       <PreprocessKeepComments>false</PreprocessKeepComments>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
       <PreprocessToFile>false</PreprocessToFile>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ShowIncludes>false</ShowIncludes>
       <SuppressStartupBanner>true</SuppressStartupBanner>

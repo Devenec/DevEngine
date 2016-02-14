@@ -21,6 +21,7 @@
 #pragma once
 
 #include <core/Types.h>
+#include <graphics/GraphicsResource.h>
 
 namespace Graphics
 {
@@ -31,51 +32,49 @@ namespace Graphics
 
 namespace Platform
 {
+	class OpenGL;
+
 	class GraphicsBufferBase
 	{
 	public:
 
-		GraphicsBufferBase(const Graphics::BufferBinding& binding, const Uint size,
-			const Graphics::AccessMode& accessMode, const Graphics::BufferUsage& usage);
+		GraphicsBufferBase(Graphics::GraphicsInterfaceHandle graphicsInterfaceHandle,
+			const Graphics::BufferBinding& binding, const Uint size, const Graphics::AccessMode& accessMode);
 
 		GraphicsBufferBase(const GraphicsBufferBase& graphicsBufferBase) = delete;
 		GraphicsBufferBase(GraphicsBufferBase&& graphicsBufferBase) = delete;
 
 		~GraphicsBufferBase();
 
-		inline void bind() const;
-
 		inline Graphics::BufferBinding binding() const;
-
-		inline void debind() const;
 
 		void demapData() const;
 
 		inline Uint32 handle() const;
-
-		inline Uint8* mapData() const;
 
 		Uint8* mapData(const Uint size, const Uint offset) const;
 
 		GraphicsBufferBase& operator =(const GraphicsBufferBase& graphicsBufferBase) = delete;
 		GraphicsBufferBase& operator =(GraphicsBufferBase&& graphicsBufferBase) = delete;
 
-	private:
+	protected:
 
+		OpenGL* _openGl;
 		Uint _size;
 		Uint32 _binding;
 		Uint32 _bufferHandle;
+
+		void initialiseStorage(const Graphics::AccessMode& accessMode, const Graphics::BufferUsage& usage)
+			const;
+
+	private:
+
 		Uint32 _flags;
 
 		void initialiseAccessMode(const Graphics::AccessMode& accessMode);
 		void createBuffer();
-		void initialiseStorage(const Graphics::AccessMode& accessMode, const Graphics::BufferUsage& usage)
-			const;
 
-		void bind(const Uint32 bufferHandle) const;
-
-		static Uint32 getUsageValue(const Graphics::AccessMode& accessMode,
-			const Graphics::BufferUsage& usage);
+		static Uint32 getUsageId(const Graphics::AccessMode& accessMode, const Graphics::BufferUsage& usage);
 	};
 
 #include "inline/OpenGLGraphicsBufferBase.inl"

@@ -20,27 +20,12 @@
 
 // Public
 
-void GraphicsBufferBase::bind() const
-{
-	bind(_bufferHandle);
-}
-
 Graphics::BufferBinding GraphicsBufferBase::binding() const
 {
 	return static_cast<Graphics::BufferBinding>(_binding);
 }
 
-void GraphicsBufferBase::debind() const
-{
-	bind(0u);
-}
-
 Uint32 GraphicsBufferBase::handle() const
 {
 	return _bufferHandle;
-}
-
-Uint8* GraphicsBufferBase::mapData() const
-{
-	return mapData(_size, 0u);
 }

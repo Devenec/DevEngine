@@ -84,8 +84,8 @@
  *   Int32Vector2,
  *   Int32Vector3,
  *   Int32Vector4,
- *   Int32_B10G10R10A2,
- *   Int32_R10G10B10A2,
+ *   Int32_A2B10G10R10,
+ *   Int32_A2R10G10B10,
  *   Uint8,
  *   Uint8Vector2,
  *   Uint8Vector3,
@@ -98,9 +98,8 @@
  *   Uint32Vector2,
  *   Uint32Vector3,
  *   Uint32Vector4,
- *   Uint32_B10G10R10A2,
- *   Uint32_R10G10B10A2,
- *   Uint32_R11G11B10_Float
+ *   Uint32_A2B10G10R10,
+ *   Uint32_A2R10G10B10
  * };
  */
 #if DE_PLATFORM == DE_PLATFORM_LINUX || DE_PLATFORM == DE_PLATFORM_WINDOWS

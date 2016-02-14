@@ -37,6 +37,7 @@
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLEffect.h>
 #include <platform/opengl/OpenGLGraphicsBuffer.h>
+#include <platform/opengl/OpenGLGraphicsEnumerations.h>
 #include <platform/opengl/OpenGLVertexBufferState.h>
 
 using namespace Core;
@@ -70,11 +71,8 @@ public:
 
 	void bindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const
 	{
-		GraphicsBuffer::Implementation* bufferImplementation = buffer->_implementation;
-
-		OpenGL::bindBufferBase(static_cast<Uint32>(bufferImplementation->binding()), bindingIndex,
-			bufferImplementation->handle());
-
+		const Uint32 bindingId = static_cast<Uint32>(buffer->_implementation->binding()) >> 4;
+		OpenGL::bindBufferBase(bindingId, bindingIndex, buffer->_implementation->handle());
 		DE_CHECK_ERROR_OPENGL();
 	}
 
@@ -88,7 +86,7 @@ public:
 	GraphicsBuffer* createBuffer(const BufferBinding& binding, const Uint size, const AccessMode& accessMode,
 		const BufferUsage& usage) const
 	{
-		return DE_NEW(GraphicsBuffer)(nullptr, binding, size, accessMode, usage);
+		return DE_NEW(GraphicsBuffer)(_openGl, binding, size, accessMode, usage);
 	}
 
 	Effect* createEffect() const
@@ -99,7 +97,7 @@ public:
 	IndexBuffer* createIndexBuffer(const Uint size, const IndexType& indexType, const AccessMode& accessMode,
 		const BufferUsage& usage) const
 	{
-		return DE_NEW(IndexBuffer)(nullptr, size, indexType, accessMode, usage);
+		return DE_NEW(IndexBuffer)(_openGl, size, indexType, accessMode, usage);
 	}
 
 	Shader* createShader(const ShaderType& type, const ByteList& shaderCode) const
@@ -109,12 +107,13 @@ public:
 
 	VertexBufferState* createVertexBufferState() const
 	{
-		return DE_NEW(VertexBufferState)(nullptr);
+		return DE_NEW(VertexBufferState)(_openGl);
 	}
 
 	void debindBufferIndexed(GraphicsBuffer* buffer, const Uint32 bindingIndex) const
 	{
-		OpenGL::bindBufferBase(static_cast<Uint32>(buffer->_implementation->binding()), bindingIndex, 0u);
+		const Uint32 bindingId = static_cast<Uint32>(buffer->_implementation->binding()) >> 4;
+		OpenGL::bindBufferBase(bindingId, bindingIndex, 0u);
 		DE_CHECK_ERROR_OPENGL();
 	}
 
@@ -226,7 +225,7 @@ private:
 
 	void deinitialiseDrawing()
 	{
-		_activeVertexBufferState->_implementation->debind();
+		_activeVertexBufferState->_implementation->debind(0u);
 		setComponentState(ComponentID::VertexBufferState, false);
 		bindEffect(0u);
 		setComponentState(ComponentID::Effect, false);
@@ -288,6 +287,7 @@ void GraphicsDevice::clear(const Colour& colour) const
 GraphicsBuffer* GraphicsDevice::createBuffer(const BufferBinding& binding, const Uint size,
 	const AccessMode& accessMode, const BufferUsage& usage)
 {
+	DE_ASSERT(binding != BufferBinding::Index);
 	GraphicsBuffer* buffer = _implementation->createBuffer(binding, size, accessMode, usage);
 	_resources.push_back(buffer);
 

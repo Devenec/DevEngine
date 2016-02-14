@@ -3,7 +3,7 @@ VertexShader
 	#version 330
 
 	layout(location = 0) in vec4 inPosition;
-	layout(location = 1) in vec3 inColour;
+	layout(location = 1) in vec4 inColour;
 
 	/*layout(binding = 0)*/ uniform Transforms
 	{
@@ -11,7 +11,7 @@ VertexShader
 		mat4 world;
 	} transforms;
 
-	out vec3 colour;
+	out vec4 colour;
 
 	void main()
 	{
@@ -24,11 +24,11 @@ FragmentShader
 {
     #version 330
 
-    in vec3 colour;
+    in vec4 colour;
     out vec4 outColour;
 
     void main()
     {
-    	outColour = vec4(colour, 1.0);
+		outColour = colour;
     }
 }

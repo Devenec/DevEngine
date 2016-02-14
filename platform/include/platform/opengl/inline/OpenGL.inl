@@ -1,5 +1,5 @@
 /**
- * @file platform/opengl/inline/OpenGLVertexBufferState.inl
+ * @file platform/opengl/inline/OpenGL.inl
  *
  * DevEngine
  * Copyright 2015-2016 Eetu 'Devenec' Oinasmaa
@@ -20,17 +20,7 @@
 
 // Public
 
-inline Uint32 VertexBufferState::Implementation::bind() const
+Uint32 OpenGL::bindDefaultVertexArray()
 {
-	return _openGl->bindVertexArrayCustom(_vertexArrayHandle);
-}
-
-Uint32 VertexBufferState::Implementation::debind(const Uint32 previousVertexArrayHandle) const
-{
-	return _openGl->bindVertexArrayCustom(previousVertexArrayHandle);
-}
-
-IndexBuffer* VertexBufferState::Implementation::indexBuffer() const
-{
-	return _indexBuffer;
+	return bindVertexArrayCustom(_defaultVertexArrayHandle);
 }

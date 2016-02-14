@@ -22,13 +22,22 @@
 
 namespace Graphics
 {
+	/*
+	 * Encoding:
+	 *
+	 * if BufferBinding::Index
+	 *   OpenGL::ELEMENT_ARRAY_BUFFER << 4
+	 * else
+	 *   (OpenGL::*_BUFFER << 4) + <bit mask index>
+	 */
 	enum class BufferBinding
 	{
-		Index	= 0x8893,
-		Uniform = 0x8A11,
-		Vertex	= 0x8892
+		Index	= 0x088930,
+		Uniform = 0x08A110,
+		Vertex	= 0x088921
 	};
 
+	// Encoding: OpenGL::*_DRAW
 	enum class BufferUsage
 	{
 		Dynamic = 0x88E8,
@@ -36,6 +45,7 @@ namespace Graphics
 		Stream	= 0x88E0
 	};
 
+	// Encoding: (OpenGL::UNSIGNED_* << 2) + (<type byte count> - 1)
 	enum class IndexType
 	{
 		Uint8  = 0x5004,
@@ -54,48 +64,55 @@ namespace Graphics
 		TriangleStrip = 0x05
 	};
 
+	/*
+	 * Encoding:
+	 *
+	 * if BGRA
+	 *   ((OpenGL::* << 3) | 0x04) + (<component count> - 1)
+	 * else
+	 *   (OpenGL::* << 3) + (<component count> - 1)
+	 */
 	enum class VertexElementType
 	{
-		Float16				   = 0x00A059,
-		Float16Vector2		   = 0x00A05A,
-		Float16Vector3		   = 0x00A05B,
-		Float16Vector4		   = 0x00A05C,
-		Float32				   = 0x00A031,
-		Float32Vector2		   = 0x00A032,
-		Float32Vector3		   = 0x00A033,
-		Float32Vector4		   = 0x00A034,
-		Float64				   = 0x00A051,
-		Float64Vector2		   = 0x00A052,
-		Float64Vector3		   = 0x00A053,
-		Float64Vector4		   = 0x00A054,
-		Int8				   = 0x00A001,
-		Int8Vector2			   = 0x00A002,
-		Int8Vector3			   = 0x00A003,
-		Int8Vector4			   = 0x00A004,
-		Int16				   = 0x00A011,
-		Int16Vector2		   = 0x00A012,
-		Int16Vector3		   = 0x00A013,
-		Int16Vector4		   = 0x00A014,
-		Int32				   = 0x00A021,
-		Int32Vector2		   = 0x00A022,
-		Int32Vector3		   = 0x00A023,
-		Int32Vector4		   = 0x00A024,
-		Int32_B10G10R10A2	   = 0x046CFE,
-		Int32_R10G10B10A2	   = 0x046CFD,
-		Uint8				   = 0x00A009,
-		Uint8Vector2		   = 0x00A00A,
-		Uint8Vector3		   = 0x00A00B,
-		Uint8Vector4		   = 0x00A00C,
-		Uint16				   = 0x00A019,
-		Uint16Vector2		   = 0x00A01A,
-		Uint16Vector3		   = 0x00A01B,
-		Uint16Vector4		   = 0x00A01C,
-		Uint32				   = 0x00A029,
-		Uint32Vector2		   = 0x00A02A,
-		Uint32Vector3		   = 0x00A02B,
-		Uint32Vector4		   = 0x00A02C,
-		Uint32_B10G10R10A2	   = 0x041B46,
-		Uint32_R10G10B10A2	   = 0x041B45,
-		Uint32_R11G11B10_Float = 0x0461DB
+		Float16				   = 0x00A058,
+		Float16Vector2		   = 0x00A059,
+		Float16Vector3		   = 0x00A05A,
+		Float16Vector4		   = 0x00A05B,
+		Float32				   = 0x00A030,
+		Float32Vector2		   = 0x00A031,
+		Float32Vector3		   = 0x00A032,
+		Float32Vector4		   = 0x00A033,
+		Float64				   = 0x00A050,
+		Float64Vector2		   = 0x00A051,
+		Float64Vector3		   = 0x00A052,
+		Float64Vector4		   = 0x00A053,
+		Int8				   = 0x00A000,
+		Int8Vector2			   = 0x00A001,
+		Int8Vector3			   = 0x00A002,
+		Int8Vector4			   = 0x00A003,
+		Int16				   = 0x00A010,
+		Int16Vector2		   = 0x00A011,
+		Int16Vector3		   = 0x00A012,
+		Int16Vector4		   = 0x00A013,
+		Int32				   = 0x00A020,
+		Int32Vector2		   = 0x00A021,
+		Int32Vector3		   = 0x00A022,
+		Int32Vector4		   = 0x00A023,
+		Int32_A2B10G10R10	   = 0x046CFF,
+		Int32_A2R10G10B10	   = 0x046CFB,
+		Uint8				   = 0x00A008,
+		Uint8Vector2		   = 0x00A009,
+		Uint8Vector3		   = 0x00A00A,
+		Uint8Vector4		   = 0x00A00B,
+		Uint16				   = 0x00A018,
+		Uint16Vector2		   = 0x00A019,
+		Uint16Vector3		   = 0x00A01A,
+		Uint16Vector4		   = 0x00A01B,
+		Uint32				   = 0x00A028,
+		Uint32Vector2		   = 0x00A029,
+		Uint32Vector3		   = 0x00A02A,
+		Uint32Vector4		   = 0x00A02B,
+		Uint32_A2B10G10R10	   = 0x041B47,
+		Uint32_A2R10G10B10	   = 0x041B43
 	};
 }

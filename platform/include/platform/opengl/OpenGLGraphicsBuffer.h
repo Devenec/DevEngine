@@ -21,6 +21,7 @@
 #pragma once
 
 #include <graphics/GraphicsBuffer.h>
+#include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsBufferBase.h>
 
 namespace Graphics
@@ -29,13 +30,23 @@ namespace Graphics
 	{
 	public:
 
-		Implementation(const BufferBinding& binding, const Uint size, const AccessMode& accessMode,
-			const BufferUsage& usage);
+		Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const BufferBinding& binding,
+			const Uint size, const AccessMode& accessMode, const BufferUsage& usage);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
 
 		~Implementation() = default;
+
+		inline void bind() const;
+
+		inline void debind() const;
+
+		void demapData() const;
+
+		inline Uint8* mapData() const;
+
+		Uint8* mapData(const Uint size, const Uint offset) const;
 
 		Implementation& operator =(const Implementation& implementation) = delete;
 		Implementation& operator =(Implementation&& implementation) = delete;
@@ -44,4 +55,6 @@ namespace Graphics
 
 		using Base = Platform::GraphicsBufferBase;
 	};
+
+#include "inline/OpenGLGraphicsBuffer.inl"
 }

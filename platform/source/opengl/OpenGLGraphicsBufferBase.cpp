@@ -23,7 +23,6 @@
 #include <graphics/AccessMode.h>
 #include <platform/opengl/OpenGL.h>
 #include <platform/opengl/OpenGLGraphicsBufferBase.h>
-#include <platform/opengl/OpenGLGraphicsEnumerations.h>
 
 using namespace Core;
 using namespace Graphics;
@@ -36,16 +35,16 @@ static const Char8* COMPONENT_TAG = "[Platform::GraphicsBufferBase - OpenGL] ";
 
 // Public
 
-GraphicsBufferBase::GraphicsBufferBase(const BufferBinding& binding, const Uint size,
-	const AccessMode& accessMode, const BufferUsage& usage)
-	: _size(size),
+GraphicsBufferBase::GraphicsBufferBase(GraphicsInterfaceHandle graphicsInterfaceHandle,
+	const BufferBinding& binding, const Uint size, const AccessMode& accessMode)
+	: _openGl(static_cast<OpenGL*>(graphicsInterfaceHandle)),
+	  _size(size),
 	  _binding(static_cast<Uint32>(binding)),
 	  _bufferHandle(0u),
 	  _flags(0u)
 {
 	initialiseAccessMode(accessMode);
 	createBuffer();
-	initialiseStorage(accessMode, usage);
 }
 
 GraphicsBufferBase::~GraphicsBufferBase()
@@ -56,8 +55,7 @@ GraphicsBufferBase::~GraphicsBufferBase()
 
 void GraphicsBufferBase::demapData() const
 {
-	bind();
-	const Uint32 result = OpenGL::unmapBuffer(_binding);
+	const Uint32 result = OpenGL::unmapBuffer(_binding >> 4);
 	DE_CHECK_ERROR_OPENGL();
 
 	if(result == 0u)
@@ -67,14 +65,11 @@ void GraphicsBufferBase::demapData() const
 
 		DE_ERROR(0x0);
 	}
-
-	debind();
 }
 
 Uint8* GraphicsBufferBase::mapData(const Uint size, const Uint bufferOffset) const
 {
-	bind();
-	Void* data = OpenGL::mapBufferRange(_binding, bufferOffset, size, _flags);
+	Void* data = OpenGL::mapBufferRange(_binding >> 4, bufferOffset, size, _flags);
 	DE_CHECK_ERROR_OPENGL();
 
 	if(data == nullptr)
@@ -83,8 +78,16 @@ Uint8* GraphicsBufferBase::mapData(const Uint size, const Uint bufferOffset) con
 		DE_ERROR(0x0);
 	}
 
-	debind();
 	return static_cast<Uint8*>(data);
+}
+
+// Protected
+
+void GraphicsBufferBase::initialiseStorage(const AccessMode& accessMode, const BufferUsage& usage) const
+{
+	const Uint32 usageId = getUsageId(accessMode, usage);
+	OpenGL::bufferData(_binding >> 4, _size, nullptr, usageId);
+	DE_CHECK_ERROR_OPENGL();
 }
 
 // Private
@@ -104,31 +107,17 @@ void GraphicsBufferBase::createBuffer()
 	DE_CHECK_ERROR_OPENGL();
 }
 
-void GraphicsBufferBase::initialiseStorage(const AccessMode& accessMode, const BufferUsage& usage) const
-{
-	bind();
-	OpenGL::bufferData(_binding, _size, nullptr, getUsageValue(accessMode, usage));
-	DE_CHECK_ERROR_OPENGL();
-	debind();
-}
-
-void GraphicsBufferBase::bind(const Uint32 bufferHandle) const
-{
-	OpenGL::bindBuffer(_binding, bufferHandle);
-	DE_CHECK_ERROR_OPENGL();
-}
-
 // Static
 
-Uint32 GraphicsBufferBase::getUsageValue(const AccessMode& accessMode, const BufferUsage& usage)
+Uint32 GraphicsBufferBase::getUsageId(const AccessMode& accessMode, const BufferUsage& usage)
 {
-	Uint32 value = static_cast<Uint32>(usage);
+	Uint32 id = static_cast<Uint32>(usage);
 
 	if((accessMode & AccessMode::Read) == AccessMode::Read &&
 		(accessMode & AccessMode::Write) != AccessMode::Write)
 	{
-		++value;
+		++id;
 	}
 
-	return value;
+	return id;
 }

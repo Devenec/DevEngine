@@ -29,12 +29,23 @@ namespace Graphics
 	{
 	public:
 
-		Implementation(const Uint size, const AccessMode& accessMode, const BufferUsage& usage);
+		Implementation(GraphicsInterfaceHandle graphicsInterfaceHandle, const Uint size,
+			const AccessMode& accessMode, const BufferUsage& usage);
 
 		Implementation(const Implementation& implementation) = delete;
 		Implementation(Implementation&& implementation) = delete;
 
 		~Implementation() = default;
+
+		inline void bind() const;
+
+		inline void debind() const;
+
+		void demapData() const;
+
+		inline Uint8* mapData() const;
+
+		Uint8* mapData(const Uint size, const Uint offset) const;
 
 		Implementation& operator =(const Implementation& implementation) = delete;
 		Implementation& operator =(Implementation&& implementation) = delete;
@@ -42,5 +53,11 @@ namespace Graphics
 	private:
 
 		using Base = Platform::GraphicsBufferBase;
+
+		Uint32 bindToDefaultVertexArray() const;
+		void debindFromDefaultVertexArray(const Uint32 previousVertexArrayHandle) const;
+		void bind(const Uint32 bufferHandle) const;
 	};
+
+#include "inline/OpenGLIndexBuffer.inl"
 }

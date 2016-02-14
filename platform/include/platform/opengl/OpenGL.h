@@ -3618,10 +3618,6 @@ namespace Platform
 		static VertexArrayVertexBuffer vertexArrayVertexBuffer;
 		static VertexArrayVertexBuffers vertexArrayVertexBuffers;
 
-		// Custom
-
-		static Int32 getInteger(const Uint32 name);
-
 		static const Core::Array<Version, 7u> SUPPORTED_VERSIONS;
 
 		OpenGL();
@@ -3629,7 +3625,13 @@ namespace Platform
 		OpenGL(const OpenGL& openGl) = delete;
 		OpenGL(OpenGL&& openGl) = delete;
 
-		~OpenGL() = default;
+		~OpenGL();
+
+		inline Uint32 bindDefaultVertexArray();
+
+		void bindGraphicsBuffer(const Uint32 binding, const Uint32 bufferHandle);
+
+		Uint32 bindVertexArrayCustom(const Uint32 vertexArrayHandle);
 
 		OpenGL& operator =(const OpenGL& openGl) = delete;
 		OpenGL& operator =(OpenGL&& openGl) = delete;
@@ -3638,17 +3640,24 @@ namespace Platform
 
 	private:
 
+		Core::Array<Uint32, 2u> _activeGraphicsBuffers;
 		Version _version;
+		Uint32 _activeVertexArrayHandle;
+		Uint32 _defaultVertexArrayHandle;
 
 		void initialiseVersion();
 		void checkSupport() const;
 		void getStandardFunctions() const;
 		void logInfo() const;
+		void createDefaultVertexArray();
 
 		static const Char8* getCharacters(const Uint32 name);
 		static const Char8* getCharacters(const Uint32 name, const Uint32 index);
 		static Graphics::ExtensionNameList getExtensionNames();
+		static Int32 getInteger(const Uint32 name);
 	};
+
+#include "inline/OpenGL.inl"
 }
 
 #undef DE_CALL_OPENGL
