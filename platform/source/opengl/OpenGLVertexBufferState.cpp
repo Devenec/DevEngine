@@ -109,9 +109,9 @@ void VertexBufferState::Implementation::setVertexLayout(const VertexElementList&
 void VertexBufferState::Implementation::setVertexElementFormat(const VertexElement& element,
 	const Uint elementOffset, const Uint32 stride)
 {
-	Bool normalise = element.normalise;
+	Bool normalise = false;
 	const Uint32 componentCount = ::getVertexElementComponentCount(element.type, normalise);
-	const Uint32 elementType = static_cast<Uint32>(element.type) >> 3;
+	const Uint32 elementType = static_cast<Uint32>(element.type) >> 4;
 	OpenGL::enableVertexAttribArray(element.index);
 	DE_CHECK_ERROR_OPENGL();
 
@@ -156,12 +156,10 @@ VertexBufferState::~VertexBufferState()
 static Uint32 getVertexElementComponentCount(const VertexElementType& elementType, Bool& normalise)
 {
 	const Int32 elementTypeId = static_cast<Int32>(elementType);
+	normalise = (elementTypeId & 0x04) == 0x04;
 
-	if((elementTypeId & 0x04) == 0x04)
-	{
-		normalise = true;
+	if((elementTypeId & 0x08) == 0x08)
 		return OpenGL::BGRA;
-	}
 
 	return (elementTypeId & 0x03) + 1u;
 }
@@ -170,64 +168,83 @@ static Uint32 getVertexElementSize(const VertexElement& element)
 {
 	switch(element.type)
 	{
-		case VertexElementType::Float16:
-		case VertexElementType::Int8Vector2:
-		case VertexElementType::Int16:
-		case VertexElementType::Uint8Vector2:
-		case VertexElementType::Uint16:
-			return 2u;
-
-		case VertexElementType::Float16Vector2:
-		case VertexElementType::Float32:
-		case VertexElementType::Int8Vector4:
-		case VertexElementType::Int16Vector2:
-		case VertexElementType::Int32:
-		case VertexElementType::Int32_A2B10G10R10:
-		case VertexElementType::Int32_A2R10G10B10:
-		case VertexElementType::Uint8Vector4:
-		case VertexElementType::Uint16Vector2:
-		case VertexElementType::Uint32:
-		case VertexElementType::Uint32_A2B10G10R10:
-		case VertexElementType::Uint32_A2R10G10B10:
+		case VertexElementType::A2B10G10R10Int:
+		case VertexElementType::A2B10G10R10IntNormalised:
+		case VertexElementType::A2B10G10R10Uint:
+		case VertexElementType::A2B10G10R10UintNormalised:
+		case VertexElementType::A2R10G10B10IntNormalised:
+		case VertexElementType::A2R10G10B10UintNormalised:
+		case VertexElementType::B8G8R8A8UintNormalised:
+		case VertexElementType::R16G16Float:
+		case VertexElementType::R32Float:
+		case VertexElementType::R8G8B8A8Int:
+		case VertexElementType::R8G8B8A8IntNormalised:
+		case VertexElementType::R16G16Int:
+		case VertexElementType::R16G16IntNormalised:
+		case VertexElementType::R32Int:
+		case VertexElementType::R32IntNormalised:
+		case VertexElementType::R8G8B8A8Uint:
+		case VertexElementType::R8G8B8A8UintNormalised:
+		case VertexElementType::R16G16Uint:
+		case VertexElementType::R16G16UintNormalised:
+		case VertexElementType::R32Uint:
+		case VertexElementType::R32UintNormalised:
 			return 4u;
 
-		case VertexElementType::Float16Vector3:
-		case VertexElementType::Int16Vector3:
-		case VertexElementType::Uint16Vector3:
+		case VertexElementType::R16Float:
+		case VertexElementType::R8G8Int:
+		case VertexElementType::R8G8IntNormalised:
+		case VertexElementType::R16Int:
+		case VertexElementType::R16IntNormalised:
+		case VertexElementType::R8G8Uint:
+		case VertexElementType::R8G8UintNormalised:
+		case VertexElementType::R16Uint:
+		case VertexElementType::R16UintNormalised:
+			return 2u;
+
+		case VertexElementType::R16G16B16Float:
+		case VertexElementType::R16G16B16Int:
+		case VertexElementType::R16G16B16IntNormalised:
+		case VertexElementType::R16G16B16Uint:
+		case VertexElementType::R16G16B16UintNormalised:
 			return 6u;
 
-		case VertexElementType::Float16Vector4:
-		case VertexElementType::Float32Vector2:
-		case VertexElementType::Float64:
-		case VertexElementType::Int16Vector4:
-		case VertexElementType::Int32Vector2:
-		case VertexElementType::Uint16Vector4:
-		case VertexElementType::Uint32Vector2:
+		case VertexElementType::R16G16B16A16Float:
+		case VertexElementType::R32G32Float:
+		case VertexElementType::R16G16B16A16Int:
+		case VertexElementType::R16G16B16A16IntNormalised:
+		case VertexElementType::R32G32Int:
+		case VertexElementType::R32G32IntNormalised:
+		case VertexElementType::R16G16B16A16Uint:
+		case VertexElementType::R16G16B16A16UintNormalised:
+		case VertexElementType::R32G32Uint:
+		case VertexElementType::R32G32UintNormalised:
 			return 8u;
 
-		case VertexElementType::Float32Vector3:
-		case VertexElementType::Int32Vector3:
-		case VertexElementType::Uint32Vector3:
+		case VertexElementType::R32G32B32Float:
+		case VertexElementType::R32G32B32Int:
+		case VertexElementType::R32G32B32IntNormalised:
+		case VertexElementType::R32G32B32Uint:
+		case VertexElementType::R32G32B32UintNormalised:
 			return 12u;
 
-		case VertexElementType::Float32Vector4:
-		case VertexElementType::Float64Vector2:
-		case VertexElementType::Int32Vector4:
-		case VertexElementType::Uint32Vector4:
+		case VertexElementType::R32G32B32A32Float:
+		case VertexElementType::R32G32B32A32Int:
+		case VertexElementType::R32G32B32A32IntNormalised:
+		case VertexElementType::R32G32B32A32Uint:
+		case VertexElementType::R32G32B32A32UintNormalised:
 			return 16u;
 
-		case VertexElementType::Float64Vector3:
-			return 24u;
-
-		case VertexElementType::Float64Vector4:
-			return 32u;
-
-		case VertexElementType::Int8:
-		case VertexElementType::Uint8:
+		case VertexElementType::R8Int:
+		case VertexElementType::R8IntNormalised:
+		case VertexElementType::R8Uint:
+		case VertexElementType::R8UintNormalised:
 			return 1u;
 
-		case VertexElementType::Int8Vector3:
-		case VertexElementType::Uint8Vector3:
+		case VertexElementType::R8G8B8Int:
+		case VertexElementType::R8G8B8IntNormalised:
+		case VertexElementType::R8G8B8Uint:
+		case VertexElementType::R8G8B8UintNormalised:
 			return 3u;
 
 		default:

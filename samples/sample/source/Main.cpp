@@ -206,8 +206,8 @@ private:
 	{
 		VertexElementList vertexElements
 		{
-			VertexElement(0u, VertexElementType::Float32Vector3),
-			VertexElement(1u, VertexElementType::Uint32_A2R10G10B10, true)
+			VertexElement(0u, VertexElementType::R32G32B32Float),
+			VertexElement(1u, VertexElementType::A2B10G10R10UintNormalised)
 		};
 
 		_vertexBufferState = _graphicsDevice->createVertexBufferState();

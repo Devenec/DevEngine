@@ -33,13 +33,10 @@ namespace Graphics
 		Uint32 index;
 		Uint32 offset;
 		VertexElementType type;
-		Bool normalise;
 
-		VertexElement(const Uint32 index, const VertexElementType& type, const Bool normalise = false,
-			const Uint32 offset = AFTER_PREVIOUS)
+		VertexElement(const Uint32 index, const VertexElementType& type, const Uint32 offset = AFTER_PREVIOUS)
 			: index(index),
 			  offset(offset),
-			  type(type),
-			  normalise(normalise) { }
+			  type(type) { }
 	};
 }

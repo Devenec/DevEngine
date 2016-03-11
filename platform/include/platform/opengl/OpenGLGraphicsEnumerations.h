@@ -37,7 +37,11 @@ namespace Graphics
 		Vertex	= 0x088921
 	};
 
-	// Encoding: OpenGL::*_DRAW
+	/*
+	 * Encoding:
+	 *
+	 * OpenGL::*_DRAW
+	 */
 	enum class BufferUsage
 	{
 		Dynamic = 0x88E8,
@@ -45,7 +49,11 @@ namespace Graphics
 		Stream	= 0x88E0
 	};
 
-	// Encoding: (OpenGL::UNSIGNED_* << 2) + (<type byte count> - 1)
+	/*
+	 * Encoding:
+	 *
+	 * (OpenGL::UNSIGNED_* << 2) + (<type byte count> - 1)
+	 */
 	enum class IndexType
 	{
 		Uint8  = 0x5004,
@@ -53,6 +61,11 @@ namespace Graphics
 		Uint32 = 0x5017
 	};
 
+	/*
+	 * Encoding:
+	 *
+	 * OpenGL::*
+	 */
 	enum class PrimitiveType
 	{
 		Line		  = 0x01,
@@ -67,52 +80,72 @@ namespace Graphics
 	/*
 	 * Encoding:
 	 *
-	 * if BGRA
-	 *   ((OpenGL::* << 3) | 0x04) + (<component count> - 1)
-	 * else
-	 *   (OpenGL::* << 3) + (<component count> - 1)
+	 * (OpenGL::* << 4) | (<BGRA> ? 0x08 : 0x00) | (<normalised> ? 0x04 : 0x00) + (<component count> - 1)
 	 */
 	enum class VertexElementType
 	{
-		Float16				   = 0x00A058,
-		Float16Vector2		   = 0x00A059,
-		Float16Vector3		   = 0x00A05A,
-		Float16Vector4		   = 0x00A05B,
-		Float32				   = 0x00A030,
-		Float32Vector2		   = 0x00A031,
-		Float32Vector3		   = 0x00A032,
-		Float32Vector4		   = 0x00A033,
-		Float64				   = 0x00A050,
-		Float64Vector2		   = 0x00A051,
-		Float64Vector3		   = 0x00A052,
-		Float64Vector4		   = 0x00A053,
-		Int8				   = 0x00A000,
-		Int8Vector2			   = 0x00A001,
-		Int8Vector3			   = 0x00A002,
-		Int8Vector4			   = 0x00A003,
-		Int16				   = 0x00A010,
-		Int16Vector2		   = 0x00A011,
-		Int16Vector3		   = 0x00A012,
-		Int16Vector4		   = 0x00A013,
-		Int32				   = 0x00A020,
-		Int32Vector2		   = 0x00A021,
-		Int32Vector3		   = 0x00A022,
-		Int32Vector4		   = 0x00A023,
-		Int32_A2B10G10R10	   = 0x046CFF,
-		Int32_A2R10G10B10	   = 0x046CFB,
-		Uint8				   = 0x00A008,
-		Uint8Vector2		   = 0x00A009,
-		Uint8Vector3		   = 0x00A00A,
-		Uint8Vector4		   = 0x00A00B,
-		Uint16				   = 0x00A018,
-		Uint16Vector2		   = 0x00A019,
-		Uint16Vector3		   = 0x00A01A,
-		Uint16Vector4		   = 0x00A01B,
-		Uint32				   = 0x00A028,
-		Uint32Vector2		   = 0x00A029,
-		Uint32Vector3		   = 0x00A02A,
-		Uint32Vector4		   = 0x00A02B,
-		Uint32_A2B10G10R10	   = 0x041B47,
-		Uint32_A2R10G10B10	   = 0x041B43
+		A2B10G10R10Int			   = 0x08D9F3,
+		A2B10G10R10IntNormalised   = 0x08D9F7,
+		A2B10G10R10Uint			   = 0x083683,
+		A2B10G10R10UintNormalised  = 0x083687,
+		A2R10G10B10IntNormalised   = 0x08D9FF,
+		A2R10G10B10UintNormalised  = 0x08368F,
+		B8G8R8A8UintNormalised	   = 0x01401F,
+		R16Float				   = 0x0140B0,
+		R16G16Float				   = 0x0140B1,
+		R16G16B16Float			   = 0x0140B2,
+		R16G16B16A16Float		   = 0x0140B3,
+		R32Float				   = 0x014060,
+		R32G32Float				   = 0x014061,
+		R32G32B32Float			   = 0x014062,
+		R32G32B32A32Float		   = 0x014063,
+		R8Int					   = 0x014000,
+		R8IntNormalised			   = 0x014004,
+		R8G8Int					   = 0x014001,
+		R8G8IntNormalised		   = 0x014005,
+		R8G8B8Int				   = 0x014002,
+		R8G8B8IntNormalised		   = 0x014006,
+		R8G8B8A8Int				   = 0x014003,
+		R8G8B8A8IntNormalised	   = 0x014007,
+		R16Int					   = 0x014020,
+		R16IntNormalised		   = 0x014024,
+		R16G16Int				   = 0x014021,
+		R16G16IntNormalised		   = 0x014025,
+		R16G16B16Int			   = 0x014022,
+		R16G16B16IntNormalised	   = 0x014026,
+		R16G16B16A16Int			   = 0x014023,
+		R16G16B16A16IntNormalised  = 0x014027,
+		R32Int					   = 0x014040,
+		R32IntNormalised		   = 0x014044,
+		R32G32Int				   = 0x014041,
+		R32G32IntNormalised		   = 0x014045,
+		R32G32B32Int			   = 0x014042,
+		R32G32B32IntNormalised	   = 0x014046,
+		R32G32B32A32Int			   = 0x014043,
+		R32G32B32A32IntNormalised  = 0x014047,
+		R8Uint					   = 0x014010,
+		R8UintNormalised		   = 0x014014,
+		R8G8Uint				   = 0x014011,
+		R8G8UintNormalised		   = 0x014015,
+		R8G8B8Uint				   = 0x014012,
+		R8G8B8UintNormalised	   = 0x014016,
+		R8G8B8A8Uint			   = 0x014013,
+		R8G8B8A8UintNormalised	   = 0x014017,
+		R16Uint					   = 0x014030,
+		R16UintNormalised		   = 0x014034,
+		R16G16Uint				   = 0x014031,
+		R16G16UintNormalised	   = 0x014035,
+		R16G16B16Uint			   = 0x014032,
+		R16G16B16UintNormalised	   = 0x014036,
+		R16G16B16A16Uint		   = 0x014033,
+		R16G16B16A16UintNormalised = 0x014037,
+		R32Uint					   = 0x014050,
+		R32UintNormalised		   = 0x014054,
+		R32G32Uint				   = 0x014051,
+		R32G32UintNormalised	   = 0x014055,
+		R32G32B32Uint			   = 0x014052,
+		R32G32B32UintNormalised	   = 0x014056,
+		R32G32B32A32Uint		   = 0x014053,
+		R32G32B32A32UintNormalised = 0x014057
 	};
 }
