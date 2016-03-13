@@ -21,13 +21,6 @@
 #pragma once
 
 /**
- * Boolean
- *
- * The size is platform-dependent.
- */
-using Bool = bool;
-
-/**
  * Signed 8-bit integer
  */
 using Int8 = signed char;
@@ -88,7 +81,12 @@ using Char8 = char;
 using Char16 = wchar_t;
 
 /**
- * Void type
+ * Boolean
+ */
+using Bool = Int8;
+
+/**
+ * Void
  *
  * Used mainly with void pointers.
  */
