@@ -36,7 +36,7 @@ using namespace Platform;
 static const Char8* COMPONENT_TAG = "[Platform::Icon - Windows] ";
 
 static BITMAPV5HEADER createBitmapHeader(const Image* image);
-static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Uint8*& dataBuffer);
+static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Uint8*& bitmapData);
 static ICONINFO createIconInfo(HBITMAP colourBitmapHandle, HBITMAP maskBitmapHandle);
 static HBITMAP createMaskBitmap(const Image* image);
 static void destroyBitmap(HBITMAP bitmapHandle);
@@ -58,9 +58,9 @@ Icon::Icon(const Image* image)
 {
 	DE_ASSERT(image != nullptr);
 	BITMAPV5HEADER bitmapHeader = ::createBitmapHeader(image);
-	Uint8* bitmapDataBuffer;
-	HBITMAP colourBitmapHandle = ::createColourBitmap(bitmapHeader, bitmapDataBuffer);
-	::setBitmapData(image, bitmapDataBuffer);
+	Uint8* bitmapData = nullptr;
+	HBITMAP colourBitmapHandle = ::createColourBitmap(bitmapHeader, bitmapData);
+	::setBitmapData(image, bitmapData);
 	HBITMAP maskBitmapHandle = ::createMaskBitmap(image);
 	createIcon(colourBitmapHandle, maskBitmapHandle);
 	::destroyBitmap(maskBitmapHandle);
@@ -128,14 +128,14 @@ static BITMAPV5HEADER createBitmapHeader(const Image* image)
 	return bitmapHeader;
 }
 
-static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Uint8*& dataBuffer)
+static HBITMAP createColourBitmap(const BITMAPV5HEADER& bitmapHeader, Uint8*& bitmapData)
 {
 	HDC deviceContextHandle = ::getDeviceContext();
 	const BITMAPINFO* bitmapInfo = reinterpret_cast<const BITMAPINFO*>(&bitmapHeader);
 
 	HBITMAP bitmapHandle =
 		CreateDIBSection(deviceContextHandle, bitmapInfo, DIB_RGB_COLORS,
-			reinterpret_cast<Void**>(&dataBuffer), nullptr, 0u);
+			reinterpret_cast<Void**>(&bitmapData), nullptr, 0u);
 
 	if(bitmapHandle == nullptr)
 	{

@@ -21,20 +21,20 @@
 #include <climits>
 #include <core/Types.h>
 
-static_assert(CHAR_BIT == 8, "The number of bits in a byte is incorrect.");
+static_assert(CHAR_BIT == 8, "The number of bits in a byte is invalid.");
 
-static_assert(sizeof(Int8) == 1, "The size of Int8 is incorrect.");
-static_assert(sizeof(Uint8) == 1, "The size of Uint8 is incorrect.");
-static_assert(sizeof(Int16) == 2, "The size of Int16 is incorrect.");
-static_assert(sizeof(Uint16) == 2, "The size of Uint16 is incorrect.");
-static_assert(sizeof(Int32) == 4, "The size of Int32 is incorrect.");
-static_assert(sizeof(Uint32) == 4, "The size of Uint32 is incorrect.");
-static_assert(sizeof(Int64) == 8, "The size of Int64 is incorrect.");
-static_assert(sizeof(Uint64) == 8, "The size of Uint64 is incorrect.");
-static_assert(sizeof(Float32) == 4, "The size of Float32 is incorrect.");
-static_assert(sizeof(Float64) == 8, "The size of Float64 is incorrect.");
-static_assert(sizeof(Char8) == 1, "The size of Char8 is incorrect.");
-//static_assert(sizeof(Char16) == 2, "The size of Char16 is incorrect.");
+static_assert(sizeof(Int8) == 1, "The size of Int8 is invalid.");
+static_assert(sizeof(Uint8) == 1, "The size of Uint8 is invalid.");
+static_assert(sizeof(Int16) == 2, "The size of Int16 is invalid.");
+static_assert(sizeof(Uint16) == 2, "The size of Uint16 is invalid.");
+static_assert(sizeof(Int32) == 4, "The size of Int32 is invalid.");
+static_assert(sizeof(Uint32) == 4, "The size of Uint32 is invalid.");
+static_assert(sizeof(Int64) == 8, "The size of Int64 is invalid.");
+static_assert(sizeof(Uint64) == 8, "The size of Uint64 is invalid.");
+static_assert(sizeof(Float32) == 4, "The size of Float32 is invalid.");
+static_assert(sizeof(Float64) == 8, "The size of Float64 is invalid.");
+static_assert(sizeof(Char8) == 1, "The size of Char8 is invalid.");
+//static_assert(sizeof(Char16) == 2, "The size of Char16 is invalid.");
 
 enum class Enumeration { };
-static_assert(sizeof(Enumeration) == 4, "The size of enumeration (enum class) is incorrect.");
+static_assert(sizeof(Enumeration) == 4, "The size of enumeration (enum class) is invalid.");

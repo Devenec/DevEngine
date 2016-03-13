@@ -26,7 +26,7 @@ T* constructArray(T* pointer, const Uint32 size)
 	DE_ASSERT(pointer != nullptr);
 
 	for(Uint32 i = 0u; i < size; ++i)
-		new (static_cast<Void*>(pointer + i)) T();
+		::new (static_cast<Void*>(pointer + i)) T();
 
 	return pointer;
 }

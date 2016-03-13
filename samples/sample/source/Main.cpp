@@ -132,10 +132,9 @@ private:
 			worldTransform =
 				Matrix4::createTranslation(0.0f, 0.0f, -15.0f) * Matrix4::createRotation(axis, rotation);
 
-			Float32* data =
-				reinterpret_cast<Float32*>(_uniformBuffer->mapData(sizeof(Matrix4), sizeof(Matrix4)));
-
-			std::copy(worldTransform.data(), worldTransform.data() + 16, data);
+			Uint8* mappedData = _uniformBuffer->mapData(sizeof(Matrix4), sizeof(Matrix4));
+			const Uint8* worldTransformData = reinterpret_cast<const Uint8*>(worldTransform.data());
+			std::copy(worldTransformData, worldTransformData + sizeof(Matrix4), mappedData);
 			_uniformBuffer->demapData();
 
 			_graphicsDevice->draw(PrimitiveType::TriangleStrip, 4u);
@@ -165,22 +164,30 @@ private:
 			 0.0f
 		};
 
-		Uint32 colour = 0xC00003FF;
-		VERTEX_DATA[3] = *reinterpret_cast<Float32*>(&colour);
-		colour = 0xC00FFC00;
-		VERTEX_DATA[7] = *reinterpret_cast<Float32*>(&colour);
-		colour = 0xFFF00000;
-		VERTEX_DATA[11] = *reinterpret_cast<Float32*>(&colour);
-		colour = 0xC00FFFFF;
-		VERTEX_DATA[15] = *reinterpret_cast<Float32*>(&colour);
+		union ColourConversion
+		{
+			Float32 floatingPoint;
+			Int32 hexadecimal;
+		};
+
+		ColourConversion colourConversion;
+		colourConversion.hexadecimal = 0xC00003FF;
+		VERTEX_DATA[3] = colourConversion.floatingPoint;
+		colourConversion.hexadecimal = 0xC00FFC00;
+		VERTEX_DATA[7] = colourConversion.floatingPoint;
+		colourConversion.hexadecimal = 0xFFF00000;
+		VERTEX_DATA[11] = colourConversion.floatingPoint;
+		colourConversion.hexadecimal = 0xC00FFFFF;
+		VERTEX_DATA[15] = colourConversion.floatingPoint;
 
 		const Uint bufferSize = sizeof(Float32) * VERTEX_DATA.size();
 
 		_vertexBuffer = _graphicsDevice->createBuffer(BufferBinding::Vertex, bufferSize, AccessMode::Write,
 			BufferUsage::Static);
 
-		Float32* data = reinterpret_cast<Float32*>(_vertexBuffer->mapData());
-		std::copy(VERTEX_DATA.begin(), VERTEX_DATA.end(), data);
+		Uint8* mappedData = _vertexBuffer->mapData();
+		Uint8* vertexData = reinterpret_cast<Uint8*>(VERTEX_DATA.data());
+		std::copy(vertexData, vertexData + VERTEX_DATA.size() * sizeof(Float32), mappedData);
 		_vertexBuffer->demapData();
 	}
 
@@ -234,8 +241,9 @@ private:
 			_graphicsDevice->createBuffer(BufferBinding::Uniform, 32u * sizeof(Float32), AccessMode::Write,
 				BufferUsage::Stream);
 
-		Float32* data = reinterpret_cast<Float32*>(_uniformBuffer->mapData(sizeof(Matrix4)));
-		std::copy(projectionTransform.data(), projectionTransform.data() + 16, data);
+		Uint8* mappedData = _uniformBuffer->mapData(sizeof(Matrix4));
+		const Uint8* projectionTransformData = reinterpret_cast<const Uint8*>(projectionTransform.data());
+		std::copy(projectionTransformData, projectionTransformData + sizeof(Matrix4), mappedData);
 		_uniformBuffer->demapData();
 		_graphicsDevice->bindBufferIndexed(_uniformBuffer, 0u);
 	}

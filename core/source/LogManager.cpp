@@ -28,12 +28,12 @@ using namespace Core;
 
 // External
 
-static Array<Uint8, sizeof(Log)> defaultLogMemory;
+alignas(Log) static Array<Uint8, sizeof(Log)> defaultLogStorage;
 
 
 // Core
 
-Log& Core::defaultLog = *reinterpret_cast<Log*>(::defaultLogMemory.data());
+Log& Core::defaultLog = *reinterpret_cast<Log*>(::defaultLogStorage.data());
 
 
 // Some members are defined in platform/*/*LogManager.cpp
@@ -49,6 +49,6 @@ void LogManager::deinitialise() const
 void LogManager::initialise() const
 {
 	initialisePlatform();
-	new (static_cast<Void*>(::defaultLogMemory.data())) Log();
+	::new (static_cast<Void*>(::defaultLogStorage.data())) Log();
 	defaultLog << LogLevel::Debug << "LogManager initialised." << Log::Flush();
 }

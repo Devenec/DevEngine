@@ -21,15 +21,7 @@
 #include <core/Types.h>
 
 #if DE_ARCHITECTURE == DE_ARCHITECTURE_X86
-
-static_assert(sizeof(Int) == 4, "The size of Int is incorrect.");
-static_assert(sizeof(Uint) == 4, "The size of Uint is incorrect.");
-static_assert(sizeof(Void*) == 4, "The size of pointer (Void*) is incorrect.");
-
+static_assert(sizeof(Void*) == 4, "The size of pointer (Void*) is invalid.");
 #elif DE_ARCHITECTURE == DE_ARCHITECTURE_X64
-
-static_assert(sizeof(Int) == 8, "The size of Int is incorrect.");
-static_assert(sizeof(Uint) == 8, "The size of Uint is incorrect.");
-static_assert(sizeof(Void*) == 8, "The size of pointer (Void*) is incorrect.");
-
+static_assert(sizeof(Void*) == 8, "The size of pointer (Void*) is invalid.");
 #endif

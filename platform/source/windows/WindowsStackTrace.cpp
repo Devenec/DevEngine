@@ -32,8 +32,6 @@ using namespace Debug;
 
 // External
 
-static constexpr Uint32 MAX_FUNCTION_NAME_LENGTH = 256u;
-
 static const Char8* COMPONENT_TAG = "[Debug::StackTrace - Windows] ";
 
 
@@ -59,8 +57,8 @@ public:
 		}
 
 		_sourceInfo.SizeOfStruct = sizeof(IMAGEHLP_LINEW64);
-		_symbolInfo = reinterpret_cast<SYMBOL_INFOW*>(_symbolInfoMemory.data());
-		_symbolInfo->MaxNameLen = ::MAX_FUNCTION_NAME_LENGTH;
+		_symbolInfo = reinterpret_cast<SYMBOL_INFOW*>(_symbolInfoStorage.data());
+		_symbolInfo->MaxNameLen = MAX_FUNCTION_NAME_LENGTH;
 		_symbolInfo->SizeOfStruct = sizeof(SYMBOL_INFOW);
 	}
 
@@ -91,7 +89,12 @@ public:
 
 private:
 
-	Array<Uint8, sizeof(SYMBOL_INFOW) + (::MAX_FUNCTION_NAME_LENGTH - 1u) * sizeof(Char16)> _symbolInfoMemory;
+	static constexpr Uint32 MAX_FUNCTION_NAME_LENGTH = 256u;
+
+	static constexpr Uint32 SYMBOL_INFO_SIZE =
+		sizeof(SYMBOL_INFOW) + (MAX_FUNCTION_NAME_LENGTH - 1u) * sizeof(Char16);
+
+	alignas(SYMBOL_INFOW) Array<Uint8, SYMBOL_INFO_SIZE> _symbolInfoStorage;
 	IMAGEHLP_LINEW64 _sourceInfo;
 	Vector<Void*> _symbolAddresses;
 	HANDLE _processHandle;
