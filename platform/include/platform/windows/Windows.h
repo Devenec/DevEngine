@@ -26,6 +26,7 @@
 
 #include <Windows.h>
 #include <core/ConfigInternal.h>
+#include <core/String.h>
 #include <core/Types.h>
 #include <core/UtilityMacros.h>
 
@@ -50,6 +51,8 @@ namespace Core
 
 namespace Platform
 {
+	using WideString = Core::StringTemplate<wchar_t>;
+
 	Core::Rectangle createRectangle(const RECT& rectangle);
 
 	void failWindowsAssertion(const Char8* file, const Uint32 line, const Char8* function);
@@ -59,4 +62,8 @@ namespace Platform
 	Uint32 getWindowsErrorCode();
 
 	void invokeWindowsError(const Uint32 errorCode);
+
+	Core::String8 fromWideString(const WideString& string);
+
+	WideString toWideString(const Core::String8& string);
 }

@@ -29,6 +29,7 @@
 
 using namespace Core;
 using namespace Debug;
+using namespace Platform;
 
 // External
 
@@ -118,10 +119,11 @@ private:
 		{
 			const Uint64 address = reinterpret_cast<Uint>(_symbolAddresses[i]);
 			getSymbolInfo(address);
-			entries[i].filepath = toString8(_sourceInfo.FileName);
-			entries[i].functionName.assign(toString8(String16(_symbolInfo->Name, _symbolInfo->NameLen)));
 			entries[i].address = address;
 			entries[i].fileLine = _sourceInfo.LineNumber;
+			entries[i].filepath = fromWideString(_sourceInfo.FileName);
+			const WideString functionName(_symbolInfo->Name, _symbolInfo->NameLen);
+			entries[i].functionName = fromWideString(functionName);
 		}
 
 		return entries;
@@ -142,7 +144,7 @@ private:
 
 		if(result == 0)
 		{
-			_sourceInfo.FileName = DE_CHAR16("Unknown file");
+			_sourceInfo.FileName = L"Unknown file";
 			_sourceInfo.LineNumber = 0u;
 		}
 	}

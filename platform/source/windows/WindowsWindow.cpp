@@ -114,8 +114,7 @@ void Window::Implementation::setIcon(const Image* image)
 
 void Window::Implementation::setTitle(const String8& title) const
 {
-	const String16 title16 = toString16(title);
-	const Int32 result = SetWindowTextW(_windowHandle, title16.c_str());
+	const Int32 result = SetWindowTextW(_windowHandle, toWideString(title).c_str());
 
 	if(result == 0)
 	{

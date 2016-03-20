@@ -29,6 +29,7 @@
 
 using namespace Core;
 using namespace Graphics;
+using namespace Platform;
 
 // External
 
@@ -41,9 +42,9 @@ static DEVMODEW createDisplayModeInfo(const DisplayMode& mode);
 
 // Public
 
-GraphicsAdapter::Implementation::Implementation(const String16& name,
+GraphicsAdapter::Implementation::Implementation(const NameString& name,
 	const DisplayModeList& supportedDisplayModes, const Uint32 currentDisplayModeIndex)
-	: _name(name),
+	: _name(name.c_str()),
 	  _supportedDisplayModes(supportedDisplayModes),
 	  _currentDisplayModeIndex(currentDisplayModeIndex),
 	  _initialDisplayModeIndex(currentDisplayModeIndex) { }
@@ -52,6 +53,11 @@ GraphicsAdapter::Implementation::~Implementation()
 {
 	if(_currentDisplayModeIndex != _initialDisplayModeIndex)
 		changeDisplayMode(nullptr, 0u);
+}
+
+String8 GraphicsAdapter::Implementation::name() const
+{
+	return fromWideString(_name);
 }
 
 void GraphicsAdapter::Implementation::setDisplayMode(const DisplayMode& mode)

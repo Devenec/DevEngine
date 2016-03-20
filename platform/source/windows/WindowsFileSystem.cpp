@@ -36,7 +36,7 @@ static const Char8* COMPONENT_TAG = "[Core::FileSystem - Windows] ";
 
 Bool FileSystem::fileExists(const String8& filepath)
 {
-	const Uint32 fileAttributes = GetFileAttributesW(toString16(filepath).c_str());
+	const Uint32 fileAttributes = GetFileAttributesW(toWideString(filepath).c_str());
 
 	if(fileAttributes == INVALID_FILE_ATTRIBUTES)
 	{

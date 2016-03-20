@@ -25,6 +25,7 @@
 #include <platform/windows/Windows.h>
 
 using namespace Core;
+using namespace Platform;
 
 // External
 
@@ -109,13 +110,10 @@ public:
 			(openMode & OpenMode::Write) == OpenMode::Write);
 
 		DE_ASSERT(!isOpen());
-		const String16 filepath16 = toString16(filepath);
-		const Uint32 accessMode = ::getAccessMode(openMode);
-		const Uint32 creationMode = ::getCreationMode(openMode);
 
 		_fileHandle =
-			CreateFileW(filepath16.c_str(), accessMode, FILE_SHARE_READ, nullptr, creationMode,
-				FILE_ATTRIBUTE_NORMAL, nullptr);
+			CreateFileW(toWideString(filepath).c_str(), ::getAccessMode(openMode), FILE_SHARE_READ, nullptr,
+				::getCreationMode(openMode), FILE_ATTRIBUTE_NORMAL, nullptr);
 
 		if(_fileHandle == INVALID_HANDLE_VALUE)
 		{

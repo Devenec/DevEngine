@@ -25,15 +25,6 @@
 // Functions
 
 /**
- * Converts "literal" to a Char16 literal by prefixing it with "L".
- *
- * @param literal
- *   A Char8 character or string literal.
- */
-#define DE_CHAR16(literal) \
-	DE_INTERNAL_CHAR16(literal)
-
-/**
  * Invokes a compiler warning.
  *
  * @param message

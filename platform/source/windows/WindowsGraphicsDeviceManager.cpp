@@ -45,11 +45,11 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG		  = "[Graphics::GraphicsDeviceManager - Windows] ";
-static const Uint32 CREATE_WINDOW_MESSAGE = WM_USER;
-static const Char16* WINDOW_CLASS_NAME	  = DE_CHAR16("devengine");
-static const Char16* WINDOW_DEFAULT_TITLE = DE_CHAR16("DevEngine Application");
-static const Uint32 WINDOW_STYLE		  = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
+static const Char8* COMPONENT_TAG		   = "[Graphics::GraphicsDeviceManager - Windows] ";
+static const Uint32 CREATE_WINDOW_MESSAGE  = WM_USER;
+static const wchar_t* WINDOW_CLASS_NAME	   = L"devengine";
+static const wchar_t* WINDOW_DEFAULT_TITLE = L"DevEngine Application";
+static const Uint32 WINDOW_STYLE		   = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
 
 static HWND createWindow(const Uint32 width = 640u, const Uint32 height = 480u);
 static Core::Rectangle createWindowRectangle(const Uint32 width, const Uint32 height);

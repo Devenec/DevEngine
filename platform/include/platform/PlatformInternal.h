@@ -22,11 +22,11 @@
 
 // Internal functions
 
-#define DE_INTERNAL1_STRING8(value) \
+#define DE_INTERNAL_STRING8_1(value) \
 	#value
 
-#define DE_INTERNAL2_STRING8(value) \
-	DE_INTERNAL1_STRING8(value)
+#define DE_INTERNAL_STRING8_2(value) \
+	DE_INTERNAL_STRING8_1(value)
 
 
 // Compiler and compiler version detection
@@ -83,13 +83,13 @@
 
 #if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG
 	#define DE_INTERNAL_COMPILER_WARN(msg) \
-		_Pragma(DE_INTERNAL1_STRING8(message(msg)))
+		_Pragma(DE_INTERNAL_STRING8_1(message(msg)))
 
 	#define DE_INTERNAL_DEBUGGER_BREAK()
 		// TODO: implement
 #elif DE_INTERNAL_COMPILER == DE_COMPILER_MSVC
 	#define DE_INTERNAL_COMPILER_WARN(msg) \
-		__pragma(message(__FILE__ "(" DE_INTERNAL2_STRING8(__LINE__) ") : warning: " msg))
+		__pragma(message(__FILE__ "(" DE_INTERNAL_STRING8_1(__LINE__) ") : warning: " msg))
 
 	#define DE_INTERNAL_DEBUGGER_BREAK() \
 		__debugbreak()

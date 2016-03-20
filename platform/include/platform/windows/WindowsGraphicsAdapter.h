@@ -30,7 +30,9 @@ namespace Graphics
 	{
 	public:
 
-		Implementation(const Core::String16& name, const DisplayModeList& supportedDisplayModes,
+		using NameString = Core::StringTemplate<wchar_t>;
+
+		Implementation(const NameString& name, const DisplayModeList& supportedDisplayModes,
 			const Uint32 currentDisplayModeIndex);
 
 		Implementation(const Implementation& implementation) = delete;
@@ -40,7 +42,7 @@ namespace Graphics
 
 		inline const DisplayMode& currentDisplayMode() const;
 
-		inline Core::String8 name() const;
+		Core::String8 name() const;
 
 		void setDisplayMode(const DisplayMode& mode);
 
@@ -51,7 +53,7 @@ namespace Graphics
 
 	private:
 
-		Core::String16 _name;
+		NameString _name;
 		DisplayModeList _supportedDisplayModes;
 		Uint32 _currentDisplayModeIndex;
 		Uint32 _initialDisplayModeIndex;

@@ -34,10 +34,10 @@ using namespace Graphics;
 
 static DISPLAY_DEVICEW createAdapterInfo();
 static DEVMODEW createDisplayModeInfo();
-static DisplayMode getDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo);
-static Uint32 getDisplayModes(const Char16* adapterName, DisplayModeList& modes);
+static DisplayMode getDisplayMode(const wchar_t* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo);
+static Uint32 getDisplayModes(const wchar_t* adapterName, DisplayModeList& modes);
 
-static Uint32 getCurrentDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
+static Uint32 getCurrentDisplayModeIndex(const wchar_t* adapterName, DEVMODEW& modeInfo,
 	const DisplayModeList& modes);
 
 
@@ -147,7 +147,7 @@ static DEVMODEW createDisplayModeInfo()
 	return displayModeInfo;
 }
 
-static DisplayMode getDisplayMode(const Char16* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo)
+static DisplayMode getDisplayMode(const wchar_t* adapterName, const Uint32 modeIndex, DEVMODEW& modeInfo)
 {
 	const Int32 result = EnumDisplaySettingsW(adapterName, modeIndex, &modeInfo);
 
@@ -159,7 +159,7 @@ static DisplayMode getDisplayMode(const Char16* adapterName, const Uint32 modeIn
 			modeInfo.dmDisplayFrequency);
 }
 
-static Uint32 getDisplayModes(const Char16* adapterName, DisplayModeList& modes)
+static Uint32 getDisplayModes(const wchar_t* adapterName, DisplayModeList& modes)
 {
 	DisplayMode mode(1u, 0u, 0u, 0u);
 	DEVMODEW modeInfo = ::createDisplayModeInfo();
@@ -178,7 +178,7 @@ static Uint32 getDisplayModes(const Char16* adapterName, DisplayModeList& modes)
 	return ::getCurrentDisplayModeIndex(adapterName, modeInfo, modes);
 }
 
-static Uint32 getCurrentDisplayModeIndex(const Char16* adapterName, DEVMODEW& modeInfo,
+static Uint32 getCurrentDisplayModeIndex(const wchar_t* adapterName, DEVMODEW& modeInfo,
 	const DisplayModeList& modes)
 {
 	const DisplayMode displayMode = ::getDisplayMode(adapterName, ENUM_CURRENT_SETTINGS, modeInfo);

@@ -30,8 +30,8 @@ using namespace Platform;
 
 // External
 
-static const Char8* COMPONENT_TAG	  = "[Platform::GraphicsFunctionUtility - WGL] ";
-static const Char16* LIBRARY_FILENAME = DE_CHAR16("OpenGL32.dll");
+static const Char8* COMPONENT_TAG	   = "[Platform::GraphicsFunctionUtility - WGL] ";
+static const wchar_t* LIBRARY_FILENAME = L"OpenGL32.dll";
 
 
 // Implementation
@@ -48,7 +48,7 @@ public:
 		if(_libraryHandle == nullptr)
 		{
 			defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to get the library handle to " <<
-				::LIBRARY_FILENAME << '.';
+				fromWideString(::LIBRARY_FILENAME) << '.';
 
 			DE_ERROR_WINDOWS(0x0);
 		}

@@ -34,7 +34,7 @@ static_assert(sizeof(Uint64) == 8, "The size of Uint64 is invalid.");
 static_assert(sizeof(Float32) == 4, "The size of Float32 is invalid.");
 static_assert(sizeof(Float64) == 8, "The size of Float64 is invalid.");
 static_assert(sizeof(Char8) == 1, "The size of Char8 is invalid.");
-//static_assert(sizeof(Char16) == 2, "The size of Char16 is invalid.");
+static_assert(sizeof(Char16) == 2, "The size of Char16 is invalid.");
 
 enum class Enumeration { };
 static_assert(sizeof(Enumeration) == 4, "The size of enumeration (enum class) is invalid.");

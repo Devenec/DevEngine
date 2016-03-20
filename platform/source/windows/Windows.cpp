@@ -18,13 +18,23 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <codecvt>
 #include <cstdlib>
+#include <locale>
 #include <core/Log.h>
 #include <core/Rectangle.h>
 #include <core/debug/Assert.h>
 #include <platform/windows/Windows.h>
 
 using namespace Core;
+using namespace Memory;
+
+// External
+
+using StringConverter =
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t, STDAllocator<wchar_t>,
+		STDAllocator<Char8>>;
+
 
 // Platform
 
@@ -76,4 +86,16 @@ void Platform::invokeWindowsError(const Uint32 errorCode)
 
 	DE_DEBUGGER_BREAK();
 	std::abort();
+}
+
+String8 Platform::fromWideString(const WideString& string)
+{
+	StringConverter converter;
+	return converter.to_bytes(string);
+}
+
+Platform::WideString Platform::toWideString(const Core::String8& string)
+{
+	StringConverter converter;
+	return converter.from_bytes(string);
 }

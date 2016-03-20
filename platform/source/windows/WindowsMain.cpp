@@ -24,15 +24,17 @@
 
 #include <core/Application.h>
 #include <core/Types.h>
+#include <platform/windows/Windows.h>
 
 using namespace Core;
+using namespace Platform;
 
 // External
 
-static void runDevEngineMain(const Uint32 argumentCount, Char16** arguments);
-static StartupParameters createStartupParameters(const Uint32 argumentCount, Char16** arguments);
+static void runDevEngineMain(const Uint32 argumentCount, wchar_t** arguments);
+static StartupParameters createStartupParameters(const Uint32 argumentCount, wchar_t** arguments);
 
-Int32 wmain(Int32 argumentCount, Char16** arguments)
+Int32 wmain(Int32 argumentCount, wchar_t** arguments)
 {
 	Application application;
 	application.initialise();
@@ -42,18 +44,18 @@ Int32 wmain(Int32 argumentCount, Char16** arguments)
 	return 0;
 }
 
-static void runDevEngineMain(const Uint32 argumentCount, Char16** arguments)
+static void runDevEngineMain(const Uint32 argumentCount, wchar_t** arguments)
 {
 	StartupParameters startupParameters = ::createStartupParameters(argumentCount, arguments);
 	devEngineMain(startupParameters);
 }
 
-static StartupParameters createStartupParameters(const Uint32 argumentCount, Char16** arguments)
+static StartupParameters createStartupParameters(const Uint32 argumentCount, wchar_t** arguments)
 {
 	StartupParameters startupParameters(argumentCount);
 
 	for(Uint32 i = 0u; i < argumentCount; ++i)
-		startupParameters[i] = toString8(arguments[i]);
+		startupParameters[i] = fromWideString(arguments[i]);
 
 	return startupParameters;
 }

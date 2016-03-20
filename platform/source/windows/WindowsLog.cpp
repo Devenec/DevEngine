@@ -30,5 +30,5 @@ using namespace Core;
 
 void Log::writeToConsole(const Char8* message)
 {
-	std::wprintf(DE_CHAR16("%S"), message);
+	std::wprintf(L"%S", message);
 }

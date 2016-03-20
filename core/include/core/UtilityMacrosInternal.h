@@ -22,9 +22,6 @@
 
 // Internal functions
 
-#define DE_INTERNAL_CHAR16(literal) \
-	L ## literal
-
 #define DE_INTERNAL_STRING8(value) \
 	#value
 

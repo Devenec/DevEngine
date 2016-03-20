@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file samples/sample/Main.cpp
  *
  * DevEngine
@@ -101,7 +101,7 @@ private:
 	{
 		Image* image = _contentManager.load<Image>("assets/icon.png");
 		_window->setIcon(image);
-		_window->setTitle("DevEngine Sample - \xD0\xBA\xD0\xBE\xD1\x88\xD0\xBA\xD0\xB0");
+		_window->setTitle(u8"DevEngine Sample - кошка");
 		_window->show();
 
 		_graphicsDevice = _graphicsDeviceManager.createDevice(_window);
@@ -164,21 +164,25 @@ private:
 			 0.0f
 		};
 
-		union ColourConversion
-		{
-			Float32 floatingPoint;
-			Int32 hexadecimal;
-		};
+		Uint32 colour = 0xC00003FF;
 
-		ColourConversion colourConversion;
-		colourConversion.hexadecimal = 0xC00003FF;
-		VERTEX_DATA[3] = colourConversion.floatingPoint;
-		colourConversion.hexadecimal = 0xC00FFC00;
-		VERTEX_DATA[7] = colourConversion.floatingPoint;
-		colourConversion.hexadecimal = 0xFFF00000;
-		VERTEX_DATA[11] = colourConversion.floatingPoint;
-		colourConversion.hexadecimal = 0xC00FFFFF;
-		VERTEX_DATA[15] = colourConversion.floatingPoint;
+		std::copy(reinterpret_cast<Uint8*>(&colour), reinterpret_cast<Uint8*>(&colour) + sizeof(Uint32),
+			reinterpret_cast<Uint8*>(&VERTEX_DATA[3]));
+
+		colour = 0xC00FFC00;
+
+		std::copy(reinterpret_cast<Uint8*>(&colour), reinterpret_cast<Uint8*>(&colour) + sizeof(Uint32),
+			reinterpret_cast<Uint8*>(&VERTEX_DATA[7]));
+
+		colour = 0xFFF00000;
+
+		std::copy(reinterpret_cast<Uint8*>(&colour), reinterpret_cast<Uint8*>(&colour) + sizeof(Uint32),
+			reinterpret_cast<Uint8*>(&VERTEX_DATA[11]));
+
+		colour = 0xC00FFFFF;
+
+		std::copy(reinterpret_cast<Uint8*>(&colour), reinterpret_cast<Uint8*>(&colour) + sizeof(Uint32),
+			reinterpret_cast<Uint8*>(&VERTEX_DATA[15]));
 
 		const Uint bufferSize = sizeof(Float32) * VERTEX_DATA.size();
 

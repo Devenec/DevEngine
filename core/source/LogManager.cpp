@@ -33,7 +33,7 @@ alignas(Log) static Array<Uint8, sizeof(Log)> defaultLogStorage;
 
 // Core
 
-Log& Core::defaultLog = *reinterpret_cast<Log*>(::defaultLogStorage.data());
+Log& Core::defaultLog = reinterpret_cast<Log&>(*::defaultLogStorage.data());
 
 
 // Some members are defined in platform/*/*LogManager.cpp
