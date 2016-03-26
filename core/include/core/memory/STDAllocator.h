@@ -37,7 +37,13 @@ namespace Memory
 			using other = STDAllocator<U, AllocationPolicy>;
 		};
 
-		using value_type = T;
+		using const_pointer	  = const T*;
+		using const_reference = const T&;
+		using difference_type = Int;
+		using pointer		  = T*;
+		using reference		  = T&;
+		using size_type		  = Uint;
+		using value_type	  = T;
 
 		STDAllocator() = default;
 

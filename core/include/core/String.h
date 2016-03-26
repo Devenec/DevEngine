@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <functional>
 #include <string>
 #include <core/Types.h>
 #include <core/memory/STDAllocator.h>
@@ -61,4 +62,31 @@ namespace Core
 	 *   The converted string
 	 */
 	String16 toString16(const String8& string);
+}
+
+namespace std
+{
+	template<>
+	struct hash<Core::String8>
+	{
+		Uint operator ()(const Core::String8& value) const
+		{
+			using StandardString = basic_string<Char8>;
+			hash<StandardString> hasher;
+
+			return hasher(StandardString(value.begin(), value.end()));
+		}
+	};
+
+	template<>
+	struct hash<Core::String16>
+	{
+		Uint operator ()(const Core::String16& value) const
+		{
+			using StandardString = basic_string<Char16>;
+			hash<StandardString> hasher;
+
+			return hasher(StandardString(value.begin(), value.end()));
+		}
+	};
 }

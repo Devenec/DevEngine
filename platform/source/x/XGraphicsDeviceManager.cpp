@@ -18,6 +18,7 @@
  * along with DevEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <algorithm>
 #include <core/Memory.h>
 #include <core/debug/Assert.h>
 #include <graphics/GraphicsConfig.h>
@@ -149,7 +150,7 @@ private:
 	{
 		if(event.message_type == _createMessageAtom)
 			_windowCreatedHandler(getWindow(event.window));
-		else if(event.data.l[0] == _destroyMessageAtom)
+		else if(static_cast<Atom>(event.data.l[0]) == _destroyMessageAtom)
 			getWindow(event.window)->_implementation->close();
 	}
 

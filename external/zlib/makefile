@@ -4,21 +4,19 @@
 
 # Target settings
 
-TARGET_LANGUAGE		 = c
-TARGET_NAME			 = z
-TARGET_OUTPUT_TYPE	 = static
-
-
-# Build directories
+TARGET_LANGUAGE		   = c
+TARGET_NAME			   = z
+TARGET_OUTPUT_TYPE	   = static
 
 BUILD_OUTPUT_DIRECTORY = ../../build/$(TARGET_PLATFORM)/$(TARGET_ARCHITECTURE)/$(TARGET_CONFIGURATION)
 
 
 include $(MAKE_DIRECTORY)/linux-$(TARGET_CONFIGURATION).mk
-C_COMPILER_FLAGS += -Wno-implicit-function-declaration
+
+COMPILER_C_FLAGS += -Wno-implicit-function-declaration
 
 
-# Include directories and source files
+# Includes and sources
 
 INCLUDE_DIRECTORIES = \
 	include

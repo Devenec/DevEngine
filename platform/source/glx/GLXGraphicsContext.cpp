@@ -55,6 +55,8 @@ static Array<Int32, 9u> CONTEXT_ATTRIBUTES
 	0
 }};
 
+static Int32 handleXError(Display* xConnection, XErrorEvent* errorInfo);
+
 
 // Implementation
 
@@ -103,6 +105,8 @@ private:
 
 	void createContext(GLX::FBConfig configHandle)
 	{
+		X::instance().setErrorHandler(::handleXError);
+
 		for(Uint i = OpenGL::SUPPORTED_VERSIONS.size(); i > 0u; --i)
 		{
 			_graphicsContextHandle =
@@ -111,6 +115,9 @@ private:
 			if(_graphicsContextHandle != nullptr)
 				break;
 		}
+
+		// TODO: get error code via ::handleXError()
+		X::instance().setErrorHandler(nullptr);
 
 		if(_graphicsContextHandle == nullptr)
 		{
@@ -168,4 +175,15 @@ void GraphicsContext::makeNonCurrent() const
 void GraphicsContext::swapBuffers() const
 {
 	_implementation->swapBuffers();
+}
+
+
+// External
+
+static Int32 handleXError(Display* xConnection, XErrorEvent* errorInfo)
+{
+	static_cast<Void>(xConnection);
+	static_cast<Void>(errorInfo);
+
+	return 0;
 }

@@ -4,15 +4,12 @@
 
 # Target settings
 
-TARGET_LANGUAGE		 = c++
-TARGET_NAME			 = core
-TARGET_OUTPUT_TYPE	 = static
+TARGET_LANGUAGE	   = c++
+TARGET_NAME		   = core
+TARGET_OUTPUT_TYPE = static
 
 
-include $(MAKE_DIRECTORY)/linux-$(TARGET_CONFIGURATION).mk
-
-
-# Include directories and source files
+# Includes and sources
 
 INCLUDE_DIRECTORIES = \
 	include \
@@ -47,4 +44,6 @@ SOURCE_FILES = \
 	memory/AllocationPolicy.cpp \
 	memory/AllocationPolicyBase.cpp
 
+
+include $(MAKE_DIRECTORY)/linux-$(TARGET_CONFIGURATION).mk
 include $(MAKE_DIRECTORY)/linux-build.mk

@@ -4,20 +4,14 @@
 
 # Target settings
 
-TARGET_LANGUAGE		 = c
-TARGET_NAME			 = png
-TARGET_OUTPUT_TYPE	 = static
-
-
-# Build directories
+TARGET_LANGUAGE		   = c
+TARGET_NAME			   = png
+TARGET_OUTPUT_TYPE	   = static
 
 BUILD_OUTPUT_DIRECTORY = ../../build/$(TARGET_PLATFORM)/$(TARGET_ARCHITECTURE)/$(TARGET_CONFIGURATION)
 
 
-include $(MAKE_DIRECTORY)/linux-$(TARGET_CONFIGURATION).mk
-
-
-# Include directories and source files
+# Includes and sources
 
 INCLUDE_DIRECTORIES = \
 	include \
@@ -44,4 +38,5 @@ SOURCE_FILES = \
 	pngwutil.c
 
 
+include $(MAKE_DIRECTORY)/linux-$(TARGET_CONFIGURATION).mk
 include $(MAKE_DIRECTORY)/linux-build.mk

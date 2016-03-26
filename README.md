@@ -49,10 +49,11 @@ for custom content types.
 
 #### Linux
 
-Clang 3.6 and (GNU) Make 3.81 is required (older versions may also work).
+Clang 3.3 or GCC 5.1, and (GNU) Make 3.81 is required (older versions of Make
+may also work).
 
 The project depends on the following additional libraries:
-- libc++
+- libc++ (Clang) or libstdc++ (Clang and GCC)
 - libGL(.so)
 - libX11
 - libXrandr

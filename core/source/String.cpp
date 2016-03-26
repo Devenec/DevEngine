@@ -47,6 +47,7 @@ using StringConverter =
 
 #endif
 
+
 // Core
 
 String8 Core::toString8(const String16& string)

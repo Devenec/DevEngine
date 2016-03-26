@@ -58,6 +58,6 @@ namespace Graphics
 		void initialiseInfo();
 		void validateSignature(Core::FileStream& fileStream);
 		Image* createImage(const Core::ByteList& data) const;
-		ImageFormat PNGReader::getImageFormat() const;
+		ImageFormat getImageFormat() const;
 	};
 }

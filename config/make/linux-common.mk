@@ -2,6 +2,14 @@
 # config/make/linux-common.mk
 #
 
+ifeq ($(TARGET_ARCHITECTURE), x86)
+	INTERNAL_TARGET_ARCHITECTURE = -m32
+else ifeq ($(TARGET_ARCHITECTURE), x64)
+	INTERNAL_TARGET_ARCHITECTURE = -m64
+else
+$(error The target architecture is invalid ($(TARGET_ARCHITECTURE)).)
+endif
+
 ifndef TARGET_NAME
 $(error The target name is not defined.)
 endif
@@ -18,21 +26,10 @@ ifndef BUILD_INTERMEDIATE_DIRECTORY
 endif
 
 
-ifeq ($(TARGET_ARCHITECTURE), x86)
-	BUILD_ARCHITECTURE_FLAG = -m32
-else ifeq ($(TARGET_ARCHITECTURE), x64)
-	BUILD_ARCHITECTURE_FLAG = -m64
-else
-$(error The target architecture is invalid ($(TARGET_ARCHITECTURE)).)
-endif
-
-
 # Default compiler settings
 
-C_COMPILER_FLAGS += $(BUILD_ARCHITECTURE_FLAG) -Wall -Wshorten-64-to-32
-
-C++_COMPILER_FLAGS += -fno-exceptions $(BUILD_ARCHITECTURE_FLAG) -std=c++11 -stdlib=libc++ -Wall \
-	-Wshorten-64-to-32
+COMPILER_C_FLAGS   += $(INTERNAL_TARGET_ARCHITECTURE)
+COMPILER_C++_FLAGS += $(INTERNAL_TARGET_ARCHITECTURE)
 
 
 # Default archiver settings
@@ -43,6 +40,7 @@ ARCHIVER_FLAGS += -crs
 
 # Default linker settings
 
-C_LINKER_FLAGS		+= $(BUILD_ARCHITECTURE_FLAG) -L$(BUILD_OUTPUT_DIRECTORY)
-C++_LINKER_FLAGS	+= $(BUILD_ARCHITECTURE_FLAG) -stdlib=libc++ -L$(BUILD_OUTPUT_DIRECTORY)
-LINKER_SHARED_FLAGS += -fPIC -shared
+COMPILER_C_LINKER_FLAGS			 += $(INTERNAL_TARGET_ARCHITECTURE) -L$(BUILD_OUTPUT_DIRECTORY)
+COMPILER_C_LINKER_SHARED_FLAGS	 += -fPIC -shared
+COMPILER_C++_LINKER_FLAGS		 += $(INTERNAL_TARGET_ARCHITECTURE) -L$(BUILD_OUTPUT_DIRECTORY)
+COMPILER_C++_LINKER_SHARED_FLAGS += -fPIC -shared

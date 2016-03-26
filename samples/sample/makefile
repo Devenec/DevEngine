@@ -4,17 +4,11 @@
 
 # Target settings
 
-TARGET_LANGUAGE		 = c++
-TARGET_NAME			 = sample
-TARGET_OUTPUT_TYPE	 = executable
-
-
-# Build directories
+TARGET_LANGUAGE		   = c++
+TARGET_NAME			   = sample
+TARGET_OUTPUT_TYPE	   = executable
 
 BUILD_OUTPUT_DIRECTORY = ../../build/$(TARGET_PLATFORM)/$(TARGET_ARCHITECTURE)/$(TARGET_CONFIGURATION)
-
-
-include $(MAKE_DIRECTORY)/linux-$(TARGET_CONFIGURATION).mk
 
 
 # Includes and sources
@@ -32,13 +26,8 @@ SOURCE_DIRECTORIES = \
 SOURCE_FILES = \
 	Main.cpp
 
-LIBRARY_PREREQUISITES = \
-	content \
-	core \
-	graphics \
-	platform \
-	png \
-	z
+
+# Libraries
 
 STATIC_LIBRARIES = \
 	content \
@@ -55,5 +44,14 @@ STATIC_LIBRARIES = \
 	X11 \
 	Xrandr
 
+LIBRARY_PREREQUISITES = \
+	content \
+	core \
+	graphics \
+	platform \
+	png \
+	z
 
+
+include $(MAKE_DIRECTORY)/linux-$(TARGET_CONFIGURATION).mk
 include $(MAKE_DIRECTORY)/linux-build.mk

@@ -4,8 +4,8 @@
 
 include $(MAKE_DIRECTORY)/linux-common.mk
 
-# Compiler settings
+# Default compiler settings
 
-C_COMPILER_FLAGS   += -g -O2
-C++_COMPILER_FLAGS += -g -O2
-PREPROCESSOR_FLAGS += -DDE_BUILD_CONFIG_RELEASE
+COMPILER_C_FLAGS				+= -g -O2
+COMPILER_C++_FLAGS				+= -g -O2
+COMPILER_C++_PREPROCESSOR_FLAGS += -DDE_BUILD_CONFIG_RELEASE

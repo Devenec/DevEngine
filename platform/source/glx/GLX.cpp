@@ -130,12 +130,12 @@ void GLX::checkSupport() const
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "GLX is not supported." << Log::Flush();
 		DE_ERROR_X(0x0);
 	}
-	else if(glxVersion < ::MIN_SUPPORTED_GLX_VERSION)
+	else if(glxVersion < ::MIN_SUPPORTED_VERSION)
 	{
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "GLX version " << glxVersion.majorNumber() <<
 			'.' << glxVersion.minorNumber() << " is not supported. The minimum supported version is " <<
-			::MIN_SUPPORTED_GLX_VERSION.majorNumber() << '.' << ::MIN_SUPPORTED_GLX_VERSION.minorNumber() <<
-			'.' << Log::Flush();
+			::MIN_SUPPORTED_VERSION.majorNumber() << '.' << ::MIN_SUPPORTED_VERSION.minorNumber() << '.' <<
+			Log::Flush();
 
 		DE_ERROR(0x0);
 	}

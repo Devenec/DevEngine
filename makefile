@@ -4,13 +4,40 @@
 
 # Global settings
 
-export C_COMPILER			  = clang
-export C++_COMPILER			  = clang++
-export TARGET_ARCHITECTURE	  = x64
-export TARGET_CONFIGURATION	  = debug
-export TARGET_PLATFORM		  = linux
+# Supported values are clang and gcc
+COMPILER		 = clang
 
-export MAKE_DIRECTORY := $(CURDIR)/config/make
+# Supported values are libc++ and libstdc++ (used with Clang only)
+STANDARD_LIBRARY = libc++
+
+ifeq ($(COMPILER), clang)
+	export COMPILER_C				 = clang
+	export COMPILER_C_FLAGS			 = -Wall -Wshorten-64-to-32
+	export COMPILER_C++				 = clang++
+
+	export COMPILER_C++_FLAGS		 = -fno-exceptions -std=c++11 -stdlib=$(STANDARD_LIBRARY) -Wall \
+		-Wshorten-64-to-32
+
+	export COMPILER_C++_LINKER_FLAGS = -stdlib=$(STANDARD_LIBRARY)
+else ifeq ($(COMPILER), gcc)
+	export COMPILER_C				 = gcc
+	export COMPILER_C_FLAGS			 = -Wall
+	export COMPILER_C++				 = g++
+	export COMPILER_C++_FLAGS		 = -fno-exceptions -std=c++11 -Wall
+else
+$(error The compiler is invalid ($(COMPILER)).)
+endif
+
+# Supported values are x86 and x64
+export TARGET_ARCHITECTURE	 = x64
+
+# Supported values are debug, release and production
+export TARGET_CONFIGURATION	 = debug
+
+# Supported values are linux
+export TARGET_PLATFORM		 = linux
+
+export MAKE_DIRECTORY		:= $(CURDIR)/config/make
 
 
 # Rules

@@ -29,7 +29,6 @@
 #include <graphics/EffectCodeLoader.h>
 #include <graphics/EffectSourceCodeReader.h>
 
-using namespace Content;
 using namespace Core;
 using namespace Graphics;
 
@@ -56,8 +55,11 @@ EffectCode* EffectCodeLoader::load(FileStream& fileStream)
 
 // External
 
-template<>
-ContentLoader<EffectCode>* ContentLoader<EffectCode>::createLoader()
+namespace Content
 {
-	return DE_NEW(EffectCodeLoader)();
+	template<>
+	ContentLoader<EffectCode>* ContentLoader<EffectCode>::createLoader()
+	{
+		return DE_NEW(EffectCodeLoader)();
+	}
 }

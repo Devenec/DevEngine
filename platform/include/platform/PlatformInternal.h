@@ -33,24 +33,30 @@
 
 #if defined(__clang__)
 	#define DE_INTERNAL_COMPILER		 DE_COMPILER_CLANG
-	#define DE_INTERNAL_COMPILER_VERSION 0
 
-	// TODO: check the clang features
+	#if __clang_major__ < 3 || (__clang_major__ == 3 && __clang_minor__ < 3)
+		#error The CLANG compiler version is not supported. The minumum supported version is 3.3.
+	#endif
+#elif defined(__GNUG__)
+	#define DE_INTERNAL_COMPILER		 DE_COMPILER_GCC
+
+	#if __GNUC__ < 5 || (__GNUC__ == 5 && __GNUC_MINOR__ < 1)
+		#error The GCC compiler version is not supported. The minumum supported version is 5.1.
+	#endif
 #elif defined(_MSC_VER)
 	#define DE_INTERNAL_COMPILER		 DE_COMPILER_MSVC
-	#define DE_INTERNAL_COMPILER_VERSION _MSC_VER
 
-	#if DE_INTERNAL_COMPILER_VERSION < DE_COMPILER_VERSION_MIN_MSVC
-		#error The compiler version is not supported. See the minimum supported version in core/Platform.h.
+	#if _MSC_VER < 1900
+		#error The MSVC compiler version is not supported. The minumum supported version is 14.0 (1900).
 	#endif
 #else
-	#error The compiler is not supported.
+	#error The current compiler is not supported.
 #endif
 
 
 // Target processor architecture detection
 
-#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG
+#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG || DE_INTERNAL_COMPILER == DE_COMPILER_GCC
 	#if defined(__i386) || defined(__i386__)
 		#define DE_INTERNAL_ARCHITECTURE DE_ARCHITECTURE_X86
 	#elif defined(__x86_64) || defined(__x86_64__)
@@ -71,7 +77,7 @@
 
 // Compiler specific internal keywords and variables
 
-#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG
+#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG || DE_INTERNAL_COMPILER == DE_COMPILER_GCC
 	#define DE_INTERNAL_NO_OPERATION static_cast<Void>(0)
 #elif DE_INTERNAL_COMPILER == DE_COMPILER_MSVC
 	#define DE_INTERNAL_CALL_STDCALL __stdcall
@@ -84,6 +90,12 @@
 #if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG
 	#define DE_INTERNAL_COMPILER_WARN(msg) \
 		_Pragma(DE_INTERNAL_STRING8_1(message(msg)))
+
+	#define DE_INTERNAL_DEBUGGER_BREAK()
+		// TODO: implement
+#elif DE_INTERNAL_COMPILER == DE_COMPILER_GCC
+	#define DE_INTERNAL_COMPILER_WARN(msg) \
+		_Pragma(DE_INTERNAL_STRING8_1(GCC warning msg))
 
 	#define DE_INTERNAL_DEBUGGER_BREAK()
 		// TODO: implement
@@ -106,15 +118,13 @@
 	#define DE_INTERNAL_BUILD DE_BUILD_PRODUCTION
 #else
 	#define DE_INTERNAL_BUILD DE_BUILD_DEBUG
-
-	DE_INTERNAL_COMPILER_WARN("Could not detect the build configuration correctly." \
-		" DE_BUILD is set to DE_BUILD_DEBUG.");
+	DE_INTERNAL_COMPILER_WARN("Could not detect the build configuration. DE_BUILD is set to DE_BUILD_DEBUG.");
 #endif
 
 
 // Target platform detection
 
-#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG
+#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG || DE_INTERNAL_COMPILER == DE_COMPILER_GCC
 	#if defined(__linux) || defined(__linux__)
 		#define DE_INTERNAL_PLATFORM DE_PLATFORM_LINUX
 	#endif
@@ -125,5 +135,5 @@
 #endif
 
 #if !defined(DE_INTERNAL_PLATFORM)
-	#error The target platform is not supported.
+	#error The target platform is not supported with the current compiler.
 #endif

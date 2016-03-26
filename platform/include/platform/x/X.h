@@ -118,6 +118,8 @@ namespace Platform
 		void setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Drawable rootWindowHandle,
 			const Uint32 resolutionIndex, const Uint32 refreshRate, const Time timestamp) const;
 
+		void setErrorHandler(XErrorHandler errorHandler) const;
+
 		void setWindowClientRectangle(const ::Window windowHandle, const Core::Rectangle& rectangle) const;
 
 		void setWindowFullscreen(const ::Window windowHandle, const Bool isFullscreen) const;

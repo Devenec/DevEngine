@@ -113,7 +113,7 @@ private:
 
 			for(Uint32 j = 0u; j < refreshRateCount; ++j)
 			{
-				if(i == currentResolutionIndex && refreshRates[j] == currentRefreshRate)
+				if(i == currentResolutionIndex && static_cast<Uint32>(refreshRates[j]) == currentRefreshRate)
 					currentModeIndex = static_cast<Uint32>(modes.size());
 
 				DisplayMode mode(resolutions[i].width, resolutions[i].height, 0u, refreshRates[j]);

@@ -115,7 +115,7 @@ Version X::getGLXVersion() const
 
 	Int32 majorVersion;
 	Int32 minorVersion;
-	result = GLX::queryVersion(_connection, &majorVersion &minorVersion);
+	result = GLX::queryVersion(_connection, &majorVersion, &minorVersion);
 
 	if(result == 0)
 		return Version(0u, 0u);
@@ -282,6 +282,12 @@ void X::setDisplayMode(XRRScreenConfiguration* graphicsAdapterConfig, const Draw
 		defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to set the display mode." << Log::Flush();
 		DE_ERROR_X(0x0);
 	}
+}
+
+void X::setErrorHandler(XErrorHandler errorHandler) const
+{
+	errorHandler = errorHandler == nullptr ? ::handleError : errorHandler;
+	XSetErrorHandler(errorHandler);
 }
 
 void X::setWindowClientRectangle(const ::Window windowHandle, const Core::Rectangle& rectangle) const
