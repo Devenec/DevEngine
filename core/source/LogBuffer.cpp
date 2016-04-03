@@ -99,12 +99,15 @@ void LogBuffer::openFileStream() const
 Uint LogBuffer::appendToLineBuffer(const Char8* characters, const Char8* charactersEnd)
 {
 	const Char8* lineBreakPosition = std::find(characters, charactersEnd, '\n');
-	const Uint availableCapacity = Config::LOG_LINE_MAX_WIDTH - _lineBuffer.length();
-	Uint characterCount = minimum(availableCapacity, static_cast<Uint>(charactersEnd - characters));
+	Uint characterCount;
 
-	if(lineBreakPosition != charactersEnd)
+	if(lineBreakPosition == charactersEnd)
+		characterCount = charactersEnd - characters;
+	else
 		characterCount = lineBreakPosition - characters;
 
+	const Uint availableCapacity = Config::LOG_LINE_MAX_WIDTH - _lineBuffer.length();
+	characterCount = minimum(characterCount, availableCapacity);
 	_lineBuffer.append(characters, characterCount);
 
 	if(lineBreakPosition != charactersEnd)

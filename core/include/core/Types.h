@@ -83,7 +83,7 @@ using Char16 = char16_t;
 /**
  * Boolean
  */
-using Bool = Int8;
+using Bool = Uint8;
 
 /**
  * Void

@@ -53,5 +53,11 @@ LIBRARY_PREREQUISITES = \
 	z
 
 
+# Custom commands
+
+CUSTOM_CLEAN_COMMAND = rm -fr $(BUILD_OUTPUT_DIRECTORY)/assets/
+POST_BUILD_COMMAND = cp -arv assets/ $(BUILD_OUTPUT_DIRECTORY)
+
+
 include $(MAKE_DIRECTORY)/linux-$(TARGET_CONFIGURATION).mk
 include $(MAKE_DIRECTORY)/linux-build.mk

@@ -22,6 +22,7 @@
 #include <cstdio>
 #include <core/Array.h>
 #include <core/Log.h>
+#include <core/UtilityMacros.h>
 
 using namespace Core;
 
@@ -239,7 +240,9 @@ void Log::createUint64Format(Char8* formatBuffer) const
 template<typename... Parameters>
 static Uint32 toString(const Char8* format, Char8* buffer, const Uint32 bufferSize, Parameters... parameters)
 {
+	DE_BEGIN_DISABLE_COMPILER_WARNING(DE_WARNING_NON_LITERAL_FORMAT);
 	const Int32 charactersWritten = std::snprintf(buffer, bufferSize, format, parameters...);
+	DE_END_DISABLE_COMPILER_WARNING();
 
 	if(charactersWritten < 0)
 		return 0u;

@@ -113,8 +113,8 @@ Version X::getGLXVersion() const
 	if(result == 0)
 		return Version(0u, 0u);
 
-	Int32 majorVersion;
-	Int32 minorVersion;
+	Int32 majorVersion = 0;
+	Int32 minorVersion = 0;
 	result = GLX::queryVersion(_connection, &majorVersion, &minorVersion);
 
 	if(result == 0)

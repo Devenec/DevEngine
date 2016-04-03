@@ -20,8 +20,6 @@
 
 #pragma once
 
-// Internal functions
-
 #define DE_INTERNAL_STRING8(value) \
 	#value
 

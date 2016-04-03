@@ -128,9 +128,9 @@ Int32 Effect::Implementation::getParameter(const Uint32 parameterName) const
 void Effect::Implementation::outputLinkerFailureLog() const
 {
 	defaultLog << LogLevel::Error << ::COMPONENT_TAG << "Failed to link the program:";
-	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
+	const Int32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
-	if(logLength > 1u)
+	if(logLength > 1)
 		defaultLog << '\n' << getInfoLog(logLength).data();
 	else
 		defaultLog << " No linker log available.";
@@ -140,9 +140,9 @@ void Effect::Implementation::outputLinkerFailureLog() const
 
 void Effect::Implementation::outputLinkerSuccessLog() const
 {
-	const Uint32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
+	const Int32 logLength = getParameter(OpenGL::INFO_LOG_LENGTH);
 
-	if(logLength > 1u)
+	if(logLength > 1)
 	{
 		defaultLog << LogLevel::Warning << ::COMPONENT_TAG << "The program linked with warning(s):\n" <<
 			getInfoLog(logLength).data() << Log::Flush();

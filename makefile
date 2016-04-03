@@ -5,27 +5,40 @@
 # Global settings
 
 # Supported values are clang and gcc
-COMPILER		 = clang
+COMPILER								  = gcc
 
-# Supported values are libc++ and libstdc++ (used with Clang only)
-STANDARD_LIBRARY = libc++
+export COMPILER_C++_ENABLE_EXTRA_WARNINGS = false
 
 ifeq ($(COMPILER), clang)
+	# Supported values are libc++ and libstdc++
+	STANDARD_LIBRARY				 = libstdc++
+
 	export COMPILER_C				 = clang
-	export COMPILER_C_FLAGS			 = -Wall -Wshorten-64-to-32
+	export COMPILER_C_FLAGS			 = -Wall -Wextra -Wpedantic -Wshorten-64-to-32
 	export COMPILER_C++				 = clang++
 
-	export COMPILER_C++_FLAGS		 = -fno-exceptions -std=c++11 -stdlib=$(STANDARD_LIBRARY) -Wall \
-		-Wshorten-64-to-32
+	export COMPILER_C++_FLAGS		 = -fno-exceptions -std=c++11 -stdlib=$(STANDARD_LIBRARY) -Wall -Wextra \
+		-Wcast-align -Wformat=2 -Wnon-virtual-dtor -Wpedantic -Wredundant-decls -Wshorten-64-to-32 \
+		-Wsign-promo -Wundef -Wunused -Werror=return-type
 
 	export COMPILER_C++_LINKER_FLAGS = -stdlib=$(STANDARD_LIBRARY)
 else ifeq ($(COMPILER), gcc)
 	export COMPILER_C				 = gcc
-	export COMPILER_C_FLAGS			 = -Wall
+	export COMPILER_C_FLAGS			 = -Wall -Wextra -Wpedantic
 	export COMPILER_C++				 = g++
-	export COMPILER_C++_FLAGS		 = -fno-exceptions -std=c++11 -Wall
+
+	export COMPILER_C++_FLAGS		 = -fno-exceptions -std=c++11 -Wall -Wextra -Wcast-align -Wformat=2 \
+		-Wformat-signedness -Wlogical-op -Wnon-virtual-dtor -Wpedantic -Wredundant-decls -Wsign-promo \
+		-Wundef -Wunused -Werror=return-type
 else
 $(error The compiler is invalid ($(COMPILER)).)
+endif
+
+ifeq ($(COMPILER_C++_ENABLE_EXTRA_WARNINGS), true)
+	COMPILER_C++_FLAGS += -Wconversion -Wctor-dtor-privacy -Wdate-time -Wfloat-equal -Wold-style-cast \
+		-Woverloaded-virtual -Wpadded -Wshadow -Wsign-conversion -Wstrict-null-sentinel -Wstrict-overflow=5 \
+		-Wsuggest-final-methods -Wsuggest-final-types -Wsuggest-override -Wuseless-cast \
+		-Wzero-as-null-pointer-constant
 endif
 
 # Supported values are x86 and x64
@@ -34,7 +47,7 @@ export TARGET_ARCHITECTURE	 = x64
 # Supported values are debug, release and production
 export TARGET_CONFIGURATION	 = debug
 
-# Supported values are linux
+# Supported value is linux
 export TARGET_PLATFORM		 = linux
 
 export MAKE_DIRECTORY		:= $(CURDIR)/config/make
@@ -49,10 +62,7 @@ all:
 	$(MAKE) -C core; \
 	$(MAKE) -C graphics; \
 	$(MAKE) -C platform; \
-	$(MAKE) -C samples/sample \
-
-	# Temporary solution to have assets in correct location
-	cp -arv samples/sample/assets/ build/$(TARGET_PLATFORM)/$(TARGET_ARCHITECTURE)/$(TARGET_CONFIGURATION)/
+	$(MAKE) -C samples/sample
 
 .PHONY: clean
 clean:
@@ -62,7 +72,4 @@ clean:
 	$(MAKE) -C core clean; \
 	$(MAKE) -C graphics clean; \
 	$(MAKE) -C platform clean; \
-	$(MAKE) -C samples/sample clean \
-
-	# Temporary solution, see above
-	rm -fr build/$(TARGET_PLATFORM)/$(TARGET_ARCHITECTURE)/$(TARGET_CONFIGURATION)/assets/
+	$(MAKE) -C samples/sample clean

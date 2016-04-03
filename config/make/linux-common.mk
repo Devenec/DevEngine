@@ -14,6 +14,10 @@ ifndef TARGET_NAME
 $(error The target name is not defined.)
 endif
 
+ifndef TARGET_PLATFORM
+$(error The target platform is not defined.)
+endif
+
 
 # Default build directories
 
@@ -26,19 +30,19 @@ ifndef BUILD_INTERMEDIATE_DIRECTORY
 endif
 
 
-# Default compiler settings
+# Compiler settings
 
 COMPILER_C_FLAGS   += $(INTERNAL_TARGET_ARCHITECTURE)
 COMPILER_C++_FLAGS += $(INTERNAL_TARGET_ARCHITECTURE)
 
 
-# Default archiver settings
+# Archiver settings
 
 ARCHIVER	   += ar
 ARCHIVER_FLAGS += -crs
 
 
-# Default linker settings
+# Linker settings
 
 COMPILER_C_LINKER_FLAGS			 += $(INTERNAL_TARGET_ARCHITECTURE) -L$(BUILD_OUTPUT_DIRECTORY)
 COMPILER_C_LINKER_SHARED_FLAGS	 += -fPIC -shared

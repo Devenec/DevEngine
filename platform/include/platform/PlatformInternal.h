@@ -20,31 +20,22 @@
 
 #pragma once
 
-// Internal functions
-
-#define DE_INTERNAL_STRING8_1(value) \
-	#value
-
-#define DE_INTERNAL_STRING8_2(value) \
-	DE_INTERNAL_STRING8_1(value)
-
-
 // Compiler and compiler version detection
 
 #if defined(__clang__)
-	#define DE_INTERNAL_COMPILER		 DE_COMPILER_CLANG
+	#define DE_INTERNAL_COMPILER DE_COMPILER_CLANG
 
 	#if __clang_major__ < 3 || (__clang_major__ == 3 && __clang_minor__ < 3)
 		#error The CLANG compiler version is not supported. The minumum supported version is 3.3.
 	#endif
 #elif defined(__GNUG__)
-	#define DE_INTERNAL_COMPILER		 DE_COMPILER_GCC
+	#define DE_INTERNAL_COMPILER DE_COMPILER_GCC
 
 	#if __GNUC__ < 5 || (__GNUC__ == 5 && __GNUC_MINOR__ < 1)
 		#error The GCC compiler version is not supported. The minumum supported version is 5.1.
 	#endif
 #elif defined(_MSC_VER)
-	#define DE_INTERNAL_COMPILER		 DE_COMPILER_MSVC
+	#define DE_INTERNAL_COMPILER DE_COMPILER_MSVC
 
 	#if _MSC_VER < 1900
 		#error The MSVC compiler version is not supported. The minumum supported version is 14.0 (1900).
@@ -56,69 +47,14 @@
 
 // Target processor architecture detection
 
-#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG || DE_INTERNAL_COMPILER == DE_COMPILER_GCC
-	#if defined(__i386) || defined(__i386__)
-		#define DE_INTERNAL_ARCHITECTURE DE_ARCHITECTURE_X86
-	#elif defined(__x86_64) || defined(__x86_64__)
-		#define DE_INTERNAL_ARCHITECTURE DE_ARCHITECTURE_X64
-	#endif
-#elif DE_INTERNAL_COMPILER == DE_COMPILER_MSVC
-	#if defined(_WIN64)
-		#define DE_INTERNAL_ARCHITECTURE DE_ARCHITECTURE_X64
-	#elif defined(_WIN32)
-		#define DE_INTERNAL_ARCHITECTURE DE_ARCHITECTURE_X86
-	#endif
+#if defined(_WIN64) || defined(__x86_64) || defined(__x86_64__)
+	#define DE_INTERNAL_ARCHITECTURE DE_ARCHITECTURE_X64
+#elif defined(_WIN32) || defined(__i386) || defined(__i386__)
+	#define DE_INTERNAL_ARCHITECTURE DE_ARCHITECTURE_X86
 #endif
 
 #if !defined(DE_INTERNAL_ARCHITECTURE)
 	#error The target processor architecture is not supported.
-#endif
-
-
-// Compiler specific internal keywords and variables
-
-#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG || DE_INTERNAL_COMPILER == DE_COMPILER_GCC
-	#define DE_INTERNAL_NO_OPERATION static_cast<Void>(0)
-#elif DE_INTERNAL_COMPILER == DE_COMPILER_MSVC
-	#define DE_INTERNAL_CALL_STDCALL __stdcall
-	#define DE_INTERNAL_NO_OPERATION __noop
-#endif
-
-
-// Compiler specific internal functions
-
-#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG
-	#define DE_INTERNAL_COMPILER_WARN(msg) \
-		_Pragma(DE_INTERNAL_STRING8_1(message(msg)))
-
-	#define DE_INTERNAL_DEBUGGER_BREAK()
-		// TODO: implement
-#elif DE_INTERNAL_COMPILER == DE_COMPILER_GCC
-	#define DE_INTERNAL_COMPILER_WARN(msg) \
-		_Pragma(DE_INTERNAL_STRING8_1(GCC warning msg))
-
-	#define DE_INTERNAL_DEBUGGER_BREAK()
-		// TODO: implement
-#elif DE_INTERNAL_COMPILER == DE_COMPILER_MSVC
-	#define DE_INTERNAL_COMPILER_WARN(msg) \
-		__pragma(message(__FILE__ "(" DE_INTERNAL_STRING8_1(__LINE__) ") : warning: " msg))
-
-	#define DE_INTERNAL_DEBUGGER_BREAK() \
-		__debugbreak()
-#endif
-
-
-// Build configuration detection
-
-#if defined(DE_BUILD_CONFIG_DEBUG)
-	#define DE_INTERNAL_BUILD DE_BUILD_DEBUG
-#elif defined(DE_BUILD_CONFIG_RELEASE)
-	#define DE_INTERNAL_BUILD DE_BUILD_RELEASE
-#elif defined(DE_BUILD_CONFIG_PRODUCTION)
-	#define DE_INTERNAL_BUILD DE_BUILD_PRODUCTION
-#else
-	#define DE_INTERNAL_BUILD DE_BUILD_DEBUG
-	DE_INTERNAL_COMPILER_WARN("Could not detect the build configuration. DE_BUILD is set to DE_BUILD_DEBUG.");
 #endif
 
 
@@ -136,4 +72,87 @@
 
 #if !defined(DE_INTERNAL_PLATFORM)
 	#error The target platform is not supported with the current compiler.
+#endif
+
+
+// Compiler specific internal keywords and variables
+
+#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG || DE_INTERNAL_COMPILER == DE_COMPILER_GCC
+	#define DE_INTERNAL_NO_OPERATION			   static_cast<void>(0)
+	#define DE_INTERNAL_WARNING_NON_LITERAL_FORMAT "-Wformat-nonliteral"
+#elif DE_INTERNAL_COMPILER == DE_COMPILER_MSVC
+	#define DE_INTERNAL_CALL_STDCALL			   __stdcall
+	#define DE_INTERNAL_NO_OPERATION			   __noop
+	#define DE_INTERNAL_WARNING_NON_LITERAL_FORMAT 0 // TODO: assign proper value?
+#endif
+
+
+// Compiler specific internal functions
+
+// Clang and GCC
+#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG || DE_INTERNAL_COMPILER == DE_COMPILER_GCC
+	#define DE_INTERNAL_PRAGMA(value) \
+		_Pragma(#value)
+#endif
+
+// Clang
+#if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG
+	#define DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warning) \
+		DE_INTERNAL_PRAGMA(clang diagnostic push) \
+		DE_INTERNAL_PRAGMA(clang diagnostic ignored warning)
+
+	#define DE_INTERNAL_COMPILER_WARN(msg) \
+		DE_INTERNAL_PRAGMA(message(msg))
+
+	#define DE_INTERNAL_DEBUGGER_BREAK()
+		// TODO: implement
+
+	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING() \
+		DE_INTERNAL_PRAGMA(clang diagnostic pop)
+
+// GCC
+#elif DE_INTERNAL_COMPILER == DE_COMPILER_GCC
+	#define DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warning) \
+		DE_INTERNAL_PRAGMA(GCC diagnostic push) \
+		DE_INTERNAL_PRAGMA(GCC diagnostic ignored warning)
+
+	#define DE_INTERNAL_COMPILER_WARN(msg) \
+		DE_INTERNAL_PRAGMA(GCC warning msg)
+
+	#define DE_INTERNAL_DEBUGGER_BREAK()
+		// TODO: implement
+
+	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING() \
+		DE_INTERNAL_PRAGMA(GCC diagnostic pop)
+
+// MSVC
+#elif DE_INTERNAL_COMPILER == DE_COMPILER_MSVC
+	#define DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warning)
+		// TODO: implement
+
+	#define DE_INTERNAL_STRING8(value) \
+		#value
+
+	#define DE_INTERNAL_COMPILER_WARN(msg) \
+		__pragma(message(__FILE__ "(" DE_INTERNAL_STRING8(__LINE__) ") : warning: " msg)) // TODO: fix
+
+	#define DE_INTERNAL_DEBUGGER_BREAK() \
+		__debugbreak()
+
+	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING()
+		// TODO: implement
+#endif
+
+
+// Build configuration detection
+
+#if defined(DE_BUILD_CONFIG_DEBUG)
+	#define DE_INTERNAL_BUILD DE_BUILD_DEBUG
+#elif defined(DE_BUILD_CONFIG_RELEASE)
+	#define DE_INTERNAL_BUILD DE_BUILD_RELEASE
+#elif defined(DE_BUILD_CONFIG_PRODUCTION)
+	#define DE_INTERNAL_BUILD DE_BUILD_PRODUCTION
+#else
+	#define DE_INTERNAL_BUILD DE_BUILD_DEBUG
+	DE_INTERNAL_COMPILER_WARN("Could not detect the build configuration. DE_BUILD is set to DE_BUILD_DEBUG.")
 #endif
