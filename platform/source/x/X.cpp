@@ -31,6 +31,8 @@ using namespace Platform;
 
 static const Char8* COMPONENT_TAG				  = "[Platform::X] ";
 static const Version MIN_SUPPORTED_XRANDR_VERSION = Version(1u, 1u);
+static const Char8* WINDOW_CLASS_NAMES			  = "devengine\0DevEngine";
+static const Uint32 WINDOW_CLASS_NAMES_LENGTH	  = 20u;
 
 static Int32 handleError(Display* xConnection, XErrorEvent* errorInfo);
 static Int32 handleIOError(Display* xConnection);
@@ -83,8 +85,13 @@ Cursor X::createHiddenPointer(const ::Window windowHandle) const
 	attributes.colormap = XCreateColormap(_connection, rootWindowHandle, visualInfo->visual, AllocNone);
 	attributeMask |= CWColormap;
 
-	return XCreateWindow(_connection, rootWindowHandle, x, y, width, height, 0u, visualInfo->depth,
-		InputOutput, visualInfo->visual, attributeMask, &attributes);
+	::Window windowHandle = XCreateWindow(_connection, rootWindowHandle, x, y, width, height, 0u,
+		visualInfo->depth, InputOutput, visualInfo->visual, attributeMask, &attributes);
+
+	setWindowProperty(windowHandle, "WM_CLASS", "STRING", reinterpret_cast<const Uint8*>(WINDOW_CLASS_NAMES),
+		8u, WINDOW_CLASS_NAMES_LENGTH);
+
+	return windowHandle;
 }
 
 void X::destroyWindowProperty(const ::Window windowHandle, const Char8* propertyName) const
@@ -221,7 +228,7 @@ void X::invokeError(const Uint32 errorCode) const
 		errorCode << StreamFormat::Decimal << '.' << Log::Flush();
 
 	XSync(_connection, False);
-	DE_DEBUGGER_BREAK();
+	DE_BREAK_DEBUGGER();
 	std::abort();
 }
 
@@ -232,7 +239,7 @@ void X::invokeError(const Uint32 errorCode, const Char8* file, const Uint32 line
 		StreamFormat::Decimal << '.' << Log::Flush();
 
 	XSync(_connection, False);
-	DE_DEBUGGER_BREAK();
+	DE_BREAK_DEBUGGER();
 	std::abort();
 }
 

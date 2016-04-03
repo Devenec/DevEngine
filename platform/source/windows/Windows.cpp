@@ -51,7 +51,7 @@ void Platform::failWindowsAssertion(const Char8* file, const Uint32 line, const 
 	defaultLog << LogLevel::Error << "Windows assertion failed at " << file << ", on line " << line <<
 		", in function " << function << ", with error code " << getWindowsErrorCode() << '.' << Log::Flush();
 
-	DE_DEBUGGER_BREAK();
+	DE_BREAK_DEBUGGER();
 	std::abort();
 }
 
@@ -84,7 +84,7 @@ void Platform::invokeWindowsError(const Uint32 errorCode)
 	defaultLog << LogLevel::Error << "Windows error occurred with code " << StreamFormat::Hexadecimal <<
 		errorCode << StreamFormat::Decimal << '-' << getWindowsErrorCode() << '.' << Log::Flush();
 
-	DE_DEBUGGER_BREAK();
+	DE_BREAK_DEBUGGER();
 	std::abort();
 }
 

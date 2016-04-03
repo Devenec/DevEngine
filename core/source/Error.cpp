@@ -29,6 +29,6 @@ void Core::invokeError(const Uint32 errorCode)
 	defaultLog << LogLevel::Error << "Error occurred with code " << StreamFormat::Hexadecimal << errorCode <<
 		StreamFormat::Decimal << '.' << Log::Flush();
 
-	DE_DEBUGGER_BREAK();
+	DE_BREAK_DEBUGGER();
 	std::abort();
 }

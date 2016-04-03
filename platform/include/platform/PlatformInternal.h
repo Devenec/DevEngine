@@ -101,10 +101,10 @@
 		DE_INTERNAL_PRAGMA(clang diagnostic push) \
 		DE_INTERNAL_PRAGMA(clang diagnostic ignored warning)
 
-	#define DE_INTERNAL_COMPILER_WARN(msg) \
+	#define DE_INTERNAL_WARN_COMPILER(msg) \
 		DE_INTERNAL_PRAGMA(message(msg))
 
-	#define DE_INTERNAL_DEBUGGER_BREAK()
+	#define DE_INTERNAL_BREAK_DEBUGGER()
 		// TODO: implement
 
 	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING() \
@@ -116,10 +116,10 @@
 		DE_INTERNAL_PRAGMA(GCC diagnostic push) \
 		DE_INTERNAL_PRAGMA(GCC diagnostic ignored warning)
 
-	#define DE_INTERNAL_COMPILER_WARN(msg) \
+	#define DE_INTERNAL_WARN_COMPILER(msg) \
 		DE_INTERNAL_PRAGMA(GCC warning msg)
 
-	#define DE_INTERNAL_DEBUGGER_BREAK()
+	#define DE_INTERNAL_BREAK_DEBUGGER()
 		// TODO: implement
 
 	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING() \
@@ -133,10 +133,10 @@
 	#define DE_INTERNAL_STRING8(value) \
 		#value
 
-	#define DE_INTERNAL_COMPILER_WARN(msg) \
+	#define DE_INTERNAL_WARN_COMPILER(msg) \
 		__pragma(message(__FILE__ "(" DE_INTERNAL_STRING8(__LINE__) ") : warning: " msg)) // TODO: fix
 
-	#define DE_INTERNAL_DEBUGGER_BREAK() \
+	#define DE_INTERNAL_BREAK_DEBUGGER() \
 		__debugbreak()
 
 	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING()
@@ -154,5 +154,5 @@
 	#define DE_INTERNAL_BUILD DE_BUILD_PRODUCTION
 #else
 	#define DE_INTERNAL_BUILD DE_BUILD_DEBUG
-	DE_INTERNAL_COMPILER_WARN("Could not detect the build configuration. DE_BUILD is set to DE_BUILD_DEBUG.")
+	DE_INTERNAL_WARN_COMPILER("Could not detect the build configuration. DE_BUILD is set to DE_BUILD_DEBUG.")
 #endif

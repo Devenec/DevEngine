@@ -33,7 +33,7 @@ void Platform::invokePOSIXError(const Uint32 errorCode)
 	defaultLog << LogLevel::Error << "POSIX error occurred with code " << StreamFormat::Hexadecimal <<
 		errorCode << StreamFormat::Decimal << '-' << errno << '.' << Log::Flush();
 
-	DE_DEBUGGER_BREAK();
+	DE_BREAK_DEBUGGER();
 	std::abort();
 }
 
@@ -44,6 +44,6 @@ void Platform::invokePOSIXError(const Uint32 errorCode, const Char8* file, const
 		", in function " << function << ", with code " << StreamFormat::Hexadecimal << errorCode <<
 		StreamFormat::Decimal << '-' << errno << '.' << Log::Flush();
 
-	DE_DEBUGGER_BREAK();
+	DE_BREAK_DEBUGGER();
 	std::abort();
 }

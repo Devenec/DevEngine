@@ -35,7 +35,7 @@ void Debug::failAssertion(const Char8* expression, const Char8* file, const Uint
 	defaultLog << LogLevel::Error << "Assertion failed at " << file << ", on line " << line <<
 		", in function " << function << ", with expression '" << expression << "'." << Log::Flush();
 
-	DE_DEBUGGER_BREAK();
+	DE_BREAK_DEBUGGER();
 	std::abort();
 }
 

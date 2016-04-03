@@ -83,14 +83,14 @@
  * @param message
  *   A warning message
  */
-#define DE_COMPILER_WARN(message) \
-	DE_INTERNAL_COMPILER_WARN(message)
+#define DE_WARN_COMPILER(message) \
+	DE_INTERNAL_WARN_COMPILER(message)
 
 /**
  * Breaks the debugger as if a breakpoint had been hit.
  */
-#define DE_DEBUGGER_BREAK() \
-	DE_INTERNAL_DEBUGGER_BREAK()
+#define DE_BREAK_DEBUGGER() \
+	DE_INTERNAL_BREAK_DEBUGGER()
 
 /**
  * Undoes the previous call to DE_BEGIN_DISABLE_COMPILER_WARNING() in the same
