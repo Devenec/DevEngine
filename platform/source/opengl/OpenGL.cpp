@@ -795,12 +795,14 @@ const Array<Version, 7u> OpenGL::SUPPORTED_VERSIONS
 OpenGL::OpenGL()
 	: _version(0u, 0u),
 	  _activeVertexArrayHandle(0u),
-	  _defaultVertexArrayHandle(0u)
+	  _defaultVertexArrayHandle(0u),
+	  _vertexAttributeCount(0u)
 {
 	_activeGraphicsBuffers.fill(0u);
 	initialiseVersion();
 	checkSupport();
 	getStandardFunctions();
+	getCapabilities();
 	logInfo();
 	createDefaultVertexArray();
 }
@@ -2242,6 +2244,11 @@ void OpenGL::getStandardFunctions() const
 	}
 }
 
+void OpenGL::getCapabilities()
+{
+	_vertexAttributeCount = getInteger(MAX_VERTEX_ATTRIBS);
+}
+
 void OpenGL::logInfo() const
 {
 	const Version shadingVersion = Version::createFromString(getCharacters(SHADING_LANGUAGE_VERSION));
@@ -2254,7 +2261,10 @@ void OpenGL::logInfo() const
 		"\nVendor:                   " << vendor << "\nRenderer:                 " << renderer << '\n' <<
 		Log::Flush();
 
-	logGraphicsExtensions("graphics interface", getExtensionNames());
+	defaultLog << LogLevel::Info << "OpenGL capabilities\n\nVertex attribute count: " <<
+		_vertexAttributeCount << '\n' << Log::Flush();
+
+	logGraphicsExtensions("OpenGL", getExtensionNames());
 }
 
 void OpenGL::createDefaultVertexArray()

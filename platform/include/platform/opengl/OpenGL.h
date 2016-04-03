@@ -3633,6 +3633,8 @@ namespace Platform
 
 		Uint32 bindVertexArrayCustom(const Uint32 vertexArrayHandle);
 
+		inline Uint32 vertexAttributeCount() const;
+
 		OpenGL& operator =(const OpenGL& openGl) = delete;
 		OpenGL& operator =(OpenGL&& openGl) = delete;
 
@@ -3644,10 +3646,12 @@ namespace Platform
 		Version _version;
 		Uint32 _activeVertexArrayHandle;
 		Uint32 _defaultVertexArrayHandle;
+		Uint32 _vertexAttributeCount;
 
 		void initialiseVersion();
 		void checkSupport() const;
 		void getStandardFunctions() const;
+		void getCapabilities();
 		void logInfo() const;
 		void createDefaultVertexArray();
 

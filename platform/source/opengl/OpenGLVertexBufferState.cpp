@@ -88,11 +88,10 @@ void VertexBufferState::Implementation::setVertexBuffer(const GraphicsBuffer* bu
 
 // Private
 
-// Static
-
 void VertexBufferState::Implementation::setVertexLayout(const VertexElementList& vertexElements,
-	const Uint32 stride, const Uint bufferOffset)
+	const Uint32 stride, const Uint bufferOffset) const
 {
+	resetVertexAttributes();
 	Uint elementOffset = bufferOffset;
 
 	for(VertexElementList::const_iterator i = vertexElements.begin(), end = vertexElements.end();
@@ -105,6 +104,14 @@ void VertexBufferState::Implementation::setVertexLayout(const VertexElementList&
 		elementOffset += ::getVertexElementSize(*i);
 	}
 }
+
+void VertexBufferState::Implementation::resetVertexAttributes() const
+{
+	for(Uint32 i = 0u, count = _openGl->vertexAttributeCount(); i < count; ++i)
+		OpenGL::disableVertexAttribArray(i);
+}
+
+// Static
 
 void VertexBufferState::Implementation::setVertexElementFormat(const VertexElement& element,
 	const Uint elementOffset, const Uint32 stride)

@@ -56,8 +56,10 @@ namespace Graphics
 		Platform::OpenGL* _openGl;
 		Uint32 _vertexArrayHandle;
 
-		static void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride,
-			const Uint bufferOffset);
+		void setVertexLayout(const VertexElementList& vertexElements, const Uint32 stride,
+			const Uint bufferOffset) const;
+
+		void resetVertexAttributes() const;
 
 		static void setVertexElementFormat(const VertexElement& element, const Uint elementOffset,
 			const Uint32 stride);

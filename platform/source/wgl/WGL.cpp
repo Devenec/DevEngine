@@ -61,7 +61,7 @@ void WGL::initialise(const GraphicsContextBase& graphicsContext) const
 {
 	initialiseExtensionSupport();
 	const ExtensionNameList extensionNames = getExtensionNames(graphicsContext);
-	logGraphicsExtensions("graphics context", extensionNames);
+	logGraphicsExtensions("WGL", extensionNames);
 	checkExtensionsSupport(extensionNames);
 	getExtensionFunctions();
 }

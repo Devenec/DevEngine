@@ -24,3 +24,8 @@ Uint32 OpenGL::bindDefaultVertexArray()
 {
 	return bindVertexArrayCustom(_defaultVertexArrayHandle);
 }
+
+Uint32 OpenGL::vertexAttributeCount() const
+{
+	return _vertexAttributeCount;
+}

@@ -149,7 +149,7 @@ void GLX::checkSupport() const
 void GLX::initialiseExtensions() const
 {
 	const ExtensionNameList extensionNames = getExtensionNames();
-	logGraphicsExtensions("graphics context", extensionNames);
+	logGraphicsExtensions("GLX", extensionNames);
 	checkExtensionsSupport(extensionNames);
 	getExtensionFunctions();
 }
