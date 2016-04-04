@@ -29,7 +29,7 @@
 
 #define DE_ASSERT(expression) \
 	(expression) ? DE_NO_OPERATION : \
-		Debug::failAssertion(DE_STRING8(expression), DE_FILE, DE_LINE, DE_FUNCTION)
+		Debug::failAssertion(DE_TO_STRING8(expression), DE_FILE, DE_LINE, DE_FUNCTION)
 
 namespace Debug
 {

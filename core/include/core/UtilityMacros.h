@@ -78,15 +78,6 @@
 	DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warning)
 
 /**
- * Invokes a compiler warning.
- *
- * @param message
- *   A warning message
- */
-#define DE_WARN_COMPILER(message) \
-	DE_INTERNAL_WARN_COMPILER(message)
-
-/**
  * Breaks the debugger as if a breakpoint had been hit.
  */
 #define DE_BREAK_DEBUGGER() \
@@ -106,5 +97,14 @@
  * @param value
  *   An identifier
  */
-#define DE_STRING8(value) \
-	DE_INTERNAL_STRING8(value)
+#define DE_TO_STRING8(value) \
+	DE_INTERNAL_TO_STRING8(value)
+
+/**
+ * Invokes a compiler warning.
+ *
+ * @param message
+ *   A warning message
+ */
+#define DE_WARN_COMPILER(message) \
+	DE_INTERNAL_WARN_COMPILER(message)

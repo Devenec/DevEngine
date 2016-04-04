@@ -83,7 +83,7 @@
 #elif DE_INTERNAL_COMPILER == DE_COMPILER_MSVC
 	#define DE_INTERNAL_CALL_STDCALL			   __stdcall
 	#define DE_INTERNAL_NO_OPERATION			   __noop
-	#define DE_INTERNAL_WARNING_NON_LITERAL_FORMAT 0 // TODO: assign proper value?
+	#define DE_INTERNAL_WARNING_NON_LITERAL_FORMAT 4001
 #endif
 
 
@@ -97,50 +97,54 @@
 
 // Clang
 #if DE_INTERNAL_COMPILER == DE_COMPILER_CLANG
-	#define DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warning) \
+	#define DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warningId) \
 		DE_INTERNAL_PRAGMA(clang diagnostic push) \
-		DE_INTERNAL_PRAGMA(clang diagnostic ignored warning)
+		DE_INTERNAL_PRAGMA(clang diagnostic ignored warningId)
 
-	#define DE_INTERNAL_WARN_COMPILER(msg) \
-		DE_INTERNAL_PRAGMA(message(msg))
-
-	#define DE_INTERNAL_BREAK_DEBUGGER()
+	#define DE_INTERNAL_BREAK_DEBUGGER() \
 		// TODO: implement
 
 	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING() \
 		DE_INTERNAL_PRAGMA(clang diagnostic pop)
 
+	#define DE_INTERNAL_WARN_COMPILER(msg) \
+		DE_INTERNAL_PRAGMA(message(msg))
+
 // GCC
 #elif DE_INTERNAL_COMPILER == DE_COMPILER_GCC
-	#define DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warning) \
+	#define DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warningId) \
 		DE_INTERNAL_PRAGMA(GCC diagnostic push) \
-		DE_INTERNAL_PRAGMA(GCC diagnostic ignored warning)
+		DE_INTERNAL_PRAGMA(GCC diagnostic ignored warningId)
 
-	#define DE_INTERNAL_WARN_COMPILER(msg) \
-		DE_INTERNAL_PRAGMA(GCC warning msg)
-
-	#define DE_INTERNAL_BREAK_DEBUGGER()
+	#define DE_INTERNAL_BREAK_DEBUGGER() \
 		// TODO: implement
 
 	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING() \
 		DE_INTERNAL_PRAGMA(GCC diagnostic pop)
 
+	#define DE_INTERNAL_WARN_COMPILER(msg) \
+		DE_INTERNAL_PRAGMA(GCC warning msg)
+
 // MSVC
 #elif DE_INTERNAL_COMPILER == DE_COMPILER_MSVC
-	#define DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warning)
-		// TODO: implement
-
-	#define DE_INTERNAL_STRING8(value) \
-		#value
-
-	#define DE_INTERNAL_WARN_COMPILER(msg) \
-		__pragma(message(__FILE__ "(" DE_INTERNAL_STRING8(__LINE__) ") : warning: " msg)) // TODO: fix
+	#define DE_INTERNAL_BEGIN_DISABLE_COMPILER_WARNING(warningId) \
+		__pragma(warning(push)) \
+		__pragma(warning(disable: warningId))
 
 	#define DE_INTERNAL_BREAK_DEBUGGER() \
 		__debugbreak()
 
-	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING()
-		// TODO: implement
+	#define DE_INTERNAL_END_DISABLE_COMPILER_WARNING() \
+		__pragma(warning(pop))
+
+	#define DE_INTERNAL_TO_STRING8_3(value) \
+		#value
+
+	#define DE_INTERNAL_TO_STRING8_2(value) \
+		DE_INTERNAL_TO_STRING8_3(value)
+
+	#define DE_INTERNAL_WARN_COMPILER(msg) \
+		__pragma(message(__FILE__ "(" DE_INTERNAL_TO_STRING8_2(__LINE__) "): warning: " msg))
 #endif
 
 

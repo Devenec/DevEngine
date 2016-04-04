@@ -28,7 +28,7 @@
 	#include <core/debug/Assert.h>
 
 	#define DE_ERROR(errorCode) \
-		Debug::failAssertion("error code " DE_STRING8(errorCode), DE_FILE, DE_LINE, DE_FUNCTION)
+		Debug::failAssertion("error code " DE_TO_STRING8(errorCode), DE_FILE, DE_LINE, DE_FUNCTION)
 #else
 	#define DE_ERROR(errorCode) \
 		Core::invokeError(errorCode)

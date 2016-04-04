@@ -20,7 +20,7 @@
 
 #pragma once
 
-#define DE_INTERNAL_STRING8(value) \
+#define DE_INTERNAL_TO_STRING8(value) \
 	#value
 
 
